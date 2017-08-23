@@ -19,20 +19,18 @@
 您可以通过cocoapods或者下载打包好的动态库的方式来集成SDK。在这里我们推荐您使用cocoapods的方式来进行导入。
 ##### 使用Cocoapods导入(推荐)
 
-在Podfile文件中使用：
+在Podfile文件中使用（我们建议您在使用时指定具体的版本号）：
 
 ~~~
-pod "QCloudCOSXML"
+pod 'QCloudCore','~>5.0.0'
+pod 'QCloudCOSXML','~>5.0.0'
 ~~~
 
 ##### 使用打包好的动态库导入
 
-将**QCloudCOSXML.framework和QCloudCore.framework**拖入到工程中即可：
+将我们提供的**QCloudCOSXML.framework和QCloudCore.framework**拖入到工程中：
 
 ![](http://ericcheungtest-1251668577.cosgz.myqcloud.com/framework%E6%88%AA%E5%9B%BE.png)
-
-
-
 
 并添加以下依赖库：
 
@@ -47,7 +45,7 @@ pod "QCloudCOSXML"
 
 ![参数配置](https://mccdn.qcloud.com/static/img/58327ba5d83809c77da158ff95627ef7/image.png)
 
-在工程info.plist文件中添加App Transport Security Settings 类型，然后在App Transport Security Settings下添加Allow Arbitrary Loads 类型Boolean,值设为YES。
+我们的SDK使用的是HTTP协议。为了在iOS系统上可以运行，您需要开启允许通过HTTP传输。具体操作步骤是在工程info.plist文件中添加App Transport Security Settings 类型，然后在App Transport Security Settings下添加Allow Arbitrary Loads 类型Boolean,值设为YES。
 
 
 
@@ -125,7 +123,7 @@ configuration.endPoint = [[QCloudEndPoint alloc] initWithRegionType:currentRegio
 ```
 
 需要注意的是QCloudServiceConfiguration的signatureProvider对象需要实现QCloudSignatureProvider协议。
-####示例
+#### 示例
 ```objective-c
 //AppDelegate.m
 - (void) signatureWithFields:(QCloudSignatureFields*)fileds
