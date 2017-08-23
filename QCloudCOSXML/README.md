@@ -2,9 +2,9 @@
 
 ### SDK 获取
 
-对象存储服务的 iOS SDK 的下载地址：[iOS SDK](https://github.com/tencentyun/cos_xml_iOS_sdk.git)
+对象存储服务的 iOS SDK 的下载地址：[iOS SDK](https://github.com/tencentyun/qcloud-sdk-ios.git)
 
-更多示例可参考Demo：[iOS Demo](https://github.com/tencentyun/cos_xml_iOS_sdk.git)
+更多示例可参考Demo：[iOS Demo](https://github.com/tencentyun/qcloud-sdk-ios-samples.git)
 （本版本SDK基于XML API封装组成）
 
 ### 开发准备
@@ -124,7 +124,7 @@ configuration.endPoint = [[QCloudEndPoint alloc] initWithRegionType:currentRegio
 }
 ```
 
-需要注意的是QCloudServiceConfiguration的signatureProvider对象需要实现QCloudSignatureProvider协议。 
+需要注意的是QCloudServiceConfiguration的signatureProvider对象需要实现QCloudSignatureProvider协议。
 ####示例
 ```objective-c
 //AppDelegate.m
@@ -146,9 +146,9 @@ configuration.endPoint = [[QCloudEndPoint alloc] initWithRegionType:currentRegio
 ### STEP - 2 上传文件
 
 在这里我们假设您已经申请了自己业务bucket。事实上，SDK所有的请求对应了相应的Request类，只要生成相应的请求，设置好相应的属性，然后将请求交给QCloudCOSXMLService对象，就可以完成相应的动作。其中，request的body部分传入需要上传的文件在本地的URL（NSURL* 类型）。    
-        
+
 上传文件的接口需要用到签名来进行身份认证，我们的请求会自动向初始化时指定的遵循QCloudSignatureProvider协议的对象去请求签名。签名如何生成可以参考下一章节中的生成签名。
-    
+
 需要留意的是，URL所对应的文件在上传过程中是不能进行变更的，否则会导致出错。
 
 
@@ -156,7 +156,7 @@ configuration.endPoint = [[QCloudEndPoint alloc] initWithRegionType:currentRegio
 
 ```objective-c
   QCloudCOSXMLUploadObjectRequest* put = [QCloudCOSXMLUploadObjectRequest new];
-    
+
     NSURL* url = /*文件的URL*/;
     put.object = @"文件名.jpg";
     put.bucket = /*bucket名*/;
@@ -164,15 +164,16 @@ configuration.endPoint = [[QCloudEndPoint alloc] initWithRegionType:currentRegio
     [put setSendProcessBlock:^(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
         NSLog(@"upload %lld totalSend %lld aim %lld", bytesSent, totalBytesSent, totalBytesExpectedToSend);
     }];
-    [put setFinishBlock:^(id outputObject, NSError *error) {
- 
+    [put setFinishBlock:^(id outputObject, NSError* error) {
+
     }];
     [[QCloudCOSTransferMangerService defaultCOSTRANSFERMANGER] UploadObject:put];
 
-```
+```    
 
-####QCloudCOSXMLUploadObjectRequest参数含义    
-| 参数名称   | 类型         | 是否必填 | 说明                                       |
+#### QCloudCOSXMLUploadObjectRequest参数含义    
+
+| 参数名称   | 类型         | 是否必填 | 说明                                |
 | ------ | ---------- | ---- | ---------------------------------------- |
 | Object  | NSString * | 是    | 上传文件（对象）的文件名，也是对象的key          |
 |bucket|NSString * |是|上传的存储桶的名称|
@@ -205,20 +206,20 @@ configuration.endPoint = [[QCloudEndPoint alloc] initWithRegionType:currentRegio
 	 //下载过程中的进度
 	}];
 	[[QCloudCOSXMLService defaultCOSXML] GetObject:request];
-```
+```  
 
 ## 生成签名
 
 SDK中的请求需要用到签名，以确访问的用户的身份，也保障了访问的安全性。在SDK中可以生成签名，每个请求会向QCloudServiceConfiguration对象中的signatureProvider对象来请求生成签名。我们可以将负责生成签名的对象在一开始赋值给signatureProvider，该生成签名的对象需要遵循QCloudSignatureProvider协议，并实现生成签名的方法：
-<pre objective-c>
+```objective-c
 - (void) signatureWithFields:(QCloudSignatureFields* )fileds    
                      request:(QCloudBizHTTPRequest* )request    
                   urlRequest:(NSURLRequest* )urlRequst    
                    compelete:(QCloudHTTPAuthentationContinueBlock)continueBlock
-</pre>
+```
 基于安全性的考虑，我们建议您在服务器端实现签名的过程。您也可以在本地生成签名，请参考例子：
 
-```
+```objective-c
 - (void) signatureWithFields:(QCloudSignatureFields*)fileds
                      request:(QCloudBizHTTPRequest*)request
                   urlRequest:(NSURLRequest*)urlRequst
@@ -227,7 +228,7 @@ SDK中的请求需要用到签名，以确访问的用户的身份，也保障�
     QCloudCredential* credential = [QCloudCredential new];
     credential.secretID = @"您的secretID";
     credential.secretKey = @"您的scretKey";
-    
+
     QCloudAuthentationCreator* creator = [[QCloudAuthentationCreator alloc] initWithCredential:credential];
     QCloudSignature* signature =  [creator signatureForCOSXMLRequest:request];
     continueBlock(signature, nil);
@@ -255,7 +256,7 @@ SDK中的请求需要用到签名，以确访问的用户的身份，也保障�
 | region | NSString * | 否    |前缀匹配，用来规定返回的文件前缀地址 |
 |delimiter|NSString *|否|定界符为一个符号，如果有 Prefix，则将 Prefix 到 delimiter 之间的相同路径归为一类，定义为 Common Prefix，然后列出所有 Common Prefix。如果没有 Prefix，则从路径起点开始|
 |encodingType|NSString * |否|规定返回值的编码方式，可选值:url|
-marker| NSString * | 否 | 默认以UTF-8二进制顺序列出条目，所有列出条目从marker开始|
+|marker| NSString * | 否 | 默认以UTF-8二进制顺序列出条目，所有列出条目从marker开始|
 |maxKeys|int | 否 |单次返回的最大条目数量，默认1000|
 
 #### 示例
@@ -264,7 +265,7 @@ marker| NSString * | 否 | 默认以UTF-8二进制顺序列出条目，所有列
     QCloudGetBucketRequest* request = [QCloudGetBucketRequest new];
     request.bucket = @“testBucket”;
     request.maxKeys = 1000;
-    [request setFinishBlock:^(QCloudListBucketResult * _Nonnull result, NSError * _Nonnull error) {
+    [request setFinishBlock:^(QCloudListBucketResult *_Nonnull result, NSError*  _Nonnull error) {
     //additional actions after finishing
     }];
     [[QCloudCOSXMLService defaultCOSXML] GetBucket:request];
@@ -272,25 +273,25 @@ marker| NSString * | 否 | 默认以UTF-8二进制顺序列出条目，所有列
 
 ### 获取存储桶的ACL（Access Control List）
 
-####方法原型
+#### 方法原型
 进行存储桶操作之前，我们需要导入头文件QCloudCOSXML/QCloudCOSXML.h。在此之前您需要完成前文中的STEP-1初始化操作。先生成一个QCloudGetBucketACLRequest实例，然后填入一些需要的额外的限制条件，通过并获得内容。具体步骤如下：    
 1.实例化QCloudGetBucketACLRequest，填入获取ACL的bucket。    
 2.调用QCloudCOSXMLService对象中的GetBucketACL方法发出请求。    
 3.从回调的finishBlock中的QCloudACLPolicy获取具体内容。    
 
 
-####QCloudGetBucketACLRequest参数说明
+#### QCloudGetBucketACLRequest参数说明
 | 参数名称   | 类型         | 是否必填 | 说明                                 |
 | ------ | ---------- | ---- | ---------------------------------- |
 | bucket  | NSString * | 是    | 存储桶名                      |
 
-####返回结果QCloudACLPolicy参数说明
+#### 返回结果QCloudACLPolicy参数说明
 
 | 参数名称   | 类型         |   说明                                 |
 | ------ | ---------- |  ---------------------------------- |
 | owner  | QCloudACLOwner * | 存储桶持有者的信息                 |
 |accessControlList|NSArray * |被授权者与权限的信息|
-####示例
+#### 示例
 
 ```objective-c
   QCloudGetBucketACLRequest* getBucketACl   = [QCloudGetBucketACLRequest new];
@@ -298,7 +299,7 @@ marker| NSString * | 否 | 默认以UTF-8二进制顺序列出条目，所有列
     [getBucketACl setFinishBlock:^(QCloudACLPolicy * _Nonnull result, NSError * _Nonnull error) {
         //QCloudACLPolicy中包含了bucket的ACL信息。
     }];
-    
+
     [[QCloudCOSXMLService defaultCOSXML] GetBucketACL:getBucketACl];
 
 ```
@@ -306,9 +307,9 @@ marker| NSString * | 否 | 默认以UTF-8二进制顺序列出条目，所有列
 
 
 
-###设置存储桶的ACL(Access Control List)
+### 设置存储桶的ACL(Access Control List)
 
-####方法原型
+#### 方法原型
 进行存储桶操作之前，我们需要导入头文件QCloudCOSXML/QCloudCOSXML.h。在此之前您需要完成前文中的STEP-1初始化操作。先生成一个QCloudPutBucketACLRequest实例，然后填入一些需要的额外的限制条件，通过并获得内容。具体步骤如下：    
 1.实例化QCloudPutBucketACLRequest，填入需要设置的bucket，然后根据设置值的权限类型分别填入不同的参数。    
 2.调用QCloudCOSXMLService对象中的PutBucketACL方法发出请求。    
@@ -325,7 +326,7 @@ marker| NSString * | 否 | 默认以UTF-8二进制顺序列出条目，所有列
 
 
 
-####示例
+#### 示例
 ```objective-c
     QCloudPutBucketACLRequest* putACL = [QCloudPutBucketACLRequest new];
     NSString* appID = @“您的APP ID”;
@@ -341,9 +342,9 @@ marker| NSString * | 否 | 默认以UTF-8二进制顺序列出条目，所有列
 ```
 
 
-###获取存储桶的CORS(跨域访问)设置
+### 获取存储桶的CORS(跨域访问)设置
 
-####方法原型
+#### 方法原型
 进行存储桶操作之前，我们需要导入头文件QCloudCOSXML/QCloudCOSXML.h。在此之前您需要完成前文中的STEP-1初始化操作。先生成一个QCloudPutBucketCORSRequest实例，然后填入一些需要的额外的限制条件，通过并获得内容。具体步骤如下：    
 1.实例化QCloudPutBucketCORSRequest，填入需要获取CORS的bucket。    
 2.调用QCloudCOSXMLService对象中的GetBucketCORS方法发出请求。    
@@ -361,7 +362,7 @@ marker| NSString * | 否 | 默认以UTF-8二进制顺序列出条目，所有列
 | ------ | ---------- | ---------------------------------- |
 | rules  | NSArray<QCloudCORSRule*> *  | 放置CORS的数组, 数组内容为QCloudCORSRule实例      |
 
-####QCloudCORSRule参数说明
+#### QCloudCORSRule参数说明
 
 | 参数名称   | 类型         | 说明                                 |
 | ------ | ---------- | ---------------------------------- |
@@ -375,16 +376,16 @@ marker| NSString * | 否 | 默认以UTF-8二进制顺序列出条目，所有列
 
 
 
-####示例
+#### 示例
 ```objective-c
 	QCloudGetBucketCORSRequest* corsReqeust = [QCloudGetBucketCORSRequest new];
 	corsReqeust.bucket = self.bucket;
-	    
+
 	[corsReqeust setFinishBlock:^(QCloudCORSConfiguration * _Nonnull result, NSError * _Nonnull error) {
 	    //CORS设置封装在result中。
-	  
+
   	}];
-	    
+
 	[[QCloudCOSXMLService defaultCOSXML] GetBucketCORS:corsReqeust];
 
 ```    
@@ -392,9 +393,9 @@ marker| NSString * | 否 | 默认以UTF-8二进制顺序列出条目，所有列
 
 
 
-###设置存储桶的CORS（跨域访问）
+### 设置存储桶的CORS（跨域访问）
 
-####方法原型
+#### 方法原型
 进行存储桶操作之前，我们需要导入头文件QCloudCOSXML/QCloudCOSXML.h。在此之前您需要完成前文中的STEP-1初始化操作。先生成一个QCloudPutBucketCORSRequest实例，然后填入一些需要的额外的限制条件，通过并获得内容。具体步骤如下：    
 1.实例化QCloudPutBucketCORSRequest，设置bucket，并且将需要的CORS装入QCloudCORSRule中，如果有多组CORS设置，可以将多个QCloudCORSRule放在一个NSArray里，然后将该数组填入QCloudCORSConfiguration的rules属性里，放在request中。    
 2.调用QCloudCOSXMLService对象中的PutBucketCORS方法发出请求。    
@@ -407,13 +408,13 @@ marker| NSString * | 否 | 默认以UTF-8二进制顺序列出条目，所有列
 |corsConfiguration|QCloudCORSConfiguration * |是|封装了CORS的具体参数|
 
 
-####QCloudCORSConfiguration参数说明 
+#### QCloudCORSConfiguration参数说明
 
 | 参数名称   | 类型         | 说明                                 |
 | ------ | ---------- | ---------------------------------- |
 | rules  | NSArray<QCloudCORSRule*> *  | 放置CORS的数组, 数组内容为QCloudCORSRule实例      |
 
-####QCloudCORSRule参数说明
+#### QCloudCORSRule参数说明
 
 | 参数名称   | 类型         | 说明                                 |
 | ------ | ---------- | ---------------------------------- |
@@ -426,12 +427,12 @@ marker| NSString * | 否 | 默认以UTF-8二进制顺序列出条目，所有列
 
 
 
-####示例
+#### 示例
 
 ```objective-c
     QCloudPutBucketCORSRequest* putCORS = [QCloudPutBucketCORSRequest new];
     QCloudCORSConfiguration* cors = [QCloudCORSConfiguration new];
-    
+
     QCloudCORSRule* rule = [QCloudCORSRule new];
     rule.identifier = @"sdk";
     rule.allowedHeader = @[@"origin",@"host",@"accept",@"content-type",@"authorization"];
@@ -439,9 +440,9 @@ marker| NSString * | 否 | 默认以UTF-8二进制顺序列出条目，所有列
     rule.allowedMethod = @[@"GET",@"PUT",@"POST", @"DELETE", @"HEAD"];
     rule.maxAgeSeconds = 3600;
     rule.allowedOrigin = @"*";
-    
+
     cors.rules = @[rule];
-    
+
     putCORS.corsConfiguration = cors;
     putCORS.bucket = @"您要设置的bucket";
     [putCORS setFinishBlock:^(id outputObject, NSError *error) {
@@ -450,7 +451,7 @@ marker| NSString * | 否 | 默认以UTF-8二进制顺序列出条目，所有列
         }
     }];
     [[QCloudCOSXMLService defaultCOSXML] PutBucketCORS:putCORS];
-	
+
 
 
 ```    
@@ -460,9 +461,9 @@ marker| NSString * | 否 | 默认以UTF-8二进制顺序列出条目，所有列
 
 
 
-###获取存储桶的地域信息
+### 获取存储桶的地域信息
 
-####方法原型
+#### 方法原型
 进行存储桶操作之前，我们需要导入头文件QCloudCOSXML/QCloudCOSXML.h。在此之前您需要完成前文中的STEP-1初始化操作。先生成一个QCloudGetBucketLocationRequest实例，然后填入一些需要的额外的限制条件，通过并获得内容。具体步骤如下：    
 1.实例化QCloudGetBucketLocationRequest，填入bucket名。    
 2.调用QCloudCOSXMLService对象中的GetBucketLocation方法发出请求。    
@@ -475,14 +476,14 @@ marker| NSString * | 否 | 默认以UTF-8二进制顺序列出条目，所有列
 | bucket  | NSString * | 是    | 存储桶名                      |
 
 
-####返回结果QCloudBucketLocationConstraint参数说明
+#### 返回结果QCloudBucketLocationConstraint参数说明
 | 参数名称   | 类型        | 说明                                 |
 | ------ | ---------- |  ---------------------------------- |
 | locationConstraint  |NSString* |说明 Bucket 所在区域，枚举值：cn-north，cn-east，sg，cn-southwest，cn-south|
 
 
 
-####示例
+#### 示例
 ```objective-c
 
   QCloudGetBucketLocationRequest* locationReq = [QCloudGetBucketLocationRequest new];
@@ -496,9 +497,9 @@ marker| NSString * | 否 | 默认以UTF-8二进制顺序列出条目，所有列
 ```
 
 
-###删除存储桶CORS设置
+### 删除存储桶CORS设置
 
-####方法原型
+#### 方法原型
 进行存储桶操作之前，我们需要导入头文件QCloudCOSXML/QCloudCOSXML.h。在此之前您需要完成前文中的STEP-1初始化操作。先生成一个QCloudDeleteBucketCORSRequest实例，然后填入一些需要的额外的限制条件，通过并获得内容。具体步骤如下：    
 1.实例化QCloudDeleteBucketCORSRequest，填入需要的参数。    
 2.调用QCloudCOSXMLService对象中的方法发出请求。    
@@ -508,7 +509,7 @@ marker| NSString * | 否 | 默认以UTF-8二进制顺序列出条目，所有列
 | 参数名称   | 类型         | 是否必填 | 说明                                 |
 | ------ | ---------- | ---- | ---------------------------------- |
 | bucket  | NSString * | 是    | 存储桶名                      |
-####示例
+#### 示例
 ```objective-c
  QCloudDeleteBucketCORSRequest* deleteCORS = [QCloudDeleteBucketCORSRequest new];
     deleteCORS.bucket = self.bucket;
@@ -518,9 +519,9 @@ marker| NSString * | 否 | 默认以UTF-8二进制顺序列出条目，所有列
     [[QCloudCOSXMLService defaultCOSXML] DeleteBucketCORS:deleteCORS];
 ```
 
-###查询Bucket中正在进行的分块上传
+### 查询Bucket中正在进行的分块上传
 
-####方法原型
+#### 方法原型
 进行存储桶操作之前，我们需要导入头文件QCloudCOSXML/QCloudCOSXML.h。在此之前您需要完成前文中的STEP-1初始化操作。先生成一个QCloudListBucketMultipartUploadsRequest实例，然后填入一些需要的额外的限制条件，通过并获得内容。具体步骤如下：    
 1.实例化QCloudListBucketMultipartUploadsRequest，填入需要的参数，如返回结果的前缀、编码方式等。    
 2.调用QCloudCOSXMLService对象中的ListBucketMultipartUploads方法发出请求。    
@@ -530,15 +531,14 @@ marker| NSString * | 否 | 默认以UTF-8二进制顺序列出条目，所有列
 | 参数名称   | 类型         | 是否必填 | 说明                                 |
 | ------ | ---------- | ---- | ---------------------------------- |
 | bucket  | NSString * | 是    | 存储桶名                      |
-| prefix | NSString * | 否    |限定返回的 Object key 必须以 Prefix 作为前缀。
-注意使用 prefix 查询时，返回的 key 中仍会包含 Prefix |
+| prefix | NSString * | 否    |限定返回的 Object key 必须以 Prefix 作为前缀。注意使用 prefix 查询时，返回的 key 中仍会包含 Prefix |
 |delimiter|NSString *|否|定界符为一个符号，如果有 Prefix，则将 Prefix 到 delimiter 之间的相同路径归为一类，定义为 Common Prefix，然后列出所有 Common Prefix。如果没有 Prefix，则从路径起点开始|
 |encodingType|NSString * |否|规定返回值的编码方式，可选值:url|
-keyMarker| NSString * | 否 |列出条目从该 key 值开始	|
+|keyMarker| NSString * | 否 |列出条目从该 key 值开始	|
 |uploadIDMarker|int | 否 |列出条目从该 UploadId 值开始|
 |maxUploads|int|否|设置最大返回的multipart数量，合法值1到1000|
 
-####返回结果QCloudListMultipartUploadsResult参数说明
+#### 返回结果QCloudListMultipartUploadsResult参数说明
 
 | 参数名称   | 类型         | 是否必填 | 说明                                 |
 | ------ | ---------- | ---- | ---------------------------------- |
@@ -546,12 +546,12 @@ keyMarker| NSString * | 否 |列出条目从该 key 值开始	|
 | prefix | NSString * | 否    |限定返回的 Object key 必须以 Prefix 作为前缀。注意使用 prefix 查询时，返回的 key 中仍会包含 Prefix |
 |delimiter|NSString *|否|定界符为一个符号，如果有 Prefix，则将 Prefix 到 delimiter 之间的相同路径归为一类，定义为 Common Prefix，然后列出所有 Common Prefix。如果没有 Prefix，则从路径起点开始|
 |encodingType|NSString * |否|规定返回值的编码方式，可选值:url|
-keyMarker| NSString * | 否 |列出条目从该 key 值开始	|
+|keyMarker| NSString * | 否 |列出条目从该 key 值开始	|
 |maxUploads|int|否|设置最大返回的multipart数量，合法值1到1000|
 
 
 
-####示例
+#### 示例
 ```objecitve-c
  QCloudListBucketMultipartUploadsRequest* uploads = [QCloudListBucketMultipartUploadsRequest new];
     uploads.bucket = self.bucket;
@@ -575,12 +575,12 @@ keyMarker| NSString * | 否 |列出条目从该 key 值开始	|
 
 
 
-##文件操作
+## 文件操作
 在COS中，每个文件就是一个Object(对象)。对文件的操作，其实也就是对对象的操作。
 
-###查询对象的ACL（Access Control List）
+### 查询对象的ACL（Access Control List）
 
-####方法原型
+#### 方法原型
 进行文件操作之前，我们需要导入头文件QCloudCOSXML/QCloudCOSXML.h。在此之前您需要完成前文中的STEP-1初始化操作。先生成一个QCloudGetObjectACLRequest实例，然后填入一些需要的额外的限制条件，通过并获得内容。具体步骤如下：    
 1.实例化QCloudGetObjectACLRequest，填入存储桶的名称，和需要查询对象的名称。    
 2.调用QCloudCOSXMLService对象中的GetObjectACL方法发出请求。    
@@ -593,7 +593,7 @@ keyMarker| NSString * | 否 |列出条目从该 key 值开始	|
 | bucket  | NSString * | 是    | 存储桶名                      |
 |object|NSString * |是| 对象名 |
 
-####示例
+#### 示例
 
 ```objective-c
  request.bucket = self.aclBucket;
@@ -609,9 +609,9 @@ keyMarker| NSString * | 否 |列出条目从该 key 值开始	|
 ```
 
 
-###设置对象的ACL（Access Control List）
+### 设置对象的ACL（Access Control List）
 
-####方法原型
+#### 方法原型
 进行对象操作之前，我们需要导入头文件QCloudCOSXML/QCloudCOSXML.h。在此之前您需要完成前文中的STEP-1初始化操作。先生成一个QCloudPutObjectACLRequest实例，然后填入一些需要的额外的限制条件，通过并获得内容。具体步骤如下：    
 1.实例化QCloudPutObjectACLRequest，填入bucket名，和一些额外需要的参数，如授权的具体信息等。    
 2.调用QCloudCOSXMLService对象中的方法发出请求。    
@@ -628,7 +628,7 @@ keyMarker| NSString * | 否 |列出条目从该 key 值开始	|
 |grantRead|NSString * |否|赋予被授权者读的权限。格式： id=" ",id=" "；当需要给子账户授权时，id="qcs::cam::uin/\<OwnerUin>:uin/\<SubUin>"，当需要给根账户授权时，id="qcs::cam::uin/\<OwnerUin>:uin/\<OwnerUin>"  其中OwnerUin指的是根账户的ID，而SubUin指的是子账户的ID|
 |grantWrite|NSString * |否| 授予被授权者写的权限。格式同上。|
 |grantFullControl|NSString * |否| 授予被授权者读写权限。格式同上。|
-####示例
+#### 示例
 ```objective-c
     QCloudPutObjectACLRequest* request = [QCloudPutObjectACLRequest new];
     request.object = @"需要设置ACL的对象名";
@@ -640,14 +640,14 @@ keyMarker| NSString * | 否 |列出条目从该 key 值开始	|
     [request setFinishBlock:^(id outputObject, NSError *error) {
         localError = error;
     }];
-    
+
     [[QCloudCOSXMLService defaultCOSXML] PutObjectACL:request];
 ```
 
 
-###下载文件
+### 下载文件
 
-####方法原型
+#### 方法原型
 进行文件操作之前，我们需要导入头文件QCloudCOSXML/QCloudCOSXML.h。在此之前您需要完成前文中的STEP-1初始化操作。先生成一个实例，然后填入一些需要的额外的限制条件，通过并获得内容。具体步骤如下：    
 1.实例化，填入需要的参数。    
 2.调用QCloudCOSXMLService对象中的方法发出请求。    
@@ -668,7 +668,7 @@ keyMarker| NSString * | 否 |列出条目从该 key 值开始	|
 |responseContentDisposition|NSString * |否|设置响应头部中的 Content-Disposition 参数。|
 |responseContentEncoding|NSString * |否|设置响应头部中的 Content-Encoding 参数|
 
-####示例
+#### 示例
 
 ```objective-c
   QCloudGetObjectRequest* request = [QCloudGetObjectRequest new];
@@ -689,7 +689,7 @@ keyMarker| NSString * | 否 |列出条目从该 key 值开始	|
 
 ### Object 跨域访问配置的预请求
 
-####方法原型
+#### 方法原型
 进行文件操作之前，我们需要导入头文件QCloudCOSXML/QCloudCOSXML.h。在此之前您需要完成前文中的STEP-1初始化操作。先生成一个QCloudOptionsObjectRequest实例，然后填入一些需要的额外的限制条件，通过并获得内容。具体步骤如下：    
 1.实例化QCloudOptionsObjectRequest，填入需要设置的对象名、存储桶名、模拟跨域访问请求的http方法和模拟跨域访问允许的访问来源    
 2.调用QCloudCOSXMLService对象中的方法发出请求。    
@@ -705,7 +705,7 @@ keyMarker| NSString * | 否 |列出条目从该 key 值开始	|
 |accessControlRequestMethod|NSArray<NSString*> * |是|模拟跨域访问的请求HTTP方法|
 |origin|NSString * | 是|模拟跨域访问允许的访问来源，支持通配符 * , 格式为：协议://域名[:端口]如：http://www.qq.com |
 |allowedHeader|NSArray<NSString * > * | 否|在发送 OPTIONS 请求时告知服务端，接下来的请求可以使用哪些自定义的 HTTP 请求头部，支持通配符 * |
-####示例
+#### 示例
 ```objective-c
 
  QCloudOptionsObjectRequest* request = [[QCloudOptionsObjectRequest alloc] init];
@@ -718,17 +718,17 @@ keyMarker| NSString * | 否 |列出条目从该 key 值开始	|
     [request setFinishBlock:^(id outputObject, NSError* error) {
         resultError = error;
     }];
-    
+
     [[QCloudCOSXMLService defaultCOSXML] OptionsObject:request];
-    
+
 
 
 ```
 
 
-###删除单个对象
+### 删除单个对象
 
-####方法原型
+#### 方法原型
 进行文件操作之前，我们需要导入头文件QCloudCOSXML/QCloudCOSXML.h。在此之前您需要完成前文中的STEP-1初始化操作。先生成一个QCloudDeleteObjectRequest实例，然后填入一些需要的额外的限制条件，通过并获得内容。具体步骤如下：    
 1.实例化QCloudDeleteObjectRequest，填入需要的参数。    
 2.调用QCloudCOSXMLService对象中的方法发出请求。    
@@ -739,14 +739,14 @@ keyMarker| NSString * | 否 |列出条目从该 key 值开始	|
 | ------ | ---------- | -------|---------------------------------- |
 | object  | NSString *   |是|对象名              |
 |bucket|NSString * |是| 存储桶名 |
-####示例
+#### 示例
 
 ```objective-c
 
 QCloudDeleteObjectRequest* deleteObjectRequest = [QCloudDeleteObjectRequest new];
     deleteObjectRequest.bucket = @"存储桶名";
     deleteObjectRequest.object = @"对象名";
-        
+
     __block NSError* resultError;
     [deleteObjectRequest setFinishBlock:^(id outputObject, NSError *error) {
         resultError = error;
@@ -755,9 +755,9 @@ QCloudDeleteObjectRequest* deleteObjectRequest = [QCloudDeleteObjectRequest new]
 
 ```
 
-###删除多个对象
+### 删除多个对象
 
-####方法原型
+#### 方法原型
 进行文件操作之前，我们需要导入头文件QCloudCOSXML/QCloudCOSXML.h。在此之前您需要完成前文中的STEP-1初始化操作。先生成一个QCloudDeleteMultipleObjectRequest实例，然后填入一些需要的额外的限制条件，通过并获得内容。具体步骤如下：    
 1.实例化QCloudDeleteMultipleObjectRequest，填入需要的参数。    
 2.调用QCloudCOSXMLService对象中的方法发出请求。    
@@ -778,46 +778,46 @@ QCloudDeleteObjectRequest* deleteObjectRequest = [QCloudDeleteObjectRequest new]
 | objects  |  NSArray<QCloudDeleteObjectInfo * > *   |是|存放需要删除对象信息的数组  |
 
 
-####QCloudDeleteObjectInfo参数说明
+#### QCloudDeleteObjectInfo参数说明
 | 参数名称   | 类型   |是否必填      | 说明                                 |
 | ------ | ---------- | -------|---------------------------------- |
 | key  | NSString *   |是|对象名              |
 
 
-####示例
+#### 示例
 ```objective-c
 
 QCloudDeleteMultipleObjectRequest* delteRequest = [QCloudDeleteMultipleObjectRequest new];
     delteRequest.bucket = self.aclBucket;
-    
+
     QCloudDeleteObjectInfo* deletedObject0 = [QCloudDeleteObjectInfo new];
     deletedObject0.key = @"第一个对象名";
-    
+
     QCloudDeleteObjectInfo* deleteObject1 = [QCloudDeleteObjectInfo new];
     deleteObject1.key = @"第二个对象名";
-    
+
     QCloudDeleteInfo* deleteInfo = [QCloudDeleteInfo new];
     deleteInfo.quiet = NO;
     deleteInfo.objects = @[ deletedObject0,deleteObject2];
-    
+
     delteRequest.deleteObjects = deleteInfo;
-    
+
     __block NSError* resultError;
     [delteRequest setFinishBlock:^(QCloudDeleteResult* outputObject, NSError *error) {
         localError = error;
         deleteResult = outputObject;
     }];
-    
-    
+
+
     [[QCloudCOSXMLService defaultCOSXML] DeleteMultipleObject:delteRequest];
-    
+
 
 ```
 
 
-###初始化分片上传
+### 初始化分片上传
 
-####方法原型
+#### 方法原型
 进行文件操作之前，我们需要导入头文件QCloudCOSXML/QCloudCOSXML.h。在此之前您需要完成前文中的STEP-1初始化操作。先生成一个QCloudInitiateMultipartUploadRequest实例，然后填入一些需要的额外的限制条件，通过并获得内容。具体步骤如下：    
 1.实例化QCloudInitiateMultipartUploadRequest，填入需要的参数。    
 2.调用QCloudCOSXMLService对象中的InitiateMultipartUpload方法发出请求。    
@@ -843,7 +843,7 @@ QCloudDeleteMultipleObjectRequest* delteRequest = [QCloudDeleteMultipleObjectReq
 
 
 
-####示例
+#### 示例
 ```objective-c
 
 QCloudInitiateMultipartUploadRequest* initrequest = [QCloudInitiateMultipartUploadRequest new];
@@ -854,15 +854,15 @@ QCloudInitiateMultipartUploadRequest* initrequest = [QCloudInitiateMultipartUplo
         initResult = outputObject;
     }];
     [[QCloudCOSXMLService defaultCOSXML] InitiateMultipartUpload:initrequest];
-    
+
 ```
 
 
-             
-           
-###获取对象meta信息
 
-####方法原型
+
+### 获取对象meta信息
+
+#### 方法原型
 进行文件操作之前，我们需要导入头文件QCloudCOSXML/QCloudCOSXML.h。在此之前您需要完成前文中的STEP-1初始化操作。先生成一个QCloudHeadObjectRequest实例，然后填入一些需要的额外的限制条件，通过并获得内容。具体步骤如下：    
 1.实例化QCloudHeadObjectRequest，填入需要的参数。    
 2.调用QCloudCOSXMLService对象中的HeadObject方法发出请求。    
@@ -874,29 +874,29 @@ QCloudInitiateMultipartUploadRequest* initrequest = [QCloudInitiateMultipartUplo
 | Object  | NSString * | 是    | 对象名          |
 |bucket|NSString * |是|对象所在存储桶的名称|
 |ifModifiedSince|NSString * |是|如果文件修改时间晚于指定时间，才返回文件内容。否则返回 304 (not modified)|
-####示例
+#### 示例
 ```objective-c
 QCloudHeadObjectRequest* headerRequest = [QCloudHeadObjectRequest new];
     headerRequest.object = @“对象名”;
     headerRequest.bucket = @"bucket名";
-    
+
     __block id resultError;
     [headerRequest setFinishBlock:^(NSDictionary* result, NSError *error) {
         resultError = error;
     }];
-    
+
     [[QCloudCOSXMLService defaultCOSXML] HeadObject:headerRequest];
 
 ```
 
 
-###追加文件
+### 追加文件
 Append Object 接口请求可以将一个 Object（文件）以分块追加的方式上传至指定 Bucket 中。Object 属性为 Appendable 时，才能使用 Append Object 接口上传。
 Object 属性可以在 Head Object 操作中查询到，发起 Head Object 请求时，会返回自定义 Header 的『x-cos-object-type』，该 Header 只有两个枚举值：Normal 或者 Appendable。通过 Append Object 操作创建的 Object 类型为 Appendable 文件；通过 Put Object 上传的 Object 是 Normal 文件。
 当 Appendable 的 Object 被执行 Put Object 的请求操作以后，原 Object 被覆盖，属性改变为 Normal 。
 追加上传的 Object 建议大小 1M-5G。如果 Position 的值和当前 Object 的长度不致，COS 会返回 409 错误。如果 Append 一个 Normal 属性的文件，COS 会返回 409 ObjectNotAppendable。
 
-####方法原型
+#### 方法原型
 进行文件操作之前，我们需要导入头文件QCloudCOSXML/QCloudCOSXML.h。在此之前您需要完成前文中的STEP-1初始化操作。先生成一个QCloudAppendObjectRequest实例，然后填入一些需要的额外的限制条件，通过并获得内容。具体步骤如下：    
 1.实例化QCloudAppendObjectRequest，填入需要的参数。    
 2.调用QCloudCOSXMLService对象中的AppendObject方法发出请求。    
@@ -918,10 +918,12 @@ Object 属性可以在 Head Object 操作中查询到，发起 Head Object 请�
 |accessControlList|NSString * |否| 定义 Object 的 ACL 属性。有效值：private，public-read-write，public-read；默认值：private|
 |grantRead|NSString * |否|赋予被授权者读的权限。格式： id=" ",id=" "；当需要给子账户授权时，id="qcs::cam::uin/\<OwnerUin>:uin/\<SubUin>"，当需要给根账户授权时，id="qcs::cam::uin/\<OwnerUin>:uin/\<OwnerUin>"  其中OwnerUin指的是根账户的ID，而SubUin指的是子账户的ID|
 |grantWrite|NSString * |否| 授予被授权者写的权限。格式同上。|
-|grantFullControl|NSString * |否| 授予被授权者读写权限。格式同上。|
-####示例
+|grantFullControl|NSString * |否| 授予被授权者读写权限。格式同上。|   
 
-```objective-c 
+
+
+#### 示例
+```objective-c
  QCloudAppendObjectRequest* put = [QCloudAppendObjectRequest new];
     put.object = [NSUUID UUID].UUIDString;
     put.bucket = @“bucket名”;
@@ -933,6 +935,3 @@ Object 属性可以在 Head Object 操作中查询到，发起 Head Object 请�
     [[QCloudCOSXMLService defaultCOSXML] AppendObject:put];
 
 ```
-
-
-
