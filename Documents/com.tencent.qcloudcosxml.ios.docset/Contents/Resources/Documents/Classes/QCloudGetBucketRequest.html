@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>QCloudGetBucketRequest Class Reference</title>
+
+	<link rel="stylesheet" href="../css/style.css">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
+	<meta name="generator" content="appledoc 2.2.1 (build 1334)">
+</head>
+<body class="appledoc">
+	<header>
+		<div class="container" class="hide-in-xcode">
+			
+			<h1 id="library-title">
+				<a href="../index.html">QCloudCOSXML </a>
+			</h1>
+
+			<p id="developer-home">
+				<a href="../index.html">Tencent</a>
+			</p>
+			
+		</div>
+	</header>
+
+	<aside>
+		<div class="container">
+			<nav>
+				<ul id="header-buttons" role="toolbar">
+					<li><a href="../index.html">Index</a></li>
+<li><a href="../hierarchy.html">Hierarchy</a></li>
+
+					<li id="on-this-page" role="navigation">
+						<label>
+							On This Page
+
+							<div class="chevron">
+								<div class="chevy chevron-left"></div>
+								<div class="chevy chevron-right"></div>
+							</div>
+
+							<select id="jump-to">
+	<option value="top">Jump To&#133;</option>
+	
+
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+
+	
+	
+	<optgroup label="Properties">
+		
+		<option value="//api/name/bucket">bucket</option>
+		
+		<option value="//api/name/delimiter">delimiter</option>
+		
+		<option value="//api/name/encodingType">encodingType</option>
+		
+		<option value="//api/name/marker">marker</option>
+		
+		<option value="//api/name/maxKeys">maxKeys</option>
+		
+		<option value="//api/name/prefix">prefix</option>
+		
+	</optgroup>
+	
+
+	
+
+	
+	
+</select>
+						</label>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+
+	<article>
+		<div id="overview_contents" class="container">
+			<div id="content">
+				<main role="main">
+					<h1 class="title">QCloudGetBucketRequest Class Reference</h1>
+
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<th>Inherits from</th>
+	<td>QCloudBizHTTPRequest</td>
+</tr><tr>
+	<th>Declared in</th>
+	<td>QCloudGetBucketRequest.h<br />QCloudGetBucketRequest.m</td>
+</tr>
+						</tbody></table></div>
+					
+
+                    
+
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						
+
+						
+						
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/bucket" title="bucket"></a>
+	<h3 class="method-title"><code><a href="#//api/name/bucket">&nbsp;&nbsp;bucket</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>存储桶名</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (strong, nonatomic) NSString *bucket</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>存储桶名</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">QCloudGetBucketRequest.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/prefix" title="prefix"></a>
+	<h3 class="method-title"><code><a href="#//api/name/prefix">&nbsp;&nbsp;prefix</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>前缀匹配，用来规定返回的文件前缀地址</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (strong, nonatomic) NSString *prefix</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>前缀匹配，用来规定返回的文件前缀地址</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">QCloudGetBucketRequest.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/delimiter" title="delimiter"></a>
+	<h3 class="method-title"><code><a href="#//api/name/delimiter">&nbsp;&nbsp;delimiter</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>定界符为一个符号，如果有 Prefix，则将 Prefix 到 delimiter 之间的相同路径归为一类，定义为 Common Prefix，然后列出所有 Common Prefix。如果没有 Prefix，则从路径起点开始</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (strong, nonatomic) NSString *delimiter</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>定界符为一个符号，如果有 Prefix，则将 Prefix 到 delimiter 之间的相同路径归为一类，定义为 Common Prefix，然后列出所有 Common Prefix。如果没有 Prefix，则从路径起点开始</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">QCloudGetBucketRequest.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/encodingType" title="encodingType"></a>
+	<h3 class="method-title"><code><a href="#//api/name/encodingType">&nbsp;&nbsp;encodingType</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>规定返回值的编码方式，可选值:url</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (strong, nonatomic) NSString *encodingType</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>规定返回值的编码方式，可选值:url</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">QCloudGetBucketRequest.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/marker" title="marker"></a>
+	<h3 class="method-title"><code><a href="#//api/name/marker">&nbsp;&nbsp;marker</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>默认以UTF-8二进制顺序列出条目，所有列出条目从marker开始</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (strong, nonatomic) NSString *marker</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>默认以UTF-8二进制顺序列出条目，所有列出条目从marker开始</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">QCloudGetBucketRequest.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/maxKeys" title="maxKeys"></a>
+	<h3 class="method-title"><code><a href="#//api/name/maxKeys">&nbsp;&nbsp;maxKeys</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>单次返回的最大条目数量，默认1000</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (assign, nonatomic) int maxKeys</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>单次返回的最大条目数量，默认1000</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">QCloudGetBucketRequest.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+					</div>
+					
+					
+
+                    
+                    
+          
+				</main>
+
+				<footer>
+					<div class="footer-copyright">
+						
+						<p class="copyright">Copyright &copy; 2017 Tencent. All rights reserved. Updated: 2017-08-24</p>
+						
+						
+						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>
+						
+					</div>
+				</footer>
+			</div>
+		</div>
+	</article>
+
+	<script src="../js/script.js"></script>
+</body>
+</html>

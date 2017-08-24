@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>QCloudCORSRule Class Reference</title>
+
+	<link rel="stylesheet" href="../css/style.css">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
+	<meta name="generator" content="appledoc 2.2.1 (build 1334)">
+</head>
+<body class="appledoc">
+	<header>
+		<div class="container" class="hide-in-xcode">
+			
+			<h1 id="library-title">
+				<a href="../index.html">QCloudCOSXML </a>
+			</h1>
+
+			<p id="developer-home">
+				<a href="../index.html">Tencent</a>
+			</p>
+			
+		</div>
+	</header>
+
+	<aside>
+		<div class="container">
+			<nav>
+				<ul id="header-buttons" role="toolbar">
+					<li><a href="../index.html">Index</a></li>
+<li><a href="../hierarchy.html">Hierarchy</a></li>
+
+					<li id="on-this-page" role="navigation">
+						<label>
+							On This Page
+
+							<div class="chevron">
+								<div class="chevy chevron-left"></div>
+								<div class="chevy chevron-right"></div>
+							</div>
+
+							<select id="jump-to">
+	<option value="top">Jump To&#133;</option>
+	
+
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+
+	
+	
+	<optgroup label="Properties">
+		
+		<option value="//api/name/allowedHeader">allowedHeader</option>
+		
+		<option value="//api/name/allowedMethod">allowedMethod</option>
+		
+		<option value="//api/name/allowedOrigin">allowedOrigin</option>
+		
+		<option value="//api/name/exposeHeader">exposeHeader</option>
+		
+		<option value="//api/name/identifier">identifier</option>
+		
+		<option value="//api/name/maxAgeSeconds">maxAgeSeconds</option>
+		
+	</optgroup>
+	
+
+	
+
+	
+	
+</select>
+						</label>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+
+	<article>
+		<div id="overview_contents" class="container">
+			<div id="content">
+				<main role="main">
+					<h1 class="title">QCloudCORSRule Class Reference</h1>
+
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<th>Inherits from</th>
+	<td>NSObject</td>
+</tr><tr>
+	<th>Declared in</th>
+	<td>QCloudCORSRule.h<br />QCloudCORSRule.m</td>
+</tr>
+						</tbody></table></div>
+					
+
+                    
+
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						
+
+						
+						
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/identifier" title="identifier"></a>
+	<h3 class="method-title"><code><a href="#//api/name/identifier">&nbsp;&nbsp;identifier</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>配置规则的ID，可选填</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (strong, nonatomic) NSString *identifier</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>配置规则的ID，可选填</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">QCloudCORSRule.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/allowedMethod" title="allowedMethod"></a>
+	<h3 class="method-title"><code><a href="#//api/name/allowedMethod">&nbsp;&nbsp;allowedMethod</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>允许的 HTTP 操作，枚举值：GET，PUT，HEAD，POST，DELETE</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (strong, nonatomic) NSArray&lt;NSString*&gt; *allowedMethod</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>允许的 HTTP 操作，枚举值：GET，PUT，HEAD，POST，DELETE</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">QCloudCORSRule.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/allowedOrigin" title="allowedOrigin"></a>
+	<h3 class="method-title"><code><a href="#//api/name/allowedOrigin">&nbsp;&nbsp;allowedOrigin</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>允许的访问来源，支持通配符 *
+格式为：协议://域名[:端口]如：<a href="http://www.qq.com">http://www.qq.com</a></p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (strong, nonatomic) NSString *allowedOrigin</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>允许的访问来源，支持通配符 *
+格式为：协议://域名[:端口]如：<a href="http://www.qq.com">http://www.qq.com</a></p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">QCloudCORSRule.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/allowedHeader" title="allowedHeader"></a>
+	<h3 class="method-title"><code><a href="#//api/name/allowedHeader">&nbsp;&nbsp;allowedHeader</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>在发送 OPTIONS 请求时告知服务端，接下来的请求可以使用哪些自定义的 HTTP 请求头部，支持通配符 *</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (strong, nonatomic) NSArray&lt;NSString*&gt; *allowedHeader</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>在发送 OPTIONS 请求时告知服务端，接下来的请求可以使用哪些自定义的 HTTP 请求头部，支持通配符 *</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">QCloudCORSRule.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/maxAgeSeconds" title="maxAgeSeconds"></a>
+	<h3 class="method-title"><code><a href="#//api/name/maxAgeSeconds">&nbsp;&nbsp;maxAgeSeconds</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>设置 OPTIONS 请求得到结果的有效期</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (assign, nonatomic) int maxAgeSeconds</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>设置 OPTIONS 请求得到结果的有效期</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">QCloudCORSRule.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/exposeHeader" title="exposeHeader"></a>
+	<h3 class="method-title"><code><a href="#//api/name/exposeHeader">&nbsp;&nbsp;exposeHeader</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>设置浏览器可以接收到的来自服务器端的自定义头部信息</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (strong, nonatomic) NSString *exposeHeader</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>设置浏览器可以接收到的来自服务器端的自定义头部信息</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">QCloudCORSRule.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+					</div>
+					
+					
+
+                    
+                    
+          
+				</main>
+
+				<footer>
+					<div class="footer-copyright">
+						
+						<p class="copyright">Copyright &copy; 2017 Tencent. All rights reserved. Updated: 2017-08-24</p>
+						
+						
+						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>
+						
+					</div>
+				</footer>
+			</div>
+		</div>
+	</article>
+
+	<script src="../js/script.js"></script>
+</body>
+</html>
