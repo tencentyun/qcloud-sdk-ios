@@ -13,13 +13,17 @@
 @interface QCloudCOSXMLEndPoint : QCloudEndPoint
 /**
  服务地域名称, 目前可用的服务地域名称有：
- 
- *. cn-south        华南
- *. cn-north        华北
- *. cn-east         华东
- *. cn-southwest    西南
- *. sg              新加坡
- 
+ *.ap-beijing-1    北京一区（华北）
+ *.ap-beijing	   北京
+ *.ap-shanghai     上海（华东）
+ *.ap-guangzhou    广州（华南）
+ *.ap-guangzhou-2  广州（视频云）
+ *.ap-chengdu      成都（西南）
+ *.ap-singapore    新加坡
+ *.ap-hongkong     香港
+ *.na-toronto      多伦多
+ *.eu-frankfurt    法兰克福
+ *.cn-north        华北
  */
 @property (nonatomic, copy) QCloudRegion        regionName;
 

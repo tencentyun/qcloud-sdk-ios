@@ -25,7 +25,7 @@
     NSString* scheme = @"https";
     if (!self.useHTTPS) {
         scheme = @"http";
-    }
-    return [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@-%@.%@.%@", scheme, bucket, appID, [self regionName], [self serviceName]]];
+    }    
+    return [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@-%@.cos.%@.%@",scheme,bucket,appID,self.regionName,self.serviceName]];
 }
 @end
