@@ -80,7 +80,7 @@ pod 'QCloudCOSXML','~>5.0.0'
 | 参数名称   | 类型         | 是否必填 | 说明                                       |
 | ------ | ---------- | ---- | ---------------------------------------- |
 | appID  | NSString * | 是    | 项目ID，即APP ID。                            |
-| regionType | QCloudRegionType | 是    | bucket被创建的时候机房区域，比如华南园区：QCloudRegionCNSouth，华北园区：QCloudRegionCNNorth |
+| regionType | QCloudRegionType | 是    | bucket被创建的时候机房区域，比如华南园区：ap-guangzhou |
 
 #### 示例
 
