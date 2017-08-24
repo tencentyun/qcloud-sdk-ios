@@ -1,7 +1,8 @@
 # 腾讯云 存储SDK for iOS
 
 ## 前言  
-您可以在新建项目，配置好SDK或者在已有的项目中集成进SDK，或者先运行下Demo感受下SDK是如何运作的。  下载Demo体验请前点击[Demo下载地址](https://github.com/tencentyun/qcloud-sdk-ios-samples.git)。    
+您可以在新建项目，配置好SDK或者在已有的项目中集成进SDK，或者先运行下Demo感受下SDK是如何运作的。下载Demo体验请前点击[Demo下载地址](https://github.com/tencentyun/qcloud-sdk-ios-samples.git)。  
+
 使用我们的SDK前，您需要配置好开发环境：  
 - Xcode 7 或更新的版本
 - 运行环境为 iOS 8 以上       
