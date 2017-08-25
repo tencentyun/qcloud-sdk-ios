@@ -2,9 +2,10 @@
 
 ### SDK 获取
 
-对象存储服务的 iOS SDK 的下载地址：[iOS SDK](https://github.com/tencentyun/qcloud-sdk-ios.git)
+对象存储服务的 iOS SDK 地址：[iOS SDK](https://github.com/tencentyun/qcloud-sdk-ios.git)    
+需要下载打包好的Framework格式的SDK可以从realease中选择需要的版本进行下载。
 
-更多示例可参考Demo：[iOS Demo](https://github.com/tencentyun/qcloud-sdk-ios-samples.git)
+更多示例可参考Demo：[iOS Demo](https://github.com/tencentyun/qcloud-sdk-ios-samples.git)    
 （本版本SDK基于XML API封装组成）
 
 ### 开发准备
@@ -22,15 +23,14 @@
 在Podfile文件中使用（我们建议您在使用时指定具体的版本号）：
 
 ~~~
-pod 'QCloudCore','~>5.0.0'
-pod 'QCloudCOSXML','~>5.0.0'
+pod 'QCloudCOSXML','~>5.0.1'
 ~~~
 
 ##### 使用打包好的动态库导入
 
 将我们提供的**QCloudCOSXML.framework和QCloudCore.framework**拖入到工程中：
 
-![](http://ericcheungtest-1251668577.cosgz.myqcloud.com/framework%E6%88%AA%E5%9B%BE.png)
+![](http://ericcheung-1253653367.cosgz.myqcloud.com/%E4%B8%A4%E4%B8%AAframework%E6%88%AA%E5%9B%BE.png)
 
 并添加以下依赖库：
 
@@ -43,11 +43,24 @@ pod 'QCloudCOSXML','~>5.0.0'
 
 在 Build Settings 中设置 Other Linker Flags，加入参数 -ObjC。
 
-![参数配置](https://mccdn.qcloud.com/static/img/58327ba5d83809c77da158ff95627ef7/image.png)
+![参数配置](http://ericcheung-1253653367.cosgz.myqcloud.com/WechatIMG24.jpeg)
 
-我们的SDK使用的是HTTP协议。为了在iOS系统上可以运行，您需要开启允许通过HTTP传输。具体操作步骤是在工程info.plist文件中添加App Transport Security Settings 类型，然后在App Transport Security Settings下添加Allow Arbitrary Loads 类型Boolean,值设为YES。
-
-
+我们的SDK使用的是HTTP协议。为了在iOS系统上可以运行，您需要开启允许通过HTTP传输。具体操作步骤是在工程info.plist文件中添加App Transport Security Settings 类型，然后在App Transport Security Settings下添加Allow Arbitrary Loads 类型Boolean,值设为YES。或者您可以在集成SDK的APP的info.plist中需要添加如下代码：
+```
+<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>myqcloud.com</key>
+			<dict>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+				<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
+```
 
 ### 初始化
 
@@ -64,7 +77,6 @@ pod 'QCloudCOSXML','~>5.0.0'
 ```
  QCloudServiceConfiguration* configuration = [QCloudServiceConfiguration new];
  configuration.appID = @""//项目ID;
- configuration.regionType = QCloudRegionCNNorth;
 ```
 
 ```
@@ -75,14 +87,14 @@ pod 'QCloudCOSXML','~>5.0.0'
 + (QCloudCOSTransferMangerService*) registerDefaultCOSTransferMangerWithConfiguration:(QCloudServiceConfiguration*)configuration;
 ```
 
-#### 参数说明
+#### QCloudServiceConfiguration参数说明
 
 | 参数名称   | 类型         | 是否必填 | 说明                                       |
 | ------ | ---------- | ---- | ---------------------------------------- |
 | appID  | NSString * | 是    | 项目ID，即APP ID。                            |
-| regionType | QCloudRegionType | 是    | bucket被创建的时候机房区域，比如华南园区：ap-guangzhou |
 
-#### 示例
+
+#### 初始化示例
 
 ```objective-c
 //AppDelegate.m
@@ -91,7 +103,7 @@ pod 'QCloudCOSXML','~>5.0.0'
  QCloudServiceConfiguration* configuration = [QCloudServiceConfiguration new];
     configuration.appID = @"1234567";
     configuration.signatureProvider = self;
-    configuration.regionType = QCloudRegionCNNorth;
+    configuration.regionName = @"ap-guangzhou";//填入园区名字，具体的园区可见代码注释
     configuration.endPoint = [[QCloudEndPoint alloc] initWithRegionType:currentRegion serviceType:QCloudServiceCOSXML useSSL:NO];
     [QCloudCOSXMLService registerDefaultCOSXMLWithConfiguration:configuration];
     [QCloudCOSTransferMangerService registerDefaultCOSTransferMangerWithConfiguration:configuration];
