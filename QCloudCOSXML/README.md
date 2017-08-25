@@ -489,7 +489,7 @@ SDK中的请求需要用到签名，以确访问的用户的身份，也保障�
 #### 返回结果QCloudBucketLocationConstraint参数说明
 | 参数名称   | 类型        | 说明                                 |
 | ------ | ---------- |  ---------------------------------- |
-| locationConstraint  |NSString* |说明 Bucket 所在区域，枚举值：cn-north，cn-east，sg，cn-southwest，cn-south|
+| locationConstraint  |NSString* |说明 Bucket 所在区域|
 
 
 
