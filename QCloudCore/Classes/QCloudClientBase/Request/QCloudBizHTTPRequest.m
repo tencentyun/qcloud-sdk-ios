@@ -102,11 +102,10 @@ QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilizerBlock = ^(NSHTT
     return [QCloudSignatureFields new];
 }
 
-- (NSURLRequest*) prepareInvokeURLRequest:(NSURLRequest *)urlRequest error:(NSError* __autoreleasing*)error
+- (BOOL) prepareInvokeURLRequest:(NSMutableURLRequest *)urlRequest error:(NSError* __autoreleasing*)error
 {
     
     NSAssert(self.runOnService, @"RUN ON SERVICE is nil%@", self.runOnService);
-    NSMutableURLRequest* mURLRequest = [urlRequest mutableCopy];
     __block dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     __block NSError* localError;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -115,7 +114,7 @@ QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilizerBlock = ^(NSHTT
                 localError = error;
             } else {
                 if (signature.signature) {
-                    [mURLRequest setValue:signature.signature forHTTPHeaderField:@"Authorization"];
+                    [urlRequest setValue:signature.signature forHTTPHeaderField:@"Authorization"];
                 } else {
                     // null authorization
                 }
@@ -129,9 +128,9 @@ QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilizerBlock = ^(NSHTT
         if (NULL != error) {
             *error = localError;
         }
-        return nil;
+        return NO;
     } else {
-        return mURLRequest;
+        return YES;
     }
 }
 - (void) loadQCloudSignature {

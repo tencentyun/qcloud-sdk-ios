@@ -31,7 +31,7 @@ extern NSString* const kQCloudHttpDNSHost;
       @param request 需要被重定向的URLRequest
       @return 如果改URLRequest原始指向的URL中的host对应的IP已经被解析了，则进行重定向操作，如果没有直接返回原始URLReqest
  */
-- (NSURLRequest*) resolveURLRequestIfCan:(NSURLRequest*)request;
+- (NSMutableURLRequest*) resolveURLRequestIfCan:(NSMutableURLRequest*)request;
 
 /**
    判断一个IP是否是被解析出来，且被信任的

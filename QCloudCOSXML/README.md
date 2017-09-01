@@ -246,6 +246,42 @@ SDK中的请求需要用到签名，以确访问的用户的身份，也保障�
 
 ```
 
+其实到这一步，您已经可以生成签名正常使用SDK里面的接口。但为了方便您实现临时签名，从服务器端获取tempSecretKey等临时签名需要的信息，我们提供了脚手架工具可供使用。您可以依照前面的代码来生成签名，也可以通过我们的脚手架工具QCloudCredentailFenceQueue来方便地获取临时签名。QCloudCredentailFenceQueue提供了栅栏机制，也就是说您使用QCloudCredentailFenceQueue去获取签名的话，所有需要获取签名的请求会等待签名完成后再执行，免去了自己管理异步过程的烦恼。   
+使用QCloudCredentailFenceQueue，我们需要先生成一个实例。
+```objective-c
+//AppDelegate.m
+//AppDelegate需遵循QCloudCredentailFenceQueueDelegate协议
+//
+- (BOOL)application:(UIApplication * )application didFinishLaunchingWithOptions:(NSDictionary * )launchOptions {
+    // init step
+    self.credentialFenceQueue = [QCloudCredentailFenceQueue new];
+    self.credentialFenceQueue.delegate = self;
+    return YES;
+}
+```   
+然后调用QCloudCredentailFenceQueue的类需要遵循QCloudCredentailFenceQueueDelegate并实现协议内定义的方法：
+```objective-c
+- (void) fenceQueue:(QCloudCredentailFenceQueue * )queue requestCreatorWithContinue:(QCloudCredentailFenceQueueContinue)continueBlock
+```
+当通过QCloudCredentailFenceQueue去获取签名时，所有需要签名的SDK里的请求都会等待该协议定义的方法内拿到了签名所需的参数并生成有效的签名后执行。请看以下例子
+```objective-c
+//AppDelegate.m
+- (void) fenceQueue:(QCloudCredentailFenceQueue * )queue requestCreatorWithContinue:(QCloudCredentailFenceQueueContinue)continueBlock
+{
+   QCloudCredential* credential = [QCloudCredential new];
+	 //在这里可以同步过程从服务器获取临时签名需要的secretID,secretKey,expiretionDate和token参数
+   credential.secretID = @"****";
+   credential.secretKey = @"****";
+   credential.experationDate = [NSDate dateWithTimeIntervalSince1970:1504183628];
+   credential.token = @"****";
+   QCloudAuthentationV5Creator* creator = [[QCloudAuthentationV5Creator alloc] initWithCredential:credential];
+   continueBlock(creator, nil);
+}
+
+```   
+至此，就可以通过我们提供的脚手架工具来生成临时签名了。当然您也可以自己去实现具体的签名过程
+
+
 
 
 ## 存储桶操作

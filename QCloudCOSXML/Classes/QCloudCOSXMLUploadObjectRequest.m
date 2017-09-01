@@ -431,7 +431,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     if (NULL != _queueSource) {
         dispatch_source_cancel(_queueSource);
     }
-    for (QCloudBizHTTPRequest* request  in self.requestCacheArray) {
+    for (QCloudBizHTTPRequest* request  in [self.requestCacheArray copy]) {
         [request cancel];
     }
 }

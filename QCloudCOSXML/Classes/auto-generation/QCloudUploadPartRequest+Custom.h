@@ -29,5 +29,5 @@
 #import <Foundation/Foundation.h>
 #import "QCloudUploadPartRequest.h"
 @interface QCloudUploadPartRequest (Custom)
-- (BOOL) customBuildRequestData:(NSError *__autoreleasing *)error;
+
 @end

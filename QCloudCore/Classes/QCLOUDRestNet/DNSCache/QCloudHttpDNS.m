@@ -89,7 +89,7 @@ BOOL QCloudCheckIPVaild(NSString* ip) {
     }
     return nil;
 }
-- (NSURLRequest*) resolveURLRequestIfCan:(NSURLRequest*)request
+- (NSMutableURLRequest*) resolveURLRequestIfCan:(NSMutableURLRequest*)request
 {
     if (!request) {
         return request;

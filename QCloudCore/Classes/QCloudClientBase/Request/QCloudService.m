@@ -100,7 +100,7 @@
     return YES;
 }
 
-- (void) loadAuthorizationForBiz:(QCloudBizHTTPRequest*)bizRequest urlRequest:(NSURLRequest*)urlrequest compelete:(QCloudHTTPAuthentationContinueBlock)cotinueBlock
+- (void) loadAuthorizationForBiz:(QCloudBizHTTPRequest*)bizRequest urlRequest:(NSMutableURLRequest*)urlrequest compelete:(QCloudHTTPAuthentationContinueBlock)cotinueBlock
 {
     if (cotinueBlock) {
         cotinueBlock(nil, nil);

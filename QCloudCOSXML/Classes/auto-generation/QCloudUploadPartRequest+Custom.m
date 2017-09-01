@@ -27,13 +27,6 @@
 #import "QCloudUploadPartRequest+Custom.h"
 #import "QCloudUploadpartRequestRetryHandler.h"
 @implementation  QCloudUploadPartRequest (Custom)
-- (NSMutableURLRequest*) cachedBuildURLRequest:(NSError* __autoreleasing*)error
-{
-    NSMutableURLRequest* request = [super cachedBuildURLRequest:error];
-    request.timeoutInterval = 60;
-    return request;
-    
-}
 
 - (QCloudHTTPRetryHanlder*)retryPolicy {
     QCloudUploadPartRequestRetryHandler* retryHandler =  [[QCloudUploadPartRequestRetryHandler alloc] initWithMaxCount:3 sleepTime:1];

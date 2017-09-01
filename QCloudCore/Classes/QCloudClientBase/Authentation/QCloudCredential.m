@@ -11,13 +11,10 @@
 @implementation QCloudCredential
 - (BOOL) valid
 {
-    if (!self.validBeginDate) {
-        return YES;
-    }
     if (!self.experationDate) {
         return YES;
     }
-    if ([[NSDate date] compare:self.experationDate] == NSOrderedAscending) {
+    if ([[NSDate date] compare:self.experationDate] == NSOrderedDescending) {
         return NO;
     }
     return YES;

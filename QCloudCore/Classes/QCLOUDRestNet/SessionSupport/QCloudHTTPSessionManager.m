@@ -340,20 +340,18 @@ NSString* TaskMapKey(NSURLSessionTask* task) {
 - (void) executeRestHTTPReqeust:(QCloudHTTPRequest*)httpRequest
 {
     [httpRequest willStart];
-    
-
     if (![[QCloudNetEnv shareEnv] isReachable] ) {
         NSError* nonetwork = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeNoNetwork message:@"当前无网络连接"] ;
         [httpRequest onError:nonetwork];
         return;
     }
     NSError* error;
-    NSURLRequest* urlRequest = [httpRequest cachedBuildURLRequest:&error];
+    NSMutableURLRequest* urlRequest = [[httpRequest buildURLRequest:&error] mutableCopy];
     if (error) {
         [httpRequest onError:error];
         return;
     }
-    NSURLRequest* transformRequest = urlRequest;
+    NSMutableURLRequest* transformRequest = urlRequest;
     if (httpRequest.requestSerializer.HTTPDNSPrefetch) {
         transformRequest = [[QCloudHttpDNS shareDNS] resolveURLRequestIfCan:urlRequest];
         if (error) {
@@ -426,8 +424,7 @@ NSString* TaskMapKey(NSURLSessionTask* task) {
     
     // 准备发送请求，最后一次机会修改将要发送的HTTP请求
     NSError* parepareError;
-    transformRequest = [httpRequest prepareInvokeURLRequest:transformRequest error:&parepareError];
-    if (parepareError) {
+    if (![httpRequest prepareInvokeURLRequest:transformRequest error:&parepareError]) {
         [httpRequest onError:parepareError];
         return;
     }

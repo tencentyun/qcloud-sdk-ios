@@ -33,4 +33,7 @@
 #import "QCloudEncryt.h"
 #import "QCloudWeakProxy.h"
 #import "QCloudClientContext.h"
+#import "QCloudAuthentationV5Creator.h"
+#import "QCloudAuthentationV4Creator.h"
+#import "QCloudCredentailFenceQueue.h"
 #endif /* QCloudCore_h */

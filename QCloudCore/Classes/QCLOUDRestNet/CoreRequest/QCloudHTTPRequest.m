@@ -128,29 +128,6 @@
     _cachedURLRequestBuildError = nil;
 }
 
-- (NSMutableURLRequest*) cachedBuildURLRequest:(NSError* __autoreleasing*)error
-{
-    NSError* localError = nil;
-    if (self.cachedURLRequestBuildError) {
-        if (NULL != error) {
-            *error = localError;
-        }
-        return nil;
-    }
-    if (_cachedURLRequest) {
-        return _cachedURLRequest;
-    } else {
-        _cachedURLRequest = [[self buildURLRequest:&localError] mutableCopy];
-        if (localError) {
-            if (NULL != error) {
-                *error = localError;
-            }
-        }
-        return _cachedURLRequest;
-    }
-}
-
-
 - (NSURLRequest*) buildURLRequest:(NSError* __autoreleasing*)error
 {
     [self.benchMarkMan benginWithKey:kRNBenchmarkRTT];
@@ -218,9 +195,9 @@
     }
 }
 
-- (NSURLRequest*) prepareInvokeURLRequest:(NSURLRequest *)urlRequest error:(NSError* __autoreleasing*)error
+- (BOOL) prepareInvokeURLRequest:(NSMutableURLRequest*)urlRequest error:(NSError* __autoreleasing*)error
 {
-    return urlRequest;
+    return YES;
 }
 
 - (void) cancel

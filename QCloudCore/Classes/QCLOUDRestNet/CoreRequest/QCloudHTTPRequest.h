@@ -78,8 +78,6 @@ typedef void(^QCloudHTTPRequestConfigure)(QCloudRequestSerializer* requestSerial
 
 - (void) setConfigureBlock:(void(^)(QCloudRequestSerializer* requestSerializer, QCloudResponseSerializer* responseSerializer))configBlock;
 
-- (void) clearBuildCache;
-- (NSMutableURLRequest*) cachedBuildURLRequest:(NSError* __autoreleasing*)error;
 /**
  构架RequestData，加载自定义的参数
  */
@@ -119,7 +117,7 @@ typedef void(^QCloudHTTPRequestConfigure)(QCloudRequestSerializer* requestSerial
 
 
 
-- (NSURLRequest*) prepareInvokeURLRequest:(NSURLRequest *)urlRequest error:(NSError* __autoreleasing*)error;
+- (BOOL ) prepareInvokeURLRequest:(NSMutableURLRequest*)urlRequest error:(NSError* __autoreleasing*)error;
 @end
 
 

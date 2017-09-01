@@ -68,9 +68,8 @@
     return retval;
 }
 
-- (QCloudSignature*) signatureForFields:(QCloudSignatureFields*)fields
+- (QCloudSignature*) signatureForData:(QCloudSignatureFields*)fields
 {
-
     NSMutableString* origin = [NSMutableString new];
     void(^Append)(NSString* key, NSString* value) = ^(NSString* key, NSString* value) {
         if (origin.length > 0) {

@@ -93,6 +93,12 @@ QCloudResponseSerializerBlock QCloudAcceptRespnseCodeBlock(NSSet* acceptCode, Cl
                     } else {
                         userInfo = map;
                     }
+                } else if ([contentType.lowercaseString containsString:@"application/xml"]) {
+                    QCloudXMLDictionaryParser* parser = [QCloudXMLDictionaryParser new];
+                    NSDictionary* output = [parser dictionaryWithData:inputData];
+                    if (output) {
+                        userInfo = output;
+                    }
                 }
             }
             

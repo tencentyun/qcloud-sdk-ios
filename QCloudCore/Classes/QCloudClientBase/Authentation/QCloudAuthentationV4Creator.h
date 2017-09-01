@@ -8,7 +8,10 @@
 
 #import "QCloudAuthentationCreator.h"
 
-@interface QCloudAuthentationV4Creator : QCloudAuthentationCreator
-- (QCloudSignature*) signatureForFields:(QCloudSignatureFields*)fields;
 
+/**
+ COS V4版本签名创建器
+ */
+@interface QCloudAuthentationV4Creator : QCloudAuthentationCreator
+- (QCloudSignature*) signatureForData:(QCloudSignatureFields*)fields;
 @end

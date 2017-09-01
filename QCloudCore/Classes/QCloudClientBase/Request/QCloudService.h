@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) loadCOSXMLAuthorizationForBiz:(QCloudBizHTTPRequest *)request urlRequest:(NSURLRequest *)urlrequest compelete:(QCloudHTTPAuthentationContinueBlock)cotinueBlock;
 - (void) loadCOSV4AuthorizationForBiz:(QCloudBizHTTPRequest *)request urlRequest:(NSURLRequest *)urlrequest compelete:(QCloudHTTPAuthentationContinueBlock)cotinueBlock;
 
-- (void) loadAuthorizationForBiz:(QCloudBizHTTPRequest*)bizRequest urlRequest:(NSURLRequest*)urlrequest compelete:(QCloudHTTPAuthentationContinueBlock)cotinueBlock;
+- (void) loadAuthorizationForBiz:(QCloudBizHTTPRequest*)bizRequest urlRequest:(NSMutableURLRequest*)urlrequest compelete:(QCloudHTTPAuthentationContinueBlock)cotinueBlock;
 //
 - (BOOL) fillCommonParamtersForRequest:(QCloudBizHTTPRequest *)request error:(NSError* __autoreleasing*)error;
 - (QCloudSignatureFields*) signatureFiledsForRequest:(QCloudBizHTTPRequest*)request;

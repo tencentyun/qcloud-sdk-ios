@@ -27,6 +27,6 @@ typedef void(^QCloudHTTPAuthentationContinueBlock)(QCloudSignature* signature, N
  */
 - (void) signatureWithFields:(QCloudSignatureFields*)fileds
                      request:(QCloudBizHTTPRequest*)request
-                  urlRequest:(NSURLRequest*)urlRequst
+                  urlRequest:(NSMutableURLRequest*)urlRequst
                     compelete:(QCloudHTTPAuthentationContinueBlock)continueBlock;
 @end

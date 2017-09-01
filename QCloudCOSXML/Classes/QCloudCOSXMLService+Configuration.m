@@ -44,7 +44,7 @@
     return self;
 }
 
-- (void) loadAuthorizationForBiz:(QCloudBizHTTPRequest *)bizRequest urlRequest:(NSURLRequest *)urlrequest compelete:(QCloudHTTPAuthentationContinueBlock)cotinueBlock
+- (void) loadAuthorizationForBiz:(QCloudBizHTTPRequest *)bizRequest urlRequest:(NSMutableURLRequest *)urlrequest compelete:(QCloudHTTPAuthentationContinueBlock)cotinueBlock
 {
     [self loadCOSXMLAuthorizationForBiz:bizRequest urlRequest:urlrequest compelete:cotinueBlock];
 }
