@@ -20,6 +20,7 @@
 #import "QCloudXMLDictionary.h"
 #import "QCloudEncryt.h"
 #import "QCloudFileOffsetBody.h"
+#import "QCloudURLHelper.h"
 NSString* const HTTPMethodPOST = @"POST";
 NSString* const HTTPMethodGET = @"GET";
 NSString* const HTTPHeaderHOST = @"HOST";
@@ -231,20 +232,31 @@ QCloudRequestSerializerBlock QCloudFuseMultiFormData = ^(NSMutableURLRequest* re
 };
 
 
-
-QCloudRequestSerializerBlock QCloudURLFuseSimple = ^(NSMutableURLRequest* request, QCloudRequestData* data, NSError* __autoreleasing*error) {
-    NSString* path =  QCloudPathJoin(data.serverURL, data.URIMethod);
-    if (data.URIComponents.count) {
-        for(int i = 0; i < data.URIComponents.count; i++) {
-            NSString* component = data.URIComponents[i];
-            if (component.length > 0) {
-                path = QCloudPathJoin(path, component);
-            }
+NSString* QCloudURLFuseAllPathComponents(NSArray* componets)
+{
+    NSString* path = @"";
+    for (NSString* com  in componets) {
+        if (com.length > 0) {
+            path = QCloudPathJoin(path, com);
         }
     }
+    path = QCloudPercentEscapedStringFromString(path);
+    return path;
+}
+
+QCloudRequestSerializerBlock QCloudURLFuseSimple = ^(NSMutableURLRequest* request, QCloudRequestData* data, NSError* __autoreleasing*error) {
+    NSMutableArray* coms = [NSMutableArray new];
+    if(data.URIMethod.length) {
+        [coms addObject:data.URIMethod];
+    }
+    if (data.URIComponents.count) {
+        [coms addObjectsFromArray:data.URIComponents];
+    }
+    NSString* path = QCloudURLFuseAllPathComponents(coms);
+    path =  QCloudPathJoin(data.serverURL, path);
     NSURL* url = [NSURL URLWithString:path];
     if (nil == url) {
-        url = [NSURL URLWithString:QCloudEncodeURL(path)];
+        url = [NSURL URLWithString:QCloudURLEncodeUTF8(path)];
     }
     NSMutableURLRequest* urlRequest = [[NSMutableURLRequest alloc] initWithURL:url];
     return urlRequest;
@@ -297,20 +309,20 @@ QCloudRequestSerializerBlock QCloudURLFuseWithURLEncodeParamters = ^(NSMutableUR
 
 
 QCloudRequestSerializerBlock QCloudURLFuseURIMethodASURLParamters = ^(NSMutableURLRequest* request, QCloudRequestData* data, NSError* __autoreleasing*error) {
+    
     NSString* urlStr = nil;
     if (request.URL.absoluteString.length > 0) {
         urlStr = request.URL.absoluteString;
     } else {
         urlStr = data.serverURL;
+        NSMutableArray* coms = [NSMutableArray new];
         if (data.URIComponents.count) {
-            for(int i = 0; i < data.URIComponents.count; i++) {
-                NSString* component = data.URIComponents[i];
-                if (component.length > 0) {
-                    urlStr = QCloudPathJoin(urlStr, component);
-                }
-            }
+            [coms addObjectsFromArray:data.URIComponents];
         }
+        NSString* path = QCloudURLFuseAllPathComponents(coms);
+        urlStr = QCloudPathJoin(urlStr, path);
     }
+    
     NSMutableDictionary* methodParamters = [NSMutableDictionary new];
     if (data.URIMethod) {
         methodParamters[data.URIMethod] = @"";

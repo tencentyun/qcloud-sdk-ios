@@ -33,6 +33,8 @@ QCloudLogError( @"Caught \"%@\" with reason \"%@\"%@", \
 exception.name, exception, \
 [exception callStackSymbols] ? [NSString stringWithFormat:@":\n%@.", [exception callStackSymbols]] : @"")
 
+#define QCloudLogTrance()\
+QCloudLog(QCloudLogLevelDebug,@"%@",[NSThread callStackSymbols])
 @interface QCloudLogger : NSObject
 
 

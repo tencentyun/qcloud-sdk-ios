@@ -20,10 +20,10 @@
 您可以通过cocoapods或者下载打包好的动态库的方式来集成SDK。在这里我们推荐您使用cocoapods的方式来进行导入。
 ##### 使用Cocoapods导入(推荐)
 
-在Podfile文件中使用（我们建议您在使用时指定具体的版本号）：
+在Podfile文件中使用：
 
 ~~~
-pod 'QCloudCOSXML','5.0.1'
+pod 'QCloudCOSXML'
 ~~~
 
 ##### 使用打包好的动态库导入
@@ -101,13 +101,16 @@ pod 'QCloudCOSXML','5.0.1'
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
  QCloudServiceConfiguration* configuration = [QCloudServiceConfiguration new];
-    configuration.appID = @"1234567";
-    configuration.signatureProvider = self;
-    configuration.regionName = @"ap-guangzhou";//填入园区名字，具体的园区可见代码注释
-    configuration.endPoint = [[QCloudEndPoint alloc] initWithRegionType:currentRegion serviceType:QCloudServiceCOSXML useSSL:NO];
-    [QCloudCOSXMLService registerDefaultCOSXMLWithConfiguration:configuration];
-    [QCloudCOSTransferMangerService registerDefaultCOSTransferMangerWithConfiguration:configuration];
-    return YES
+     QCloudServiceConfiguration* configuration = [QCloudServiceConfiguration new];
+     configuration.appID = @"*****";
+     configuration.signatureProvider = self;
+     QCloudCOSXMLEndPoint* endpoint = [[QCloudCOSXMLEndPoint alloc] init];
+     endpoint.regionName = @"ap-beijing";//服务地域名称，可用的地域请参考注释
+     configuration.endpoint = endpoint;
+
+     [QCloudCOSXMLService registerDefaultCOSXMLWithConfiguration:configuration];
+     [QCloudCOSTransferMangerService registerDefaultCOSTransferMangerWithConfiguration:configuration];
+
 }
 
 ```
@@ -123,14 +126,15 @@ pod 'QCloudCOSXML','5.0.1'
 ```objective-c
 //AppDelegate.m
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+	QCloudServiceConfiguration* configuration = [QCloudServiceConfiguration new];
+	configuration.appID = @"*****";
+	configuration.signatureProvider = self;
+	QCloudCOSXMLEndPoint* endpoint = [[QCloudCOSXMLEndPoint alloc] init];
+	endpoint.regionName = @"ap-beijing";//服务地域名称，可用的地域请参考注释
+	configuration.endpoint = endpoint;
 
-QCloudServiceConfiguration* configuration = [QCloudServiceConfiguration new];
-configuration.appID = @"1234567";
-configuration.signatureProvider = self;
-configuration.regionType = QCloudRegionCNNorth;
-configuration.endPoint = [[QCloudEndPoint alloc] initWithRegionType:currentRegion serviceType:QCloudServiceCOSXML useSSL:NO];
-[QCloudCOSXMLService registerDefaultCOSXMLWithConfiguration:configuration];
-[QCloudCOSTransferMangerService registerDefaultCOSTransferMangerWithConfiguration:configuration];
+	[QCloudCOSXMLService registerDefaultCOSXMLWithConfiguration:configuration];
+	[QCloudCOSTransferMangerService registerDefaultCOSTransferMangerWithConfiguration:configuration];
 }
 ```
 
