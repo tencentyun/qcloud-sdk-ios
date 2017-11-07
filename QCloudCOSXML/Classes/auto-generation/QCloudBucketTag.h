@@ -30,7 +30,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 @interface QCloudBucketTag : NSObject
+/**
+tag的key
+*/
 @property (strong, nonatomic) NSString *key;
+/**
+tag的值
+*/
 @property (strong, nonatomic) NSString *value;
 @end
 NS_ASSUME_NONNULL_END

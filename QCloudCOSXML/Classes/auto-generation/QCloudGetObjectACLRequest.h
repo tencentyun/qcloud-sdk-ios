@@ -31,7 +31,7 @@
 NS_ASSUME_NONNULL_BEGIN
 @interface QCloudGetObjectACLRequest : QCloudBizHTTPRequest
 /**
- 存储桶名 
+ 存储桶名
 */
 @property (strong, nonatomic) NSString *bucket;
 /**

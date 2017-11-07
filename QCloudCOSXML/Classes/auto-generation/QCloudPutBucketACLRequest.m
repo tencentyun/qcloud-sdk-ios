@@ -53,13 +53,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) configureReuqestSerializer:(QCloudRequestSerializer *)requestSerializer  responseSerializer:(QCloudResponseSerializer *)responseSerializer
 {
     NSArray* customRequestSerilizers = @[
-                                        QCloudURLFuseURIMethodASURLParamters,
-                                        QCloudURLFuseWithXMLParamters,
+                                        QCloudURLFuseSimple,
                                         ];
 
     NSArray* responseSerializers = @[
                                     QCloudAcceptRespnseCodeBlock([NSSet setWithObjects:@(200), @(201), @(202), @(203), @(204), @(205), @(206), @(207), @(208), @(226), nil], nil),
-
 
                                     ];
     [requestSerializer setSerializerBlocks:customRequestSerilizers];

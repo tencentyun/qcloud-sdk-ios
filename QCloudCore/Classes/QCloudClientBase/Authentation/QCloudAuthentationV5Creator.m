@@ -14,6 +14,7 @@
 #import "QCloudRequestSerializer.h"
 #import "NSString+QCloudSHA.h"
 #import <CommonCrypto/CommonDigest.h>
+#import "QCloudLogger.h"
 @implementation QCloudAuthentationV5Creator
 
 - (QCloudSignature*) signatureForData:(NSMutableURLRequest *)urlrequest

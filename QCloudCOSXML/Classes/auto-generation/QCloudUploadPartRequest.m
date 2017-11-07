@@ -35,6 +35,7 @@
 #import "QCloudSignatureFields.h"
 #import <QCloudCore/QCloudCore.h>
 #import <QCloudCore/QCloudServiceConfiguration_Private.h>
+#import "QCloudUploadPartRequest+Custom.h"
 #import "QCloudUploadPartResult.h"
 
 
@@ -43,8 +44,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) dealloc
 {
 }
-
-
 -  (instancetype) init
 {
     self = [super init];
@@ -73,6 +72,7 @@ NS_ASSUME_NONNULL_BEGIN
 
     requestSerializer.HTTPMethod = @"put";
 }
+
 
 
 - (BOOL) buildRequestData:(NSError *__autoreleasing *)error
@@ -112,11 +112,10 @@ NS_ASSUME_NONNULL_BEGIN
     NSMutableArray* __pathComponents = [NSMutableArray arrayWithArray:self.requestData.URIComponents];
     if(self.object) [__pathComponents addObject:self.object];
     self.requestData.URIComponents = __pathComponents;
+    if (![self customBuildRequestData:error]) return NO;
     self.requestData.directBody = self.body;
     return YES;
 }
-
-
 - (void) setFinishBlock:(void (^)(QCloudUploadPartResult* result, NSError * error))QCloudRequestFinishBlock
 {
     [super setFinishBlock:QCloudRequestFinishBlock];

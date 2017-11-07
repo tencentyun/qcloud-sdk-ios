@@ -52,11 +52,11 @@ NS_ASSUME_NONNULL_BEGIN
 */
 @property (assign, nonatomic) int maxUploads;
 /**
-列出条目从该 key 值开始	
+列出条目从该 key 值开始
 */
 @property (strong, nonatomic) NSString *keyMarker;
 /**
-列出条目从该 UploadId 值开始	
+列出条目从该 UploadId 值开始
 */
 @property (strong, nonatomic) NSString *uploadIDMarker;
 

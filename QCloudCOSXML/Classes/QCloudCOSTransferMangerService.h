@@ -38,9 +38,9 @@
 - (int) performRequest:(QCloudBizHTTPRequest *)httpRequst withFinishBlock:(QCloudRequestFinishBlock)block NS_UNAVAILABLE;
 
 #pragma Factory
-+ (QCloudCOSTransferMangerService*) defaultCOSTRANSFERMANGER;
++ (QCloudCOSTransferMangerService*) defaultCOSTransferManager;
 + (QCloudCOSTransferMangerService*) costransfermangerServiceForKey:(NSString*)key;
-+ (QCloudCOSTransferMangerService*) registerDefaultCOSTransferMangerWithConfiguration:(QCloudServiceConfiguration*)configuration;
++ (QCloudCOSTransferMangerService*) registerdefaultCOSTransferManagerWithConfiguration:(QCloudServiceConfiguration*)configuration;
 + (QCloudCOSTransferMangerService*) registerCOSTransferMangerWithConfiguration:(QCloudServiceConfiguration*)configuration withKey:(NSString*)key;
 
 - (void) UploadObject:(QCloudCOSXMLUploadObjectRequest*)upload;

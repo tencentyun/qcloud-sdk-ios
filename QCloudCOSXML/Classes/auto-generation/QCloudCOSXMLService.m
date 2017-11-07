@@ -44,6 +44,7 @@
 #import "QCloudCompleteMultipartUploadRequest.h"
 #import "QCloudAbortMultipfartUploadRequest.h"
 #import "QCloudGetObjectRequest.h"
+#import "QCloudPutBucketRequest.h"
 #import "QCloudGetBucketRequest.h"
 #import "QCloudGetBucketACLRequest.h"
 #import "QCloudGetBucketCORSRequest.h"
@@ -160,6 +161,10 @@ static QCloudCOSXMLService* COSXMLService = nil;
 {
     [super performRequest:request];
 }
+- (void) PutBucket:(QCloudPutBucketRequest*)request
+{
+    [super performRequest:request];
+}
 - (void) GetBucket:(QCloudGetBucketRequest*)request
 {
     [super performRequest:request];
@@ -197,6 +202,10 @@ static QCloudCOSXMLService* COSXMLService = nil;
 {
     [super performRequest:request];
 }
+- (void) PutObjectCopy:(QCloudPutObjectRequest*)request
+{
+    [super performRequest:request];
+}
 - (void) PutBucketTagging:(QCloudPutBucketTaggingRequest*)request
 {
     [super performRequest:request];
@@ -211,6 +220,10 @@ static QCloudCOSXMLService* COSXMLService = nil;
     [super performRequest:request];
 }
 - (void) DeleteBucketTagging:(QCloudDeleteBucketTaggingRequest*)request
+{
+    [super performRequest:request];
+}
+- (void) DeleteBucket:(QCloudDeleteBucketRequest*)request
 {
     [super performRequest:request];
 }

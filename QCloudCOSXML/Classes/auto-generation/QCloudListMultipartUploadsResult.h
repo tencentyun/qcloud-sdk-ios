@@ -55,6 +55,9 @@ NS_ASSUME_NONNULL_BEGIN
 定界符为一个符号，对 Object 名字包含指定前缀且第一次出现 delimiter 字符之间的 Object 作为一组元素：common prefix。如果没有 prefix，则从路径起点开始
 */
 @property (strong, nonatomic) NSString *delimiter;
+/*
+文件是否有被截断
+*/
 @property (strong, nonatomic) NSString *isTruncated;
 @property (strong, nonatomic) NSArray<QCloudListMultipartUploadContent*> *uploads;
 @end

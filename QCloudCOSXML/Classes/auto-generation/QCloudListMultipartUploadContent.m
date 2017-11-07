@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSDictionary *)modelCustomPropertyMapper
 {
-  return @{ 
+  return @{
       @"key" :@"Key",
       @"uploadID" :@"UploadId",
       @"storeageClass" :@"StorageClass",

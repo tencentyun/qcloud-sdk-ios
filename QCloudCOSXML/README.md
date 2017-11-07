@@ -66,11 +66,8 @@ pod 'QCloudCOSXML'
 
 在使用SDK的功能之前，我们需要导入一些必要的头文件和进行一些初始化工作。
 
-引入上传 SDK 的头文件 *QCloudCore/QCloudCore.h,     
- QCloudCore/QCloudCredential.h,      
- QCloudCore/QCloudAuthentationCreator.h,      
- QCloudCore/QCloudServiceConfiguration_Private.h,    
- QCloudCOSXML/QCloudCOSXML.h*，    
+引入上传 SDK 的头文件 *QCloudCore.h,    
+QCloudCOSXML/QCloudCOSXML.h*，    
  使用 SDK 操作时，需要先实例化 *QCloudCOSXMLService* 和 *QCloudCOSTransferManagerService* 对象。实例化这两个对象之前我们要实例化一个云服务配置对象*QCloudServiceConfiguration*。
 
 #### 方法原型
@@ -112,7 +109,6 @@ pod 'QCloudCOSXML'
      [QCloudCOSTransferMangerService registerDefaultCOSTransferMangerWithConfiguration:configuration];
 
 }
-
 ```
 
 ## 快速入门
@@ -147,12 +143,7 @@ pod 'QCloudCOSXML'
                   urlRequest:(NSURLRequest*)urlRequst
                    compelete:(QCloudHTTPAuthentationContinueBlock)continueBlock
 {
-    QCloudCredential* credential = [QCloudCredential new];
-    credential.secretID = @"您的SecretID";
-    credential.secretKey = @"您的SecretKey";
-    QCloudAuthentationCreator* creator = [[QCloudAuthentationCreator alloc] initWithCredential:credential];
-    QCloudSignature* signature =  [creator signatureForCOSXMLRequest:request];
-    continueBlock(signature, nil);
+//实现签名的过程，我们推荐在服务器端实现签名的过程，具体请参考接下来的“生成签名”这一章。
 }
 
 ```
@@ -197,8 +188,9 @@ pod 'QCloudCOSXML'
 |contentDisposition|NSString *|否|RFC 2616中定义的文件名称|
 |expect|NSString * | 否 |当使用expect=@"100-Continue"时，在收到服务端确认后才会发送请求内容|
 |expires| NSString * |否 | RFC 2616中定义的过期时间|
+|initMultipleUploadFinishBlock|block|否| 如果该request产生了分片上传的请求，那么在分片上传初始化完成后，会通过这个block来回调，可以在该回调block中获取分片完成后的bucket, key, uploadID,以及用于后续上传失败后恢复上传的ResumeData。|
 |accessControlList|NSString * |否| 定义 Object 的 ACL 属性。有效值：private，public-read-write，public-read；默认值：private|
-|grantRead|NSString * |否|赋予被授权者读的权限。格式： id=" ",id=" "；当需要给子账户授权时，id="qcs::cam::uin/\<OwnerUin>:uin/\<SubUin>"，当需要给根账户授权时，id="qcs::cam::uin/\<OwnerUin>:uin/\<OwnerUin>"  其中OwnerUin指的是根账户的ID，而SubUin指的是子账户的ID|
+|grantRead|NSString * |否|赋予被授权者读的权限。格式： id=" ",id=" "；当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"  其中OwnerUin指的是根账户的ID，而SubUin指的是子账户的ID|
 |grantWrite|NSString * |否| 授予被授权者写的权限。格式同上。|
 |grantFullControl|NSString * |否| 授予被授权者读写权限。格式同上。|
 
@@ -213,7 +205,7 @@ pod 'QCloudCOSXML'
   request.downloadingURL = [NSURL URLWithString:QCloudTempFilePathWithExtension(@"downding")];
   request.object = @“你的Object-Key”;
   request.bucket = @"你的bucket名";
-  [request setFinishBlock:^(id outputObject, NSError *error) {
+  [request setFinishBlock:^(id outputObject, NSError \*error) {
     //additional actions after finishing
 }];
 	[request setDownProcessBlock:^(int64_t bytesDownload, int64_t totalBytesDownload, int64_t totalBytesExpectedToDownload) {
@@ -224,14 +216,20 @@ pod 'QCloudCOSXML'
 
 ## 生成签名
 
-SDK中的请求需要用到签名，以确访问的用户的身份，也保障了访问的安全性。在SDK中可以生成签名，每个请求会向QCloudServiceConfiguration对象中的signatureProvider对象来请求生成签名。我们可以将负责生成签名的对象在一开始赋值给signatureProvider，该生成签名的对象需要遵循QCloudSignatureProvider协议，并实现生成签名的方法：
+SDK中的请求需要用到签名，以确访问的用户的身份，也保障了访问的安全性。当签名不正确时，大部分COS的服务将无法访问并且返回403错误。在SDK中可以生成签名，每个请求会向QCloudServiceConfiguration对象中的signatureProvider对象来请求生成签名。我们可以将负责生成签名的对象在一开始赋值给signatureProvider，该生成签名的对象需要遵循QCloudSignatureProvider协议，并实现生成签名的方法：
 ```objective-c
 - (void) signatureWithFields:(QCloudSignatureFields* )fileds    
                      request:(QCloudBizHTTPRequest* )request    
                   urlRequest:(NSURLRequest* )urlRequst    
                    compelete:(QCloudHTTPAuthentationContinueBlock)continueBlock
 ```
-基于安全性的考虑，我们建议您在服务器端实现签名的过程。您也可以在本地生成签名，请参考例子：
+虽然我们提供在本地提供了永久的Secret ID 和Secret Key来生成签名的接口，但请注意，将永久的Secret ID 和Secret Key存储在本地是非常危险的行为，容易造成泄露引起不必要的损失。因此基于安全性的考虑，我们建议您在服务器端实现签名的过程。    
+
+我们推荐您在自己的签名服务器内接入腾讯云的CAM（Cloud Access Manager， 访问管理）来实现整个签名流程。    
+
+![接入CAM签名部署图](http://ericcheung-1253653367.cosgz.myqcloud.com/Logical%20View.png)        
+
+签名服务器接入CAM系统后，当客户端去向签名服务器端请求签名时，签名服务器端会去向CAM系统请求临时证书，然后返回给客户端。CAM系统会根据您的永久Secret ID 和 Secret Key 来生成临时的 Secret ID, Secret Key 和临时Token来生成签名，可以最大限度地提高安全性。
 
 ```objective-c
 - (void) signatureWithFields:(QCloudSignatureFields*)fileds
@@ -239,10 +237,13 @@ SDK中的请求需要用到签名，以确访问的用户的身份，也保障�
                   urlRequest:(NSURLRequest*)urlRequst
                    compelete:(QCloudHTTPAuthentationContinueBlock)continueBlock
 {
-    QCloudCredential* credential = [QCloudCredential new];
-    credential.secretID = @"您的secretID";
-    credential.secretKey = @"您的scretKey";
 
+		/*向签名服务器请求临时的secretID,secretKey,token*/
+    QCloudCredential* credential = [QCloudCredential new];
+    credential.secretID = @"从CAM系统获取的临时Secret ID";
+    credential.secretKey = @"从CAM系统获取的临时Secret Key";
+		credential.token = @"从CAM系统返回的token，为会话ID"
+		credential.expiretionDate	 = /*签名过期时间*/
     QCloudAuthentationCreator* creator = [[QCloudAuthentationCreator alloc] initWithCredential:credential];
     QCloudSignature* signature =  [creator signatureForCOSXMLRequest:request];
     continueBlock(signature, nil);
@@ -283,7 +284,7 @@ SDK中的请求需要用到签名，以确访问的用户的身份，也保障�
 }
 
 ```   
-至此，就可以通过我们提供的脚手架工具来生成临时签名了。当然您也可以自己去实现具体的签名过程
+至此，就可以通过我们提供的脚手架工具来生成临时签名了。您也可以自己去实现具体的签名过程。
 
 
 
@@ -370,7 +371,7 @@ SDK中的请求需要用到签名，以确访问的用户的身份，也保障�
 | ------ | ---------- | ---- | ---------------------------------- |
 | bucket  | NSString * | 是    | 存储桶名                      |
 |accessControlList|NSString * |否| 定义 Object 的 ACL 属性。有效值：private，public-read-write，public-read；默认值：private|
-|grantRead|NSString * |否|赋予被授权者读的权限。格式： id=" ",id=" "；当需要给子账户授权时，id="qcs::cam::uin/\<OwnerUin>:uin/\<SubUin>"，当需要给根账户授权时，id="qcs::cam::uin/\<OwnerUin>:uin/\<OwnerUin>"  其中OwnerUin指的是根账户的ID，而SubUin指的是子账户的ID|
+|grantRead|NSString * |否|赋予被授权者读的权限。格式： id=" ",id=" "；当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"  其中OwnerUin指的是根账户的ID，而SubUin指的是子账户的ID|
 |grantWrite|NSString * |否| 授予被授权者写的权限。格式同上。|
 |grantFullControl|NSString * |否| 授予被授权者读写权限。格式同上。|
 
@@ -675,7 +676,7 @@ SDK中的请求需要用到签名，以确访问的用户的身份，也保障�
 | bucket  | NSString * | 是    | 存储桶名                      |
 |object|NSString * |是|对象名|
 |accessControlList|NSString * |否| 定义 Object 的 ACL 属性。有效值：private，public-read-write，public-read；默认值：private|
-|grantRead|NSString * |否|赋予被授权者读的权限。格式： id=" ",id=" "；当需要给子账户授权时，id="qcs::cam::uin/\<OwnerUin>:uin/\<SubUin>"，当需要给根账户授权时，id="qcs::cam::uin/\<OwnerUin>:uin/\<OwnerUin>"  其中OwnerUin指的是根账户的ID，而SubUin指的是子账户的ID|
+|grantRead|NSString * |否|赋予被授权者读的权限。格式： id=" ",id=" "；当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"  其中OwnerUin指的是根账户的ID，而SubUin指的是子账户的ID|
 |grantWrite|NSString * |否| 授予被授权者写的权限。格式同上。|
 |grantFullControl|NSString * |否| 授予被授权者读写权限。格式同上。|
 #### 示例
@@ -887,7 +888,7 @@ QCloudDeleteMultipleObjectRequest* delteRequest = [QCloudDeleteMultipleObjectReq
 |expires| NSString * |否 | RFC 2616中定义的过期时间|
 |storageClass|QCloudCOSStorageClass|否|对象的存储级别|
 |accessControlList|NSString * |否| 定义 Object 的 ACL 属性。有效值：private，public-read-write，public-read；默认值：private|
-|grantRead|NSString * |否|赋予被授权者读的权限。格式： id=" ",id=" "；当需要给子账户授权时，id="qcs::cam::uin/\<OwnerUin>:uin/\<SubUin>"，当需要给根账户授权时，id="qcs::cam::uin/\<OwnerUin>:uin/\<OwnerUin>"  其中OwnerUin指的是根账户的ID，而SubUin指的是子账户的ID|
+|grantRead|NSString * |否|赋予被授权者读的权限。格式： id=" ",id=" "；当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"  其中OwnerUin指的是根账户的ID，而SubUin指的是子账户的ID|
 |grantWrite|NSString * |否| 授予被授权者写的权限。格式同上。|
 |grantFullControl|NSString * |否| 授予被授权者读写权限。格式同上。|
 
@@ -966,7 +967,7 @@ Object 属性可以在 Head Object 操作中查询到，发起 Head Object 请�
 |expires| NSString * |否 | RFC 2616中定义的过期时间|
 |storageClass|QCloudCOSStorageClass|否|对象的存储级别|
 |accessControlList|NSString * |否| 定义 Object 的 ACL 属性。有效值：private，public-read-write，public-read；默认值：private|
-|grantRead|NSString * |否|赋予被授权者读的权限。格式： id=" ",id=" "；当需要给子账户授权时，id="qcs::cam::uin/\<OwnerUin>:uin/\<SubUin>"，当需要给根账户授权时，id="qcs::cam::uin/\<OwnerUin>:uin/\<OwnerUin>"  其中OwnerUin指的是根账户的ID，而SubUin指的是子账户的ID|
+|grantRead|NSString * |否|赋予被授权者读的权限。格式： id=" ",id=" "；当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"  其中OwnerUin指的是根账户的ID，而SubUin指的是子账户的ID|
 |grantWrite|NSString * |否| 授予被授权者写的权限。格式同上。|
 |grantFullControl|NSString * |否| 授予被授权者读写权限。格式同上。|   
 

@@ -30,7 +30,7 @@
 #import "QCloudBucketLocationConstraint.h"
 NS_ASSUME_NONNULL_BEGIN
 @interface QCloudGetBucketLocationRequest : QCloudBizHTTPRequest
-/**
+/**p
 存储桶名
 */
 @property (strong, nonatomic) NSString *bucket;

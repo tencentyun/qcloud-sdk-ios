@@ -9,13 +9,14 @@
 #import <QCloudCore/QCloudCore.h>
 #import "QCloudCOSStorageClassEnum.h"
 
-
 FOUNDATION_EXTERN NSString* const QCloudUploadResumeDataKey;
 
 typedef NSData* QCloudCOSXMLUploadObjectResumeData;
 @class QCloudUploadObjectResult;
+@class QCloudInitiateMultipartUploadResult;
+@class QCloudCOSXMLUploadObjectRequest;
+typedef void(^InitMultipleUploadFinishBlock)(QCloudInitiateMultipartUploadResult* multipleUploadInitResult, QCloudCOSXMLUploadObjectResumeData resumeData);
 @interface QCloudCOSXMLUploadObjectRequest<BodyType> : QCloudAbstractRequest
-
 /**
  上传文件（对象）的文件名，也是对象的key，请注意文件名中不可以含有问号即"?"字符
  */
@@ -96,9 +97,16 @@ typedef NSData* QCloudCOSXMLUploadObjectResumeData;
  表明该请求是否已经被中断
  */
 @property (assign, atomic, readonly) BOOL aborted;
+
+/**
+ 如果该request产生了分片上传的请求，那么在分片上传初始化完成后，会通过这个block来回调，可以在该回调block中获取分片完成后的bucket, key, uploadID,以及用于后续上传失败后恢复上传的ResumeData。
+ */
+@property (nonatomic, copy) InitMultipleUploadFinishBlock initMultipleUploadFinishBlock;
+
 - (void) setFinishBlock:(void (^)(QCloudUploadObjectResult* result, NSError *))QCloudRequestFinishBlock;
 #pragma resume
 + (instancetype) requestWithRequestData:(QCloudCOSXMLUploadObjectResumeData)resumeData;
+
 - (QCloudCOSXMLUploadObjectResumeData) cancelByProductingResumeData:(NSError* __autoreleasing*)error;
 
 

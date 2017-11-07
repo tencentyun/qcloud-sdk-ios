@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "QCloudCore"
-  s.version          = "5.0.3"
+  s.version          = "5.1.0"
   s.summary          = "QCloudCore--腾讯云iOS-SDK Foundation"
 
 # This description is used to generate tags and improve search results.
@@ -28,10 +28,10 @@ QCloudCore--腾讯云iOS-SDK Foundation。提供腾讯云iOS相关SDK的基础�
   s.source           = { :git => "https://github.com/tencentyun/qcloud-sdk-ios.git", :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
   s.ios.deployment_target = '8.0'
-  s.source_files = "QCloudCore/Classes/**/*"
+  s.source_files = "QCloudCore/Classes/**/**/*"
   s.frameworks ='CoreMedia', "Accelerate"
   s.libraries = "z","c++"
-
+  s.public_header_files = "QCloudCore/Classes/**/*.h"
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
   # s.dependency 'AFNetworking', '~> 2.3'

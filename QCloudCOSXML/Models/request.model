@@ -6,9 +6,13 @@ enum COSStorageClass (TOString){
 }
 
 enum COSAccountType (TOString) {
-/*根账户*/
+/**
+根账户
+*/
     COSAccountTypeRoot 0 [RootAccount]
-/*子账户*/
+/**
+子账户
+*/
     COSAccountTypeSub 1[SubAccount]
 }
 
@@ -22,272 +26,408 @@ enum COSPermission (TOString) {
 request AppendObject (UP.url CW.post Over.body APPEND.headers M.cosxml) {
   int64 position
   method append
-/*存储桶名*/
+/**
+存储桶名
+*/
   string bucket (XML.bucket need)
 
-/*对象名*/
+/**
+对象名
+*/
   string object (URI0 need)
 
-/*RFC 2616 中定义的缓存策略，将作为 Object 元数据返回*/
+/**
+RFC 2616 中定义的缓存策略，将作为 Object 元数据返回
+*/
   string cacheControl [Cache-Control] (HEADER)
 
-/*RFC 2616 中定义的文件名称，将作为 Object 元数据返回	*/
+/**
+RFC 2616 中定义的文件名称，将作为 Object 元数据返回
+*/
   string contentDisposition [Content-Disposition] (HEADER)
 
-/*当使用 Expect: 100-continue 时，在收到服务端确认后，才会发送请求内容*/
+/**
+当使用 Expect: 100-continue 时，在收到服务端确认后，才会发送请求内容
+*/
   string expect [Expect] (HEADER)
 
-/*RFC 2616 中定义的过期时间，将作为 Object 元数据返回*/
+/**
+RFC 2616 中定义的过期时间，将作为 Object 元数据返回
+*/
   string expires [Expires] (HEADER)
 
   string contentSHA1 [x-cos-content-sha1] (HEADER)
 
   COSStorageClass storageClass [x-cos-storage-class] (HEADER TOString)
 
-/*定义 Object 的 ACL 属性。有效值：private，public-read-write，public-read；默认值：private*/
+/**
+定义 Object 的 ACL 属性。有效值：private，public-read-write，public-read；默认值：private
+*/
   string accessControlList [x-cos-acl] (HEADER)
 
-/*赋予被授权者读的权限。格式：x-cos-grant-read: id=" ",id=" "；
+/**
+赋予被授权者读的权限。格式：x-cos-grant-read: id=" ",id=" "；
 当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
-当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"*/
+当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
+*/
   string grantRead  [x-cos-grant-read] (HEADER)
 
-/*赋予被授权者写的权限。格式：x-cos-grant-write: id=" ",id=" "；
+/**
+赋予被授权者写的权限。格式：x-cos-grant-write: id=" ",id=" "；
 当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
-当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"*/
+当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
+*/
   string grantWrite [x-cos-grant-write] (HEADER)
 
-/*赋予被授权者读写权限。格式：x-cos-grant-full-control: id=" ",id=" "；
+/**
+赋予被授权者读写权限。格式：x-cos-grant-full-control: id=" ",id=" "；
 当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
-当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"*/
+当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
+*/
   string grantFullControl [x-cos-grant-full-control] (HEADER)
 }
 model QCloudACLOwner {
-/*Bucket 持有者的名称*/
+/**
+Bucket 持有者的名称
+*/
   string displayName [DisplayName]
 
-/*Bucket 持有者 ID，
+/**
+Bucket 持有者 ID，
 格式：qcs::cam::uin/<OwnerUin>:uin/<SubUin>
-如果是根帐号，<OwnerUin> 和 <SubUin> 是同一个值*/
+如果是根帐号，<OwnerUin> 和 <SubUin> 是同一个值
+*/
   string identifier [ID]
 }
 
 
 model QCloudACLGrantee {
 
-/*子账号*/
+/**
+子账号
+*/
   string subAccount [Subaccount]
 
-/* ID，格式：qcs::cam::uin/<OwnerUin>:uin/<SubUin> 如果是根帐号，<OwnerUin> 和 <SubUin> 是同一个值 */
+/**
+ ID，格式：qcs::cam::uin/<OwnerUin>:uin/<SubUin> 如果是根帐号，<OwnerUin> 和 <SubUin> 是同一个值
+*/
   string identifier [ID]
 
-/* 名称 */
+/**
+ 名称
+*/
   string displayName [DisplayName]
 
-/*type 类型可以为 RootAccount， Subaccount；
+/**
+type 类型可以为 RootAccount， Subaccount；
 当 type 类型为 RootAccount 时，在 ID 中指定根帐号;
-当 type 类型为 Subaccount 时，在 ID 中指定子帐号*/
+当 type 类型为 Subaccount 时，在 ID 中指定子帐号
+*/
   COSAccountType type (XMLATTR TOString)
 
-/*命名空间*/
+/**
+命名空间
+*/
   string xmlns (XMLATTR TOString)
 }
 
 model QCloudACLGrant {
 
-/* 说明被授权者的信息。type 类型可以为 RootAccount， Subaccount；当 type 类型为 RootAccount 时，ID 中指定的是根帐号;当 type 类型为 Subaccount 时，ID 中指定的是子帐号*/
+/**
+ 说明被授权者的信息。type 类型可以为 RootAccount， Subaccount；当 type 类型为 RootAccount 时，ID 中指定的是根帐号;当 type 类型为 Subaccount 时，ID 中指定的是子帐号
+*/
   QCloudACLGrantee grantee [Grantee]
 
-/*指明授予被授权者的权限信息，枚举值*/
+/**
+指明授予被授权者的权限信息，枚举值
+*/
   COSPermission permission [Permission] (TOString)
 }
 
 model QCloudACLPolicy {
-/*持有者的信息*/
+/**
+持有者的信息
+*/
   QCloudACLOwner owner [Owner]
-/*被授权者与权限的信息*/
+/**
+被授权者与权限的信息
+*/
   array QCloudACLGrant accessControlList [AccessControlList] (NODE.Grant)
 }
 
 request GetObjectACL (UP.url DOWN.xml M.cosxml CW.get ){
-/* 存储桶名 */
+/**
+ 存储桶名
+*/
   string bucket (XML.bucket need)
-/* 对象名*/
+/**
+ 对象名
+*/
   string object (URI0 need)
   method acl
   response  QCloudACLPolicy
 }
 
 request PutObject (CW.put Over.body APPEND.headers HEADER.MD5.BASE64) {
-/* 对象 名称*/
+/**
+ 对象 名称
+*/
   string object (URI0 need)
-/* 存储桶 名称*/
+/**
+ 存储桶 名称
+*/
   string bucket (XML.bucket need)
 
-/*RFC 2616 中定义的缓存策略，将作为 Object 元数据保存	*/
+/**
+RFC 2616 中定义的缓存策略，将作为 Object 元数据保存
+*/
   string cacheControl [Cache-Control] (HEADER)
 
-/*RFC 2616 中定义的文件名称，将作为 Object 元数据保存	*/
+/**
+RFC 2616 中定义的文件名称，将作为 Object 元数据保存
+*/
   string contentDisposition [Content-Disposition] (HEADER)
 
-/*当使用 Expect: 100-continue 时，在收到服务端确认后，才会发送请求内容	*/
+/**
+当使用 Expect: 100-continue 时，在收到服务端确认后，才会发送请求内容
+*/
   string expect [Expect] (HEADER)
 
-/*RFC 2616 中定义的过期时间，将作为 Object 元数据保存	*/
+/**
+RFC 2616 中定义的过期时间，将作为 Object 元数据保存
+*/
   string expires [Expires] (HEADER)
 
   string contentSHA1 [x-cos-content-sha1] (HEADER)
 
-/*Object 的存储级别*/
+/**
+Object 的存储级别
+*/
   COSStorageClass storageClass [x-cos-storage-class] (HEADER TOString)
 
 
-/*定义 Object 的 ACL 属性。有效值：private，public-read-write，public-read；默认值：private*/
+/**
+定义 Object 的 ACL 属性。有效值：private，public-read-write，public-read；默认值：private
+*/
   string accessControlList [x-cos-acl] (HEADER)
 
-/*赋予被授权者读的权限。格式：id=" ",id=" "；
+/**
+赋予被授权者读的权限。格式：id=" ",id=" "；
 当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
-当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"*/
+当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
+*/
   string grantRead  [x-cos-grant-read] (HEADER)
 
-/*赋予被授权者写的权限。格式：id=" ",id=" "；
+/**
+赋予被授权者写的权限。格式：id=" ",id=" "；
 当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
-当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"*/
+当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
+*/
   string grantWrite [x-cos-grant-write] (HEADER)
 
-/*赋予被授权者读写权限。格式: id=" ",id=" " ；
+/**
+赋予被授权者读写权限。格式: id=" ",id=" " ；
 当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
-当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"*/
+当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
+*/
   string grantFullControl [x-cos-grant-full-control] (HEADER)
 }
 
 request PutObjectACL(UP.xml  APPEND.headers CW.put M.cosxml) {
-/*object名*/
+/**
+object名
+*/
   string object (URI0 need)
 
-/*定义 Object 的 ACL 属性。有效值：private，public-read-write，public-read；默认值：private*/
+/**
+定义 Object 的 ACL 属性。有效值：private，public-read-write，public-read；默认值：private
+*/
   string accessControlList [x-cos-acl] (HEADER)
 
-/*赋予被授权者读的权限。格式：id=" ",id=" "；
+/**
+赋予被授权者读的权限。格式：id=" ",id=" "；
 当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
-当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"*/
+当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
+*/
   string grantRead  [x-cos-grant-read] (HEADER)
 
-/*赋予被授权者写的权限。格式：id=" ",id=" "；
+/**
+赋予被授权者写的权限。格式：id=" ",id=" "；
 当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
-当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"*/
+当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
+*/
   string grantWrite [x-cos-grant-write] (HEADER)
 
-/*赋予被授权者读写权限。格式: id=" ",id=" " ；
+/**
+赋予被授权者读写权限。格式: id=" ",id=" " ；
 当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
-当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"*/
+当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
+*/
   string grantFullControl [x-cos-grant-full-control] (HEADER)
 
-/*存储桶名*/
+/**
+存储桶名
+*/
   string bucket (XML.bucket need)
   method acl
 }
 
 request DeleteObject(UP.url CW.delete) {
-/*对象名*/
+/**
+对象名
+*/
   string object (URI0 need)
-/*存储桶名*/
+/**
+存储桶名
+*/
   string bucket (XML.bucket need)
 }
 
 model QCloudDeleteObjectInfo {
-/*需要删除对象的key*/
+/**
+需要删除对象的key
+*/
   string key [Key]
 }
 model QCloudDeleteInfo {
   bool quiet [Quiet] (TRANSFER.TF)
-/*存放需要删除对象信息的数组*/
+/**
+存放需要删除对象信息的数组
+*/
   array QCloudDeleteObjectInfo objects [Object]
 }
 
 model QCloudDeleteResultRow {
-/*删除的对象的key*/
+/**
+删除的对象的key
+*/
   string key [Key]
 }
 model QCloudDeleteResult {
-/*存放被删除对象信息的数组*/
+/**
+存放被删除对象信息的数组
+*/
   array QCloudDeleteResultRow deletedObjects [Deleted]
 }
 request DeleteMultipleObject(UP.xml DOWN.xml CW.post M.cosxml HEADER.MD5.BASE64) {
-/*存储桶名称*/
+/**
+存储桶名称
+*/
   string bucket (XML.bucket need)
-/*放置被删除对象的信息*/
+/**
+放置被删除对象的信息
+*/
   QCloudDeleteInfo deleteObjects [Delete] (need)
   method delete
   response  QCloudDeleteResult
 }
 
 request HeadObject (UP.url CW.head APPEND.headers) {
-/*对象的key*/
+/**
+对象的key
+*/
   string object (URI0 need)
-/*存储桶名*/
+/**
+存储桶名
+*/
   string bucket (XML.bucket need)
   string ifModifiedSince [If-Modified-Since] (HEADER)
 }
 
 request OptionsObject(UP.url CW.OPTIONS APPEND.headers) {
-/*对象的key*/
+/**
+对象的key
+*/
   string object (URI0 need)
-/*存储桶名*/
+/**
+存储桶名
+*/
   string bucket (XML.bucket need)
-/*模拟跨域访问的请求来源域名*/
+/**
+模拟跨域访问的请求来源域名
+*/
   string origin [Origin] (HEADER need)
-/*模拟跨域访问的请求HTTP方法*/
+/**
+模拟跨域访问的请求HTTP方法
+*/
   string accessControlRequestMethod [Access-Control-Request-Method] (HEADER need)
-/*模；模拟跨域访问的请求头部*/
+/**
+模；模拟跨域访问的请求头部
+*/
   string accessControlRequestHeaders [Access-Control-Request-Headers] (HEADER)
 }
 model QCloudInitiateMultipartUploadResult {
-/*存储桶名*/
+/**
+存储桶名
+*/
   string bucket [Bucket]
-/*对象的名称*/
+/**
+对象的名称
+*/
   string key [Key]
-/*在后续上传中使用的ID*/
+/**
+在后续上传中使用的ID
+*/
   string uploadId [UploadId]
 }
 request InitiateMultipartUpload(CW.post DOWN.xml M.cosxml) {
-/*对象的名称*/
+/**
+对象的名称
+*/
   string object (URI0  need)
 
-/*存储桶名*/
+/**
+存储桶名
+*/
   string bucket (XML.bucket need)
 
-/*RFC 2616 中定义的缓存策略，将作为对象的元数据返回*/
+/**
+RFC 2616 中定义的缓存策略，将作为对象的元数据返回
+*/
   string cacheControl [Cache-Control] (HEADER)
 
-/*RFC 2616 中定义的文件名称，将作为 Object 元数据保存	*/
+/**
+RFC 2616 中定义的文件名称，将作为 Object 元数据保存
+*/
   string contentDisposition [Content-Disposition] (HEADER)
   string expect [Expect] (HEADER)
-/*RFC 2616 中定义的文件名称，将作为 Object 元数据保存。*/
+/**
+RFC 2616 中定义的文件名称，将作为 Object 元数据保存。
+*/
   string expires [Expires] (HEADER)
   string contentSHA1 [x-cos-content-sha1] (HEADER)
-/*设置 Object 的存储级别*/
+/**
+设置 Object 的存储级别
+*/
   COSStorageClass storageClass [x-cos-storage-class] (HEADER TOString)
 
-/*定义 Object 的 ACL 属性。有效值：private，public-read-write，public-read；默认值：private*/
+/**
+定义 Object 的 ACL 属性。有效值：private，public-read-write，public-read；默认值：private
+*/
   string accessControlList [x-cos-acl] (HEADER)
 
-/*赋予被授权者读的权限。格式：x-cos-grant-read: id=" ",id=" "；
+/**
+赋予被授权者读的权限。格式：x-cos-grant-read: id=" ",id=" "；
 当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
 当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
-其中，<OwnerUin>为根账户的uin，而<SubUin>为子账户的uin，使用时替换*/
+其中，<OwnerUin>为根账户的uin，而<SubUin>为子账户的uin，使用时替换
+*/
   string grantRead  [x-cos-grant-read] (HEADER)
 
-/*赋予被授权者写的权限。格式：x-cos-grant-write: id=" ",id=" "；
+/**
+赋予被授权者写的权限。格式：x-cos-grant-write: id=" ",id=" "；
 当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
 当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
-其中，<OwnerUin>为根账户的uin，而<SubUin>为子账户的uin，使用时替换*/
+其中，<OwnerUin>为根账户的uin，而<SubUin>为子账户的uin，使用时替换
+*/
   string grantWrite [x-cos-grant-write] (HEADER)
 
-/*赋予被授权者读写权限。格式: id=" ",id=" " ；
+/**
+赋予被授权者读写权限。格式: id=" ",id=" " ；
 当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
 当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
-其中，<OwnerUin>为根账户的uin，而<SubUin>为子账户的uin，使用时替换*/
+其中，<OwnerUin>为根账户的uin，而<SubUin>为子账户的uin，使用时替换
+*/
   string grantFullControl [x-cos-grant-full-control] (HEADER)
   method uploads
   response QCloudInitiateMultipartUploadResult
@@ -298,14 +438,22 @@ model QCloudUploadPartResult {
 }
 
 request UploadPart(CW.put  UP.url Over.body APPEND.headers HEADER.MD5.BASE64 custom_build) {
-/*对象的名称*/
+/**
+对象的名称
+*/
     string object (URI0  need)
-/*存储桶名*/
+/**
+存储桶名
+*/
     string bucket (XML.bucket need)
-/*标识本次分块上传的编号*/
+/**
+标识本次分块上传的编号
+*/
     int partNumber
-/*标识本次分块上传的 ID；
-使用 Initiate Multipart Upload 接口初始化分片上传时会得到一个 uploadId，该 ID 不但唯一标识这一分块数据，也标识了这分块数据在整个文件内的相对位置*/
+/**
+标识本次分块上传的 ID；
+使用 Initiate Multipart Upload 接口初始化分片上传时会得到一个 uploadId，该 ID 不但唯一标识这一分块数据，也标识了这分块数据在整个文件内的相对位置
+*/
     string uploadId (need)
     string contentSHA1 [x-cos-content-sha1] (HEADER)
     string expect [Expect] (HEADER)
@@ -313,13 +461,19 @@ request UploadPart(CW.put  UP.url Over.body APPEND.headers HEADER.MD5.BASE64 cus
 }
 
 model QCloudMultipartInfo {
-/*块编号*/
+/**
+块编号
+*/
    string partNumber [PartNumber]
-/*每个块文件的MD5算法校验值*/
+/**
+每个块文件的MD5算法校验值
+*/
    string eTag      [ETag]
 }
 model QCloudCompleteMultipartUploadInfo {
-/*用来说明本次分块上传中每个块的信息*/
+/**
+用来说明本次分块上传中每个块的信息
+*/
   array QCloudMultipartInfo parts [Part]
 }
 
@@ -334,143 +488,229 @@ model QCloudMultipartUploadOwner {
 }
 
 model QCloudMultipartUploadPart {
-/*块的编号*/
+/**
+块的编号
+*/
     string partNumber [PartNumber]
-/*块的最后修改时间*/
+/**
+块的最后修改时间
+*/
     string lastModified [LastModified]
-/*对象的SHA-1算法校验值*/
+/**
+对象的SHA-1算法校验值
+*/
     string eTag [ETag]
-/*块大小，单位byte*/
+/**
+块大小，单位byte
+*/
     int64 size [Size]
 }
 
 
 model QCloudListPartsResult {
-/*存储桶名*/
+/**
+存储桶名
+*/
   string bucket [Bucket]
 
-/*规定返回值的编码格式*/
+/**
+规定返回值的编码格式
+*/
   string encodingType [Encoding-type]
 
-/*对象的名称*/
+/**
+对象的名称
+*/
   string key [Key]
 
-/*标识本次分块上传的uploadId*/
+/**
+标识本次分块上传的uploadId
+*/
   string uploadId [UploadID]
 
-/*用来表示这些分块的存储级别*/
+/**
+用来表示这些分块的存储级别
+*/
   COSStorageClass storageClass [StorageClass] (TOString)
 
-/*默认以 UTF-8 二进制顺序列出条目，所有列出条目从 marker 开始*/
+/**
+默认以 UTF-8 二进制顺序列出条目，所有列出条目从 marker 开始
+*/
   string partNumberMarker [PartNumberMarker]
 
-/*假如返回条目被截断，则返回 NextMarker 就是下一个条目的起点*/
+/**
+假如返回条目被截断，则返回 NextMarker 就是下一个条目的起点
+*/
   string nextNumberMarker [NextPartNumberMarker]
 
-/*单次返回的最大条目数*/
+/**
+单次返回的最大条目数
+*/
   string maxParts [MaxParts]
 
-/*返回条目是否被截断*/
+/**
+返回条目是否被截断
+*/
   bool   isTruncated [IsTruncated]
 
-/*用来标识本次上传发起者的信息*/
+/**
+用来标识本次上传发起者的信息
+*/
   QCloudMultipartUploadInitiator initiator [Initiator]
 
-/*用来标识这些分块所有者的信息*/
+/**
+用来标识这些分块所有者的信息
+*/
   QCloudMultipartUploadOwner owner [Owner]
 
-/*用来表示每一个块的信息*/
+/**
+用来表示每一个块的信息
+*/
   array QCloudMultipartUploadPart parts [Part]
 
 }
 request ListMultipart (CW.get DOWN.xml UP.url APPEND.headers) {
-/*对象的名称*/
+/**
+对象的名称
+*/
   string object (URI0 need)
 
-/*存储桶名*/
+/**
+存储桶名
+*/
   string bucket (XML.bucket need)
 
-/*标识本次分块上传的uploadId*/
+/**
+标识本次分块上传的uploadId
+*/
   string uploadId (need)
 
-/*单次返回最大的条目数量，默认 1000	*/
+/**
+单次返回最大的条目数量，默认 1000
+*/
   string maxPartsCount [max-parts] (HEADER)
 
-/*默认以 UTF-8 二进制顺序列出条目，所有列出条目从 marker 开始*/
+/**
+默认以 UTF-8 二进制顺序列出条目，所有列出条目从 marker 开始
+*/
   string partNumberMarker [part-number-marker] (HEADER)
 
-/*规定返回值的编码方式*/
+/**
+规定返回值的编码方式
+*/
   string encodingType [Encoding-Type] (HEADER)
 
   response QCloudListPartsResult
 }
 
 model QCloudUploadObjectResult {
-/*创建对象的外网访问域名*/
+/**
+创建对象的外网访问域名
+*/
     string location [Location]
 
-/*分快上传的目标存储桶名*/
+/**
+分快上传的目标存储桶名
+*/
     string bucket [Bucket]
 
-/*对象名*/
+/**
+对象名
+*/
     string key [Key]
 
-/*合并后文件的MD5算法校验值*/
+/**
+合并后文件的MD5算法校验值
+*/
     string eTag [ETag]
 }
 
 request CompleteMultipartUpload(CW.post UP.xml DOWN.xml APPEND.header) {
-/*对象名*/
+/**
+对象名
+*/
     string object (URI0 need)
-/*存储桶名*/
+/**
+存储桶名
+*/
     string bucket (XML.bucket need)
-/*本次分片上传的UploadID*/
+/**
+本次分片上传的UploadID
+*/
     string uploadId  (L.url need)
-/*完成分片上传的信息*/
+/**
+完成分片上传的信息
+*/
     QCloudCompleteMultipartUploadInfo parts [CompleteMultipartUpload] (need)
     response QCloudUploadObjectResult
 }
 
 request AbortMultipfartUpload(CW.delete UP.url APPEND.header) {
-/*对象名*/
+/**
+对象名
+*/
   string object (URI0 need)
 
-/*存储桶名*/
+/**
+存储桶名
+*/
   string bucket (XML.bucket need)
 
-/*本次分片上传的UploadId*/
+/**
+本次分片上传的UploadId
+*/
   string uploadId [UploadId] (need)
 }
 
 
 request GetObject(CW.get APPEND.headers) {
-/*设置响应头部中的 Content-Type参数*/
+/**
+设置响应头部中的 Content-Type参数
+*/
   string responseContentType [response-content-type]  (HEADER)
 
-/*设置响应头部中的Content-Language参数*/
+/**
+设置响应头部中的Content-Language参数
+*/
   string responseContentLanguage [response-content-language] (HEADER)
 
-/*设置响应头部中的Content-Expires参数*/
+/**
+设置响应头部中的Content-Expires参数
+*/
   string responseContentExpires  [response-expires] (HEADER)
 
-/*设置响应头部中的Cache-Control参数*/
+/**
+设置响应头部中的Cache-Control参数
+*/
   string responseCacheControl [response-cache-control] (HEADER)
 
-/*设置响应头部中的 Content-Disposition 参数。*/
+/**
+设置响应头部中的 Content-Disposition 参数。
+*/
   string responseContentDisposition [response-content-disposition] (HEADER)
 
-/*设置响应头部中的 Content-Encoding 参数。*/
+/**
+设置响应头部中的 Content-Encoding 参数。
+*/
   string responseContentEncoding [response-content-encoding] (HEADER)
 
-/*RFC 2616 中定义的指定文件下载范围，以字节（bytes）为单位*/
+/**
+RFC 2616 中定义的指定文件下载范围，以字节（bytes）为单位
+*/
   string range [Range] (HEADER)
 
-/*如果文件修改时间晚于指定时间，才返回文件内容。否则返回 412 (not modified)*/
+/**
+如果文件修改时间晚于指定时间，才返回文件内容。否则返回 412 (not modified)
+*/
   string ifModifiedSince [If-Modified-Since] (HEADER)
 
-/*对象名*/
+/**
+对象名
+*/
   string object (URI0 need)
-/*存储桶名*/
+/**
+存储桶名
+*/
   string bucket (XML.bucket need)
 }
 
@@ -483,49 +723,85 @@ model QCloudCommonPrefixes {
   array string prefix [Prefix]
 }
 model QCloudBucketContents {
-/*对象的key*/
+/**
+对象的key
+*/
   string key [Key]
-/*说明对象最后被修改的时间*/
+/**
+说明对象最后被修改的时间
+*/
   string lastModified [LastModified]
-/*文件的MD-5算法校验值*/
+/**
+文件的MD-5算法校验值
+*/
   string eTag [ETag]
-/*文件大小，单位是Byte*/
+/**
+文件大小，单位是Byte
+*/
   int size [Size]
-/*存储桶持有者信息*/
+/**
+存储桶持有者信息
+*/
   QCloudBucketOwner owner [Owner]
-/*存储级别*/
+/**
+存储级别
+*/
   COSStorageClass storageClass [StorageClass] (TOString)
 }
 model QCloudListBucketResult {
-/*存储桶名信息*/
+/**
+存储桶名信息
+*/
   string name [Name]
-/*前缀匹配，用来规定响应返回的文件前缀地址*/
+/**
+前缀匹配，用来规定响应返回的文件前缀地址
+*/
   string prefix [Prefix]
-/*默认以UTF-8二进制顺序列出条目，所有列出条目从marker开始*/
+/**
+默认以UTF-8二进制顺序列出条目，所有列出条目从marker开始
+*/
   string marker [Marker]
-/*单次响应请求内返回结果的最大条目数量*/
+/**
+单次响应请求内返回结果的最大条目数量
+*/
   int maxKeys [MaxKeys]
   string delimiter [Delimiter]
-/*响应请求条目是否被截断*/
+/**
+响应请求条目是否被截断
+*/
   bool isTruncated [IsTruncated]  (TRANSFER.TF)
 
   array QCloudBucketContents contents [Contents]
-/*将 Prefix 到 delimiter 之间的相同路径归为一类，定义为 Common Prefix*/
+/**
+将 Prefix 到 delimiter 之间的相同路径归为一类，定义为 Common Prefix
+*/
   QCloudCommonPrefixes commonFixes [CommonPrefixes]
 }
 
 request GetBucket(UP.url CW.get DOWN.xml) {
-/*存储桶名*/
+/**
+存储桶名
+*/
     string bucket (XML.bucket need)
-/*前缀匹配，用来规定返回的文件前缀地址*/
+/**
+前缀匹配，用来规定返回的文件前缀地址
+*/
     string prefix
-/*定界符为一个符号，如果有 Prefix，则将 Prefix 到 delimiter 之间的相同路径归为一类，定义为 Common Prefix，然后列出所有 Common Prefix。如果没有 Prefix，则从路径起点开始*/
+/**
+定界符为一个符号，如果有 Prefix，则将 Prefix 到 delimiter 之间的相同路径归为一类，定义为 Common Prefix，然后列出所有 Common Prefix。如果没有 Prefix，则从路径起点开始
+*/
     string delimiter
-/*规定返回值的编码方式，可选值:url*/
+/**
+规定返回值的编码方式，可选值:url
+*/
     string encodingType [encoding-type]
-/*默认以UTF-8二进制顺序列出条目，所有列出条目从marker开始*/
+/**
+默认以UTF-8二进制顺序列出条目，所有列出条目从marker开始
+*/
     string marker
-/*单次返回的最大条目数量，默认1000*/
+/**
+单次返回的最大条目数量，默认1000
+*/
     int maxKeys [max-keys]
     response QCloudListBucketResult
 }
@@ -533,114 +809,277 @@ request GetBucket(UP.url CW.get DOWN.xml) {
 
 request GetBucketACL(DOWN.xml CW.get DOWN.xml M.cosxml) {
     method acl
-/*存储桶名*/
+/**
+存储桶名
+*/
     string bucket (XML.bucket need)
     response QCloudACLPolicy
 }
 
 model QCloudCORSRule {
-/*配置规则的ID，可选填*/
+/**
+配置规则的ID，可选填
+*/
   string identifier [ID]
-/*允许的 HTTP 操作，枚举值：GET，PUT，HEAD，POST，DELETE*/
+/**
+允许的 HTTP 操作，枚举值：GET，PUT，HEAD，POST，DELETE
+*/
   array string allowedMethod [AllowedMethod]
-/*允许的访问来源，支持通配符 *
-格式为：协议://域名[:端口]如：http://www.qq.com*/
+/**
+允许的访问来源，支持通配符 *
+格式为：协议://域名[:端口]如：http://www.qq.com
+*/
   string allowedOrigin [AllowedOrigin]
-/*在发送 OPTIONS 请求时告知服务端，接下来的请求可以使用哪些自定义的 HTTP 请求头部，支持通配符 * */
+/**
+在发送 OPTIONS 请求时告知服务端，接下来的请求可以使用哪些自定义的 HTTP 请求头部，支持通配符 *
+*/
   array string allowedHeader [AllowedHeader]
-/*设置 OPTIONS 请求得到结果的有效期*/
+/**
+设置 OPTIONS 请求得到结果的有效期
+*/
   int maxAgeSeconds [MaxAgeSeconds]
-/*设置浏览器可以接收到的来自服务器端的自定义头部信息*/
+/**
+设置浏览器可以接收到的来自服务器端的自定义头部信息
+*/
   string exposeHeader [ExposeHeader]
 }
 model QCloudCORSConfiguration {
   array QCloudCORSRule rules [CORSRule]
 }
 request GetBucketCORS(M.cosxml CW.get DOWN.xml) {
-/*存储桶名*/
+/**
+存储桶名
+*/
     string bucket (XML.bucket need)
     method cors
     response QCloudCORSConfiguration
 }
 
 model QCloudBucketLocationConstraint {
-/*说明 Bucket 所在区域，枚举值：cn-north，cn-east，sg，cn-southwest，cn-south*/
+/**
+说明 Bucket 所在区域，枚举值：cn-north，cn-east，sg，cn-southwest，cn-south
+*/
     string locationConstraint [__text]
 }
 
 request GetBucketLocation(DOWN.xml CW.get DOWN.xml M.cosxml) {
-/*存储桶名*/
+/**p
+存储桶名
+*/
     string bucket (XML.bucket need)
     method location
     response QCloudBucketLocationConstraint
 }
 
 model QCloudLifecycleTransition {
+/**
+指明规则对应的动作在对象最后的修改日期过后多少天操作，在Transition里，该字段有效值是非负整数
+*/
     int days [Days]
-    string date [Date]
+/**
+指明规则对应的动作在何时操作
+*/
+    string transitionDate [Date]
+/**
+指定 Object 转储到的目标存储类型，枚举值： Standard_IA, Nearline
+*/
     COSStorageClass storageClass [StorageClass] (TOString)
 }
 
 model QCloudLifecycleExpiration {
+/**
+删除过期对象删除标记，NSString类型，枚举值 true，false，例如expiredObjectDeleteMarker = @"true"
+*/
+    string expiredObjectDeleteMarker [ExpiredObjectDeleteMarker]
+/**
+指明规则对应的动作在何时操作
+*/
+    string expirationDate [Date]
+/**
+指明规则对应的动作在对象最后的修改日期过后多少天操作，在Expiration里，该字段有效值为正整数
+*/
     int days [Days]
-    string date [Date]
 }
 
 enum LifecycleStatue (TOString) {
-    LifecycleStatueEnable 0 [Enable]
+/**
+规则启用
+*/
+    LifecycleStatueEnabled 0 [Enabled]
+/**
+规则不启用
+*/
     LifecycleStatueDisabled 1 [Disabled]
 }
+
+model QCloudLifecycleTag {
+/**
+标签tag的key
+*/
+     string key [Key]
+/**
+标签tag的value
+*/
+     string value [Value]
+}
+
+model QCloudLifecycleRuleFilterAnd {
+/**
+指定规则所适用的前缀。匹配前缀的对象受该规则影响。
+*/
+    string prefix [Prefix]
+/**
+标签，Tag 可以有零个或者多个
+*/
+    QCloudLifecycleTag tag [Tag]
+}
+
+model QCloudLifecycleRuleFilter {
+/**
+指定规则所适用的前缀。匹配前缀的对象受该规则影响。
+*/
+   string prefix[Prefix]
+/**
+标签，Tag 可以有零个或者多个
+*/
+   string tag[Tag]
+/**
+用于组合 Prefix 与 Tag
+*/
+   QCloudLifecycleRuleFilterAnd and [And]
+}
+
+model QCloudLifecycleAbortIncompleteMultipartUpload {
+/**
+指明分片上传开始后多少天内必须完成上传
+*/
+    int daysAfterInitiation [DaysAfterInitiation]
+}
+
+model QCloudNoncurrentVersionExpiration {
+/**
+指明非当前版本对象何时过期
+*/
+    int noncurrentDays [NoncurrentDays]
+}
+
+model QCloudNoncurrentVersionTransition {
+/**
+指明非当前版本对象何时转换被转换为 Standard_IA或 Nearline
+*/
+    int noncurrentDays [NoncurrentDays]
+/**
+指定 Object 转储到的目标存储类型，枚举值： Standard_IA, Nearline
+*/
+    COSStorageClass storageClass [StorageClass]
+}
+
 model QCloudLifecycleRule {
+/**
+用于唯一地标识规则，长度不能超过 255 个字符
+*/
   string identifier [ID]
-  string prefix [Prefix]
+/**
+Filter 用于描述规则影响的 Object 集合
+*/
+  QCloudLifecycleRuleFilter filter [Filter]
+/**
+指明规则是否启用，枚举值：Enabled，Disabled
+*/
   LifecycleStatue status [Status] (TOString)
+/**
+设置允许分片上传保持运行的最长时间
+*/
+  QCloudLifecycleAbortIncompleteMultipartUpload abortIncompleteMultipartUpload [AbortIncompleteMultipartUpload]
+/**
+规则转换属性，对象何时转换被转换为 Standard_IA 或 Nearline
+*/
   QCloudLifecycleTransition transition [Transition]
+/**
+规则过期属性
+*/
   QCloudLifecycleExpiration expiration [Expiration]
+/**
+指明非当前版本对象何时过期
+*/
+  QCloudNoncurrentVersionTransition noncurrentVersionExpiration [NoncurrentVersionExpiration]
+/**
+指明非当前版本对象何时转换被转换为 Standard_IA或 Nearline
+*/
+  QCloudNoncurrentVersionExpiration noncurrentVersionTransition [NoncurrentVersionTransition]
 }
 model QCloudLifecycleConfiguration {
+/**
+规则描述集合的数组
+*/
   array QCloudLifecycleRule rules [Rule]
 }
 request GetBucketLifecycle(DOWN.xml CW.get DOWN.xml M.cosxml) {
+/**
+需要获取lifecycle的存储桶名
+*/
     string bucket (XML.bucket need)
     method lifecycle
     response QCloudLifecycleConfiguration
 }
 
 model QCloudBucketTag {
+/**
+tag的key
+*/
     string key [Key]
+/**
+tag的值
+*/
     string value [Value]
 }
 model QCloudBucketTagging {
+/**
+tag的集合
+*/
   array QCloudBucketTag tagset [TagSet] (NODE.Tag)
 }
 
 request GetBucketTagging(DOWN.xml CW.get DOWN.xml M.cosxml) {
+/**
+存储桶名
+*/
     string bucket (XML.bucket need)
     method tagging
     response QCloudBucketTagging
 }
 
 
-request PutBucketACL(UP.xml CW.put APPEND.header M.cosxml) {
-/*定义 Object 的 ACL 属性。有效值：private，public-read-write，public-read；默认值：private*/
+request PutBucketACL(CW.put APPEND.header) {
+/**
+定义 Object 的 ACL 属性。有效值：private，public-read-write，public-read；默认值：private
+*/
     string accessControlList [x-cos-acl] (HEADER)
-/*赋予被授权者读的权限。格式：x-cos-grant-read: id=" ",id=" "；
+/**
+赋予被授权者读的权限。格式：x-cos-grant-read: id=" ",id=" "；
 当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
 当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
-其中，<OwnerUin>为根账户的uin，而<SubUin>为子账户的uin，使用时替换*/
+其中，<OwnerUin>为根账户的uin，而<SubUin>为子账户的uin，使用时替换
+*/
     string grantRead  [x-cos-grant-read] (HEADER)
-/*赋予被授权者写的权限。格式：x-cos-grant-write: id=" ",id=" "；
+/**
+赋予被授权者写的权限。格式：x-cos-grant-write: id=" ",id=" "；
 当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
 当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
-其中，<OwnerUin>为根账户的uin，而<SubUin>为子账户的uin，使用时替换*/
+其中，<OwnerUin>为根账户的uin，而<SubUin>为子账户的uin，使用时替换
+*/
     string grantWrite [x-cos-grant-write] (HEADER)
 
-/*赋予被授权者读写权限。格式: id=" ",id=" " ；
+/**
+赋予被授权者读写权限。格式: id=" ",id=" " ；
 当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
 当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
-其中，<OwnerUin>为根账户的uin，而<SubUin>为子账户的uin，使用时替换*/
+其中，<OwnerUin>为根账户的uin，而<SubUin>为子账户的uin，使用时替换
+*/
     string grantFullControl [x-cos-grant-full-control] (HEADER)
-/*存储桶名*/
+/**
+存储桶名
+*/
     string bucket (XML.bucket need)
     method acl
 }
@@ -648,7 +1087,9 @@ request PutBucketACL(UP.xml CW.put APPEND.header M.cosxml) {
 
 request PutBucketCORS(UP.xml CW.put APPEND.header HEADER.MD5.BASE64  M.cosxml) {
     QCloudCORSConfiguration corsConfiguration [CORSConfiguration] (need)
-/*存储桶名*/
+/**
+存储桶名
+*/
     string bucket (XML.bucket need)
     method cors
 }
@@ -656,7 +1097,9 @@ request PutBucketCORS(UP.xml CW.put APPEND.header HEADER.MD5.BASE64  M.cosxml) {
 
 request PutBucketLifecycle(UP.xml CW.put APPEND.header HEADER.MD5.BASE64  M.cosxml) {
     QCloudLifecycleConfiguration lifeCycle [LifecycleConfiguration] (need)
-/*存储桶名*/
+/**
+存储桶名
+*/
     string bucket (XML.bucket need)
     method lifecycle
 }
@@ -664,65 +1107,103 @@ request PutBucketLifecycle(UP.xml CW.put APPEND.header HEADER.MD5.BASE64  M.cosx
 
 request PutBucketTagging(UP.xml CW.put APPEND.header M.cosxml HEADER.MD5.BASE64) {
     QCloudBucketTagging taggings [Tagging] (need)
-/*存储桶名*/
+/**
+存储桶名
+*/
     string bucket (XML.bucket need)
     method tagging
 }
 
 
 request DeleteBucketCORS(CW.delete APPEND.header M.cosxml) {
-/*存储桶名*/
+/**
+存储桶名
+*/
     string bucket (XML.bucket need)
     method cors
 }
 
 
 request DeleteBucketLifeCycle(CW.delete APPEND.header M.cosxml) {
-/*存储桶名*/
+/**
+存储桶名
+*/
     string bucket (XML.bucket need)
     method lifecycle
 }
 
 
 request DeleteBucketTagging(CW.delete APPEND.header M.cosxml) {
-/*存储桶名*/
+/**
+存储桶名
+*/
     string bucket (XML.bucket need)
+
     method tagging
 }
 
 request HeadBucket(CW.head APPEND.header) {
-/*存储桶名*/
+/**
+存储桶名
+*/
     string bucket (XML.bucket need)
 }
 
 model QCloudListMultipartUploadContent {
-/*object的名称*/
+/**
+object的名称
+*/
     string key [Key]
-/*标示本次分块上传的ID*/
+/**
+标示本次分块上传的ID
+*/
     string uploadID [UploadId]
-/*用来标识分块的存储级别*/
+/**
+用来标识分块的存储级别
+*/
     COSStorageClass storeageClass [StorageClass] (TOString)
-/*表示本次上传发起者的信息*/
+/**
+表示本次上传发起者的信息
+*/
     string initiated [Initiated]
-/*表示这些分块所有者的信息*/
+/**
+表示这些分块所有者的信息
+*/
     QCloudMultipartUploadOwner owner [Owner]
-/*分块上传的起始时间*/
+/**
+分块上传的起始时间
+*/
     QCloudMultipartUploadInitiator initiator [Initiator]
 }
 
 model QCloudListMultipartUploadsResult {
-/*分块上传的目标存储桶名*/
+/**
+分块上传的目标存储桶名
+*/
   string bucket [Bucket]
-/*规定返回值的编码格式，合法值：url*/
+/**
+规定返回值的编码格式，合法值：url
+*/
   string encodingType [Encoding-Type]
-/*列出条目从该key值开始*/
+/**
+列出条目从该key值开始
+*/
   string keyMarker [KeyMarker]
-/*设置最大返回的multipart数量*/
+/**
+设置最大返回的multipart数量
+*/
   int maxUploads [MaxUploads]
-/*规定返回的对象的名称必须以Prefix作为前缀*/
+/**
+规定返回的对象的名称必须以Prefix作为前缀
+*/
   string prefix [Prefix]
-/*定界符为一个符号，对 Object 名字包含指定前缀且第一次出现 delimiter 字符之间的 Object 作为一组元素：common prefix。如果没有 prefix，则从路径起点开始*/
+/**
+定界符为一个符号，对 Object 名字包含指定前缀且第一次出现 delimiter 字符之间的 Object 作为一组元素：common prefix。如果没有 prefix，则从路径起点开始
+*/
   string delimiter [Delimiter]
+/*
+文件是否有被截断
+*/
   string isTruncated [IsTruncated]
 
   array QCloudListMultipartUploadContent uploads [Upload]
@@ -731,21 +1212,152 @@ model QCloudListMultipartUploadsResult {
 
 
 request ListBucketMultipartUploads(UP.url DOWN.xml M.cosxml) {
-/*存储桶名*/
+/**
+存储桶名
+*/
     string bucket (XML.bucket need)
-/*定界符为一个符号，对 Object 名字包含指定前缀且第一次出现 delimiter 字符之间的 Object 作为一组元素：common prefix。如果没有 prefix，则从路径起点开始*/
+/**
+定界符为一个符号，对 Object 名字包含指定前缀且第一次出现 delimiter 字符之间的 Object 作为一组元素：common prefix。如果没有 prefix，则从路径起点开始
+*/
     string delimiter
-/*规定返回值的编码格式，合法值：url*/
+/**
+规定返回值的编码格式，合法值：url
+*/
     string encodingType [encoding-type]
-/*限定返回的 Object key 必须以 Prefix 作为前缀。
-注意使用 prefix 查询时，返回的 key 中仍会包含 Prefix*/
+/**
+限定返回的 Object key 必须以 Prefix 作为前缀。
+注意使用 prefix 查询时，返回的 key 中仍会包含 Prefix
+*/
     string prefix [Prefix]
-/*设置最大返回的 multipart 数量，合法取值从 1 到 000*/
+/**
+设置最大返回的 multipart 数量，合法取值从 1 到 000
+*/
     int maxUploads [max-uploads]
-/*列出条目从该 key 值开始	*/
+/**
+列出条目从该 key 值开始
+*/
     string keyMarker [key-marker]
-/*列出条目从该 UploadId 值开始	*/
+/**
+列出条目从该 UploadId 值开始
+*/
     string uploadIDMarker [upload-id-marker]
     method uploads
     response QCloudListMultipartUploadsResult
+}
+
+request PutBucket(UP.url CW.PUT ) {
+/**
+定义 Object 的 ACL 属性。有效值：private，public-read-write，public-read；默认值：private
+*/
+string accessControlList [x-cos-acl] (HEADER)
+/**
+赋予被授权者读的权限。格式：x-cos-grant-read: id=" ",id=" "；
+当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
+当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
+其中，<OwnerUin>为根账户的uin，而<SubUin>为子账户的uin，使用时替换
+*/
+string grantRead  [x-cos-grant-read] (HEADER)
+/**
+赋予被授权者写的权限。格式：x-cos-grant-write: id=" ",id=" "；
+当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
+当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
+其中，<OwnerUin>为根账户的uin，而<SubUin>为子账户的uin，使用时替换
+*/
+string grantWrite [x-cos-grant-write] (HEADER)
+
+/**
+赋予被授权者读写权限。格式: id=" ",id=" " ；
+当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
+当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
+其中，<OwnerUin>为根账户的uin，而<SubUin>为子账户的uin，使用时替换
+*/
+string grantFullControl [x-cos-grant-full-control] (HEADER)
+/**
+要创建的存储桶名
+注意存储桶名只能由数字和小写字母组成，并且长度不能超过40个字符，否则会创建失败
+*/
+string bucket (XML.bucket need)
+}
+
+request DeleteBucket(CW.DELETE DOWN.xml) {
+/**
+要删除的存储桶名。注意删除之前要求bucket里的内容为空。
+*/
+     string bucket(XML.bucket need)
+}
+
+model QCloudCopyObjectResult {
+/*
+文件的 SHA-1 算法校验值。ETag 的值可以用于检查 Object 的内容是否发生变化。
+*/
+   string eTag [ETag]
+/*
+文件的最后修改时间，GMT格式
+*/
+   string lastModified [LastModified]
+}
+
+request PutObjectCopy(UP.xml CW.PUT DOWN.xml) {
+/**
+对象名
+*/
+    string object(URI0 need)
+/**
+存储桶名
+*/
+    string bucket (XML.bucket need)
+/**
+源文件 URL 路径，可以通过 versionid 子资源指定历史版本
+*/
+    string objectCopySource[x-cos-copy-source](HEADER)
+/**
+是否拷贝元数据，枚举值：Copy, Replaced，默认值 Copy。假如标记为 Copy，忽略 Header 中的用户元数据信息直接复制；假如标记为 Replaced，按 Header 信息修改元数据。当目标路径和原路径一致，即用户试图修改元数据时，必须为 Replaced
+*/
+    string metadataDirective[x-cos-metadata-directive](HEADER)
+/**
+当 Object 在指定时间后被修改，则执行操作，否则返回 412。可与 x-cos-copy-source-If-None-Match 一起使用，与其他条件联合使用返回冲突。
+*/
+    string objectCopyIfModifiedSince[x-cos-copy-source-If-Modified-Since](HEADER)
+/**
+当 Object 在指定时间后未被修改，则执行操作，否则返回 412。可与 x-cos-copy-source-If-Match 一起使用，与其他条件联合使用返回冲突。
+*/
+    string objectCopyIfUnmodifiedSince[x-cos-copy-source-If-Unmodified-Since](HEADER)
+/**
+当 Object 的 Etag 和给定一致时，则执行操作，否则返回 412。可与x-cos-copy-source-If-Unmodified-Since 一起使用，与其他条件联合使用返回冲突。
+*/
+    string objectCopyIfMatch[x-cos-copy-source-If-Match](HEADER)
+/**
+当 Object 的 Etag 和给定不一致时，则执行操作，否则返回 412。可与 x-cos-copy-source-If-Modified-Since 一起使用，与其他条件联合使用返回冲突。
+*/
+    string objectCopyIfNoneMatch[x-cos-copy-source-If-None-Match](HEADER)
+    /**
+    Object 的存储级别
+    */
+    COSStorageClass storageClass [x-cos-storage-class] (HEADER TOString)
+    /**
+    定义 Object 的 ACL 属性。有效值：private，public-read-write，public-read；默认值：private
+    */
+    string accessControlList [x-cos-acl] (HEADER)
+
+    /**
+    赋予被授权者读的权限。格式：id=" ",id=" "；
+    当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
+    当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
+    */
+    string grantRead  [x-cos-grant-read] (HEADER)
+
+    /**
+    赋予被授权者写的权限。格式：id=" ",id=" "；
+    当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
+    当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
+    */
+    string grantWrite [x-cos-grant-write] (HEADER)
+
+    /**
+    赋予被授权者读写权限。格式: id=" ",id=" " ；
+    当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
+    当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
+    */
+    string grantFullControl [x-cos-grant-full-control] (HEADER)
+    response QCloudCopyObjectResult
 }

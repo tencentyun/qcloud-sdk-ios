@@ -40,19 +40,19 @@ NS_ASSUME_NONNULL_BEGIN
 */
 @property (strong, nonatomic) NSString *bucket;
 /**
-RFC 2616 中定义的缓存策略，将作为 Object 元数据保存	
+RFC 2616 中定义的缓存策略，将作为 Object 元数据保存
 */
 @property (strong, nonatomic) NSString *cacheControl;
 /**
-RFC 2616 中定义的文件名称，将作为 Object 元数据保存	
+RFC 2616 中定义的文件名称，将作为 Object 元数据保存
 */
 @property (strong, nonatomic) NSString *contentDisposition;
 /**
-当使用 Expect: 100-continue 时，在收到服务端确认后，才会发送请求内容	
+当使用 Expect: 100-continue 时，在收到服务端确认后，才会发送请求内容
 */
 @property (strong, nonatomic) NSString *expect;
 /**
-RFC 2616 中定义的过期时间，将作为 Object 元数据保存	
+RFC 2616 中定义的过期时间，将作为 Object 元数据保存
 */
 @property (strong, nonatomic) NSString *expires;
 @property (strong, nonatomic) NSString *contentSHA1;

@@ -39,6 +39,10 @@ QCloudResponseSerializerBlock QCloudResponseXMLSerializerBlock = ^(NSHTTPURLResp
         }
         return (id)nil;
     }
+    if ([(NSData*)inputData length] == 0) {
+        NSDictionary* emptyDictionary = [[NSDictionary alloc] init];
+        return  (id)emptyDictionary;
+    }
 #ifdef DEBUG
     NSString* xmlString = [[NSString alloc] initWithData:inputData encoding:NSUTF8StringEncoding];
     QCloudLogDebug(@"XML RESPONSE:%@",xmlString);

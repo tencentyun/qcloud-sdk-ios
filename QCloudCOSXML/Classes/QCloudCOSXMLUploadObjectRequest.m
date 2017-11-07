@@ -203,11 +203,19 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     uploadRequet.grantWrite = self.grantWrite;
     uploadRequet.grantFullControl = self.grantFullControl;
     __weak typeof(self) weakSelf = self;
+
     [uploadRequet setFinishBlock:^(QCloudInitiateMultipartUploadResult * _Nonnull result,
                                    NSError * _Nonnull error) {
         if (error) {
             [weakSelf onError:error];
         } else {
+            if (weakSelf.initMultipleUploadFinishBlock) {
+                QCloudCOSXMLUploadObjectResumeData resumeData = [self productingReqsumeData:nil];
+                QCloudCOSXMLUploadObjectRequest* resumeRequest = [QCloudCOSXMLUploadObjectRequest requestWithRequestData:resumeData];
+                if (self.initMultipleUploadFinishBlock) {
+                    self.initMultipleUploadFinishBlock(result, resumeData);
+                }
+            }
             [weakSelf uploadMultiParts:result];
         }
     }];
@@ -367,7 +375,6 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
         [super onError:error];
     }
 }
-
 
 - (void) finishUpload:(NSString*)uploadId
 {

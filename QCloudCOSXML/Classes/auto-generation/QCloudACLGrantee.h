@@ -36,11 +36,11 @@ NS_ASSUME_NONNULL_BEGIN
 */
 @property (strong, nonatomic) NSString *subAccount;
 /**
- ID，格式：qcs::cam::uin/<OwnerUin>:uin/<SubUin> 如果是根帐号，<OwnerUin> 和 <SubUin> 是同一个值 
+ ID，格式：qcs::cam::uin/<OwnerUin>:uin/<SubUin> 如果是根帐号，<OwnerUin> 和 <SubUin> 是同一个值
 */
 @property (strong, nonatomic) NSString *identifier;
 /**
- 名称 
+ 名称
 */
 @property (strong, nonatomic) NSString *displayName;
 /**

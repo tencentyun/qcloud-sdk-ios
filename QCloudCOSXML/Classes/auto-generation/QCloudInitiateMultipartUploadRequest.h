@@ -44,7 +44,7 @@ RFC 2616 中定义的缓存策略，将作为对象的元数据返回
 */
 @property (strong, nonatomic) NSString *cacheControl;
 /**
-RFC 2616 中定义的文件名称，将作为 Object 元数据保存	
+RFC 2616 中定义的文件名称，将作为 Object 元数据保存
 */
 @property (strong, nonatomic) NSString *contentDisposition;
 @property (strong, nonatomic) NSString *expect;

@@ -30,6 +30,9 @@
 #import "QCloudBucketTagging.h"
 NS_ASSUME_NONNULL_BEGIN
 @interface QCloudGetBucketTaggingRequest : QCloudBizHTTPRequest
+/**
+存储桶名
+*/
 @property (strong, nonatomic) NSString *bucket;
 
 

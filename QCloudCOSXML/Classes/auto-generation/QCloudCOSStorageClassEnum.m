@@ -10,7 +10,8 @@
 #import "QCloudCOSStorageClassEnum.h"
 
 QCloudCOSStorageClass QCloudCOSStorageClassDumpFromString(NSString* key) {
-     if ([key isEqualToString:@"Standard"]) {
+      if (NO) {}
+      else if ([key isEqualToString:@"Standard"]) {
           return QCloudCOSStorageStandard;
       }
       else if ([key isEqualToString:@"Standard_IA"]) {

@@ -43,7 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 */
 @property (strong, nonatomic) NSString *uploadId;
 /**
-单次返回最大的条目数量，默认 1000	
+单次返回最大的条目数量，默认 1000
 */
 @property (strong, nonatomic) NSString *maxPartsCount;
 /**

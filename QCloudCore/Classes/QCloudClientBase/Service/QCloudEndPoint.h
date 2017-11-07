@@ -19,6 +19,7 @@ typedef NSString* QCloudServiceName;
     @protected
     QCloudRegion _regionName;
     QCloudServiceName   _serviceName;
+    NSURL* _serverURLLiteral;
 }
 /**
  是否启动HTTPS安全连接
@@ -34,5 +35,28 @@ typedef NSString* QCloudServiceName;
  */
 @property (nonatomic, copy) QCloudServiceName   serviceName;
 
+
+/**
+ 字面URL地址，改地址将作为一个字面量直接返回。
+ */
+@property (nonatomic, strong, readonly) NSURL* serverURLLiteral;
+
+
+/**
+ 通过一个包含字面URL地址的变量初始化endpoint
+
+ @param url 字面URL地址
+ @return endpoint实例
+ */
+- (instancetype) initWithLiteralURL:(NSURL*)url;
+
+
+/**
+ 通过存储桶名称和用户的appid构建服务地址
+
+ @param bucket 存储桶名称
+ @param appID appid
+ @return 对指称的用户的存储桶提供服务的服务器地址
+ */
 - (NSURL*) serverURLWithBucket:(NSString*)bucket appID:(NSString*)appID;
 @end

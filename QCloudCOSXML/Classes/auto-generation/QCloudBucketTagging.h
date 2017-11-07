@@ -31,6 +31,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 @interface QCloudBucketTagging : NSObject
+/**
+tag的集合
+*/
 @property (strong, nonatomic) NSArray<QCloudBucketTag*> *tagset;
 @end
 NS_ASSUME_NONNULL_END

@@ -25,11 +25,13 @@
 
 
 #import "QCloudUploadPartRequest+Custom.h"
-#import "QCloudUploadpartRequestRetryHandler.h"
-@implementation  QCloudUploadPartRequest (Custom)
 
-- (QCloudHTTPRetryHanlder*)retryPolicy {
-    QCloudUploadPartRequestRetryHandler* retryHandler =  [[QCloudUploadPartRequestRetryHandler alloc] initWithMaxCount:3 sleepTime:1];
-    return retryHandler;
+@implementation  QCloudUploadPartRequest (Custom)
+- (BOOL) customBuildRequestData:(NSError *__autoreleasing *)error
+{
+    if (![super customBuildRequestData:error]) {
+        return NO;
+    }
+    return YES;
 }
 @end

@@ -10,7 +10,8 @@
 #import "QCloudCOSAccountTypeEnum.h"
 
 QCloudCOSAccountType QCloudCOSAccountTypeDumpFromString(NSString* key) {
-     if ([key isEqualToString:@"RootAccount"]) {
+      if (NO) {}
+      else if ([key isEqualToString:@"RootAccount"]) {
           return QCloudCOSAccountTypeRoot;
       }
       else if ([key isEqualToString:@"SubAccount"]) {

@@ -60,6 +60,8 @@
 @class QCloudDeleteBucketTaggingRequest;
 @class QCloudHeadBucketRequest;
 @class QCloudListBucketMultipartUploadsRequest;
+@class QCloudPutObjectCopyRequest;
+@class QCloudDeleteBucketRequest;
 
 @interface QCloudCOSXMLService : QCloudService
 
@@ -87,6 +89,7 @@
 - (void) CompleteMultipartUpload:(QCloudCompleteMultipartUploadRequest*)request;
 - (void) AbortMultipfartUpload:(QCloudAbortMultipfartUploadRequest*)request;
 - (void) GetObject:(QCloudGetObjectRequest*)request;
+- (void) PutBucket:(QCloudPutBucketRequest*)request;
 - (void) GetBucket:(QCloudGetBucketRequest*)request;
 - (void) GetBucketACL:(QCloudGetBucketACLRequest*)request;
 - (void) GetBucketCORS:(QCloudGetBucketCORSRequest*)request;
@@ -100,6 +103,8 @@
 - (void) DeleteBucketCORS:(QCloudDeleteBucketCORSRequest*)request;
 - (void) DeleteBucketLifeCycle:(QCloudDeleteBucketLifeCycleRequest*)request;
 - (void) DeleteBucketTagging:(QCloudDeleteBucketTaggingRequest*)request;
+- (void) DeleteBucket:(QCloudDeleteBucketRequest*)request;
 - (void) HeadBucket:(QCloudHeadBucketRequest*)request;
+- (void) PutObjectCopy:(QCloudPutObjectRequest*)request;
 - (void) ListBucketMultipartUploads:(QCloudListBucketMultipartUploadsRequest*)request;
 @end

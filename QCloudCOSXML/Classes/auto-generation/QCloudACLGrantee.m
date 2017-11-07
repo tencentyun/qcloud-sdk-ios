@@ -40,7 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
       @"identifier" :@"ID",
       @"displayName" :@"DisplayName",
       @"type" :@"_type",
-      @"xmlns":@"_xsi"
+      @"xmlns" :@"_xmlns",
   };
 }
 
@@ -48,11 +48,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic
 {
 
-    NSNumber* COSAccountTypeenumValue = dic[@"_xsi:type"];
+    NSNumber* COSAccountTypeenumValue = dic[@"_type"];
     if (COSAccountTypeenumValue) {
         NSString* value = QCloudCOSAccountTypeTransferToString([COSAccountTypeenumValue intValue]);
         if (value) {
-            dic[@"_xsi:type"] = value;
+            dic[@"_type"] = value;
         }
     }
 
@@ -66,10 +66,10 @@ NS_ASSUME_NONNULL_BEGIN
     }
     NSMutableDictionary* transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
 
-        NSString* COSAccountTypeenumValue = transfromDic[@"_xsi:type"];
+        NSString* COSAccountTypeenumValue = transfromDic[@"_type"];
         if (COSAccountTypeenumValue && [COSAccountTypeenumValue isKindOfClass:[NSString class]] && COSAccountTypeenumValue.length > 0) {
             int value = QCloudCOSAccountTypeDumpFromString(COSAccountTypeenumValue);
-            transfromDic[@"_xsi:type"] = @(value);
+            transfromDic[@"_type"] = @(value);
         }
     return transfromDic;
 }

@@ -8,8 +8,12 @@
 
 #import "QCloudEndPoint.h"
 #import "QCloudError.h"
+static NSString* QCloudHTTPScheme = @"http://";
+static NSString* QCloudHTTPSScheme = @"https://";
+
 
 @interface QCloudEndPoint ()
+@property (nonatomic, strong) NSURL* serverURLLiteral;
 @end
 
 @implementation QCloudEndPoint
@@ -21,6 +25,37 @@
     }
     _useHTTPS = NO;
     return self;
+}
+- (instancetype) initWithLiteralURL:(NSURL *)url
+{
+    self = [super init];
+    if (!self) {
+        return self;
+    }
+    _serverURLLiteral = url;
+    if ([_serverURLLiteral.absoluteString.lowercaseString hasPrefix:QCloudHTTPSScheme]) {
+        _useHTTPS = YES;
+    } else {
+        _useHTTPS = NO;
+    }
+    return self;
+}
+
+
+- (NSURL*) serverURLLiteral
+{
+    NSString* url = _serverURLLiteral.absoluteString;
+    if ([url.lowercaseString hasPrefix:QCloudHTTPSScheme]) {
+        url = [url substringFromIndex:QCloudHTTPSScheme.length];
+    } else if ([url.lowercaseString hasPrefix:QCloudHTTPScheme]) {
+        url = [url substringFromIndex:QCloudHTTPScheme.length];
+    }
+    if (self.useHTTPS) {
+        url = [QCloudHTTPSScheme stringByAppendingString:url];
+    } else {
+        url = [QCloudHTTPScheme stringByAppendingString:url];
+    }
+    return [NSURL URLWithString:url];
 }
 
 - (NSURL*) serverURLWithBucket:(NSString *)bucket appID:(NSString *)appID
@@ -35,9 +70,7 @@
     endpoint.useHTTPS = self.useHTTPS;
     endpoint.serviceName = self.serviceName;
     endpoint.regionName = self.regionName;
+    endpoint.serverURLLiteral = _serverURLLiteral;
     return endpoint;
 }
-
-
-
 @end

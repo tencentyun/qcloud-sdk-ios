@@ -58,7 +58,7 @@ QCloudThreadSafeMutableDictionary* QCloudCOSTransferMangerServiceCache()
 static QCloudCOSTransferMangerService* COSTransferMangerService = nil;
 
 
-+ (QCloudCOSTransferMangerService*) defaultCOSTRANSFERMANGER
++ (QCloudCOSTransferMangerService*) defaultCOSTransferManager
 {
     @synchronized (self) {
         if (!COSTransferMangerService) {
@@ -68,7 +68,7 @@ static QCloudCOSTransferMangerService* COSTransferMangerService = nil;
     }
 }
 
-+ (QCloudCOSTransferMangerService*) registerDefaultCOSTransferMangerWithConfiguration:(QCloudServiceConfiguration*)configuration
++ (QCloudCOSTransferMangerService*) registerdefaultCOSTransferManagerWithConfiguration:(QCloudServiceConfiguration*)configuration
 {
     @synchronized (self) {
         COSTransferMangerService = [[QCloudCOSTransferMangerService alloc] initWithConfiguration:configuration];
