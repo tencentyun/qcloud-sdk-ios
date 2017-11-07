@@ -210,8 +210,8 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
             [weakSelf onError:error];
         } else {
             if (weakSelf.initMultipleUploadFinishBlock) {
+                self.uploadId = result.uploadId;
                 QCloudCOSXMLUploadObjectResumeData resumeData = [self productingReqsumeData:nil];
-                QCloudCOSXMLUploadObjectRequest* resumeRequest = [QCloudCOSXMLUploadObjectRequest requestWithRequestData:resumeData];
                 if (self.initMultipleUploadFinishBlock) {
                     self.initMultipleUploadFinishBlock(result, resumeData);
                 }
@@ -484,7 +484,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
         path = QCloudFilteLocalPath(path);
         self.body = path;
         NSData* info = [self qcloud_modelToJSONData];
-        QCloudLogDebug(@"RESUME data %@",info);
+        QCloudLogDebug(@"RESUME data %@",[[NSString alloc] initWithData:info encoding:NSUTF8StringEncoding]);
         self.body = url;
     [_recursiveLock unlock];
     return info;
