@@ -1,6 +1,6 @@
 //
-//  QCloudLifecycleRuleFilterAnd.m
-//  QCloudLifecycleRuleFilterAnd
+//  QCloudLifecycleRuleFilter.m
+//  QCloudLifecycleRuleFilter
 //
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.
@@ -24,29 +24,30 @@
 //
 
 
-#import "QCloudLifecycleRuleFilterAnd.h"
+#import "QCloudLifecycleRuleFilter.h"
 
-#import "QCloudLifecycleTag.h"
+#import "QCloudLifecycleRuleFilterAnd.h"
 
 
 NS_ASSUME_NONNULL_BEGIN
-@implementation QCloudLifecycleRuleFilterAnd
+@implementation QCloudLifecycleRuleFilter
 
 
 
 + (NSDictionary *)modelCustomPropertyMapper
 {
-  return @{
-      @"prefix" :@"Prefix",
-      @"tag" :@"Tag",
-  };
+    return @{
+             @"prefix" :@"Prefix",
+             @"tag" :@"Tag",
+             @"ruleFilterAnd" :@"And",
+             };
 }
 
 
 - (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic
 {
-
-
+    
+    
     return YES;
 }
 
@@ -56,7 +57,7 @@ NS_ASSUME_NONNULL_BEGIN
         return dic;
     }
     NSMutableDictionary* transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
-
+    
     return transfromDic;
 }
 
@@ -64,3 +65,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 NS_ASSUME_NONNULL_END
+
