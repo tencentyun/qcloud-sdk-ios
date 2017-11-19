@@ -1,6 +1,6 @@
 //
-//  QCloudLifecycleRuleFilter.m
-//  QCloudLifecycleRuleFilter
+//  QCloudLifecycleRuleFilterAnd.m
+//  QCloudLifecycleRuleFilterAnd
 //
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.
@@ -24,13 +24,13 @@
 //
 
 
-#import "QCloudLifecycleRuleFilter.h"
-
 #import "QCloudLifecycleRuleFilterAnd.h"
+
+#import "QCloudLifecycleTag.h"
 
 
 NS_ASSUME_NONNULL_BEGIN
-@implementation QCloudLifecycleRuleFilter
+@implementation QCloudLifecycleRuleFilterAnd
 
 
 
@@ -39,7 +39,6 @@ NS_ASSUME_NONNULL_BEGIN
     return @{
              @"prefix" :@"Prefix",
              @"tag" :@"Tag",
-             @"ruleFilterAnd" :@"And",
              };
 }
 
@@ -65,4 +64,3 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 NS_ASSUME_NONNULL_END
-

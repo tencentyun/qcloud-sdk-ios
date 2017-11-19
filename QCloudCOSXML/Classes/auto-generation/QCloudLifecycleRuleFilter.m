@@ -36,18 +36,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSDictionary *)modelCustomPropertyMapper
 {
-  return @{
-      @"prefix" :@"Prefix",
-      @"tag" :@"Tag",
-      @"and" :@"And",
-  };
+    return @{
+             @"prefix" :@"Prefix",
+             @"tag" :@"Tag",
+             @"ruleFilterAnd" :@"And",
+             };
 }
 
 
 - (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic
 {
-
-
+    
+    
     return YES;
 }
 
@@ -57,7 +57,7 @@ NS_ASSUME_NONNULL_BEGIN
         return dic;
     }
     NSMutableDictionary* transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
-
+    
     return transfromDic;
 }
 
@@ -65,3 +65,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 NS_ASSUME_NONNULL_END
+
