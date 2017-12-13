@@ -36,15 +36,30 @@
     }
 }
 
-
+- (NSString *)formattedBucket:(NSString*)bucket withAPPID:(NSString*)APPID {
+    NSInteger subfixLength = APPID.length + 1;
+    if (bucket.length <= subfixLength) {
+        return bucket;
+    }
+    NSString* APPIDSubfix = [NSString stringWithFormat:@"-%@",APPID];
+    NSString* subfixString = [bucket substringWithRange:NSMakeRange(bucket.length - subfixLength  , subfixLength)];
+    if ([subfixString isEqualToString:APPIDSubfix]) {
+        return [bucket substringWithRange:NSMakeRange(0, bucket.length - subfixLength)];
+    }
+    //should not reach here
+    return bucket;
+}
 
 - (NSURL*) serverURLWithBucket:(NSString *)bucket appID:(NSString *)appID
 {
     NSString* scheme = @"https";
     if (!self.useHTTPS) {
         scheme = @"http";
-    }    
-    NSURL* serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@-%@.%@.%@",scheme,bucket,appID,[self formattedRegionName:self.regionName],self.serviceName]];
+    }
+    NSString* formattedRegionName = [self formattedRegionName:self.regionName];
+    NSString* formattedBucketName = [self formattedBucket:bucket withAPPID:appID];
+    NSURL* serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@-%@.%@.%@",scheme,formattedBucketName,appID,formattedRegionName,self.serviceName]];
     return serverURL;
 }
 @end
+
