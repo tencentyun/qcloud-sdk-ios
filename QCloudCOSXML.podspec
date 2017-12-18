@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.dependency "QCloudCore",'5.2.0'
 
   s.subspec 'Transfer' do |sbt|
-    sbt.source_files = 'QCloudCOSXML/Classes/Transfer/*','Pod/Classes/Base/*'
+    sbt.source_files = 'QCloudCOSXML/Classes/Transfer/*','QCloudCOSXML/Classes/Base/*'
     sbt.dependency "QCloudCore",'5.2.0'
   end
 end
