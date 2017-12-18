@@ -42,6 +42,9 @@
     _writeReadQueue = dispatch_queue_create("com.tencent.qcloud.service.lock", DISPATCH_QUEUE_CONCURRENT);
     return self;
 }
+- (QCloudHTTPSessionManager*) sessionManager {
+    return [QCloudHTTPSessionManager shareClient];
+}
 
 - (QCloudSignatureFields*) signatureFiledsForRequest:(QCloudBizHTTPRequest*)request
 {

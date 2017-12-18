@@ -9,7 +9,19 @@
 #import <UIKit/UIKit.h>
 #import "QCloudModel.h"
 @interface QCloudSHAPart : QCloudModel
-@property (nonatomic, strong) NSString* sha;
+
+/**
+ sha值
+ */
+@property (nonatomic, strong) NSString* datasha;
+
+/**
+ offset
+ */
 @property (nonatomic, assign) uint64_t offset;
-@property (nonatomic, assign) uint64_t length;
+
+/**
+ 长度
+ */
+@property (nonatomic, assign) uint64_t datalen;
 @end

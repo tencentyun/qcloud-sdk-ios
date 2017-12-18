@@ -91,20 +91,20 @@
         _activeSession = [[QCloudSupervisorySession alloc] init];
     } else {
         __block QCloudSupervisorySession* oldSession;
-        dispatch_barrier_sync(_readWriteQueue, ^{
+        dispatch_barrier_async(_readWriteQueue, ^{
              oldSession = _activeSession;
             [_activeSession markFinish];
             _activeSession = [[QCloudSupervisorySession alloc] init];
             _activeSession.ips = [_hostIps copy];
-        });
-        dispatch_async(_readWriteQueue, ^{
             [self flushSession:oldSession];
         });
+
     }
 }
 
 - (void) record:(QCloudSupervisoryRecord*)record
 {
+    // deal lock warning by ericcheung
     dispatch_barrier_sync(_readWriteQueue, ^{
         if (!_activeSession) {
             [self alternateActiveSession];

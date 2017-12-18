@@ -36,4 +36,6 @@
 #import "QCloudAuthentationV5Creator.h"
 #import "QCloudAuthentationV4Creator.h"
 #import "QCloudCredentailFenceQueue.h"
+#import "QCloudMultiDelegateProxy.h"
+
 #endif /* QCloudCore_h */

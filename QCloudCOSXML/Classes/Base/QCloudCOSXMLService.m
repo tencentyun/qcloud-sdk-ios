@@ -1,0 +1,87 @@
+//
+//  COSXML.m
+//  COSXML
+//
+//  Created by tencent
+//  Copyright (c) 2015年 tencent. All rights reserved.
+//
+//   ██████╗  ██████╗██╗      ██████╗ ██╗   ██╗██████╗     ████████╗███████╗██████╗ ███╗   ███╗██╗███╗   ██╗ █████╗ ██╗         ██╗      █████╗ ██████╗
+//  ██╔═══██╗██╔════╝██║     ██╔═══██╗██║   ██║██╔══██╗    ╚══██╔══╝██╔════╝██╔══██╗████╗ ████║██║████╗  ██║██╔══██╗██║         ██║     ██╔══██╗██╔══██╗
+//  ██║   ██║██║     ██║     ██║   ██║██║   ██║██║  ██║       ██║   █████╗  ██████╔╝██╔████╔██║██║██╔██╗ ██║███████║██║         ██║     ███████║██████╔╝
+//  ██║▄▄ ██║██║     ██║     ██║   ██║██║   ██║██║  ██║       ██║   ██╔══╝  ██╔══██╗██║╚██╔╝██║██║██║╚██╗██║██╔══██║██║         ██║     ██╔══██║██╔══██╗
+//  ╚██████╔╝╚██████╗███████╗╚██████╔╝╚██████╔╝██████╔╝       ██║   ███████╗██║  ██║██║ ╚═╝ ██║██║██║ ╚████║██║  ██║███████╗    ███████╗██║  ██║██████╔╝
+//   ╚══▀▀═╝  ╚═════╝╚══════╝ ╚═════╝  ╚═════╝ ╚═════╝        ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝    ╚══════╝╚═╝  ╚═╝╚═════╝
+//
+//
+//                                                                              _             __                 _                _
+//                                                                             (_)           / _|               | |              | |
+//                                                          ___  ___ _ ____   ___  ___ ___  | |_ ___  _ __    __| | _____   _____| | ___  _ __   ___ _ __ ___
+//                                                         / __|/ _ \ '__\ \ / / |/ __/ _ \ |  _/ _ \| '__|  / _` |/ _ \ \ / / _ \ |/ _ \| '_ \ / _ \ '__/ __|
+//                                                         \__ \  __/ |   \ V /| | (_|  __/ | || (_) | |    | (_| |  __/\ V /  __/ | (_) | |_) |  __/ |  \__
+//                                                         |___/\___|_|    \_/ |_|\___\___| |_| \___/|_|     \__,_|\___| \_/ \___|_|\___/| .__/ \___|_|  |___/
+//    ______ ______ ______ ______ ______ ______ ______ ______                                                                            | |
+//   |______|______|______|______|______|______|______|______|                                                                           |_|
+//
+
+
+#import "QCloudCOSXMLService.h"
+#import "QCloudCOSXMLService+Configuration.h"
+#import "QCloudCOSXMLService+Private.h"
+#import "QCloudThreadSafeMutableDictionary.h"
+#import "QCLoudError.h"
+
+
+QCloudThreadSafeMutableDictionary* QCloudCOSXMLServiceCache()
+{
+    static QCloudThreadSafeMutableDictionary* CloudcosxmlService = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        CloudcosxmlService = [QCloudThreadSafeMutableDictionary new];
+    });
+    return CloudcosxmlService;
+}
+
+@implementation QCloudCOSXMLService
+static QCloudCOSXMLService* COSXMLService = nil;
+
+
++ (QCloudCOSXMLService*) defaultCOSXML
+{
+    @synchronized (self) {
+        if (!COSXMLService) {
+            @throw [NSException exceptionWithName:QCloudErrorDomain reason:@"您没有配置默认的OCR服务配置，请配置之后再调用该方法" userInfo:nil];
+        }
+        return COSXMLService;
+    }
+}
+
++ (QCloudCOSXMLService*) registerDefaultCOSXMLWithConfiguration:(QCloudServiceConfiguration*)configuration
+{
+    @synchronized (self) {
+        COSXMLService = [[QCloudCOSXMLService alloc] initWithConfiguration:configuration];
+    }
+    return COSXMLService;
+}
+
++ (QCloudCOSXMLService*) cosxmlServiceForKey:(NSString*)key
+{
+    QCloudCOSXMLService* cosxmlService = [QCloudCOSXMLServiceCache() objectForKey:key];
+    if (!cosxmlService) {
+        @throw [NSException exceptionWithName:QCloudErrorDomain reason:[NSString stringWithFormat:@"您没有配置Key为%@的OCR服务配置，请配置之后再调用该方法", key] userInfo:nil];
+    }
+    return cosxmlService;
+}
+
++ (void) removeCOSXMLWithKey:(NSString*) key {
+    [QCloudCOSXMLServiceCache() removeObjectForKey:key];
+}
+
++ (QCloudCOSXMLService*) registerCOSXMLWithConfiguration:(QCloudServiceConfiguration*)configuration withKey:(NSString*)key;
+{
+    QCloudCOSXMLService* cosxmlService =[[QCloudCOSXMLService alloc] initWithConfiguration:configuration];
+    [QCloudCOSXMLServiceCache() setObject:cosxmlService  forKey:key];
+    return cosxmlService;
+}
+
+
+@end

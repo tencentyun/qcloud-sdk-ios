@@ -14,4 +14,5 @@
 - (void) addOpreation:(QCloudRequestOperation*)operation;
 - (void) cancel:(QCloudRequestOperation*)operation;
 - (void) cancelByRequestID:(int64_t)requestID;
+- (void) cancelByRequestIDs:(NSArray<NSNumber*>*)requestIDs;
 @end

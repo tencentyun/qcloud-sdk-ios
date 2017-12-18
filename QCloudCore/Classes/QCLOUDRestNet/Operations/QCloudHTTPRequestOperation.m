@@ -20,6 +20,7 @@
 #import "QCloudFileUtils.h"
 #import "NSError+QCloudNetworking.h"
 #import "QCloudFileOffsetBody.h"
+#import "NSError+QCloudNetworking.h"
 
 @interface QCloudHTTPRequestOperation ()
 @property (nonatomic, strong, readonly) QCloudHTTPRequest* httpRequest;
@@ -40,8 +41,19 @@
 - (void) main
 {
     @autoreleasepool {
+    
         QCloudRequestFinishBlock originFinishBlock = self.httpRequest.finishBlock;
-        
+        if (self.httpRequest.canceled) {
+            QCloudRemoveFileByPath(self.tempFilePath);
+            if ([self.delagte respondsToSelector:@selector(requestOperationFinish:)]) {
+                [self.delagte requestOperationFinish:self];
+            }
+            if (originFinishBlock) {
+                NSError* cancel = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeCanceled message:@"已经取消了，不再执行"];
+                originFinishBlock(nil, cancel);
+            }
+            return;
+        }
         __weak typeof(self) weakSelf = self;
         [self.httpRequest setFinishBlock:^(id outputObject, NSError *error) {
             QCloudRemoveFileByPath(weakSelf.tempFilePath);
@@ -53,8 +65,8 @@
             }
         }];
         
+        QCloudLogDebug(@"开始执行一个请求:%lld", self.httpRequest.requestID);
         [[QCloudHTTPSessionManager shareClient] executeRestHTTPReqeust:self.httpRequest];
-        
     }
 }
 @end

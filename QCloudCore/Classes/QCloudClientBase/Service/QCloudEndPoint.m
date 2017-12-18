@@ -8,9 +8,7 @@
 
 #import "QCloudEndPoint.h"
 #import "QCloudError.h"
-static NSString* QCloudHTTPScheme = @"http://";
-static NSString* QCloudHTTPSScheme = @"https://";
-
+#import "QCloudURLTools.h"
 
 @interface QCloudEndPoint ()
 @property (nonatomic, strong) NSURL* serverURLLiteral;

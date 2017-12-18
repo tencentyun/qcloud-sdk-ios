@@ -283,6 +283,57 @@ NSString* const HTTPHeaderUserAgent = @"User-Agent";
     return YES;
 }
 
+- (BOOL)appendPartWithFileURL:(nonnull NSURL *)fileURL
+                         name:(nonnull NSString *)name
+                     fileName:(nonnull NSString *)fileName
+                       offset:(int64_t)offset
+                  sliceLength:(int)sliceLength
+                     mimeType:(nonnull NSString *)mimeType
+              headerParamters:(nullable NSDictionary*)paramerts
+                        error:(  NSError * _Nullable   __autoreleasing   *)error
+{
+#ifdef DEBUG
+    NSParameterAssert(fileURL);
+    NSParameterAssert(name);
+    NSParameterAssert(fileName);
+    NSParameterAssert(mimeType);
+#else
+    B_ENSURE_NOT_NIL_PARAMTER(fileURL);
+    B_ENSURE_NOT_NIL_PARAMTER(name);
+    B_ENSURE_NOT_NIL_PARAMTER(fileName);
+    B_ENSURE_NOT_NIL_PARAMTER(mimeType);
+#endif
+    
+    if (![fileURL isFileURL]) {
+        if (error) {
+            *error = [NSError qcloud_errorWithCode:NSURLErrorBadURL message:NSLocalizedStringFromTable(@"Expected URL to be a file URL", @"QCloudNetworking", nil)];
+        }
+        
+        return NO;
+    } else if ([fileURL checkResourceIsReachableAndReturnError:error] == NO) {
+        if (error) {
+            *error = [NSError qcloud_errorWithCode:NSURLErrorBadURL message:[NSString stringWithFormat:@"File URL not reachable. %@", fileURL]];
+        }
+        return NO;
+    }
+    
+    NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[fileURL path] error:error];
+    if (!fileAttributes) {
+        return NO;
+    }
+    
+    QCloudHTTPBodyPart* part = [[QCloudHTTPBodyPart alloc] initWithURL:fileURL offetSet:offset withContentLength:sliceLength ];
+    [part setValue:[NSString stringWithFormat:@"form-data; name=\"%@\"; filename=\"%@\"", name, fileName]forHeaderKey:@"Content-Disposition"];
+    
+    [part setHeaderValueWithMap:paramerts];
+    [part setValue:mimeType forHeaderKey:@"Content-Type"];
+    
+    [[self multiDataStream] appendBodyPart:part];
+    
+    return YES;
+}
+
+
 - (void) setStringEncoding:(NSStringEncoding)stringEncoding
 {
     _stringEncoding = stringEncoding;

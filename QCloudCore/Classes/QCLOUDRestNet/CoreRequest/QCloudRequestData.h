@@ -145,11 +145,45 @@ extern NSString* const HTTPHeaderUserAgent;
 - (BOOL) appendFormDataKey:(NSString*)key
                      value:(NSString*)value;
 
+/**
+ 添加文件内容部分
+
+ @param fileURL URL
+ @param name 文件名
+ @param fileName 文件名
+ @param mimeType mimeType
+ @param paramerts 头部参数
+ @param error error
+ @return 成功与否
+ */
 - (BOOL)appendPartWithFileURL:(nonnull NSURL *)fileURL
                          name:(nonnull NSString *)name
                      fileName:(nonnull NSString *)fileName
                      mimeType:(nonnull NSString *)mimeType
               headerParamters:(nullable NSDictionary*)paramerts
                         error:(  NSError * _Nullable   __autoreleasing   *)error;
+
+/**
+ 添加分片文件内容部分
+
+ @param fileURL url
+ @param name name
+ @param fileName fileName
+ @param offset offset
+ @param sliceLength sliceLength
+ @param mimeType mimeType
+ @param paramerts parameters
+ @param error error
+ @return 成功与否
+ */
+- (BOOL)appendPartWithFileURL:(nonnull NSURL *)fileURL
+                         name:(nonnull NSString *)name
+                     fileName:(nonnull NSString *)fileName
+                       offset:(int64_t)offset
+                  sliceLength:(int)sliceLength
+                     mimeType:(nonnull NSString *)mimeType
+              headerParamters:(nullable NSDictionary*)paramerts
+                        error:(  NSError * _Nullable   __autoreleasing   *)error;
+
 @end
 NS_ASSUME_NONNULL_END

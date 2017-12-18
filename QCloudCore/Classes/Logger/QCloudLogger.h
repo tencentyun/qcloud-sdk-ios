@@ -35,6 +35,8 @@ exception.name, exception, \
 
 #define QCloudLogTrance()\
 QCloudLog(QCloudLogLevelDebug,@"%@",[NSThread callStackSymbols])
+
+
 @interface QCloudLogger : NSObject
 
 

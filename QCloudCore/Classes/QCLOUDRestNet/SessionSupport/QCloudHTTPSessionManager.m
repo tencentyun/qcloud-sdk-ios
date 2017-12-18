@@ -93,6 +93,10 @@ NSString* TaskMapKey(NSURLSessionTask* task) {
     }
 }
 
+- (void) cancelRequests:(NSArray<NSNumber*>*)requestID
+{
+    
+}
 - (void) cacheTask:(NSURLSessionTask*)task data:(QCloudURLSessionTaskData*)data forSEQ:(int)seq
 {
     if (!task) {
@@ -166,7 +170,6 @@ NSString* TaskMapKey(NSURLSessionTask* task) {
 - (void) URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didFinishCollectingMetrics:(NSURLSessionTaskMetrics *)metrics
 {
     QCloudURLSessionTaskData* taskData = [self taskDataForTask:task];
-    QCloudLogDebug(@"metricts %@ %d",metrics, metrics.transactionMetrics.count);
     NSURLSessionTaskTransactionMetrics* networkMetrics = nil;
     for (NSURLSessionTaskTransactionMetrics* m in metrics.transactionMetrics) {
         if (m.resourceFetchType == NSURLSessionTaskMetricsResourceFetchTypeNetworkLoad) {
@@ -323,6 +326,13 @@ NSString* TaskMapKey(NSURLSessionTask* task) {
     NSURLSessionTask* task  = [self taskForSEQ:requestID];
     [task cancel];
     [self removeTaskForSEQ:requestID];
+}
+
+- (void) cancelRequestsWithID:(NSArray<NSNumber*>*)requestIDs {
+    [self.operationQueue cancelByRequestIDs:requestIDs];
+    for (NSNumber* requestID in requestIDs) {
+        [self cancelRequestWithID:[requestID intValue]];
+    }
 }
 
 - (void) cancelAllRequest

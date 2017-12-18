@@ -20,6 +20,7 @@
 #import "QCloudSupervisory.h"
 #import "QCloudHTTPSessionManager.h"
 #import "NSError+QCloudNetworking.h"
+#import "NSObject+HTTPHeadersContainer.h"
 
 @interface QCloudHTTPRequest ()
 {
@@ -158,6 +159,8 @@
     if (NSURLErrorCancelled == error.code && [NSURLErrorDomain isEqualToString:error.domain]) {
         error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeCanceled message:@"The request is canceled"];
     }
+    _httpURLError.__originHTTPURLResponse__ = response;
+    error.__originHTTPURLResponse__ = response;
     [self onError:error];
 }
 - (void) onReciveRespone:(NSHTTPURLResponse *)response data:(NSData *)data
@@ -187,10 +190,12 @@
     id outputObject = [self.responseSerializer decodeWithWithResponse:response data:data error:&localError];
     [self.benchMarkMan markFinishWithKey:kRNBenchmarkResponse];
     if (localError) {
+        localError.__originHTTPURLResponse__ = response;
         QCloudLogError(@"[%@][%lld] %@", [self class], self.requestID, localError);
         [self onError:localError];
     } else {
         QCloudLogDebug(@"[%@][%lld] RESPONSE \n%@ ", [self class], self.requestID, [outputObject qcloud_modelToJSONString]);
+        [outputObject set__originHTTPURLResponse__:response];
         [self onSuccess:outputObject];
     }
 }

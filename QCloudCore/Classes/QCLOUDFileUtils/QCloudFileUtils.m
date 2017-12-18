@@ -302,7 +302,7 @@ NSArray<QCloudSHAPart*>*  QCloudIncreaseFileSHAData(NSString *path, uint64_t sli
             }
             QCloudSHAPart* part = [[QCloudSHAPart alloc] init];
             part.offset = offset;
-            part.length = partLength;
+            part.datalen = partLength;
             offset += partLength;
             totalData += partLength;
             unsigned char * digest =(unsigned char *) & sha.h0;
@@ -313,7 +313,7 @@ NSArray<QCloudSHAPart*>*  QCloudIncreaseFileSHAData(NSString *path, uint64_t sli
                                 digest[ 8], digest[ 9], digest[10], digest[11],
                                 digest[12], digest[13], digest[14], digest[15],
                                 digest[16], digest[17], digest[18], digest[19]];
-            part.sha = result;
+            part.datasha = result;
             [arr addObject:part];
         }
     }
@@ -329,8 +329,8 @@ NSArray<QCloudSHAPart*>*  QCloudIncreaseFileSHAData(NSString *path, uint64_t sli
                         digest[16], digest[17], digest[18], digest[19]];
     QCloudSHAPart* part = [[QCloudSHAPart alloc] init];
     part.offset = 0;
-    part.length = totalData;
-    part.sha = result;
+    part.datalen = totalData;
+    part.datasha = result;
     [arr addObject:part];
 #ifdef DEBUG
     NSLog(@"sh1 time is %f", CFAbsoluteTimeGetCurrent() - beginTime);

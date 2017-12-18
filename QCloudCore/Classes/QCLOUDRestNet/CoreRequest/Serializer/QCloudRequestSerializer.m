@@ -123,6 +123,7 @@ NSString* QCloudEncodeURL(NSString* url) {
     return path;
 }
 
+
 NSDictionary* QCloudURLReadQuery(NSURL* url)
 {
     NSString* query = url.query;

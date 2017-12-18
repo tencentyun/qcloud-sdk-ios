@@ -1,3 +1,9 @@
+# 5.2.0
+- 增加了精简版的SDK，只支持上传下载功能。
+- BucketName概念统一。
+- 支持查看Response中原始的HTTP Response内容。
+- 其它一些BUG修复与性能优化。
+
 # 5.1.3
 - BucketName概念统一。
 

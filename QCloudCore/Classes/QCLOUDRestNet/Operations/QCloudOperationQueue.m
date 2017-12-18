@@ -104,6 +104,7 @@
 
 - (void) cancel:(QCloudRequestOperation *)operation
 {
+    QCloudLogDebug(@"[%llu] cancelled by operation",operation.request.requestID);
     [_dataLock lock];
     [_runningOperationArray removeObject:operation];
     [_operationArray removeObject:operation];
@@ -113,18 +114,35 @@
 
 - (void) cancelByRequestID:(int64_t)requestID
 {
+    QCloudLogDebug(@"[%llu] cancelled by request id ",requestID);
     [_dataLock lock];
+    [self removeRequestInQueue:requestID];
+    [self tryStartAnyOperation];
+    [_dataLock unlock];
+}
+
+- (void)removeRequestInQueue:(int64_t) requestID {
     void(^RemoveOperation)(NSMutableArray* array) = ^(NSMutableArray* array) {
         for (QCloudRequestOperation* request in [array copy]) {
             if (request.request.requestID == requestID) {
                 [array removeObject:request];
+                QCloudLogDebug(@"[%llu] request removed successes!");
             }
         }
     };
     RemoveOperation(_runningOperationArray);
     RemoveOperation(_operationArray);
-    [self tryStartAnyOperation];
-    [_dataLock unlock];
 }
+
+- (void) cancelByRequestIDs:(NSArray<NSNumber*>*)requestIDs {
+    QCloudLogDebug(@"cancelled by request ids ",requestIDs);
+    [_dataLock lock];
+    for (NSNumber* requestID in requestIDs) {
+        [self removeRequestInQueue:[requestID longLongValue]];
+    }
+    [_dataLock unlock];
+    [self tryStartAnyOperation];
+}
+
 @end
 

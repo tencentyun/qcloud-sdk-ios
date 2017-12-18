@@ -1050,7 +1050,7 @@ request GetBucketTagging(DOWN.xml CW.get DOWN.xml M.cosxml) {
 }
 
 
-request PutBucketACL(CW.put APPEND.header) {
+request PutBucketACL(CW.put APPEND.header  M.cosxml) {
 /**
 定义 Object 的 ACL 属性。有效值：private，public-read-write，public-read；默认值：private
 */
@@ -1361,3 +1361,219 @@ request PutObjectCopy(UP.xml CW.PUT DOWN.xml) {
     string grantFullControl [x-cos-grant-full-control] (HEADER)
     response QCloudCopyObjectResult
 }
+
+enum COSBucketVersioningStatus (TOString) {
+    /**
+    开启版本
+    */
+    COSBucketVersioningStatusEnabled 0 [Enabled]
+    /**
+    关闭版本
+    */
+    COSBucketVersioningStatusSuspended 1[Suspended]
+}
+
+model QCloudBucketVersioningConfiguration {
+    /**
+    说明版本是否开启，枚举值：Suspended\Enabled
+    */
+    COSBucketVersioningStatus status [Status] (TOString)
+}
+
+request PutBucketVersioning (UP.xml CW.PUT DOWN.xml M.cosxml) {
+    /**
+    存储桶名称
+    */
+    string bucket (need XML.bucket)
+    /**
+    版本控制的具体信息
+    */
+ QCloudBucketVersioningConfiguration configuration [VersioningConfiguration]
+    method versioning
+}
+
+request GetBucketVersioning (CW.GET DOWN.xml M.cosxml) {
+/**
+存储桶名称
+*/
+    string bucket (need XML.bucket)
+    method versioning
+    response QCloudBucketVersioningConfiguration
+}
+
+model QCloudBucketReplicationDestination {
+    /**
+    资源标识符,注意与存储桶不同，格式为：qcs:id/0:cos:[region]:appid/[AppId]:[bucketname]
+    */
+    string bucket [Bucket]
+    /**
+    存储级别，枚举值：Standard, Standard_IA, Nearline；默认值：原存储桶级别
+    */
+    COSStorageClass storageClass [StorageClass] (TOString)
+}
+
+enum QCloudCOSXMLStatus (TOString) {
+    /**
+    通用的启用状态
+    */
+    QCloudCOSXMLStatusEnabled  1 [Enabled]
+    /**
+    通用的关闭状态
+    */
+    QCloudCOSXMLStatusDisabled 0 [Disabled]
+}
+
+model QCloudBucketReplicationRule {
+    /**
+    标志Rule是否生效
+    */
+    QCloudCOSXMLStatus status  [Status] (TOString)
+    /**
+    用来标注具体rule的名称
+    */
+    string identifier [ID]
+    /**
+    前缀匹配策略，不可重叠，重叠返回错误。前缀匹配根目录为空
+    */
+    string prefix [Prefix]
+    /**
+    目标存储桶信息
+    */
+    QCloudBucketReplicationDestination destination [Destination]
+}
+
+model QCloudBucketReplicationConfiguation {
+    /**
+    发起者身份标示，格式为：qcs::cam::uin/<OwnerUin>:uin/<SubUin>
+    */
+    string role [Role]
+    /**
+    具体配置信息，最多支持 1000 个，所有策略只能指向一个目标存储桶
+    */
+    array QCloudBucketReplicationRule rule [Rule]
+}
+
+request PutBucketReplication (CW.PUT UP.xml HEADER.MD5.BASE64  M.cosxml) {
+
+/**
+说明所有跨区域配置信息
+*/
+    QCloudBucketReplicationConfiguation configuation [ReplicationConfiguration]
+/**
+存储桶名称
+*/
+    string bucket (need XML.bucket)
+
+    method replication
+}
+
+request GetBucketReplication (DOWN.xml CW.get DOWN.xml M.cosxml) {
+/**
+存储桶信息
+*/
+    string bucket(need XML.bucket)
+    method replication
+    response QCloudBucketReplicationConfiguation
+}
+
+request DeleteBucketReplication(CW.DELETE APPEND.header M.cosxml) {
+/**
+    存储桶名称
+*/
+    string bucket (need XML.bucket)
+    method replication
+}
+
+model QCloudOwner {
+/**
+ 持有者的名称
+*/
+string displayName [DisplayName]
+
+/**
+持有者 ID，
+格式：qcs::cam::uin/<OwnerUin>:uin/<SubUin>
+如果是根帐号，<OwnerUin> 和 <SubUin> 是同一个值
+*/
+string identifier [ID]
+}
+
+model QCloudBucket {
+/**
+存储桶名称
+*/
+    string name [Name]
+/**
+存储桶所在区域
+*/
+    string location [Location]
+/**
+存储桶创建时间
+*/
+    string createDate [CreateDate]
+}
+
+model QCloudListAllMyBucketsResult {
+/**
+bucket owner的信息
+*/
+    QCloudOwner owner[Owner]
+/**
+所有的bucket
+*/
+    array QCloudBucket buckets [Buckets]
+}
+
+request GetService (UP.url CW.get DOWN.xml custom_build){
+    response QCloudListAllMyBucketsResult
+}
+
+request UploadPartCopy (UP.url DOWN.xml M.cosxml CW.PUT APPEND.headers ) {
+    /**
+    存储桶名称
+    */
+    string bucket (need XML.bucket)
+    /**
+    对象名
+    */
+    string object (URI0 need )
+    /**
+    在初始化分块上传的响应中，会返回一个唯一的描述符（upload ID）
+    */
+    string uploadID [UploadId]
+    /**
+    标志当前分块的序号
+    */
+    int64 partNumber
+    /**
+    源文件 URL 路径，可以通过 versionid 子资源指定历史版本
+    */
+    string source [x-cos-copy-source] (need HEADER)
+    /**
+    源文件的字节范围，范围值必须使用 bytes=first-last 格式，first 和 last 都是基于 0 开始的偏移量。
+    例如 bytes=0-9 表示你希望拷贝源文件的开头10个字节的数据，如果不指定，则表示拷贝整个文件。
+    */
+    string sourceRange [x-cos-copy-source-range] (HEADER)
+    /**
+    当 Object 在指定时间后被修改，则执行操作，否则返回 412。
+    可与 x-cos-copy-source-If-None-Match 一起使用，与其他条件联合使用返回冲突。
+    */
+    string sourceIfModifiedSince [x-cos-copy-source-If-Modified-Since] (HEADER)
+    /**
+    当 Object 在指定时间后未被修改，则执行操作，否则返回 412。
+    可与 x-cos-copy-source-If-Match 一起使用，与其他条件联合使用返回冲突。
+    */
+    string sourceIfUnmodifiedSince [x-cos-copy-source-If-Unmodified-Since] (HEADER)
+    /**
+    当 Object 的 Etag 和给定一致时，则执行操作，否则返回 412。
+    可与x-cos-copy-source-If-Unmodified-Since 一起使用，与其他条件联合使用返回冲突。
+    */
+    string sourceIfMatch [x-cos-copy-source-If-Match] (HEADER)
+    /**
+    当 Object 的 Etag 和给定不一致时，则执行操作，否则返回 412。
+    可与 x-cos-copy-source-If-Modified-Since 一起使用，与其他条件联合使用返回冲突。
+    */
+    string sourceIfNoneMatch [x-cos-copy-source-If-None-Match] (HEADER)
+        response QCloudCopyObjectResult
+}
+

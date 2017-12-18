@@ -29,6 +29,6 @@ extern NSString* const kQCloudRestNetURLUsageNotification;
 - (int) performRequest:(QCloudHTTPRequest *)httpRequst withFinishBlock:(QCloudRequestFinishBlock)block;
 - (void) cancelRequestWithID:(int)requestID;
 - (void) cancelAllRequest;
-
+- (void) cancelRequestsWithID:(NSArray<NSNumber*>*)requestIDs;
 - (void) executeRestHTTPReqeust:(QCloudHTTPRequest*)httpRequest;
 @end
