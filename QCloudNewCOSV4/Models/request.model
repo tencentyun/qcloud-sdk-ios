@@ -1,0 +1,691 @@
+
+model QCloudCreateDirectoryResult {
+  string ctime
+}
+
+model QCloudCOSV4Error (ERROR) {
+/**
+错误码
+*/
+    int code (E.code)
+/**
+错误描述信息
+*/
+    string message (E.message)
+}
+
+
+request CreateDirectory (UP.json DOWN.json CW.post cos_response) {
+/**
+自定义属性
+*/
+  string bizAttribute [biz_attr]
+  /**
+存储桶是 COS 中用于存储数据的容器，是用户存储在 Appid 下的第一级目录，每个对象都存储在一个存储桶中。
+  */
+  string bucket (URI2 need S.bucket)
+  /**
+目录是 COS 中用于存储数据的容器，是用于分级管理资源的有效工具。
+  */
+  string directory [dir_name] (URI3 need S.directory)
+  string /  (URI4 hiden)
+  method create (cosop)
+
+  error  QCloudCOSV4Error
+  response QCloudCreateDirectoryResult
+}
+
+
+model QCloudCreateResult {
+/*
+* 创建时间，10 位 Unix 时间戳
+*/
+  string ctime
+}
+
+
+model QCloudFileCustomHeaders {
+
+}
+model QCloudFileInfo {
+/**
+文件名
+*/
+    string name
+/**
+文件大小，当类型为文件时返回
+*/
+    int64 fileSize [filesize]
+/**
+文件已传输大小，当类型为文件时返回
+*/
+    int64 fileLength [filelen]
+/**
+文件 sha，当类型为文件时返回
+*/
+    string sha
+/**
+创建时间，10位 Unix 时间戳
+*/
+    string ctime
+/**
+修改时间，10位 Unix 时间戳
+*/
+    string mtime
+/**
+生成的资源可访问的cdn url，当类型为文件时返回
+*/
+    string accessURL [access_url]
+/**
+如果没有对文件单独设置该属性，则可能不会返回该字段。返回值：eInvalid（表示继承 bucket 的读写权限）；eWRPrivate（私有读写）；eWPrivateRPublic（公有读私有写）。说明：文件可以和 bucket 拥有不同的权限类型，已经设置过权限的文件如果想要撤销，将会直接被赋值为 eInvalid，即继承 bucket 的权限
+*/
+    string authority
+/**
+生成的资源可访问的源站 url，当类型为文件时返回
+*/
+    string sourceURL [source_url]
+    string previewURL [preview_url]
+/**
+用户自定义头部
+*/
+    dictionary customHeaders [custom_headers]
+/**
+COS 服务调用方自定义属性，可通过 查询目录属性 获取该属性值
+*/
+    string attribute[biz_attr]
+}
+
+
+model QCloudListDirectoryResult {
+/**
+透传字段，用于翻页，业务端不需理解，需要往后翻页则透传给腾讯云
+*/
+  string context
+  /**
+是否有内容可以继续往后翻页
+  */
+  bool listOver
+  /**
+文件和文件夹列表，若当前目录下不存在文件或文件夹，则该返回值可能为空
+  */
+  array QCloudFileInfo files [infos]
+}
+
+
+request ListDirectory (UP.url DOWN.json CW.get cos_response) {
+
+  /**
+透传字段，查看第一页，则传空字符串。若需要翻页，需要将前一页返回值中的context透传到参数中。
+  */
+  string context
+  /**
+返回的数目，默认为199，最大199
+  */
+  int number  [num]
+  /**
+存储桶是 COS 中用于存储数据的容器，是用户存储在 Appid 下的第一级目录，每个对象都存储在一个存储桶中。
+  */
+  string bucket (URI2 need S.bucket)
+  /**
+目录是 COS 中用于存储数据的容器，是用于分级管理资源的有效工具。
+  */
+  string directory [dir_name] (URI3  S.directory)
+  string /  (URI8 hiden)
+
+
+  method list (cosop)
+  error  QCloudCOSV4Error
+
+  response QCloudListDirectoryResult
+}
+
+
+request UpdateDirectoryAttributes(UP.json DOWN.json CW.post cos_response) {
+/**
+自定义属性
+*/
+  string attributes [biz_attr]
+/**
+存储桶是 COS 中用于存储数据的容器，是用户存储在 Appid 下的第一级目录，每个对象都存储在一个存储桶中。
+*/
+  string bucket (URI2 need S.bucket)
+/**
+目录是 COS 中用于存储数据的容器，是用于分级管理资源的有效工具。
+*/
+  string directory [dir_name] (URI3 need S.directory)
+  error  QCloudCOSV4Error
+  method update (cosop)
+}
+
+
+model QCloudDirectoryAttributesResult {
+/**
+COS 服务调用方自定义属性
+*/
+    string attributes[biz_attr]
+/**
+创建时间，10 位 Unix 时间戳（UNIX时间是从协调世界时 1970 年 1 月 1 日 0 时 0 分 0 秒起的总秒数）
+*/
+    string createTime[ctime]
+/**
+修改时间，10 位 Unix 时间戳（UNIX时间是从协调世界时 1970 年 1 月 1 日 0 时 0 分 0 秒起的总秒数）
+*/
+    string lastModifiedTime[mtime]
+}
+
+request DirectoryAttributes(UP.url DOWN.json CW.get cos_response) {
+/**
+存储桶是 COS 中用于存储数据的容器，是用户存储在 Appid 下的第一级目录，每个对象都存储在一个存储桶中。
+*/
+  string bucket (URI2 need S.bucket)
+/**
+目录是 COS 中用于存储数据的容器，是用于分级管理资源的有效工具。
+*/
+  string directory [dir_name] (URI3)
+  string /  (URI4 hiden)
+
+  error  QCloudCOSV4Error
+
+  method stat (cosop)
+  response QCloudDirectoryAttributesResult
+}
+
+request DeleteDirectory(UP.json DOWN.json CW.post cos_response) {
+/*
+* 存储桶是 COS 中用于存储数据的容器，是用户存储在 Appid 下的第一级目录，每个对象都存储在一个存储桶中。
+*/
+  string bucket (URI2 need S.bucket)
+/*
+* 目录是 COS 中用于存储数据的容器，是用于分级管理资源的有效工具。
+*/
+  string directory [dir_name] (URI3 need S.directory)
+  string /  (URI8 hiden)
+  error  QCloudCOSV4Error
+  method delete (cosop)
+}
+
+model QCloudUploadObjectResult {
+/**
+通过 CDN 访问该文件的资源链接（访问速度更快）
+*/
+  string accessURL [access_url]
+/**
+该文件在 COS 中的相对路径名，可作为其 ID 标识。 格式/<APPID>/<BucketName>/<ObjectName>。推荐业务端存储 resource_path，然后根据业务需求灵活拼接资源 url（通过 CDN 访问 COS 资源的 url 和直接访问 COS 资源的 url 不同）。
+*/
+  string resourcePath [resource_path]
+/**
+（不通过 CDN）直接访问 COS 的资源链接
+*/
+  string sourceUrl [source_url]
+  string url
+  string previewURL [preview_url]
+}
+
+request UploadObjectSimple(UP.form DOWN.json CW.post cos_response  slow) {
+/**
+必填项，文件在本地的URL。注意：文件在上传过程中不可以进行变更，否则会导致失败。
+*/
+   file  filePath [filecontent]
+/**
+COS 服务调用方自定义属性
+*/
+   string bizAttribute [biz_attr]
+/**
+同名文件覆盖选项，有效值：NO--覆盖（删除已有的重名文件，存储新上传的文件），YES---不覆盖（若已存在重名文件，则不做覆盖，返回“上传失败”）。默认为 YES---不覆盖。
+*/
+   bool insertOnly
+
+   /*
+   * 存储桶是 COS 中用于存储数据的容器，是用户存储在 Appid 下的第一级目录，每个对象都存储在一个存储桶中。
+   */
+   string bucket (URI2 need S.bucket)
+   /*
+   * 目录是 COS 中用于存储数据的容器，是用于分级管理资源的有效工具。
+   */
+   string directory [dir_name] (URI3 S.directory)
+/**
+上传到COS的文件名
+*/
+   string fileName  (URI7 need S.file)
+
+   error  QCloudCOSV4Error
+
+   method upload (cosop)
+   response QCloudUploadObjectResult
+}
+
+
+model QCloudUploadSliceInitResult {
+/**
+唯一标识此文件传输过程的 id，由后台下发
+*/
+  string session
+/**
+分片大小，单位为 Byte
+有效值：524288 (512 KB), 1048576 (1 MB), 2097152 (2 MB), 3145728 (3 MB)
+*/
+  int64 sliceSize     [slice_size]
+  int64 serialUpload  [serial_upload]
+/**
+未经过URL Encode的URL。不经过CDN的话可以使用该URL下载
+*/
+  string url
+/**
+通过 CDN 访问该文件的资源链接（访问速度更快）
+*/
+  string accessURL [access_url]
+/**
+（不通过 CDN ）直接访问 COS 的资源链接
+*/
+  string sourceURL [source_url]
+/**
+该文件在 COS 中的相对路径名，可作为其 ID 标识。 格式 '/appid/bucket/filename'。推荐业务端存储 resource_path，然后根据业务需求灵活拼接资源 url（通过 CDN 访问 COS 资源的 url 和直接访问 COS 资源的 url 不同）。
+*/
+  string resourcePath [resource_path]
+  string previewURL [preview_url]
+}
+request UploadSliceInit(UP.form DOWN.json CW.post cos_response custom_build inner) {
+
+/**
+存储桶是 COS 中用于存储数据的容器，是用户存储在 Appid 下的第一级目录，每个对象都存储在一个存储桶中。
+*/
+string bucket (URI2 need S.bucket)
+/**
+目录是 COS 中用于存储数据的容器，是用于分级管理资源的有效工具。
+*/
+string directory [dir_name] (URI3  S.directory)
+/**
+文件在COS上的文件名
+*/
+string fileName  (URI7 need S.file)
+/**
+文件大小，要与Finish Slice Upload里的文件大小一致。
+*/
+  int64 fileSize [filesize]
+/**
+分片大小
+*/
+  int64 sliceSize [slice_size]
+/**
+COS 服务调用方自定义属性
+*/
+  string bizAttribute [biz_attr]
+/**
+同名文件覆盖选项，有效值：NO--覆盖（删除已有的重名文件，存储新上传的文件），YES---不覆盖（若已存在重名文件，则不做覆盖，返回“上传失败”）。默认为 YES---不覆盖。
+*/
+  bool insertOnly
+/**
+sha值
+*/
+  string sha  ( need)
+/**
+
+*/
+  array QCloudSHAPart uploadParts [uploadparts] ( need)
+  method  upload_slice_init (cosop)
+  error  QCloudCOSV4Error
+
+  response QCloudUploadSliceInitResult
+}
+
+model QCloudUploadSliceResult {
+/**
+唯一标识此文件传输过程的 id，由后台下发
+*/
+ string session
+/**
+该分片的偏移量
+*/
+ int64 offset
+/**
+该分片的大小
+*/
+ int64 dataLength [datalen]
+}
+request UploadSliceData(UP.form DOWN.json CW.post cos_response custom_build slow inner) {
+
+   method upload_slice_data (cosop)
+   /**
+    存储桶是 COS 中用于存储数据的容器，是用户存储在 Appid 下的第一级目录，每个对象都存储在一个存储桶中。
+   */
+   string bucket (URI2 need S.bucket)
+   /**
+    目录是 COS 中用于存储数据的容器，是用于分级管理资源的有效工具。
+   */
+   string directory [dir_name] (URI3  S.directory)
+/**
+文件名
+*/
+   string fileName  (URI7 need S.file)
+/**
+文件在本地的路径
+*/
+   string localPath ( need)
+
+/**
+唯一标识此文件传输过程的 id，由后台下发
+*/
+   string session
+/**
+偏移量
+*/
+   int64 offset
+/**
+分片大小
+*/
+   int64 sliceLength
+/**
+sha值
+*/
+   string sha
+/**
+文件大小
+*/
+   int64 fileLength [file_size]
+   error  QCloudCOSV4Error
+
+   response QCloudUploadSliceResult
+}
+
+model QCloudUploadSliceFinishResult {
+  string url
+/**
+通过 CDN 访问该文件的资源链接。访问速度更快。
+*/
+  string accessURL [access_url]
+/**
+该文件在 COS 中的相对路径名，可作为其 ID 标识。 格式 '/appid/bucket/filename'。推荐业务端存储 resource_path，然后根据业务需求灵活拼接资源 url（通过 CDN 访问 COS 资源的 url 和直接访问 COS 资源的 url 不同。
+*/
+  string sourceURL [source_url]
+/**
+（不通过 CDN ）直接访问 COS 的资源链接
+*/
+  string resourcePath [resource_path]
+  string previewURL [preview_url]
+}
+
+request UploadSliceFinish (UP.form DOWN.json CW.post cos_response inner) {
+    method upload_slice_finish (cosop)
+/**
+唯一标识此文件传输过程的 id，由后台下发
+*/
+    string session
+/**
+文件大小，需要与初始化分片上传时指定的文件大小一致，否则会返回-4019
+*/
+    int64 filesize
+/**
+sha值
+*/
+    string sha
+
+    /*
+    * 存储桶是 COS 中用于存储数据的容器，是用户存储在 Appid 下的第一级目录，每个对象都存储在一个存储桶中。
+    */
+    string bucket (URI2 need S.bucket)
+    /*
+    * 目录是 COS 中用于存储数据的容器，是用于分级管理资源的有效工具。
+    */
+    string directory [dir_name] (URI3  S.directory)
+/**
+在COS上的文件名
+*/
+    string fileName  (URI7 need S.file)
+    error  QCloudCOSV4Error
+
+    response QCloudUploadSliceFinishResult
+
+}
+
+model QCloudUploadSliceInfo {
+/**
+偏移量
+*/
+   int64 offset
+/**
+数据长度
+*/
+   int64 dataLength [datalen]
+}
+
+model QCloudUploadSliceListResult {
+
+   string url
+/**
+通过 CDN 访问该文件的资源链接（访问速度更快）
+*/
+   string accessURL [access_url]
+/**
+该文件在 COS 中的相对路径名，可作为其 ID 标识。 格式 '/appid/bucket/filename'。推荐业务端存储 resource_path，然后根据业务需求灵活拼接资源 url（通过 CDN 访问 COS 资源的 url 和直接访问 COS 资源的 url 不同）。
+*/
+   string sourceURL [source_url]
+/**
+（不通过 CDN ）直接访问 COS 的资源链接
+*/
+   string resourcePath [resource_path]
+
+   string previewURL [preview_url]
+/**
+    返回码
+*/
+   int code
+/**
+    返回message
+*/
+   string message
+/**
+唯一标识此文件传输过程的 id，命中秒传则不携带
+*/
+   string session
+/**
+文件大小
+*/
+   int fileSize [filesize]
+/**
+sha值
+*/
+   string sha
+/**
+分片大小
+*/
+   int64 sliceSize [flice_size]
+   array QCloudUploadSliceInfo existSlices [listparts]
+}
+request UploadSliceList (UP.form DOWN.json CW.post cos_response inner) {
+  method upload_slice_list (cosop)
+  /*
+  * 存储桶是 COS 中用于存储数据的容器，是用户存储在 Appid 下的第一级目录，每个对象都存储在一个存储桶中。
+  */
+  string bucket (URI2 need S.bucket)
+  /*
+  * 目录是 COS 中用于存储数据的容器，是用于分级管理资源的有效工具。
+  */
+  string directory [dir_name] (URI3  S.directory)
+  string fileName  (URI7 need S.file)
+
+
+  error  QCloudCOSV4Error
+
+  response QCloudUploadSliceListResult
+}
+request MoveFile(UP.json DOWN.json CW.post cos_response) {
+/**
+目标路径（不带路径则为当前路径下，带路径则会移动到携带指定的路径下）
+*/
+  string destination [dest_fileid] ( need)
+/**
+覆盖写入目标文件选项，有效值:0 不覆盖（若已存在重名文件，则不做覆盖，返回“移动失败”）1 覆盖。默认值为 0 不覆盖。
+*/
+  bool overWrite    [to_over_write]
+  /*
+  * 存储桶是 COS 中用于存储数据的容器，是用户存储在 Appid 下的第一级目录，每个对象都存储在一个存储桶中。
+  */
+  string bucket (URI2 need S.bucket)
+  /*
+  * 目录是 COS 中用于存储数据的容器，是用于分级管理资源的有效工具。
+  */
+  string directory [dir_name] (URI3  S.directory)
+/**
+移动的源文件的文件名
+*/
+  string fileName  (URI7 need S.file)
+
+  error  QCloudCOSV4Error
+
+  method move (cosop)
+
+}
+
+
+request FileAttributes (UP.url DOWN.json CW.get cos_response) {
+/*
+* 存储桶是 COS 中用于存储数据的容器，是用户存储在 Appid 下的第一级目录，每个对象都存储在一个存储桶中。
+*/
+string bucket (URI2 need S.bucket)
+/*
+* 目录是 COS 中用于存储数据的容器，是用于分级管理资源的有效工具。
+*/
+string directory [dir_name] (URI3  S.directory)
+string fileName  (URI7 need S.file)
+
+
+error  QCloudCOSV4Error
+
+    method stat (cosop)
+    response QCloudFileInfo
+}
+
+enum UpdateAttributeFlag {
+  UpdateAttributeFlagBizAttr        0x01
+  UpdateAttributeFlagForbid         0x02
+  UpdateAttributeFlagCustomeHeader  0x08
+  UpdateAttributeFlagAuthority      0x10
+}
+
+request UpdateFileAttributes(UP.json DOWN.json CW.post cos_response) {
+/**
+COS 服务调用方自定义属性，可通过 查询目录属性 获取该属性值
+*/
+    string attributes [biz_attr] (KVO)
+/**
+Object 的权限，默认与 Bucket 权限一致，此时不会返回该字段。如果设置了独立权限，则会返回该字段。
+有效值：eInvalid（空权限），此时系统会默认调取 Bucket 权限，eWRPrivate（私有读写） ，eWPrivateRPublic （公有读私有写）
+*/
+    string authority (KVO)
+    UpdateAttributeFlag flag (ENUM)
+/**
+用户自定义 header，在执行更新操作时，只需填写需要增加或修改的项
+*/
+    dictionary customHeaders [custom_headers] (KVO)
+    /*
+    * 存储桶是 COS 中用于存储数据的容器，是用户存储在 Appid 下的第一级目录，每个对象都存储在一个存储桶中。
+    */
+    string bucket (URI2 need S.bucket)
+    /*
+    * 目录是 COS 中用于存储数据的容器，是用于分级管理资源的有效工具。
+    */
+    string directory [dir_name] (URI3  S.directory)
+/**
+需要更新属性的文件名
+*/
+    string fileName  (URI7 need S.file)
+
+
+
+    error  QCloudCOSV4Error
+
+    method update (cosop)
+}
+
+
+request DeleteFile(UP.json DOWN.json CW.post cos_response) {
+/*
+* 存储桶是 COS 中用于存储数据的容器，是用户存储在 Appid 下的第一级目录，每个对象都存储在一个存储桶中。
+*/
+string bucket (URI2 need S.bucket)
+/*
+* 目录是 COS 中用于存储数据的容器，是用于分级管理资源的有效工具。
+*/
+string directory [dir_name] (URI3  S.directory)
+string fileName  (URI7 need S.file)
+
+
+error  QCloudCOSV4Error
+
+    method delete (cosop)
+}
+
+
+
+
+request CopyFile(UP.json DOWN.json CW.post cos_response) {
+/**
+存储桶是 COS 中用于存储数据的容器，是用户存储在 Appid 下的第一级目录，每个对象都存储在一个存储桶中。
+*/
+string bucket (URI2  S.bucket)
+/**
+目录是 COS 中用于存储数据的容器，是用于分级管理资源的有效工具。
+*/
+string directory [dir_name] (URI3  S.directory)
+/**
+文件名
+*/
+string fileName  (URI7 need S.file)
+
+
+error  QCloudCOSV4Error
+/**
+复制到的目的目录
+*/
+    string destination [dest_fileid] ( need)
+    method copy (cosop)
+}
+
+model QCloudListUploadSliceResult {
+/**
+文件大小
+*/
+    int64 filesize
+    /**
+    完全上传的文件分片信息
+    */
+    array QCloudUploadSliceInfo listParts [listparts]
+    /**
+    唯一标识此文件传输过程的 id，命中秒传则不携带
+    */
+    string session
+    /**
+    分片大小，单位为 Byte。
+    有效值：524288 (512 KB), 1048576 (1 MB), 2097152 (2 MB), 3145728 (3 MB)
+    */
+    int64 sliceSize [slice_size]
+}
+
+request ListUploadSlice (UP.json DOWN.json CW.POST cos_response)  {
+    /**
+    存储桶是 COS 中用于存储数据的容器，是用户存储在 Appid 下的第一级目录，每个对象都存储在一个存储桶中。
+    */
+        string bucket (URI2 S.bucket)
+    /**
+    目录是 COS 中用于存储数据的容器，是用于分级管理资源的有效工具。
+    */
+    string directory [dir_name] (URI3  S.directory)
+    /**
+    文件名
+    */
+    string fileName  (URI7 need S.file)
+    method upload_slice_list(cosop)
+    error  QCloudCOSV4Error
+    response QCloudListUploadSliceResult
+}
+
+request DownloadFile (CW.GET custom_build) {
+    /**
+    文件的URL
+    */
+    string fileURL
+}
+
+service COSV4 {
+
+}
