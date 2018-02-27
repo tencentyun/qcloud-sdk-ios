@@ -38,6 +38,8 @@
 
 #import "QCloudDeleteObjectRequest.h"
 #import "QCloudListObjectVersionsRequest.h"
+#import "QCloudGetPresignedURLRequest.h"
+
 @implementation QCloudCOSXMLService (Manager)
 - (void) AppendObject:(QCloudAppendObjectRequest*)request
 {
@@ -149,5 +151,32 @@
 }
 - (void) ListObjectVersions:(QCloudListObjectVersionsRequest *)request {
     [super performRequest:request];
+}
+
+
+- (void) getPresignedURL:(QCloudGetPresignedURLRequest*)request {
+    
+    request.runOnService = self;
+    NSError* error;
+    NSURLRequest* urlRequest = [request buildURLRequest:&error];
+    if (nil != error) {
+        [request onError:error];
+        return ;
+    }
+    __block NSString* requestURLString = urlRequest.URL.absoluteString;
+    [self loadCOSXMLAuthorizationForBiz:request urlRequest:urlRequest compelete:^(QCloudSignature *signature, NSError *error) {
+        NSString* authorizatioinString = signature.signature;
+        if ([requestURLString hasSuffix:@"&"] || [requestURLString hasSuffix:@"?"]) {
+            requestURLString = [requestURLString stringByAppendingString:authorizatioinString];
+        } else {
+            requestURLString = [requestURLString stringByAppendingFormat:@"?%@",authorizatioinString];
+        }
+        QCloudGetPresignedURLResult* result = [[QCloudGetPresignedURLResult alloc] init];
+        result.presienedURL = requestURLString;
+        if (request.finishBlock) {
+            request.finishBlock(result, nil);
+        }
+    }];
+    
 }
 @end

@@ -29,7 +29,6 @@
 #import "QCloudCOSXMLService+Private.h"
 #import "QCloudThreadSafeMutableDictionary.h"
 #import "QCLoudError.h"
-#import "QCloudGetPresignedURLRequest.h"
 
 QCloudThreadSafeMutableDictionary* QCloudCOSXMLServiceCache()
 {
@@ -105,30 +104,5 @@ static QCloudCOSXMLService* COSXMLService = nil;
     return [resultURL copy];
 }
 
-- (void) getPresignedURL:(QCloudGetPresignedURLRequest*)request {
-
-    request.runOnService = self;
-    NSError* error;
-    NSURLRequest* urlRequest = [request buildURLRequest:&error];
-    if (nil != error) {
-        [request onError:error];
-        return ;
-    }
-    __block NSString* requestURLString = urlRequest.URL.absoluteString;
-    [self loadCOSXMLAuthorizationForBiz:request urlRequest:urlRequest compelete:^(QCloudSignature *signature, NSError *error) {
-        NSString* authorizatioinString = signature.signature;
-        if ([requestURLString hasSuffix:@"&"] || [requestURLString hasSuffix:@"?"]) {
-             requestURLString = [requestURLString stringByAppendingString:authorizatioinString];
-        } else {
-            requestURLString = [requestURLString stringByAppendingFormat:@"?%@",authorizatioinString];
-        }
-       QCloudGetPresignedURLResult* result = [[QCloudGetPresignedURLResult alloc] init];
-        result.presienedURL = requestURLString;
-        if (request.finishBlock) {
-            request.finishBlock(result, nil);
-        }
-    }];
-    
-}
 
 @end

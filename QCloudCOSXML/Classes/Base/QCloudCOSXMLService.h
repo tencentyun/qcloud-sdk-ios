@@ -29,7 +29,6 @@
 #import <Foundation/Foundation.h>
 #import <QCloudCore/QCloudService.h>
 
-@class QCloudGetPresignedURLRequest;
 @interface QCloudCOSXMLService : QCloudService
 
 #pragma hidden super selectors
@@ -58,6 +57,5 @@
  */
 - (NSString*)getURLWithBucket:(NSString*)bucket object:(NSString*)object withAuthorization:(BOOL)withAuthorization;
 
-- (void) getPresignedURL:(QCloudGetPresignedURLRequest*)request;
 
 @end

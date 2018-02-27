@@ -40,6 +40,8 @@
 @class QCloudUploadPartCopyRequest;
 @class QCloudPostObjectRestoreRequest;
 @class QCloudListObjectVersionsRequest;
+@class QCloudGetPresignedURLRequest;
+
 @interface QCloudCOSXMLService (Manager)
 
 - (void) AppendObject:(QCloudAppendObjectRequest*)request;
@@ -73,4 +75,6 @@
 - (void) GetService:(QCloudGetServiceRequest*)request;
 - (void) PostObjectRestore:(QCloudPostObjectRestoreRequest*)request;
 - (void) ListObjectVersions:(QCloudListObjectVersionsRequest*)request;
+
+- (void) getPresignedURL:(QCloudGetPresignedURLRequest*)request;
 @end
