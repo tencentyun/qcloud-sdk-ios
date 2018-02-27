@@ -23,8 +23,14 @@
  */
 @property (nonatomic, strong) NSString* secretKey;
 
+
 /**
- 签名有效期截止的时间。
+ 签名有效期的起始时间。默认是设备的本地时间，如果传入起始时间，那么将以起始时间去计算签名。
+ */
+@property (nonatomic, strong) NSDate* startDate;
+
+/**
+ 签名有效期截止的时间。没有设置的话，默认是起始时间加十分钟。
  */
 @property (nonatomic, strong) NSDate* experationDate;
 

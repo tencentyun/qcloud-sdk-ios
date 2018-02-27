@@ -22,7 +22,12 @@
     if (self.credential.token) {
         [urlrequest setValue:self.credential.token forHTTPHeaderField:@"x-cos-security-token"];
     }
-    int64_t nowInterval = [[NSDate date] timeIntervalSince1970];
+    int64_t nowInterval = 0;
+    if (self.credential.startDate) {
+        nowInterval = [self.credential.startDate timeIntervalSince1970];
+    } else {
+        nowInterval = [[NSDate date] timeIntervalSince1970];
+    }
     //  默认一个签名为10分钟有效，防止签名时间过长，导致泄露
     NSTimeInterval experationInterVal = nowInterval + 10*60;
     if (self.credential.experationDate) {
