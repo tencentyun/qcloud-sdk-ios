@@ -23,6 +23,7 @@
 #import "NSError+QCloudNetworking.h"
 #import "QCloudFileUtils.h"
 #import "QCloudFileOffsetBody.h"
+#import "QCloudRequestData.h"
 NSString* TaskDataKey(int64_t identifier){
     return [NSString stringWithFormat:@"data-%lld", identifier];
 }
@@ -169,25 +170,26 @@ NSString* TaskMapKey(NSURLSessionTask* task) {
 // only work at iOS 10 and up
 - (void) URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didFinishCollectingMetrics:(NSURLSessionTaskMetrics *)metrics
 {
-    QCloudURLSessionTaskData* taskData = [self taskDataForTask:task];
-    NSURLSessionTaskTransactionMetrics* networkMetrics = nil;
-    for (NSURLSessionTaskTransactionMetrics* m in metrics.transactionMetrics) {
-        if (m.resourceFetchType == NSURLSessionTaskMetricsResourceFetchTypeNetworkLoad) {
-            networkMetrics = m;
-        } else if (m.resourceFetchType == NSURLSessionTaskMetricsResourceFetchTypeLocalCache){
-        }
-    }
-    if (networkMetrics) {
-        if (!networkMetrics.reusedConnection) {
-            [taskData.httpRequest.benchMarkMan directSetCost:[networkMetrics.connectEndDate timeIntervalSinceDate:networkMetrics.connectStartDate] forKey:kRNBenchmarkConnectionTime];
-            if ([taskData.httpRequest.requestData.serverURL.lowercaseString hasPrefix:@"https"]) {
-                [taskData.httpRequest.benchMarkMan directSetCost:[networkMetrics.secureConnectionEndDate timeIntervalSinceDate:networkMetrics.secureConnectionStartDate] forKey:kRNBenchmarkSecureConnectionTime];
+        QCloudURLSessionTaskData* taskData = [self taskDataForTask:task];
+        NSURLSessionTaskTransactionMetrics* networkMetrics = nil;
+        for (NSURLSessionTaskTransactionMetrics* m in metrics.transactionMetrics) {
+            if (m.resourceFetchType == NSURLSessionTaskMetricsResourceFetchTypeNetworkLoad) {
+                networkMetrics = m;
+            } else if (m.resourceFetchType == NSURLSessionTaskMetricsResourceFetchTypeLocalCache){
             }
-            [taskData.httpRequest.benchMarkMan directSetCost:[networkMetrics.domainLookupEndDate timeIntervalSinceDate:networkMetrics.domainLookupEndDate] forKey:kRNBenchmarkDNSLoopupTime];
         }
-        [taskData.httpRequest.benchMarkMan directSetCost:[networkMetrics.requestEndDate timeIntervalSinceDate:networkMetrics.requestStartDate] forKey:@"upload"];
-        [taskData.httpRequest.benchMarkMan directSetCost:[networkMetrics.responseEndDate timeIntervalSinceDate:networkMetrics.responseStartDate] forKey:@"download"];
-    }
+
+        if (networkMetrics) {
+            if (!networkMetrics.reusedConnection) {
+                [taskData.httpRequest.benchMarkMan directSetCost:[networkMetrics.connectEndDate     timeIntervalSinceDate:networkMetrics.connectStartDate] forKey:kRNBenchmarkConnectionTime];
+                if ([taskData.httpRequest.requestData.serverURL.lowercaseString hasPrefix:@"https"]) {
+                    [taskData.httpRequest.benchMarkMan directSetCost:[networkMetrics.secureConnectionEndDate timeIntervalSinceDate:networkMetrics.secureConnectionStartDate] forKey:kRNBenchmarkSecureConnectionTime];
+                }
+                [taskData.httpRequest.benchMarkMan directSetCost:[networkMetrics.domainLookupEndDate timeIntervalSinceDate:networkMetrics.domainLookupEndDate] forKey:kRNBenchmarkDNSLoopupTime];
+            }
+            [taskData.httpRequest.benchMarkMan directSetCost:[networkMetrics.requestEndDate timeIntervalSinceDate:networkMetrics.requestStartDate] forKey:@"upload"];
+            [taskData.httpRequest.benchMarkMan directSetCost:[networkMetrics.responseEndDate timeIntervalSinceDate:networkMetrics.responseStartDate] forKey:@"download"];
+        }
 }
 
 - (void) URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler
@@ -265,12 +267,16 @@ NSString* TaskMapKey(NSURLSessionTask* task) {
             EndRetryFunc();
         } else {
             if (![taskData.retryHandler retryFunction:^{
-                NSURLSessionDataTask* tryTask = [weakSelf.session dataTaskWithRequest:task.originalRequest];
+                QCloudLogDebug(@"[%i] 错误，开始重试",seq);
+                QCloudURLSessionTaskData* taskData = [weakSelf taskDataForTask:task];
+                if (taskData.httpRequest.sendProcessBlock) {
+                    [taskData.httpRequest notifySendProgressBytesSend:-(task.countOfBytesSent) totalBytesSend:task.countOfBytesSent totalBytesExpectedToSend:task.countOfBytesExpectedToSend];
+                }
+                QCloudHTTPRequest* httpRequset = taskData.httpRequest;
                 [taskData restData];
                 [weakSelf removeTask:task];
-                [weakSelf cacheTask:tryTask data:taskData  forSEQ:(int)seq];
-                [tryTask resume];
-                
+                [httpRequset.requestData clean];
+                [weakSelf executeRestHTTPReqeust:httpRequset];
             } whenError:error])
             {
                 EndRetryFunc();
@@ -448,7 +454,6 @@ NSString* TaskMapKey(NSURLSessionTask* task) {
     taskData.httpRequest = httpRequest;
     
     QCloudHTTPRetryHanlder* retryHandler =  httpRequest.retryPolicy;
-    [retryHandler reset];
     taskData.retryHandler = retryHandler;
     [self cacheTask:task data:taskData forSEQ:(int)httpRequest.requestID];
     [httpRequest.benchMarkMan benginWithKey:kRNBenchmarkOnlyNet];

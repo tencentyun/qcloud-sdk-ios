@@ -1,6 +1,6 @@
 //
-//  QCloudCOSXMLStatus.h
-//  QCloudCOSXMLStatus
+//  QCloudVersionContent.h
+//  QCloudVersionContent
 //
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.
@@ -24,14 +24,19 @@
 //
 
 
+
+#import <Foundation/Foundation.h>
+#import <QCloudCore/QCloudCore.h>
+#import "QCloudVersionOwner.h"
+
 NS_ASSUME_NONNULL_BEGIN
-
-typedef NS_ENUM(NSInteger, QCloudQCloudCOSXMLStatus) {
-
-  QCloudQCloudCOSXMLStatusEnabled = 1,
-  QCloudQCloudCOSXMLStatusDisabled = 0,
-};
-
-FOUNDATION_EXTERN QCloudQCloudCOSXMLStatus QCloudQCloudCOSXMLStatusDumpFromString(NSString* key);
-FOUNDATION_EXTERN NSString* QCloudQCloudCOSXMLStatusTransferToString(QCloudQCloudCOSXMLStatus type);
+@interface QCloudVersionContent : NSObject
+@property (strong, nonatomic) NSString *object;
+@property (strong, nonatomic) NSString *versionID;
+@property (strong, nonatomic) NSString *isLatest;
+@property (strong, nonatomic) NSString *lastModified;
+@property (strong, nonatomic) NSString *ETag;
+@property (assign, nonatomic) int64_t size;
+@property (strong, nonatomic) QCloudVersionOwner *owner;
+@end
 NS_ASSUME_NONNULL_END

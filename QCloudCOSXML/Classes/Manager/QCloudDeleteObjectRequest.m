@@ -52,6 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 - (void) configureReuqestSerializer:(QCloudRequestSerializer *)requestSerializer  responseSerializer:(QCloudResponseSerializer *)responseSerializer
 {
+
     NSArray* customRequestSerilizers = @[
                                         QCloudURLFuseSimple,
                                         QCloudURLFuseWithURLEncodeParamters,
@@ -89,6 +90,9 @@ NS_ASSUME_NONNULL_BEGIN
     NSURL* __serverURL = [self.runOnService.configuration.endpoint serverURLWithBucket:self.bucket appID:self.runOnService.configuration.appID];
     self.requestData.serverURL = __serverURL.absoluteString;
     [self.requestData setValue:__serverURL.host forHTTPHeaderField:@"Host"];
+    if (self.versionID) {
+        [self.requestData setValue:self.versionID forHTTPHeaderField:@"x-cos-version-id"];
+    }
     NSMutableArray* __pathComponents = [NSMutableArray arrayWithArray:self.requestData.URIComponents];
     if(self.object) [__pathComponents addObject:self.object];
     self.requestData.URIComponents = __pathComponents;

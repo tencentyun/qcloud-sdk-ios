@@ -70,6 +70,12 @@ extern NSString* const HTTPHeaderUserAgent;
 
 @property (nonnull, strong) BodyType directBody;
 
+
+/**
+ 清除所有参数
+ */
+- (void)clean;
+
 /**
    添加类型为NSString的参数
       @param paramter 添加的参数

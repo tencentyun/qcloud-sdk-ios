@@ -30,15 +30,9 @@
 #import "QCloudCopyObjectResult.h"
 #import "QCloudCOSStorageClassEnum.h"
 NS_ASSUME_NONNULL_BEGIN
-
 /**
- @brief Put Object Copy 请求实现将一个文件从源路径复制到目标路径。建议文件大小 1M 到 5G，超过 5G 的文件请使用分块上传 Upload - Copy。在拷贝的过程中，文件元属性和 ACL 可以被修改。
- 
- 用户可以通过该接口实现文件移动，文件重命名，修改文件属性和创建副本。
- 
- 注意：
- 在跨帐号复制的时候，需要先设置被复制文件的权限为公有读，或者对目标帐号赋权，同帐号则不需要。
- */
+对象名
+*/
 @interface QCloudPutObjectCopyRequest : QCloudBizHTTPRequest
 /**
 对象名
@@ -98,12 +92,17 @@ NS_ASSUME_NONNULL_BEGIN
     当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
     */
 @property (strong, nonatomic) NSString *grantFullControl;
-
 /**
- 请求完成后的会通过该block回调，返回结果，若error为空，即为成功。
- 
- @param QCloudRequestFinishBlock 回调bock
- */
+    指定源文件的versionID
+    */
+@property (strong, nonatomic) NSString *versionID;
+
+/*
+在进行HTTP请求的时候，可以通过设置该参数来设置自定义的一些头部信息。
+通常情况下，携带特定的额外HTTP头部可以使用某项功能，如果是这类需求，可以通过设置该属性来实现。
+*/
+@property (strong, nonatomic) NSDictionary* customHeaders;
+
 - (void) setFinishBlock:(void (^)(QCloudCopyObjectResult* result, NSError * error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

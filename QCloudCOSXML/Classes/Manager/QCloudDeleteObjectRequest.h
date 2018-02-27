@@ -28,12 +28,9 @@
 #import <Foundation/Foundation.h>
 #import <QCloudCore/QCloudCore.h>
 NS_ASSUME_NONNULL_BEGIN
-
 /**
- @brief Delete Object 接口请求可以在 COS 的 Bucket 中将一个文件（Object）删除。该操作需要请求者对 Bucket 有 WRITE 权限。
- 
- 注意：对象一旦删除，不可恢复
- */
+对象名
+*/
 @interface QCloudDeleteObjectRequest : QCloudBizHTTPRequest
 /**
 对象名
@@ -43,6 +40,10 @@ NS_ASSUME_NONNULL_BEGIN
 存储桶名
 */
 @property (strong, nonatomic) NSString *bucket;
+/**
+如果需要删除指定版本的Object,请在该参数中指定versionID（在开启了多版本的情况才有）
+*/
+@property (strong, nonatomic) NSString *versionID;
 
 
 @end

@@ -47,6 +47,9 @@ typedef void(^__QCloudFenceActionBlock)(QCloudAuthentationCreator *, NSError *);
 - (void) performAction:(void (^)(QCloudAuthentationCreator *, NSError *))action
 {
     NSParameterAssert(action);
+    if (!_delegate) {
+        @throw [NSException exceptionWithName:@"com.qcloud.cos.xml" reason:@"当前的QCloudCredentailFenceQueue的delegate为空，请设置之后在使用。如果不设置，将会导致程序线程死锁！！" userInfo:nil];
+    }
     [_lock lock];
     if ([self fenceDataVaild]) {
         action(self.authentationCreator, nil);

@@ -20,4 +20,15 @@ static void* kQCloudOriginHTTPHeaders = &kQCloudOriginHTTPHeaders;
 {
     return objc_getAssociatedObject(self, kQCloudOriginHTTPHeaders);
 }
+
+- (void)set__originHTTPResponseData__:(NSData *)__originHTTPResponseData__ {
+    objc_setAssociatedObject(self, @selector(set__originHTTPResponseData__:), __originHTTPResponseData__, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (NSData*) __originHTTPResponseData__
+{
+    return objc_getAssociatedObject(self, @selector(set__originHTTPResponseData__:));
+}
+
+
 @end

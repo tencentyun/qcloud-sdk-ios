@@ -53,6 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 - (void) configureReuqestSerializer:(QCloudRequestSerializer *)requestSerializer  responseSerializer:(QCloudResponseSerializer *)responseSerializer
 {
+
     NSArray* customRequestSerilizers = @[
                                         QCloudURLFuseURIMethodASURLParamters,
                                         QCloudURLFuseWithURLEncodeParamters,
@@ -119,6 +120,9 @@ NS_ASSUME_NONNULL_BEGIN
     }
     if (self.sourceIfNoneMatch) {
         [self.requestData setValue:self.sourceIfNoneMatch forHTTPHeaderField:@"x-cos-copy-source-If-None-Match"];
+    }
+    if (self.versionID) {
+        [self.requestData setValue:self.versionID forHTTPHeaderField:@"x-cos-version-id"];
     }
     NSMutableArray* __pathComponents = [NSMutableArray arrayWithArray:self.requestData.URIComponents];
     if(self.object) [__pathComponents addObject:self.object];

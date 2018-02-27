@@ -27,6 +27,7 @@
 #import "QCloudHeadObjectRequest.h"
 #import "QCloudAppendObjectRequest.h"
 #import "QCloudGetObjectRequest.h"
+#import "QCloudGetObjectRequest+Custom.h"
 #import "QCloudCopyObjectResult.h"
 #import "QCloudPutObjectCopyRequest.h"
 #import "QCloudGetBucketRequest.h"
@@ -56,5 +57,9 @@
 #import "QCloudGetServiceRequest.h"
 #import "QCloudUploadPartCopyRequest.h"
 #import "QCloudCOSXMLCopyObjectRequest.h"
+#import "QCloudPostObjectRestoreRequest.h"
+#import "QCloudRestoreRequest.h"
+#import "QCloudListObjectVersionsRequest.h"
+#import "QCloudGetPresignedURLRequest.h"
 #endif /* QCloudCOSXML_h */
 

@@ -1,6 +1,5 @@
 #import "QCloudCoreVersion.h"
-#import "QCloudCore.h"
-NSString * const QCloudCoreModuleVersion = @"0.1.1";
+NSString * const QCloudCoreModuleVersion = @"5.3.0";
 NSString * const QCloudCoreModuleName = @"QCloudCore";
 @interface QCloudQCloudCoreLoad : NSObject
 @end
@@ -8,9 +7,23 @@ NSString * const QCloudCoreModuleName = @"QCloudCore";
 @implementation QCloudQCloudCoreLoad
 + (void) load
 {
-    QCloudSDKModule* module = [[QCloudSDKModule alloc] init];
-    module.name = QCloudCoreModuleName;
-    module.version = QCloudCoreModuleVersion;
-    [[QCloudSDKModuleManager shareInstance] registerModule:module];
+    Class cla = NSClassFromString(@"QCloudSDKModuleManager");
+    if (cla) {
+        NSMutableDictionary* module = [@{
+                                 @"name" : QCloudCoreModuleName,
+                                 @"version" : QCloudCoreModuleVersion
+                                 } mutableCopy];
+
+          NSString* buglyID = @"";
+          if (buglyID.length > 0) {
+              module[@"crashID"] = buglyID;
+          }
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
+        id share = [cla performSelector:@selector(shareInstance)];
+        [share performSelector:@selector(registerModuleByJSON:) withObject:module];
+#pragma clang diagnostic pop
+    }
 }
 @end

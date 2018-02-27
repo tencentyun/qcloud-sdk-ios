@@ -354,6 +354,21 @@ NSString* const HTTPHeaderUserAgent = @"User-Agent";
 }
 
 
+- (void)clean {
+    _queryParamters = nil;
+    self.stringEncoding = NSUTF8StringEncoding;
+    _serverURL = nil;
+    _URIMethod = nil;
+    _URIComponents = nil;
+    _httpHeaders = nil;
+    _paramters = nil;
+    _multiDataStream = nil;
+    _boundary = nil;
+    _cookies = nil;
+    _directBody = nil;
+    [self __dataCommonInit];
+}
+
 - (NSString*) description
 {
     NSMutableString* str = [NSMutableString new];

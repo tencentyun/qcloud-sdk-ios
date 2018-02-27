@@ -38,5 +38,9 @@ NS_ASSUME_NONNULL_BEGIN
 文件的最后修改时间，GMT格式
 */
 @property (strong, nonatomic) NSString *lastModified;
+/**
+对象对应的Version ID（在开启了多版本的情况才有）
+*/
+@property (strong, nonatomic) NSString *versionID;
 @end
 NS_ASSUME_NONNULL_END

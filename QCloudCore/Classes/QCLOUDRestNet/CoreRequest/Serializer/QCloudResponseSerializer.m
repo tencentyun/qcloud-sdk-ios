@@ -76,7 +76,7 @@ QCloudResponseSerializerBlock QCloudResponseAppendHeadersSerializerBlock = ^(NSH
 QCloudResponseSerializerBlock QCloudAcceptRespnseCodeBlock(NSSet* acceptCode, Class errorModel) {
     return ^(NSHTTPURLResponse* response,  id inputData, NSError* __autoreleasing* error) {
 
-        void(^LoadDefaultError)() = ^() {
+        void(^LoadDefaultError)(void) = ^() {
             NSString* errorMessage = [[NSString alloc] initWithData:inputData encoding:NSUTF8StringEncoding];
             errorMessage = errorMessage?:[NSString stringWithFormat:@"不接受该HTTP StatusCode %ld", (long)response.statusCode];
             if (error != NULL) {

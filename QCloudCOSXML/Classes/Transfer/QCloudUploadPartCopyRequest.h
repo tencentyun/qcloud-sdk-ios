@@ -29,6 +29,9 @@
 #import <QCloudCore/QCloudCore.h>
 #import "QCloudCopyObjectResult.h"
 NS_ASSUME_NONNULL_BEGIN
+/**
+    存储桶名称
+    */
 @interface QCloudUploadPartCopyRequest : QCloudBizHTTPRequest
 /**
     存储桶名称
@@ -75,12 +78,12 @@ NS_ASSUME_NONNULL_BEGIN
     可与 x-cos-copy-source-If-Modified-Since 一起使用，与其他条件联合使用返回冲突。
     */
 @property (strong, nonatomic) NSString *sourceIfNoneMatch;
-
 /**
- 请求完成后的会通过该block回调，返回结果，若error为空，即为成功。
- 
- @param QCloudRequestFinishBlock 回调bock
- */
+    指定源文件的版本号
+    */
+@property (strong, nonatomic) NSString *versionID;
+
+
 - (void) setFinishBlock:(void (^)(QCloudCopyObjectResult* result, NSError * error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

@@ -27,7 +27,7 @@
 
 #import <Foundation/Foundation.h>
 #import <QCloudCore/QCloudCore.h>
-#import "QCloudQCloudCOSXMLStatusEnum.h"
+#import "QCloudCOSXMLStatusEnum.h"
 #import "QCloudBucketReplicationDestination.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -35,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
     标志Rule是否生效
     */
-@property (assign, nonatomic) QCloudQCloudCOSXMLStatus status;
+@property (assign, nonatomic) QCloudCOSXMLStatus status;
 /**
     用来标注具体rule的名称
     */

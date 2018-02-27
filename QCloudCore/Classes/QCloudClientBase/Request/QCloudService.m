@@ -57,7 +57,7 @@
 {
     __block QCloudSignature* auth;
     dispatch_sync(_writeReadQueue, ^{
-        auth = _signatureCache[fields.filed];
+        auth = self->_signatureCache[fields.filed];
     });
     if ([auth.expiration compare:[NSDate date]] == NSOrderedAscending) {
         auth = nil;
@@ -74,9 +74,9 @@
 
     dispatch_barrier_async(_writeReadQueue, ^{
         if (!signature) {
-            [_signatureCache removeObjectForKey:fields.filed];
+            [self->_signatureCache removeObjectForKey:fields.filed];
         } else {
-            _signatureCache[fields.filed] = signature;
+            self->_signatureCache[fields.filed] = signature;
         }
     });
 }
@@ -85,7 +85,7 @@
     NSAssert([self.configuration.signatureProvider respondsToSelector:@selector(signatureWithFields:request:urlRequest:compelete:)], @"您没有提供用于签名的委托者，请设置后再调用API");
     request.runOnService = self;
     QCloudSignatureFields* fileds = [self signatureFiledsForRequest:request];
-    [self.configuration.signatureProvider signatureWithFields:fileds request:request urlRequest:urlrequest compelete:cotinueBlock];
+    [self.configuration.signatureProvider signatureWithFields:fileds request:request urlRequest:(NSMutableURLRequest*)urlrequest compelete:cotinueBlock];
 }
 
 - (void) loadCOSXMLAuthorizationForBiz:(QCloudBizHTTPRequest *)request urlRequest:(NSURLRequest *)urlrequest compelete:(QCloudHTTPAuthentationContinueBlock)cotinueBlock
@@ -93,13 +93,15 @@
     NSAssert([self.configuration.signatureProvider respondsToSelector:@selector(signatureWithFields:request:urlRequest:compelete:)], @"您没有提供用于签名的委托者，请设置后再调用API");
     request.runOnService = self;
     QCloudSignatureFields* fileds = [self signatureFiledsForRequest:request];
-    [self.configuration.signatureProvider signatureWithFields:fileds request:request urlRequest:urlrequest compelete:cotinueBlock];
+    [self.configuration.signatureProvider signatureWithFields:fileds request:request urlRequest:(NSMutableURLRequest*)urlrequest compelete:cotinueBlock];
 }
 
 - (BOOL) fillCommonParamtersForRequest:(QCloudBizHTTPRequest *)request error:(NSError * _Nullable __autoreleasing *)error
 {
     request.runOnService = self;
-    [request.requestData setValue:self.configuration.userAgent forHTTPHeaderField:HTTPHeaderUserAgent];
+    if ( nil == [request.requestData.httpHeaders valueForKey:HTTPHeaderUserAgent]) {
+        [request.requestData setValue:self.configuration.userAgent forHTTPHeaderField:HTTPHeaderUserAgent];
+    }
     return YES;
 }
 

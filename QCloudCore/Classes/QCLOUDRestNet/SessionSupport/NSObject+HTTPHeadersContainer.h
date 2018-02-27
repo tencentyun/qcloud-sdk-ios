@@ -9,4 +9,6 @@
 
 @interface NSObject (HTTPHeadersContainer)
 @property (nonatomic, strong) NSHTTPURLResponse * __originHTTPURLResponse__;
+
+@property (nonatomic, strong) NSData*             __originHTTPResponseData__;
 @end

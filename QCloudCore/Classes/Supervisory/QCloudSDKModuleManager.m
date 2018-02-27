@@ -7,7 +7,7 @@
 //
 
 #import "QCloudSDKModuleManager.h"
-
+#import "QCloudObjectModel.h"
 @interface QCloudSDKModuleManager  ()
 {
     NSMutableArray* _modules;
@@ -49,6 +49,18 @@
     @synchronized (self) {
         [_modules addObject:module];
     }
+}
+
+- (void) registerModuleByJSON:(NSDictionary *)json
+{
+    if (!json.count) {
+        return;
+    }
+    QCloudSDKModule* module = [QCloudSDKModule qcloud_modelWithJSON:json];
+    if (!module) {
+        return;
+    }
+    [self registerModule:module];
 }
 
 @end

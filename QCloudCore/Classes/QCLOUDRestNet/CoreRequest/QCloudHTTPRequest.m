@@ -96,7 +96,7 @@
 
 - (void) willStart
 {
-    
+    QCloudLogDebug(@"[%llu] Will Start",self.requestID);
 }
 
 
@@ -159,8 +159,8 @@
     if (NSURLErrorCancelled == error.code && [NSURLErrorDomain isEqualToString:error.domain]) {
         error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeCanceled message:@"The request is canceled"];
     }
-    _httpURLError.__originHTTPURLResponse__ = response;
-    error.__originHTTPURLResponse__ = response;
+    _httpURLError.__originHTTPURLResponse__ = _httpURLResponse;
+    error.__originHTTPURLResponse__ = _httpURLResponse;
     [self onError:error];
 }
 - (void) onReciveRespone:(NSHTTPURLResponse *)response data:(NSData *)data
@@ -191,11 +191,13 @@
     [self.benchMarkMan markFinishWithKey:kRNBenchmarkResponse];
     if (localError) {
         localError.__originHTTPURLResponse__ = response;
+        localError.__originHTTPResponseData__ = data;
         QCloudLogError(@"[%@][%lld] %@", [self class], self.requestID, localError);
         [self onError:localError];
     } else {
         QCloudLogDebug(@"[%@][%lld] RESPONSE \n%@ ", [self class], self.requestID, [outputObject qcloud_modelToJSONString]);
         [outputObject set__originHTTPURLResponse__:response];
+        [outputObject set__originHTTPResponseData__:data];
         [self onSuccess:outputObject];
     }
 }

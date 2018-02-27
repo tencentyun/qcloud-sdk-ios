@@ -20,15 +20,7 @@
 
 
 
-@interface QCloudNetProfileLevel : NSObject
-{
-    NSMutableArray* _downloadPoints;
-    NSMutableArray* _uploadPoints;
-}
-@property (atomic, assign, readonly) int64_t downloadSpeed;
-@property (atomic, assign, readonly) int64_t uploadSpped;
-@property (atomic, assign) NSTimeInterval interval;
-@end
+
 
 @implementation QCloudNetProfileLevel
 - (instancetype) initWithInterval:(NSTimeInterval)interval
@@ -148,7 +140,7 @@ typedef NS_ENUM(NSInteger, QCloudNetSpeedLevel) {
 - (void) checkSpeed
 {
     dispatch_sync(_readWriteQueue, ^{
-        for (QCloudNetProfileLevel* level in _sppedLevels) {
+        for (QCloudNetProfileLevel* level in self->_sppedLevels) {
             QCloudLogDebug(@"%f download spped %lld bytes/s", level.interval, level.downloadSpeed);
             QCloudLogDebug(@"%f upload speed %lld bytes/s", level.interval, level.uploadSpped);
         }
@@ -177,6 +169,7 @@ typedef NS_ENUM(NSInteger, QCloudNetSpeedLevel) {
     _readWriteQueue = dispatch_queue_create("com.tencent.network.profile.level", DISPATCH_QUEUE_CONCURRENT);
     _sppedLevels = [NSMutableArray new];
     [_sppedLevels addObject:[[QCloudNetProfileLevel alloc] initWithInterval:1]];
+    [_sppedLevels addObject: [[QCloudNetProfileLevel alloc] initWithInterval:30]];
     [_sppedLevels addObject:[[QCloudNetProfileLevel alloc] initWithInterval:60]];
     return self;
 }
@@ -184,7 +177,7 @@ typedef NS_ENUM(NSInteger, QCloudNetSpeedLevel) {
 - (void) pointDownload:(int64_t)bytes
 {
     dispatch_barrier_async(_readWriteQueue, ^{
-        for (QCloudNetProfileLevel* level in _sppedLevels) {
+        for (QCloudNetProfileLevel* level in self->_sppedLevels) {
             QCloudNetProfilePoint* point = [QCloudNetProfilePoint new];
             point.pointTime = CFAbsoluteTimeGetCurrent();
             point.downloadBytes = bytes;
@@ -196,12 +189,13 @@ typedef NS_ENUM(NSInteger, QCloudNetSpeedLevel) {
 - (void) pointUpload:(int64_t)bytes
 {
     dispatch_barrier_async(_readWriteQueue, ^{
-        for (QCloudNetProfileLevel* level in _sppedLevels) {
+        for (QCloudNetProfileLevel* level in self->_sppedLevels) {
             QCloudNetProfilePoint* point = [QCloudNetProfilePoint new];
             point.pointTime = CFAbsoluteTimeGetCurrent();
             point.uploadBytes = bytes;
             [level pointUpload:point];
         }
+        [[NSNotificationCenter defaultCenter] postNotificationName:kQCloudNetProfileUploadSpeedUpdate object:self->_sppedLevels];
     });
 }
 

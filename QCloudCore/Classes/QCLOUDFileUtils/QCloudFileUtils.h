@@ -10,6 +10,8 @@
 #import "QCloudSHAPart.h"
 #ifndef __QCloudFileUtils
 #define __QCloudFileUtils
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wstrict-prototypes"
 
 #define NSShareFileManager [NSFileManager defaultManager]
 FOUNDATION_EXTERN void QCloudEnsurePathExist(NSString* path);
@@ -38,4 +40,9 @@ FOUNDATION_EXTERN  NSString* QCloudDocumentsTempFile(NSString* fileName, NSStrin
 
 FOUNDATION_EXTERN  uint64_t QCloudFileSize(NSString* path);
 FOUNDATION_EXTERN NSArray<QCloudSHAPart*>*  QCloudIncreaseFileSHAData(NSString *path, uint64_t sliceSize);
+
+
+#pragma clang diagnostic pop
 #endif
+
+

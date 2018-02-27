@@ -39,7 +39,6 @@ QCloudLog(QCloudLogLevelDebug,@"%@",[NSThread callStackSymbols])
 
 @interface QCloudLogger : NSObject
 
-
 @property (nonatomic, assign) QCloudLogLevel logLevel;
 
 @property (nonatomic, strong, readonly) NSString* logDirctoryPath;

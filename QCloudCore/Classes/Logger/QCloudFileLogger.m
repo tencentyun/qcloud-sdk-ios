@@ -85,8 +85,8 @@
         QCloudLogModel* log = logCreate();
         NSString* message = [NSString stringWithFormat:@"%@\n",[log fileDescription]];
         NSData* data = [message dataUsingEncoding:NSUTF8StringEncoding];
-        _currentSize += data.length;
-        [_sliceData appendData:data];
+        self->_currentSize += data.length;
+        [self->_sliceData appendData:data];
         //
         if (self.currentSize >= self.maxSize) {
             [self writeCliceDataToFile];
@@ -94,7 +94,7 @@
                 [self.delegate fileLoggerDidFull:self];
             }
         } else {
-            if (_sliceData.length >= _sliceSize) {
+            if (self->_sliceData.length >= self->_sliceSize) {
                 [self writeCliceDataToFile];
             }
         }

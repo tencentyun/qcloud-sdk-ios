@@ -29,7 +29,7 @@
 #import "QCloudCOSXMLService+Private.h"
 #import "QCloudThreadSafeMutableDictionary.h"
 #import "QCLoudError.h"
-
+#import "QCloudGetPresignedURLRequest.h"
 
 QCloudThreadSafeMutableDictionary* QCloudCOSXMLServiceCache()
 {
@@ -82,6 +82,53 @@ static QCloudCOSXMLService* COSXMLService = nil;
     [QCloudCOSXMLServiceCache() setObject:cosxmlService  forKey:key];
     return cosxmlService;
 }
+- (NSString*)getURLWithBucket:(NSString *)bucket object:(NSString *)object withAuthorization:(BOOL)withAuthorization {
+    NSParameterAssert(bucket);
+    NSParameterAssert(object);
+    __block NSMutableString* resultURL = [[NSMutableString alloc] init];
+    NSString* bucketURL = [[self.configuration.endpoint serverURLWithBucket:bucket appID:self.configuration.appID] absoluteString];
+    [resultURL appendString:bucketURL];
+    [resultURL appendFormat:@"/%@",object];
+    if (withAuthorization) {
+        dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+        NSMutableURLRequest* fakeURLRequest = [[NSMutableURLRequest alloc] init];
+        [fakeURLRequest setHTTPMethod:@"GET"];
+        [fakeURLRequest setURL:[NSURL URLWithString:resultURL]];
+        [self.configuration.signatureProvider signatureWithFields:nil request:nil urlRequest:fakeURLRequest compelete:^(QCloudSignature *signature, NSError *error) {
+            NSString* sign = signature.signature;
+            sign = QCloudURLEncodeUTF8(sign);
+            [resultURL appendFormat:@"?sign=%@",sign];
+            dispatch_semaphore_signal(semaphore);
+        }];
+        dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, 5*NSEC_PER_SEC));
+    }
+    return [resultURL copy];
+}
 
+- (void) getPresignedURL:(QCloudGetPresignedURLRequest*)request {
+
+    request.runOnService = self;
+    NSError* error;
+    NSURLRequest* urlRequest = [request buildURLRequest:&error];
+    if (nil != error) {
+        [request onError:error];
+        return ;
+    }
+    __block NSString* requestURLString = urlRequest.URL.absoluteString;
+    [self loadCOSXMLAuthorizationForBiz:request urlRequest:urlRequest compelete:^(QCloudSignature *signature, NSError *error) {
+        NSString* authorizatioinString = signature.signature;
+        if ([requestURLString hasSuffix:@"&"] || [requestURLString hasSuffix:@"?"]) {
+             requestURLString = [requestURLString stringByAppendingString:authorizatioinString];
+        } else {
+            requestURLString = [requestURLString stringByAppendingFormat:@"?%@",authorizatioinString];
+        }
+       QCloudGetPresignedURLResult* result = [[QCloudGetPresignedURLResult alloc] init];
+        result.presienedURL = requestURLString;
+        if (request.finishBlock) {
+            request.finishBlock(result, nil);
+        }
+    }];
+    
+}
 
 @end

@@ -38,6 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
   return @{
       @"eTag" :@"ETag",
       @"lastModified" :@"LastModified",
+      @"versionID" :@"x-cos-version-id",
   };
 }
 

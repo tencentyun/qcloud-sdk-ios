@@ -59,6 +59,9 @@ static const int64_t   kCopySliceLength    = 5242880;
             weakSelf.lastModified = resultDictionray[kLastModifiedKey];
             if (fileSize > kMultipartThreshold) {
                 weakSelf.sliceCount = fileSize / kCopySliceLength;
+                if (fileSize % kCopySliceLength != 0) {
+                    weakSelf.sliceCount++;
+                }
                 weakSelf.fileSize = fileSize;
                 [weakSelf multipleCopy];
             } else {

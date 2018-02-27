@@ -98,7 +98,7 @@ NSString* QCloudTempDir(){
 
 NSString* QCloudMKTempDirectory(){
     NSString* path = [[NSUUID UUID] UUIDString];
-    return QCloudAppendPath(QCloudTempDir(), path);
+    return QCloudAppendPath(QCloudTempDir(),path);
 }
 
 NSString* QCloudDocumentsSubPath(NSString* str) {

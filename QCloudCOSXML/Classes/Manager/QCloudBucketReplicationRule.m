@@ -48,9 +48,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic
 {
 
-    NSNumber* QCloudCOSXMLStatusenumValue = dic[@"Status"];
-    if (QCloudCOSXMLStatusenumValue) {
-        NSString* value = QCloudQCloudCOSXMLStatusTransferToString([QCloudCOSXMLStatusenumValue intValue]);
+    NSNumber* COSXMLStatusenumValue = dic[@"Status"];
+    if (COSXMLStatusenumValue) {
+        NSString* value = QCloudCOSXMLStatusTransferToString([COSXMLStatusenumValue intValue]);
         if (value) {
             dic[@"Status"] = value;
         }
@@ -66,9 +66,9 @@ NS_ASSUME_NONNULL_BEGIN
     }
     NSMutableDictionary* transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
 
-        NSString* QCloudCOSXMLStatusenumValue = transfromDic[@"Status"];
-        if (QCloudCOSXMLStatusenumValue && [QCloudCOSXMLStatusenumValue isKindOfClass:[NSString class]] && QCloudCOSXMLStatusenumValue.length > 0) {
-            int value = QCloudQCloudCOSXMLStatusDumpFromString(QCloudCOSXMLStatusenumValue);
+        NSString* COSXMLStatusenumValue = transfromDic[@"Status"];
+        if (COSXMLStatusenumValue && [COSXMLStatusenumValue isKindOfClass:[NSString class]] && COSXMLStatusenumValue.length > 0) {
+            int value = QCloudCOSXMLStatusDumpFromString(COSXMLStatusenumValue);
             transfromDic[@"Status"] = @(value);
         }
     return transfromDic;

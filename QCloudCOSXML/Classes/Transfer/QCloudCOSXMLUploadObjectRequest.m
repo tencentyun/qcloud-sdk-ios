@@ -20,6 +20,7 @@
 #import "QCloudCOSTransferMangerService.h"
 #import "QCloudAbortMultipfartUploadRequest.h"
 #import "QCloudNetworkingAPI.h"
+#import "QCloudEncryt.h"
 static NSUInteger kQCloudCOSXMLUploadLengthLimit = 1*1024*1024;
 static NSUInteger kQCloudCOSXMLUploadSliceLength = 1*1024*1024;
 
@@ -159,6 +160,29 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
         } else {
             QCloudUploadObjectResult* result = [QCloudUploadObjectResult new];
             result.eTag = [outputObject valueForKey:@"Etag"];
+            if (outputObject[@"x-cos-version-id"]) {
+                result.versionID = outputObject[@"x-cos-version-id"];
+            }
+            
+            NSString* localMD5 ;
+            if ([weakSelf.body isKindOfClass:[NSData class]]) {
+                localMD5 = QCloudEncrytNSDataMD5(weakSelf.body);
+            } else if ([weakSelf.body isKindOfClass:[NSURL class]]) {
+                localMD5 = QCloudEncrytFileMD5(((NSURL*)weakSelf.body).path);
+            }
+            NSString* MD5FromCOS = [result.eTag substringWithRange:NSMakeRange(1, result.eTag.length - 2)];
+            if (![localMD5.lowercaseString isEqualToString:MD5FromCOS]) {
+                NSMutableString* errorMessageString = [[NSMutableString alloc] init];
+                [errorMessageString appendFormat:@"简单上传过程中MD5校验与本地不一致，请检查本地文件在上传过程中是否发生了变化,建议调用删除接口将COS上的文件删除并重新上传"];
+                if ( outputObject[@"x-cos-request-id"]!= nil) {
+                    NSString* requestID = outputObject[@"x-cos-request-id"];
+                    [errorMessageString appendFormat:@", Request id:%@",requestID];
+                }
+                NSError* error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeMD5NotMatch message:errorMessageString];
+                [weakSelf onError:error];
+                return ;
+            }
+            
             result.key = weakSelf.object;
             result.bucket = weakSelf.bucket;
             result.location = QCloudCOSXMLObjectLocation(weakSelf.transferManager.configuration.endpoint,
@@ -184,6 +208,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     request.grantFullControl = self.grantFullControl;
     request.sendProcessBlock = self.sendProcessBlock;
     request.delegate = self.delegate;
+    request.customHeaders = self.customHeaders;
     [self.requestCacheArray addPointer:(__bridge void * _Nullable)(request)];
     [self.transferManager.cosService PutObject:request];
 }
@@ -206,9 +231,6 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     for (NSString* key  in self.customHeaders.allKeys.copy) {
         [uploadRequet.requestData setValue:self.customHeaders[key] forHTTPHeaderField:key];
     }
-    for (NSString* key  in self.customHeaders.allKeys.copy) {
-        [uploadRequet.requestData setValue:self.customHeaders[key] forHTTPHeaderField:key];
-    }
     __weak typeof(self) weakSelf = self;
 
     [uploadRequet setFinishBlock:^(QCloudInitiateMultipartUploadResult * _Nonnull result,
@@ -218,7 +240,6 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
         } else {
             if (weakSelf.initMultipleUploadFinishBlock) {
                 QCloudCOSXMLUploadObjectResumeData resumeData = [self productingReqsumeData:nil];
-                QCloudCOSXMLUploadObjectRequest* resumeRequest = [QCloudCOSXMLUploadObjectRequest requestWithRequestData:resumeData];
                 if (self.initMultipleUploadFinishBlock) {
                     self.initMultipleUploadFinishBlock(result, resumeData);
                 }
@@ -298,7 +319,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     });
     dispatch_resume(_queueSource);
     for (int i = 0; i < allParts.count; i++) {
-        QCloudFileOffsetBody* body = allParts[i];
+        __block QCloudFileOffsetBody* body = allParts[i];
 
         QCloudUploadPartRequest* request = [QCloudUploadPartRequest new];
         request.bucket = self.bucket;
@@ -335,6 +356,23 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
                     [strongSelf cancel];
                 }
             } else {
+                
+                NSString* MD5FromeETag = [outputObject.eTag substringWithRange:NSMakeRange(1, outputObject.eTag.length-2)];
+                NSString* localMD5String = [QCloudEncrytFileOffsetMD5(body.fileURL.path, body.offset, body.sliceLength) lowercaseString];
+                if (![MD5FromeETag isEqualToString:localMD5String]) {
+                    NSMutableString* errorMessageString = [[NSMutableString alloc] init];
+                    [errorMessageString appendFormat:@"分片上传过程中MD5校验与本地不一致，请检查本地文件在上传过程中是否发生了变化,建议调用删除接口将COS上的文件删除并重新上传"];
+                    if ( [outputObject __originHTTPURLResponse__]&& [[outputObject __originHTTPURLResponse__].allHeaderFields valueForKey:@"x-cos-request-id"]!= nil) {
+                        NSString* requestID = [[outputObject __originHTTPURLResponse__].allHeaderFields valueForKey:@"x-cos-request-id"];
+                        [errorMessageString appendFormat:@", Request id:%@",requestID];
+                    }
+                    NSError* error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeMD5NotMatch message:errorMessageString];
+                    [weakSelf onError:error];
+                    [weakSelf cancel];
+                    return ;
+                }
+                
+                
                 QCloudMultipartInfo* info = [QCloudMultipartInfo new];
                 info.eTag = outputObject.eTag;
                 info.partNumber = [@(body.index+1) stringValue];

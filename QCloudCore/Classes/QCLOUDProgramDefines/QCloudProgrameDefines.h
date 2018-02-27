@@ -7,6 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wstrict-prototypes"
+
 
 #define DEFINE_PROPERTY_KEY(key)  static void const   kPK##key = &kPK##key
 
@@ -43,35 +46,10 @@
 #define DEFINE_PROPERTY_STRONG_UIButton(name) DEFINE_PROPERTY_STRONG(UIButton*, name)
 
 
-#define INIT_SUBVIEW(sView, class, name) name = [[class alloc] init]; [sView addSubview:name];
-#define INIT_SUBVIEW_UIImageView(sView, name) INIT_SUBVIEW(sView, UIImageView, name)
-#define INIT_SUBVIEW_UILabel(sView, name) INIT_SUBVIEW(sView, UILabel, name)
-
-#define INIT_SUBVIEW_UIButton(sView, name) name =[UIButton buttonWithType:UIButtonTypeCustom]; [sView addSubview:name];
-
-#define INIT_SELF_SUBVIEW(class, name) INIT_SUBVIEW(self, class , name)
-#define INIT_SELF_SUBVIEW_UIImageView(name) INIT_SUBVIEW_UIImageView(self, name)
-#define INIT_SELF_SUBVIEW_UILabel(name) INIT_SUBVIEW_UILabel(self, name)
 
 
 #define DEFINE_PROPERTY_WEAK(type, name) DEFINE_PROPERTY(weak, type, name)
 
-/**
-   初始化一个点击的手势
-      @param name   点击手势的名称
-   @param view   要添加手势的视图的名称
-   @param taps   需要的点击次数
-   @param touchs 需要的手指数量
-    */
-#define INIT_GESTRUE_TAP_IN_VIEW(name, view, taps, touchs)  name=[[UITapGestureRecognizer alloc] init];\
-name.numberOfTapsRequired = 1;\
-name.numberOfTouchesRequired = 1;\
-[view addGestureRecognizer:name];
-
-/**
-   在当前视图上初始化一个点击手势
- */
-#define INIT_GESTRUE_TAP_IN_SELF(name, taps, touchs) INIT_GESTRUE_TAP_IN_VIEW(name, self, taps, touchs)
 
 
 #define DEFINE_DZ_EXTERN_STRING(key) extern NSString* const  key;
@@ -92,12 +70,8 @@ name.numberOfTouchesRequired = 1;\
 //Notification defaults
 
 
-FOUNDATION_EXTERN Class DZGetCurrentClassInvocationSEL(NSString*  functionString);
 
-FOUNDATION_EXTERN BOOL DZCheckSuperResponseToSelector(Class cla, SEL selector);
 
-#define __SEL_CLASS__  DZGetCurrentClassInvocationSEL([NSString stringWithFormat:@"%s",__FUNCTION__])
-#define __DZSuperResponseCMD__ DZCheckSuperResponseToSelector(__SEL_CLASS__, _cmd) 
 
 
 #define DZExternObserverMessage(msg) \
@@ -133,3 +107,5 @@ FOUNDATION_EXTERN void  DZEnsureMainThread(void(^mainSafeBlock)());
 
 #define bQCloudSystemVersion(min, max) ([UIDevice currentDevice].systemVersion.doubleValue >= min) && ([UIDevice currentDevice].systemVersion.doubleValue <=max)
 #define bQCloudSystemVersion8 bQCloudSystemVersion(8.0, 8.999)
+
+#pragma clang diagnostic pop

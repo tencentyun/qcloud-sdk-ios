@@ -53,6 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 - (void) configureReuqestSerializer:(QCloudRequestSerializer *)requestSerializer  responseSerializer:(QCloudResponseSerializer *)responseSerializer
 {
+
     NSArray* customRequestSerilizers = @[
                                         QCloudURLFuseSimple,
                                         QCloudURLFuseWithXMLParamters,
@@ -62,6 +63,7 @@ NS_ASSUME_NONNULL_BEGIN
                                     QCloudAcceptRespnseCodeBlock([NSSet setWithObjects:@(200), @(201), @(202), @(203), @(204), @(205), @(206), @(207), @(208), @(226), nil], nil),
                                     QCloudResponseXMLSerializerBlock,
 
+                                    QCloudResponseAppendHeadersSerializerBlock,
 
                                     QCloudResponseObjectSerilizerBlock([QCloudCopyObjectResult class])
                                     ];
@@ -124,9 +126,15 @@ NS_ASSUME_NONNULL_BEGIN
     if (self.grantFullControl) {
         [self.requestData setValue:self.grantFullControl forHTTPHeaderField:@"x-cos-grant-full-control"];
     }
+    if (self.versionID) {
+        [self.requestData setValue:self.versionID forHTTPHeaderField:@"x-cos-version-id"];
+    }
     NSMutableArray* __pathComponents = [NSMutableArray arrayWithArray:self.requestData.URIComponents];
     if(self.object) [__pathComponents addObject:self.object];
     self.requestData.URIComponents = __pathComponents;
+    for (NSString* key  in self.customHeaders.allKeys.copy) {
+    [self.requestData setValue:self.customHeaders[key] forHTTPHeaderField:key];
+    }
     return YES;
 }
 - (void) setFinishBlock:(void (^)(QCloudCopyObjectResult* result, NSError * error))QCloudRequestFinishBlock

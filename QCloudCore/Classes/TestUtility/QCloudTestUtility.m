@@ -11,7 +11,7 @@
 
 + (NSString* )tempFileWithSize:(NSInteger)size unit:(QCloudTestFileUnit)unit {
     NSString* file4MBPath = QCloudPathJoin(QCloudTempDir(), [NSUUID UUID].UUIDString);
-    
+
     if (!QCloudFileExist(file4MBPath)) {
         [[NSFileManager defaultManager] createFileAtPath:file4MBPath contents:[NSData data] attributes:nil];
     }
@@ -28,3 +28,4 @@
 
 
 @end
+

@@ -34,10 +34,10 @@
 #import "QCloudDeleteBucketRequest.h"
 #import "QCloudPutBucketLifecycleRequest.h"
 #import "QCloudDeleteBucketLifeCycleRequest.h"
-
+#import "QCloudPostObjectRestoreRequest.h"
 
 #import "QCloudDeleteObjectRequest.h"
-
+#import "QCloudListObjectVersionsRequest.h"
 @implementation QCloudCOSXMLService (Manager)
 - (void) AppendObject:(QCloudAppendObjectRequest*)request
 {
@@ -144,5 +144,10 @@
 - (void) GetService:(QCloudGetServiceRequest*)request {
     [super performRequest:request];
 }
-
+- (void) PostObjectRestore:(QCloudPostObjectRestoreRequest*)request {
+    [super performRequest:request];
+}
+- (void) ListObjectVersions:(QCloudListObjectVersionsRequest *)request {
+    [super performRequest:request];
+}
 @end

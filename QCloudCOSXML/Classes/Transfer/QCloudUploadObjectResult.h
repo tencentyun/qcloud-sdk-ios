@@ -46,5 +46,9 @@ NS_ASSUME_NONNULL_BEGIN
 合并后文件的MD5算法校验值
 */
 @property (strong, nonatomic) NSString *eTag;
+/**
+对象对应的Version ID（在开启了多版本的情况才有）
+*/
+@property (strong, nonatomic) NSString *versionID;
 @end
 NS_ASSUME_NONNULL_END

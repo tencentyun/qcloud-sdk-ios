@@ -39,14 +39,14 @@
     }
 #endif
     dispatch_barrier_async(_hostChangeQueue, ^{
-        NSMutableArray* array = [_cache objectForKey:domain];
+        NSMutableArray* array = [self->_cache objectForKey:domain];
         if (!array) {
             array = [NSMutableArray new];
         }
         if (![array containsObject:ip]) {
             [array addObject:ip];
         }
-        _cache[domain] = array;
+        self->_cache[domain] = array;
     });
 }
 
@@ -54,7 +54,7 @@
 {
     __block NSArray* array = nil;
     dispatch_sync(_hostChangeQueue, ^(void) {
-        array = [[_cache objectForKey:domain] copy];
+        array = [[self->_cache objectForKey:domain] copy];
     });
     return array;
 }
@@ -66,7 +66,7 @@
     }
     __block BOOL contained = NO;
     dispatch_sync(_hostChangeQueue, ^{
-        for (NSArray* array in _cache.allValues) {
+        for (NSArray* array in self->_cache.allValues) {
             for (NSString* cachedIP in array) {
                 if ([cachedIP isEqualToString:ip]) {
                     contained = YES;
@@ -84,7 +84,7 @@
 - (void) clean
 {
     dispatch_barrier_async(_hostChangeQueue, ^{
-        [_cache removeAllObjects];
+        [self->_cache removeAllObjects];
     });
 }
 

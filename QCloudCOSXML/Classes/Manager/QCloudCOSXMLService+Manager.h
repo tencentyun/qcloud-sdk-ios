@@ -38,6 +38,8 @@
 @class QCloudDeleteBucketReplicationRequest;
 @class QCloudGetServiceRequest;
 @class QCloudUploadPartCopyRequest;
+@class QCloudPostObjectRestoreRequest;
+@class QCloudListObjectVersionsRequest;
 @interface QCloudCOSXMLService (Manager)
 
 - (void) AppendObject:(QCloudAppendObjectRequest*)request;
@@ -69,4 +71,6 @@
 - (void) GetBucketReplication:(QCloudGetBucketReplicationRequest*)request;
 - (void) DeleteBucketReplication:(QCloudDeleteBucketReplicationRequest*)request;
 - (void) GetService:(QCloudGetServiceRequest*)request;
+- (void) PostObjectRestore:(QCloudPostObjectRestoreRequest*)request;
+- (void) ListObjectVersions:(QCloudListObjectVersionsRequest*)request;
 @end

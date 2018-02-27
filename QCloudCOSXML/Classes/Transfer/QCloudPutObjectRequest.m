@@ -52,6 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 - (void) configureReuqestSerializer:(QCloudRequestSerializer *)requestSerializer  responseSerializer:(QCloudResponseSerializer *)responseSerializer
 {
+
     NSArray* customRequestSerilizers = @[
                                         QCloudURLFuseSimple,
                                         QCloudURLFuseContentMD5Base64StyleHeaders,
@@ -122,6 +123,9 @@ NS_ASSUME_NONNULL_BEGIN
     if(self.object) [__pathComponents addObject:self.object];
     self.requestData.URIComponents = __pathComponents;
     self.requestData.directBody = self.body;
+    for (NSString* key  in self.customHeaders.allKeys.copy) {
+    [self.requestData setValue:self.customHeaders[key] forHTTPHeaderField:key];
+    }
     return YES;
 }
 

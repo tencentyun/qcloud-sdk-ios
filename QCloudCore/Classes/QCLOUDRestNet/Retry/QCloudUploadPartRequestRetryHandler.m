@@ -14,6 +14,7 @@
     self = [super initWithMaxCount:maxCount sleepTime:sleepStep];
     _errorCode = [NSSet setWithObjects:
                   @(kCFURLErrorTimedOut),
+                  @(kCFURLErrorNetworkConnectionLost),
                   @(kCFURLErrorNotConnectedToInternet),
                   @(kCFURLErrorCannotConnectToHost),
                   nil];
