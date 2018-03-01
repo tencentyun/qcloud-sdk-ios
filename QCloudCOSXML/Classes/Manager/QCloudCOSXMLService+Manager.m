@@ -152,8 +152,6 @@
 - (void) ListObjectVersions:(QCloudListObjectVersionsRequest *)request {
     [super performRequest:request];
 }
-
-
 - (void) getPresignedURL:(QCloudGetPresignedURLRequest*)request {
     
     request.runOnService = self;

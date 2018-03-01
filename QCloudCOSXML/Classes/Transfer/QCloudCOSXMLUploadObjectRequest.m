@@ -239,6 +239,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
             [weakSelf onError:error];
         } else {
             if (weakSelf.initMultipleUploadFinishBlock) {
+                self.uploadId = result.uploadId;
                 QCloudCOSXMLUploadObjectResumeData resumeData = [self productingReqsumeData:nil];
                 if (self.initMultipleUploadFinishBlock) {
                     self.initMultipleUploadFinishBlock(result, resumeData);

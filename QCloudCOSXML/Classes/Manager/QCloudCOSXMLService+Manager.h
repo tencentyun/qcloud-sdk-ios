@@ -75,6 +75,5 @@
 - (void) GetService:(QCloudGetServiceRequest*)request;
 - (void) PostObjectRestore:(QCloudPostObjectRestoreRequest*)request;
 - (void) ListObjectVersions:(QCloudListObjectVersionsRequest*)request;
-
 - (void) getPresignedURL:(QCloudGetPresignedURLRequest*)request;
 @end
