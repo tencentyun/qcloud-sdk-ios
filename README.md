@@ -8,13 +8,22 @@
 - 运行环境为 iOS 8 以上       
 
 本仓库中只包含了SDK的代码和docset格式的文档。如果需要更多的信息可以浏览腾讯云官网。具体SDK的文档在对应目录下的REAME.md中。
+## 产品列表
+当前仓库内提供的产品有:
+- 基于 COS JSON API 封装的 SDK
+- 基于 COS XML API 封装的 SDK
 
 ## 集成SDK
-您可以通过Cocoapods集成、下载源代码或者使用我们打包好的动态库来进行SDK的集成工作。在这里我们推荐您使用Cocoapods的方式来进行集成。在您的podfile中加入需要集成的库即可。
+您可以通过Cocoapods集成、下载源代码或者使用我们打包好的动态库来进行SDK的集成工作。在这里我们推荐您使用Cocoapods的方式来进行集成。在您的podfile中加入需要集成的库即可。    
+如果需要使用基于XML封装的SDK:
 ```
 pod 'QCloudCOSXML'
 ```    
-其他的具体的集成方式可以详见具体库的文档。
+如果需要使用基于V4封装的，重构后的SDK:
+```
+pod 'QCloudNewCOSV4'
+```
+其他的具体的集成方式进入该SDK所在的文件夹中，查看README可以详见具体库的文档。
 
 ## 文档集成
 我们提供了docset格式的文档，在仓库的Documents目录中，或者可以从release中下载。您可以直接使用Dash来打开。也可以将文档集成到Xcode中去。

@@ -1,7 +1,8 @@
 # 快速集成与入门
 
 ## 前言
-** 对于新接入COS SDK的用户，我们推荐使用[基于XML API封装的SDK](https://cloud.tencent.com/document/product/436/11280) **
+**对于新接入COS SDK的用户，我们推荐使用[基于XML API封装的SDK](https://cloud.tencent.com/document/product/436/11280)**    
+对于种种原因仍需要使用V4 SDK的用户，可以使用这一版我们基于旧版本V4 SDK重构后的SDK。
 
 ## 开发准备
 
@@ -11,7 +12,7 @@
 需要下载打包好的Framework格式的SDK可以从realease中选择需要的版本进行下载。
 
 更多示例可参考Demo：[iOS Demo](https://github.com/tencentyun/qcloud-sdk-ios-samples.git)    
-（本版本SDK基于JSON API封装组成）
+（本版本SDK基于COS JSON API封装组成）
 
 ### 环境要求
 
@@ -28,15 +29,13 @@
 在Podfile文件中使用：
 
 ~~~
-pod 'QCloduCOS'
+pod 'QCloduCOSNewV4'
 ~~~
 
 ##### 使用打包好的动态库导入
 
-将我们提供的**QCloudCOS.framework和QCloudCore.framework**拖入到工程中：
-
-![](http://ericcheung-1253653367.cosgz.myqcloud.com/%E4%B8%A4%E4%B8%AAframework%E6%88%AA%E5%9B%BE.png)
-
+将我们提供的**QCloudNewCOSV4.framework和QCloudCore.framework**拖入到工程中, 并且勾选 Copy items if needed：
+![](http://eric-image-bed-1253653367.cosgz.myqcloud.com/Frameworks%E6%88%AA%E5%9B%BE.png  )
 并添加以下依赖库：
 
 1. CoreTelephony
@@ -483,6 +482,7 @@ QCloudUpdateFileAttributesRequest* request = [[QCloudUpdateFileAttributesRequest
 	request.bucket = testBucket;
 	request.fileName = @"填入文件名";
 	request.attributes = @"填入自定义属性";
+	request.flag = QCloudUpdateAttributeFlagBizAttr;
 	[request setFinishBlock:^(NSDictionary* result, NSError* error) {
 			//设置完成回调
 	}];
@@ -496,6 +496,7 @@ QCloudUpdateFileAttributesRequest* request = [[QCloudUpdateFileAttributesRequest
 |fileName|NSString|是|在COS上的文件名|
 |customHeaders|NSDictionary*|否|用户自定义 header，在执行更新操作时，只需填写需要增加或修改的项|
 |authority|NSString*|否|Object 的权限，默认与 Bucket 权限一致，此时不会返回该字段。如果设置了独立权限，则会返回该字段。有效值：eInvalid（空权限），此时系统会默认调取 Bucket 权限，eWRPrivate（私有读写） ，eWPrivateRPublic （公有读私有写）|
+|flag|QCloudUpdateAttributeFlag|是|更新属性的时候需要带上一个flag，更新属性时该flag为QCloudUpdateAttributeFlagBizAttr|
 |attributes|NSString*|COS 服务调用方自定义属性，可通过 查询目录属性 获取该属性值|
 ### 复制文件
 #### 示例

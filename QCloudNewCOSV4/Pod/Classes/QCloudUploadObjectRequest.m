@@ -254,7 +254,9 @@ int64_t const kQCloudUploadSliceDefaultSize = 1024*1024;
             }
             if (error) {
                 [weakSelf onError:error];
+                if (_queueSource) {
                 dispatch_source_cancel(weakSelf.queueSource);
+                }
                 QCloudLogError(@"上传分片失败%@",error);
                 return ;
             }

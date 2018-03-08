@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "QCloudNewCOSV4"
-  s.version          = "5.2.0"
+  s.version          = "5.3.2"
   s.summary          = "New refactored COSV4 framework"
 
   s.description      = <<-DESC
@@ -22,6 +22,6 @@ TODO: Add long description of the pod here.aaa
   s.ios.deployment_target = '8.0'
   s.source_files = 'QCloudNewCOSV4/Pod/Classes/**'
 
-  s.dependency 'QCloudCore','5.2.0'
+  s.dependency 'QCloudCore','5.3.2'
 
 end
