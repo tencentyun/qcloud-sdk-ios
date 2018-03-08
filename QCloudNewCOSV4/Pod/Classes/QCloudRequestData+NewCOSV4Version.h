@@ -8,5 +8,5 @@
 #import <QCloudCore/QCloudCore.h>
 
 @interface QCloudRequestData (NewCOSV4Version)
- 
+
 @end
