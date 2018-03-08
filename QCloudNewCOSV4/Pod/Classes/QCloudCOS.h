@@ -8,7 +8,7 @@
 
 #ifndef QCloudCOS_h
 #define QCloudCOS_h
-#import "QCloudCOSVersion.h"
+#import "QCloudNewCOSV4Version.h"
 #import "QCloudCreateDirectoryRequest.h"
 #import "QCloudCOSV4Service.h"
 #import "QCloudDeleteDirectoryRequest.h"
