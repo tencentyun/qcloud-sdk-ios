@@ -15,6 +15,33 @@
 #import "NSString+QCloudSHA.h"
 #import <CommonCrypto/CommonDigest.h>
 #import "QCloudLogger.h"
+
+@implementation NSDictionary(HeaderFilter)
+- (NSDictionary*)filteHeaders; {
+    NSMutableDictionary* signedHeaders = [[NSMutableDictionary alloc] init];
+    __block  const NSArray* shouldSignedHeaderList = @[ @"Content-Length", @"Content-MD5",@"Host"];
+    [self enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+        //签名的Headers列表：x开头的(x-cos-之类的),host,content-length,content-MD5
+        BOOL shouldSigned = NO;
+        for (NSString* header in shouldSignedHeaderList) {
+            if ([header isEqualToString:((NSString*)key)]) {
+                shouldSigned = YES;
+            }
+        }
+        NSArray* headerSeperatedArray = [key componentsSeparatedByString:@"-"];
+        if ([headerSeperatedArray firstObject] && [headerSeperatedArray.firstObject isEqualToString:@"x"]) {
+            shouldSigned = YES;
+        }
+        if (shouldSigned) {
+            signedHeaders[key]=obj;
+        }
+    }];
+    return  [signedHeaders copy];
+}
+@end
+
+
+
 @implementation QCloudAuthentationV5Creator
 
 - (QCloudSignature*) signatureForData:(NSMutableURLRequest *)urlrequest
@@ -35,8 +62,7 @@
     }
     NSString * signTime = [NSString stringWithFormat:@"%lld;%lld",(int64_t)nowInterval, (int64_t)experationInterVal];
     //
-    NSDictionary* headers = [urlrequest allHTTPHeaderFields];
-
+    NSDictionary* headers = [[urlrequest allHTTPHeaderFields] filteHeaders];
     NSDictionary* urlParamters = QCloudURLReadQuery(urlrequest.URL);
     NSDictionary* (^LowcaseDictionary)(NSDictionary* origin) = ^(NSDictionary* origin) {
         NSMutableDictionary* aim = [NSMutableDictionary new];
@@ -114,4 +140,6 @@
     QCloudLogDebug(@"authoration is %@", authoration);
     return [QCloudSignature signatureWith1Day:authoration];
 }
+
+
 @end
