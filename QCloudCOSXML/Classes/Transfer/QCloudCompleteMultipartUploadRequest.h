@@ -30,20 +30,38 @@
 #import "QCloudUploadObjectResult.h"
 @class QCloudCompleteMultipartUploadInfo;
 NS_ASSUME_NONNULL_BEGIN
-
 /**
- @brief Complete Multipart Upload 接口请求用来实现完成整个分块上传。当使用 Upload Parts 上传完所有块以后，必须调用该 API 来完成整个文件的分块上传。在使用该 API 时，您必须在请求 Body 中给出每一个块的 PartNumber 和 ETag，用来校验块的准确性。
- 由于分块上传完后需要合并，而合并需要数分钟时间，因而当合并分块开始的时候，COS 就立即返回 200 的状态码，在合并的过程中，COS 会周期性的返回空格信息来保持连接活跃，直到合并完成，COS会在 Body 中返回合并后块的内容。
- 当上传块小于 1 MB 的时候，在调用该 API 时，会返回 400 EntityTooSmall；
- 当上传块编号不连续的时候，在调用该 API 时，会返回 400 InvalidPart；
- 当请求 Body 中的块信息没有按序号从小到大排列的时候，在调用该 API 时，会返回 400 InvalidPartOrder；
- 当 UploadId 不存在的时候，在调用该 API 时，会返回 404 NoSuchUpload。
+完成整个分块上传的方法.
 
- 注意：
- 
- 建议您及时完成分块上传或者舍弃分块上传，因为已上传但是未终止的块会占用存储空间进而产生存储费用。
- 
- */
+当使用分块上传（uploadPart(UploadPartRequest)）完对象的所有块以后，必须调用该 completeMultiUpload(CompleteMultiUploadRequest) 或者 completeMultiUploadAsync(CompleteMultiUploadRequest, CosXmlResultListener) 来完成整个文件的分块上传.且在该请求的 Body 中需要给出每一个块的 PartNumber 和 ETag，用来校验块的准 确性.
+
+分块上传适合于在弱网络或高带宽环境下上传较大的对象.SDK 支持自行切分对象并分别调用uploadPart(UploadPartRequest)上传各 个分块.
+
+关于分块上传的描述，请查看 https://cloud.tencent.com/document/product/436/14112.
+
+关于完成整个分片上传接口的描述，请查看 https://cloud.tencent.com/document/product/436/7742.
+
+cos iOS SDK 中完成整个分块上传请求的方法具体步骤如下：
+
+1. 实例化 QCloudCompleteMultipartUploadRequest，填入需要的参数。
+
+2. 调用 QCloudCOSXMLService 对象中的 CompleteMultipartUpload 方法发出请求。
+
+3. 从回调的 finishBlock 中的 QCloudUploadObjectResult 获取具体内容。
+
+示例：
+示例：
+@code
+QCloudCompleteMultipartUploadRequest *completeRequst = [QCloudCompleteMultipartUploadRequest new];
+completeRequst.bucket = @"bucketName";
+completeRequst.object = @"objectName";
+completeRequst.uploadId = @"uploadId"; //本次分片上传的UploadID
+[completeRequst setFinishBlock:^(QCloudUploadObjectResult * _Nonnull result, NSError * _Nonnull error) {
+
+}];
+[[QCloudCOSXMLService defaultCOSXML] CompleteMultipartUpload:completeRequst];
+@endcode
+*/
 @interface QCloudCompleteMultipartUploadRequest : QCloudBizHTTPRequest
 /**
 对象名
@@ -62,11 +80,12 @@ NS_ASSUME_NONNULL_BEGIN
 */
 @property (strong, nonatomic) QCloudCompleteMultipartUploadInfo *parts;
 
-/**
- 请求完成后的会通过该block回调，返回结果，若error为空，即为成功。
- 
- @param QCloudRequestFinishBlock 回调bock
- */
+/*
+在进行HTTP请求的时候，可以通过设置该参数来设置自定义的一些头部信息。
+通常情况下，携带特定的额外HTTP头部可以使用某项功能，如果是这类需求，可以通过设置该属性来实现。
+*/
+@property (strong, nonatomic) NSDictionary* customHeaders;
+
 - (void) setFinishBlock:(void (^)(QCloudUploadObjectResult* result, NSError * error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

@@ -30,6 +30,7 @@
 #import "QCloudCommonPrefixes.h"
 
 @class QCloudBucketContents;
+@class QCloudCommonPrefixes;
 
 NS_ASSUME_NONNULL_BEGIN
 @implementation QCloudListBucketResult
@@ -38,6 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 {
    return @ {
       @"contents":[QCloudBucketContents class],
+      @"commonPrefixes":[QCloudCommonPrefixes class],
   };
 }
 
@@ -52,7 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
       @"delimiter" :@"Delimiter",
       @"isTruncated" :@"IsTruncated",
       @"contents" :@"Contents",
-      @"commonFixes" :@"CommonPrefixes",
+      @"commonPrefixes" :@"CommonPrefixes",
   };
 }
 
@@ -84,6 +86,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSMutableDictionary* transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
     NSArray* transformArrayKeypaths = @[
     @"Contents",
+    @"CommonPrefixes",
     ];
 
     for (NSString* keyPath in transformArrayKeypaths) {

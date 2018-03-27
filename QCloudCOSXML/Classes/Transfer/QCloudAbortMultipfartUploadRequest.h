@@ -28,12 +28,34 @@
 #import <Foundation/Foundation.h>
 #import <QCloudCore/QCloudCore.h>
 NS_ASSUME_NONNULL_BEGIN
-
 /**
- Abort Multipart Upload 用来实现舍弃一个分块上传并删除已上传的块。当您调用 Abort Multipart Upload 时，如果有正在使用这个 Upload Parts 上传块的请求，则 Upload Parts 会返回失败。当该 UploadId 不存在时，会返回 404 NoSuchUpload。
- 
- 建议您及时完成分块上传或者舍弃分块上传，因为已上传但是未终止的块会占用存储空间进而产生存储费用。
- */
+舍弃一个分块上传且删除已上传的分片块的方法.
+
+COS 支持舍弃一个分块上传且删除已上传的分片块. 注意，已上传但是未终止的分片块会占用存储空间进 而产生存储费用.因此，建议及时完成分块上传 或者舍弃分块上传.
+
+关于分块上传的具体描述，请查看 https://cloud.tencent.com/document/product/436/14112.
+
+关于舍弃一个分块上传且删除已上传的分片块接口的描述，请查看 https://cloud.tencent.com/document/product/436/7740.
+
+cos iOS SDK 中舍弃一个分块上传且删除已上传的分片块请求的方法具体步骤如下：
+
+1. 实例化 QCloudAbortMultipfartUploadRequest，填入需要的参数。
+
+2. 调用 QCloudCOSXMLService 对象中的 AbortMultipfartUpload 方法发出请求。
+
+3. 从回调的 finishBlock 中的 outputObject 获取具体内容。
+示例：
+@code
+QCloudAbortMultipfartUploadRequest *abortRequest = [QCloudAbortMultipfartUploadRequest new];
+abortRequest.bucket = @"bucketName"; ////存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
+abortRequest.object = [[QCloudCOSXMLTestUtility sharedInstance]createCanbeDeleteTestObject];
+abortRequest.uploadId = @"uploadId";
+[abortRequest setFinishBlock:^(id outputObject, NSError *error) {
+//additional actions after finishing
+}];
+[[QCloudCOSXMLService defaultCOSXML]AbortMultipfartUpload:abortRequest];
+@endcode
+*/
 @interface QCloudAbortMultipfartUploadRequest : QCloudBizHTTPRequest
 /**
 对象名

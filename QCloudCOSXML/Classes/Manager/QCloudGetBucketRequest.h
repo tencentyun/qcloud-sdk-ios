@@ -29,18 +29,42 @@
 #import <QCloudCore/QCloudCore.h>
 #import "QCloudListBucketResult.h"
 NS_ASSUME_NONNULL_BEGIN
-
 /**
- @brief Get Bucket 请求等同于 List Object 请求，可以列出该 Bucket 下的部分或者全部 Object。此 API 调用者需要对 Bucket 有 Read 权限。
- 
- 细节分析
- 
- 每次默认返回的最大条目数为 1000 条，如果无法一次返回所有的 list，则返回结果中的 IsTruncated 为 true，同时会附加一个 NextMarker 字段，提示下一个条目的起点。若一次请求，已经返回了整个 list，则不会有 NextMarker 这个字段，同时 IsTruncated 为 false。
- 
- 若把 prefix 设置为某个文件夹的全路径名，则可以列出以此 prefix 为开头的文件，即该文件夹下递归的所有文件和子文件夹。如果再设置 delimiter 定界符为 “/”，则只列出该文件夹下的文件，子文件夹下递归的文件和文件夹名将不被列出。而子文件夹名将会以 CommonPrefix 的形式给出。
+查询存储桶（Bucket) 下的部分或者全部对象的方法.
 
+COS 支持列出指定 Bucket 下的部分或者全部对象.
 
- */
+每次默认返回的最大条目数为 1000 条.
+
+如果无法一次返回所有的对象，则返回结果中的 IsTruncated 为 true，同时会附加一个 NextMarker 字段，提示下 一个条目的起点.
+
+若一次请求，已经返回了全部对象，则不会有 NextMarker 这个字段，同时 IsTruncated 为 false.
+
+若把 prefix 设置为某个文件夹的全路径名，则可以列出以此 prefix 为开头的文件，即该文件 夹下递归的所有文件和子文件夹.
+
+如果再设置 delimiter 定界符为 “/”，则只列出该文件夹下的文件，子文件夹下递归的文件和文件夹名 将不被列出.而子文件夹名将会以 CommonPrefix 的形式给出.
+
+关于查询Bucket 下的部分或者全部对象接口的具体描述，请查看https://cloud.tencent.com/document/product/436/7734.
+
+cos iOS SDK 中查询 Bucket 下的部分或者全部对象的方法具体步骤如下：
+
+1. 实例化 QCloudGetBucketRequest，填入需要的参数。
+
+2. 调用 QCloudCOSXMLService 对象中的 GetBucket 方法发出请求。
+
+3. 从回调的 finishBlock 中的 QCloudListBucketResult 获取具体内容。
+
+示例：
+@code
+QCloudGetBucketRequest* request = [QCloudGetBucketRequest new];
+request.bucket = @“testBucket-123456789”; //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
+request.maxKeys = 1000;
+[request setFinishBlock:^(QCloudListBucketResult * result, NSError*   error) {
+//additional actions after finishing
+}];
+[[QCloudCOSXMLService defaultCOSXML] GetBucket:request];
+@endcode
+*/
 @interface QCloudGetBucketRequest : QCloudBizHTTPRequest
 /**
 存储桶名
@@ -67,11 +91,7 @@ NS_ASSUME_NONNULL_BEGIN
 */
 @property (assign, nonatomic) int maxKeys;
 
-/**
- 请求完成后的会通过该block回调，返回结果，若error为空，即为成功。
- 
- @param QCloudRequestFinishBlock 回调bock
- */
+
 - (void) setFinishBlock:(void (^)(QCloudListBucketResult* result, NSError * error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

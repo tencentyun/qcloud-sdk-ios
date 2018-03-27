@@ -29,11 +29,14 @@
 #import <QCloudCore/QCloudCore.h>
 #import "QCloudCOSStorageClassEnum.h"
 NS_ASSUME_NONNULL_BEGIN
-@interface QCloudAppendObjectRequest <BodyType> : QCloudBizHTTPRequest
 /**
- 需要上传的对象内容。可以传入NSData*或者NSURL*类型的变量
- */
+Append Object
+*/
+@interface QCloudAppendObjectRequest <BodyType> : QCloudBizHTTPRequest
 @property (nonatomic, strong) BodyType body;
+/**
+位置
+*/
 @property (assign, nonatomic) int64_t position;
 /**
 存储桶名

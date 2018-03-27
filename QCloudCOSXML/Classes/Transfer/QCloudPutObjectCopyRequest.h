@@ -31,7 +31,45 @@
 #import "QCloudCOSStorageClassEnum.h"
 NS_ASSUME_NONNULL_BEGIN
 /**
-对象名
+简单复制对象的方法.
+
+COS 中复制对象可以完成如下功能:
+
+创建一个新的对象副本.
+
+复制对象并更名，删除原始对象，实现重命名
+
+修改对象的存储类型，在复制时选择相同的源和目标对象键，修改存储类型.
+
+在不同的腾讯云 COS 地域复制对象.
+
+修改对象的元数据，在复制时选择相同的源和目标对象键，并修改其中的元数据,复制对象时，默认将继承原对象的元数据，但创建日期将会按新对象的时间计算.
+
+当复制的对象小于等于 5 GB ，可以使用简单复制（https://cloud.tencent.com/document/product/436/14117).
+
+当复制对象超过 5 GB 时，必须使用分块复制（https://cloud.tencent.com/document/product/436/14118 ） 来实现复制.
+
+关于简单复制接口的具体描述，请查看https://cloud.tencent.com/document/product/436/10881.
+
+cos iOS SDK 中简单复制对象的方法具体步骤如下：
+
+1. 实例化 QCloudPutObjectCopyRequest，填入需要的参数。
+
+2. 调用 QCloudCOSXMLService 对象中的 PutObjectCopy 方法发出请求。
+
+3. 从回调的 finishBlock 中的 QCloudCopyObjectResult 获取具体内容。
+
+示例：
+@code
+QCloudPutObjectCopyRequest* request = [[QCloudPutObjectCopyRequest alloc] init];
+request.bucket = @"bucketName";
+request.object = @"objectName";
+request.objectCopySource = @"objectCopySource";
+
+[request setFinishBlock:^(QCloudCopyObjectResult* result, NSError* error) {
+}];
+[[QCloudCOSXMLService defaultCOSXML] PutObjectCopy:request];
+@endcode
 */
 @interface QCloudPutObjectCopyRequest : QCloudBizHTTPRequest
 /**

@@ -28,14 +28,36 @@
 #import <Foundation/Foundation.h>
 #import <QCloudCore/QCloudCore.h>
 NS_ASSUME_NONNULL_BEGIN
-
 /**
- @brief Put Object ACL 接口用来对某个 Bucket 中的某个的 Object 进行 ACL 表的配置。
- 
- 注意：
- Put Object ACL 是一个覆盖操作，传入新的 ACL 将覆盖原有 ACL。
- 只有 Bucket 持有者才有权操作。
- */
+设置 COS 对象的访问权限信息（Access Control List, ACL）的方法.
+
+ACL权限包括读、写、读写权限. COS 对象的 ACL 可以通过 header头部："x-cos-acl"，"x-cos-grant-read"，"x-cos-grant-write"， "x-cos-grant-full-control" 传入 ACL 信息，或者通过 Body 以 XML 格式传入 ACL 信息.这两种方式只 能选择其中一种，否则引起冲突. 传入新的 ACL 将覆盖原有 ACL信息.ACL策略数上限1000，建议用户不要每个上传文件都设置 ACL.
+
+关于设置 COS 对象的ACL接口的具体描述，请查看https://cloud.tencent.com/document/product/436/7748.
+
+cos iOS SDK 中设置 COS 对象的 ACL 的方法具体步骤如下：
+
+1. 实例化 QCloudPutObjectACLRequest，填入存储桶名，和一些额外需要的参数，如授权的具体信息等。
+
+2. 调用 QCloudCOSXMLService 对象中的方法发出请求。
+
+3. 从回调的 finishBlock 中获取设置的完成情况，若 error 为空，则设置成功。
+
+示例：
+@code
+QCloudPutObjectACLRequest* request = [QCloudPutObjectACLRequest new];
+request.object = @"需要设置 ACL 的对象名";
+request.bucket = @"testBucket-123456789";
+NSString *ownerIdentifier = [NSString stringWithFormat:@"qcs::cam::uin/%@:uin/%@",self.appID, self.appID];
+NSString *grantString = [NSString stringWithFormat:@"id=\"%@\"",ownerIdentifier];
+request.grantFullControl = grantString;
+__block NSError* localError;
+[request setFinishBlock:^(id outputObject, NSError *error) {
+localError = error;
+}];
+[[QCloudCOSXMLService defaultCOSXML] PutObjectACL:request];
+@endcode
+*/
 @interface QCloudPutObjectACLRequest : QCloudBizHTTPRequest
 /**
 object名

@@ -29,21 +29,65 @@
 #import <QCloudCore/QCloudCore.h>
 #import "QCloudACLPolicy.h"
 NS_ASSUME_NONNULL_BEGIN
-
 /**
- Get Bucket ACL 接口用来获取 Bucket 的 ACL(access control list)， 即用户空间（Bucket）的访问权限控制列表。 此 API 接口只有 Bucket 的持有者有权限操作。
- */
+获取存储桶（Bucket) 的访问权限信息（Access Control List, ACL）的方法.
+
+ACL 权限包括读、写、读写权限. COS 中 Bucket 是有访问权限控制的.可以通过获取 Bucket 的 ACL 表(putBucketACL(PutBucketACLRequest))，来查看那些用户拥有 Bucket 访 问权限.
+
+关于获取 Bucket 的 ACL 接口的具体描述，请查看 https://cloud.tencent.com/document/product/436/7733.
+
+cos iOS SDK 中获取 Bucket 的 ACL 的方法具体步骤如下：
+
+1. 实例化 QCloudGetBucketACLRequest，填入获取 ACL 的存储桶。
+
+2. 调用 QCloudCOSXMLService 对象中的 GetBucketACL 方法发出请求。
+
+3. 从回调的 finishBlock 中的 QCloudACLPolicy 获取具体内容。
+
+示例：
+@code
+QCloudGetBucketACLRequest* getBucketACl   = [QCloudGetBucketACLRequest new];
+getBucketACl.bucket = @"testbucket-123456789";
+[getBucketACl setFinishBlock:^(QCloudACLPolicy * _Nonnull result, NSError * _Nonnull error) {
+//QCloudACLPolicy中包含了 Bucket 的 ACL 信息。
+}];
+
+[[QCloudCOSXMLService defaultCOSXML] GetBucketACL:getBucketACl];
+@endcode
+*/
 @interface QCloudGetBucketACLRequest : QCloudBizHTTPRequest
+/**
+获取存储桶（Bucket) 的访问权限信息（Access Control List, ACL）的方法.
+
+ACL 权限包括读、写、读写权限. COS 中 Bucket 是有访问权限控制的.可以通过获取 Bucket 的 ACL 表(putBucketACL(PutBucketACLRequest))，来查看那些用户拥有 Bucket 访 问权限.
+
+关于获取 Bucket 的 ACL 接口的具体描述，请查看 https://cloud.tencent.com/document/product/436/7733.
+
+cos iOS SDK 中获取 Bucket 的 ACL 的方法具体步骤如下：
+
+1. 实例化 QCloudGetBucketACLRequest，填入获取 ACL 的存储桶。
+
+2. 调用 QCloudCOSXMLService 对象中的 GetBucketACL 方法发出请求。
+
+3. 从回调的 finishBlock 中的 QCloudACLPolicy 获取具体内容。
+
+示例：
+@code
+QCloudGetBucketACLRequest* getBucketACl   = [QCloudGetBucketACLRequest new];
+getBucketACl.bucket = @"testbucket-123456789";
+[getBucketACl setFinishBlock:^(QCloudACLPolicy * _Nonnull result, NSError * _Nonnull error) {
+//QCloudACLPolicy中包含了 Bucket 的 ACL 信息。
+}];
+
+[[QCloudCOSXMLService defaultCOSXML] GetBucketACL:getBucketACl];
+@endcode
+*/
 /**
 存储桶名
 */
 @property (strong, nonatomic) NSString *bucket;
 
-/**
- 请求完成后的会通过该block回调，返回结果，若error为空，即为成功。
- 
- @param QCloudRequestFinishBlock 回调bock
- */
+
 - (void) setFinishBlock:(void (^)(QCloudACLPolicy* result, NSError * error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

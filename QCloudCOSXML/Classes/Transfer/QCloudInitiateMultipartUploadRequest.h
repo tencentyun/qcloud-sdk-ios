@@ -30,10 +30,37 @@
 #import "QCloudInitiateMultipartUploadResult.h"
 #import "QCloudCOSStorageClassEnum.h"
 NS_ASSUME_NONNULL_BEGIN
-
 /**
- Initiate Multipart Upload 接口请求实现初始化分片上传，成功执行此请求以后会返回 UploadId 用于后续的 Upload Part 请求。
- */
+初始化分块上传的方法.
+
+使用分块上传对象时，首先要进行初始化分片上传操作，获取对应分块上传的 uploadId，用于后续上传操 作.分块上传适合于在弱网络或高带宽环境下上传较大的对象.SDK 支持自行切分对象并分别调用uploadPart(UploadPartRequest)或者uploadPartAsync(UploadPartRequest, CosXmlResultListener)上传各 个分块.
+
+关于分块上传的描述，请查看 https://cloud.tencent.com/document/product/436/14112.
+
+关于初始化分块上传的描述，请查看 https://cloud.tencent.com/document/product/436/7746.
+
+cos iOS SDK 中初始化分块上传请求的方法具体步骤如下：
+
+1. 实例化 QCloudInitiateMultipartUploadRequest，填入需要的参数。
+
+2. 调用 QCloudCOSXMLService 对象中的 InitiateMultipartUpload 方法发出请求。
+
+3. 从回调的 finishBlock 中的获取具体内容。
+
+示例：
+@code
+QCloudInitiateMultipartUploadRequest* initrequest = [QCloudInitiateMultipartUploadRequest new];
+initrequest.bucket = @"bucketName"; //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
+initrequest.object = @"objectName"
+
+__block QCloudInitiateMultipartUploadResult* initResult;
+[initrequest setFinishBlock:^(QCloudInitiateMultipartUploadResult* outputObject, NSError *error) {
+initResult = outputObject;
+}];
+[[QCloudCOSXMLService defaultCOSXML] InitiateMultipartUpload:initrequest];
+
+@endcode
+*/
 @interface QCloudInitiateMultipartUploadRequest : QCloudBizHTTPRequest
 /**
 对象的名称
@@ -87,11 +114,12 @@ RFC 2616 中定义的文件名称，将作为 Object 元数据保存。
 */
 @property (strong, nonatomic) NSString *grantFullControl;
 
-/**
- 请求完成后的会通过该block回调，返回结果，若error为空，即为成功。
- 
- @param QCloudRequestFinishBlock 回调bock
- */
+/*
+在进行HTTP请求的时候，可以通过设置该参数来设置自定义的一些头部信息。
+通常情况下，携带特定的额外HTTP头部可以使用某项功能，如果是这类需求，可以通过设置该属性来实现。
+*/
+@property (strong, nonatomic) NSDictionary* customHeaders;
+
 - (void) setFinishBlock:(void (^)(QCloudInitiateMultipartUploadResult* result, NSError * error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

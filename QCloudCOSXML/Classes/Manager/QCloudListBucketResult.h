@@ -57,6 +57,6 @@ NS_ASSUME_NONNULL_BEGIN
 /**
 将 Prefix 到 delimiter 之间的相同路径归为一类，定义为 Common Prefix
 */
-@property (strong, nonatomic) QCloudCommonPrefixes *commonFixes;
+@property (strong, nonatomic) NSArray<QCloudCommonPrefixes*> *commonPrefixes;
 @end
 NS_ASSUME_NONNULL_END

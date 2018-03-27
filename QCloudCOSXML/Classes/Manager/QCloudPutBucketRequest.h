@@ -28,12 +28,35 @@
 #import <Foundation/Foundation.h>
 #import <QCloudCore/QCloudCore.h>
 NS_ASSUME_NONNULL_BEGIN
-
 /**
- Put Bucket 接口请求可以在指定账号下创建一个 Bucket。该 API 接口不支持匿名请求，您需要使用帯 Authorization 签名认证的请求才能创建新的 Bucket 。创建 Bucket 的用户默认成为 Bucket 的持有者。
- 
- 创建 Bucket 时，如果没有指定访问权限，则默认使用私有读写（private）权限。
- */
+创建存储桶（Bucket）的方法.
+
+在开始使用 COS 时，需要在指定的账号下先创建一个 Bucket 以便于对象的使用和管理. 并指定 Bucket 所属的地域.创建 Bucket 的用户默认成为 Bucket 的持有者.若创建 Bucket 时没有指定访问权限，则默认 为私有读写（private）权限.
+
+可用地域，可以查看https://cloud.tencent.com/document/product/436/6224.
+
+关于创建 Bucket 描述，请查看 https://cloud.tencent.com/document/product/436/14106.
+
+关于创建存储桶（Bucket）接口的具体 描述，请查看 https://cloud.tencent.com/document/product/436/7738.
+
+cos iOS SDK 中创建 Bucket的方法具体步骤如下：
+
+1. 实例化 QCloudPutBucketRequest，填入需要的参数。
+
+2. 调用 QCloudCOSXMLService 对象中的 PutBucket 方法发出请求。
+
+3. 从回调的 finishBlock 中的 outputObject 获取具体内容。
+
+示例：
+@code
+QCloudPutBucketRequest* request = [QCloudPutBucketRequest new];
+request.bucket = bucketName; //additional actions after finishing
+[request setFinishBlock:^(id outputObject, NSError* error) {
+
+}];
+[[QCloudCOSXMLService defaultCOSXML] PutBucket:request];
+@endcode
+*/
 @interface QCloudPutBucketRequest : QCloudBizHTTPRequest
 /**
 定义 Object 的 ACL 属性。有效值：private，public-read-write，public-read；默认值：private

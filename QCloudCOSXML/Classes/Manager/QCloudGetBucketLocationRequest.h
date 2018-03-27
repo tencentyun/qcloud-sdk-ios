@@ -29,21 +29,41 @@
 #import <QCloudCore/QCloudCore.h>
 #import "QCloudBucketLocationConstraint.h"
 NS_ASSUME_NONNULL_BEGIN
-
 /**
- Get Bucket Location 接口用于获取 Bucket 所在的地域信息，该 GET 操作使用 location 子资源返回 Bucket 所在的区域，只有 Bucket 持有者才有该 API 接口的操作权限。
- */
+获取存储桶（Bucket) 所在的地域信息的方法.
+
+在创建 Bucket 时，需要指定所属该 Bucket 所属地域信息.
+
+COS 支持的地域信息，可查看https://cloud.tencent.com/document/product/436/6224.
+
+关于获取 Bucket 所在的地域信息接口的具体描述，请查看https://cloud.tencent.com/document/product/436/8275.
+
+cos iOS SDK 中获取 Bucket 所在的地域信息的方法具体步骤如下：
+
+1. 实例化 QCloudGetBucketLocationRequest，填入需要的参数。
+
+2. 调用 QCloudCOSXMLService 对象中的 GetBucketLocation 方法发出请求。
+
+3. 从回调的 finishBlock 中的 QCloudBucketLocationConstraint 获取具体内容。
+
+示例：
+@code
+QCloudGetBucketLocationRequest* locationReq = [QCloudGetBucketLocationRequest new];
+locationReq.bucket = @"bucketName";//存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
+__block QCloudBucketLocationConstraint* location;
+[locationReq setFinishBlock:^(QCloudBucketLocationConstraint * _Nonnull result, NSError * _Nonnull error) {
+location = result;
+}];
+[[QCloudCOSXMLService defaultCOSXML] GetBucketLocation:locationReq];
+@endcode
+*/
 @interface QCloudGetBucketLocationRequest : QCloudBizHTTPRequest
 /**p
 存储桶名
 */
 @property (strong, nonatomic) NSString *bucket;
 
-/**
- 请求完成后的会通过该block回调，返回结果，若error为空，即为成功。
- 
- @param QCloudRequestFinishBlock 回调bock
- */
+
 - (void) setFinishBlock:(void (^)(QCloudBucketLocationConstraint* result, NSError * error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

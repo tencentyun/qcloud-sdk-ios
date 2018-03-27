@@ -100,6 +100,7 @@ static const int64_t   kCopySliceLength    = 5242880;
     QCloudInitiateMultipartUploadRequest* initMultipartUploadRequest = [[QCloudInitiateMultipartUploadRequest alloc] init];
     initMultipartUploadRequest.bucket = self.bucket;
     initMultipartUploadRequest.object = self.object;
+    initMultipartUploadRequest.customHeaders = self.customHeaders;
     __weak typeof(self) weakSelf = self;
     [initMultipartUploadRequest setFinishBlock:^(QCloudInitiateMultipartUploadResult* result, NSError* error) {
         if (nil == error) {

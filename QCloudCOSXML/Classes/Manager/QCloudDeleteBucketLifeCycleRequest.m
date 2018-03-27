@@ -31,8 +31,7 @@
 
 
 #import "QCloudDeleteBucketLifeCycleRequest.h"
-#import "QCloudObjectModel.h"
-#import "QCloudSignatureFields.h"
+#import <QCloudCore/QCloudSignatureFields.h>
 #import <QCloudCore/QCloudCore.h>
 #import <QCloudCore/QCloudServiceConfiguration_Private.h>
 
@@ -52,6 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 - (void) configureReuqestSerializer:(QCloudRequestSerializer *)requestSerializer  responseSerializer:(QCloudResponseSerializer *)responseSerializer
 {
+
     NSArray* customRequestSerilizers = @[
                                         QCloudURLFuseURIMethodASURLParamters,
                                         ];

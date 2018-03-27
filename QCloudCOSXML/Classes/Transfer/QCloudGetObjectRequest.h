@@ -28,10 +28,34 @@
 #import <Foundation/Foundation.h>
 #import <QCloudCore/QCloudCore.h>
 NS_ASSUME_NONNULL_BEGIN
-
 /**
- Get Object 接口请求可以在 COS 的 Bucket 中将一个文件（Object）下载至本地。该操作需要请求者对目标 Object 具有读权限或目标 Object 对所有人都开放了读权限（公有读）。
- */
+下载 COS 对象的方法.
+
+可以直接发起 GET 请求获取 COS 中完整的对象数据, 或者在 GET 请求 中传入 Range 请求头部获取对象的部分内容. 获取COS 对象的同时，对象的元数据将会作为 HTTP 响应头部随对象内容一同返回，COS 支持GET 请求时 使用 URL 参数的方式覆盖响应的部分元数据值，例如覆盖 Content-iDisposition 的响应值.
+
+关于获取 COS 对象的具体描述，请查看 https://cloud.tencent.com/document/product/436/14115.
+
+关于获取 COS 对象的接口描述，请查看 https://cloud.tencent.com/document/product/436/7753.
+
+cos iOS SDK 中获取 COS 对象请求的方法具体步骤如下：
+
+1. 实例化 QCloudGetObjectRequest，填入需要的参数。
+
+2. 调用 QCloudCOSXMLService 对象中的 GetObject 方法发出请求。
+
+3. 从回调的 finishBlock 中的 outputObject 获取具体内容。
+
+示例：
+@code
+QCloudGetObjectRequest* request = [[QCloudGetObjectRequest alloc] init];
+request.bucket = @"bucketName"; //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
+request.object = @"objectName";;
+[request setFinishBlock:^(id outputObject, NSError *error) {
+//additional actions after finishing
+}];
+[[QCloudCOSXMLService defaultCOSXML] GetObject:request];
+@endcode
+*/
 @interface QCloudGetObjectRequest : QCloudBizHTTPRequest
 /**
 设置响应头部中的 Content-Type参数
@@ -66,6 +90,18 @@ RFC 2616 中定义的指定文件下载范围，以字节（bytes）为单位
 */
 @property (strong, nonatomic) NSString *ifModifiedSince;
 /**
+如果文件修改时间早于或等于指定时间，才返回文件内容。否则返回 412 (precondition failed)
+*/
+@property (strong, nonatomic) NSString *ifUnmodifiedModifiedSince;
+/**
+当 ETag 与指定的内容一致，才返回文件。否则返回 412 (precondition failed)
+*/
+@property (strong, nonatomic) NSString *ifMatch;
+/**
+当 ETag 与指定的内容不一致，才返回文件。否则返回 304 (not modified)
+*/
+@property (strong, nonatomic) NSString *ifNoneMatch;
+/**
 对象名
 */
 @property (strong, nonatomic) NSString *object;
@@ -74,6 +110,11 @@ RFC 2616 中定义的指定文件下载范围，以字节（bytes）为单位
 */
 @property (strong, nonatomic) NSString *bucket;
 
+/*
+在进行HTTP请求的时候，可以通过设置该参数来设置自定义的一些头部信息。
+通常情况下，携带特定的额外HTTP头部可以使用某项功能，如果是这类需求，可以通过设置该属性来实现。
+*/
+@property (strong, nonatomic) NSDictionary* customHeaders;
 
 @end
 NS_ASSUME_NONNULL_END

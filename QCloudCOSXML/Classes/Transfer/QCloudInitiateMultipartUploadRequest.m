@@ -31,8 +31,7 @@
 
 
 #import "QCloudInitiateMultipartUploadRequest.h"
-#import "QCloudObjectModel.h"
-#import "QCloudSignatureFields.h"
+#import <QCloudCore/QCloudSignatureFields.h>
 #import <QCloudCore/QCloudCore.h>
 #import <QCloudCore/QCloudServiceConfiguration_Private.h>
 #import "QCloudInitiateMultipartUploadResult.h"
@@ -53,6 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 - (void) configureReuqestSerializer:(QCloudRequestSerializer *)requestSerializer  responseSerializer:(QCloudResponseSerializer *)responseSerializer
 {
+
     NSArray* customRequestSerilizers = @[
                                         QCloudURLFuseURIMethodASURLParamters,
                                         ];
@@ -124,6 +124,9 @@ NS_ASSUME_NONNULL_BEGIN
     NSMutableArray* __pathComponents = [NSMutableArray arrayWithArray:self.requestData.URIComponents];
     if(self.object) [__pathComponents addObject:self.object];
     self.requestData.URIComponents = __pathComponents;
+    for (NSString* key  in self.customHeaders.allKeys.copy) {
+    [self.requestData setValue:self.customHeaders[key] forHTTPHeaderField:key];
+    }
     return YES;
 }
 - (void) setFinishBlock:(void (^)(QCloudInitiateMultipartUploadResult* result, NSError * error))QCloudRequestFinishBlock

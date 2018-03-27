@@ -29,21 +29,36 @@
 #import <QCloudCore/QCloudCore.h>
 #import "QCloudBucketReplicationConfiguation.h"
 NS_ASSUME_NONNULL_BEGIN
-
 /**
- Get Bucket Replication 接口请求实现读取存储桶中用户跨区域复制配置信息。
- */
+获取跨区域复制配置信息的方法.
+
+跨区域复制是支持不同区域 Bucket 自动复制对象, 请查阅putBucketReplication(PutBucketReplicationRequest).
+
+cos iOS SDK 中获取跨区域复制配置信息的方法具体步骤如下：
+
+1. 实例化 QCloudGetBucketReplicationRequest，填入需要的参数。
+
+2. 调用 QCloudCOSXMLService 对象中的 GetBucketReplication 方法发出请求。
+
+3. 从回调的 finishBlock 中的 QCloudBucketReplicationConfiguation 获取具体内容。
+
+示例：
+@code
+QCloudGetBucketReplicationRequest* request = [[QCloudGetBucketReplicationRequest alloc] init];
+request.bucket = bucketBame; // //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
+[request setFinishBlock:^(QCloudBucketReplicationConfiguation* result, NSError* error) {
+//设置完成回调
+}];
+[[QCloudCOSXMLService defaultCOSXML] GetBucketReplication:request];
+@endcode
+*/
 @interface QCloudGetBucketReplicationRequest : QCloudBizHTTPRequest
 /**
 存储桶信息
 */
 @property (strong, nonatomic) NSString *bucket;
 
-/**
- 请求完成后的会通过该block回调，返回结果，若error为空，即为成功。
- 
- @param QCloudRequestFinishBlock 回调bock
- */
+
 - (void) setFinishBlock:(void (^)(QCloudBucketReplicationConfiguation* result, NSError * error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

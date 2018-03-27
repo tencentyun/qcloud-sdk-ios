@@ -30,6 +30,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 @interface QCloudCommonPrefixes : NSObject
-@property (strong, nonatomic) NSArray<NSString*> *prefix;
+@property (strong, nonatomic) NSString *prefix;
 @end
 NS_ASSUME_NONNULL_END

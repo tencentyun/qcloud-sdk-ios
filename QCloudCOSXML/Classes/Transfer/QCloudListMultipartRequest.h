@@ -29,10 +29,32 @@
 #import <QCloudCore/QCloudCore.h>
 #import "QCloudListPartsResult.h"
 NS_ASSUME_NONNULL_BEGIN
-
 /**
- 该接口用来查询特定分块上传中的已上传的块，即罗列出指定 UploadId 所属的所有已上传成功的分块。
- */
+查询特定分块上传中的已上传的块的方法.
+
+COS 支持查询特定分块上传中的已上传的块, 即可以 罗列出指定 UploadId 所属的所有已上传成功的分块. 因此，基于此可以完成续传功能.
+
+关于分块上传的描述，请查看 https://cloud.tencent.com/document/product/436/14112,
+
+关于查询特定分块上传中的已上传块接口的描述，请查看 https://cloud.tencent.com/document/product/436/7747.
+
+cos iOS SDK 中查询特定分块上传中的已上传块请求的方法具体步骤如下：
+
+1. 实例化 QCloudListMultipartRequest，填入需要的参数。
+2. 调用 QCloudCOSXMLService 对象中的 ListMultipart 方法发出请求。
+3. 从回调的 finishBlock 中的 QCloudListPartsResult 获取具体内容。
+示例：
+@code
+QCloudListMultipartRequest* request = [[QCloudListMultipartRequest alloc] init];
+request.bucket = @"bucketName"; //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
+request.object = @"objectName";
+request.uploadId = @"uploadID";
+[request setFinishBlock:^(QCloudListPartsResult * _Nonnull result, NSError * _Nonnull error) {
+//additional actions after finishing
+}];
+[[QCloudCOSXMLService defaultCOSXML] ListMultipart:request];
+@endcode
+*/
 @interface QCloudListMultipartRequest : QCloudBizHTTPRequest
 /**
 对象的名称
@@ -59,11 +81,7 @@ NS_ASSUME_NONNULL_BEGIN
 */
 @property (strong, nonatomic) NSString *encodingType;
 
-/**
- 请求完成后的会通过该block回调，返回结果，若error为空，即为成功。
- 
- @param QCloudRequestFinishBlock 回调bock
- */
+
 - (void) setFinishBlock:(void (^)(QCloudListPartsResult* result, NSError * error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

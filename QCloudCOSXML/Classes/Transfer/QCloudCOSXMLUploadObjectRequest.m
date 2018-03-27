@@ -19,8 +19,8 @@
 #import "QCloudCOSXMLServiceUtilities.h"
 #import "QCloudCOSTransferMangerService.h"
 #import "QCloudAbortMultipfartUploadRequest.h"
-#import "QCloudNetworkingAPI.h"
-#import "QCloudEncryt.h"
+#import <QCloudCore/QCloudNetworkingAPI.h>
+//#import <QCloudCore/QCloudEncrypt.h>
 static NSUInteger kQCloudCOSXMLUploadLengthLimit = 1*1024*1024;
 static NSUInteger kQCloudCOSXMLUploadSliceLength = 1*1024*1024;
 
@@ -228,9 +228,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     uploadRequet.grantRead = self.grantRead;
     uploadRequet.grantWrite = self.grantWrite;
     uploadRequet.grantFullControl = self.grantFullControl;
-    for (NSString* key  in self.customHeaders.allKeys.copy) {
-        [uploadRequet.requestData setValue:self.customHeaders[key] forHTTPHeaderField:key];
-    }
+    uploadRequet.customHeaders = self.customHeaders;
     __weak typeof(self) weakSelf = self;
 
     [uploadRequet setFinishBlock:^(QCloudInitiateMultipartUploadResult * _Nonnull result,
@@ -328,6 +326,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
         request.priority = QCloudAbstractRequestPriorityLow;
         request.partNumber = (int)body.index + 1;
         request.uploadId = self.uploadId;
+        request.customHeaders = self.customHeaders;
         request.body = body;
         
         __block int64_t partBytesSent = 0;

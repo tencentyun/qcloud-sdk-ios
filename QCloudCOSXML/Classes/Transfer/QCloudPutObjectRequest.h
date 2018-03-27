@@ -30,13 +30,36 @@
 #import "QCloudCOSStorageClassEnum.h"
 NS_ASSUME_NONNULL_BEGIN
 /**
-@brief Put Object 接口请求可以将本地的文件（Object）上传至指定 Bucket 中。该操作需要请求者对 Bucket 有 WRITE 权限。
+简单上传的方法.
 
+简单上传主要适用于在单个请求中上传一个小于 5 GB 大小的对象. 对于大于 5 GB 的对象(或者在高带宽或弱网络环境中）优先使用分片上传的方式 (https://cloud.tencent.com/document/product/436/14112).
 
-需要有 Bucket 的写权限；
-如果请求头的 Content-Length 值小于实际请求体（body）中传输的数据长度，COS 仍将成功创建文件，但 Object 大小只等于 Content-Length 中定义的大小，其他数据将被丢弃；
+关于简单上传的具体描述，请查看 https://cloud.tencent.com/document/product/436/14113.
 
-如果试图添加的 Object 的同名文件已经存在，那么新上传的文件，将覆盖原来的文件，成功时返回 200 OK。
+关于简单上传接口的具体描述，请查看 https://cloud.tencent.com/document/product/436/7749.
+
+cos iOS SDK 中简单上传请求的方法具体步骤如下：
+
+1. 实例化 QCloudPutObjectRequest，填入需要的参数。
+
+2. 调用 QCloudCOSXMLService 对象中的 PutObject 方法发出请求。
+
+3. 从回调的 finishBlock 中的 outputObject 获取具体内容。
+
+示例：
+@code
+QCloudPutObjectRequest* put = [QCloudPutObjectRequest new];
+put.object = @"object-name";
+put.bucket = @"bucket-12345678";
+put.body =  [@"testFileContent" dataUsingEncoding:NSUTF8StringEncoding];
+[put setFinishBlock:^(id outputObject, NSError *error) {
+//完成回调
+if (nil == error) {
+//成功
+}
+}];
+[[QCloudCOSXMLService defaultCOSXML] PutObject:put];
+@endcode
 */
 @interface QCloudPutObjectRequest <BodyType> : QCloudBizHTTPRequest
 @property (nonatomic, strong) BodyType body;

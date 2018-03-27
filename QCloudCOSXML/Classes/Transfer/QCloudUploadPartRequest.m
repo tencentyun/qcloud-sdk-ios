@@ -31,8 +31,7 @@
 
 
 #import "QCloudUploadPartRequest.h"
-#import "QCloudObjectModel.h"
-#import "QCloudSignatureFields.h"
+#import <QCloudCore/QCloudSignatureFields.h>
 #import <QCloudCore/QCloudCore.h>
 #import <QCloudCore/QCloudServiceConfiguration_Private.h>
 #import "QCloudUploadPartRequest+Custom.h"
@@ -54,6 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 - (void) configureReuqestSerializer:(QCloudRequestSerializer *)requestSerializer  responseSerializer:(QCloudResponseSerializer *)responseSerializer
 {
+
     NSArray* customRequestSerilizers = @[
                                         QCloudURLFuseSimple,
                                         QCloudURLFuseWithURLEncodeParamters,
@@ -114,6 +114,9 @@ NS_ASSUME_NONNULL_BEGIN
     self.requestData.URIComponents = __pathComponents;
     if (![self customBuildRequestData:error]) return NO;
     self.requestData.directBody = self.body;
+    for (NSString* key  in self.customHeaders.allKeys.copy) {
+    [self.requestData setValue:self.customHeaders[key] forHTTPHeaderField:key];
+    }
     return YES;
 }
 - (void) setFinishBlock:(void (^)(QCloudUploadPartResult* result, NSError * error))QCloudRequestFinishBlock

@@ -31,11 +31,6 @@
 NS_ASSUME_NONNULL_BEGIN
 @implementation QCloudCommonPrefixes
 
-+ (NSDictionary *)modelContainerPropertyGenericClass
-{
-   return @ {
-  };
-}
 
 
 + (NSDictionary *)modelCustomPropertyMapper
@@ -59,31 +54,6 @@ NS_ASSUME_NONNULL_BEGIN
         return dic;
     }
     NSMutableDictionary* transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
-    NSArray* transformArrayKeypaths = @[
-    @"Prefix",
-    ];
-
-    for (NSString* keyPath in transformArrayKeypaths) {
-        id object = [dic valueForKeyPath:keyPath];
-        if (!object) {
-            continue;
-        }
-        if ([object isKindOfClass:[NSNull class]]) {
-            continue;
-        }
-        if (![object isKindOfClass:[NSArray class]]) {
-          if ([object isKindOfClass:[NSDictionary class]] && [(NSDictionary*)object count] == 1) {
-            id value = [[object allValues] firstObject];
-            if ([value isKindOfClass:[NSArray class]]) {
-                [transfromDic setValue:value forKey:keyPath];
-            } else {
-                [transfromDic setValue:@[value] forKey:keyPath];
-            }
-          } else {
-              [transfromDic setValue:@[object] forKeyPath:keyPath];
-          }
-        }
-    }
 
     return transfromDic;
 }

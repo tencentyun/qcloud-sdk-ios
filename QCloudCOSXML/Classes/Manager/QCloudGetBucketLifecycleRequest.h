@@ -29,21 +29,38 @@
 #import <QCloudCore/QCloudCore.h>
 #import "QCloudLifecycleConfiguration.h"
 NS_ASSUME_NONNULL_BEGIN
-
 /**
- Get Bucket Lifecycle 用来查询 Bucket 的生命周期配置。如果该 Bucket 没有配置生命周期规则会返回 NoSuchLifecycleConfiguration。
- */
+查询存储桶（Bucket) 的生命周期配置的方法.
+
+COS 支持以生命周期配置的方式来管理 Bucket 中对象的生命周期，生命周期配置包含一个或多个将 应用于一组对象规则的规则集 (其中每个规则为 COS 定义一个操作)，请参阅 putBucketLifecycle(PutBucketLifecycleRequest).
+
+关于查询 Bucket 的生命周期配置接口的具体描述，请查看https://cloud.tencent.com/document/product/436/8278.
+
+cos iOS SDK 中查询 Bucket 的生命周期配置的方法具体步骤如下：
+
+1. 实例化 QCloudGetBucketLifecycleRequest，填入需要的参数。
+
+2. 调用 QCloudCOSXMLService 对象中的 GetBucketLifecycle 方法发出请求。
+
+3. 从回调的 finishBlock 中的 QCloudLifecycleConfiguration 获取具体内容。
+
+示例：
+@code
+QCloudGetBucketLifecycleRequest* request = [QCloudGetBucketLifecycleRequest new];
+request.bucket = bucketName; //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
+[request setFinishBlock:^(QCloudLifecycleConfiguration* result,NSError* error) {
+//设置完成回调
+}];
+[[QCloudCOSXMLService defaultCOSXML] GetBucketLifecycle:request];
+@endcode
+*/
 @interface QCloudGetBucketLifecycleRequest : QCloudBizHTTPRequest
 /**
 需要获取lifecycle的存储桶名
 */
 @property (strong, nonatomic) NSString *bucket;
 
-/**
- 请求完成后的会通过该block回调，返回结果，若error为空，即为成功。
- 
- @param QCloudRequestFinishBlock 回调bock
- */
+
 - (void) setFinishBlock:(void (^)(QCloudLifecycleConfiguration* result, NSError * error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

@@ -31,10 +31,10 @@
 
 
 #import "QCloudGetObjectRequest.h"
-#import "QCloudObjectModel.h"
-#import "QCloudSignatureFields.h"
+#import <QCloudCore/QCloudSignatureFields.h>
 #import <QCloudCore/QCloudCore.h>
 #import <QCloudCore/QCloudServiceConfiguration_Private.h>
+#import "QCloudGetObjectRequest+Custom.h"
 
 
 NS_ASSUME_NONNULL_BEGIN
@@ -52,6 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 - (void) configureReuqestSerializer:(QCloudRequestSerializer *)requestSerializer  responseSerializer:(QCloudResponseSerializer *)responseSerializer
 {
+
     NSArray* customRequestSerilizers = @[
                                         QCloudURLFuseSimple,
                                         ];
@@ -98,6 +99,15 @@ NS_ASSUME_NONNULL_BEGIN
     if (self.ifModifiedSince) {
         [self.requestData setValue:self.ifModifiedSince forHTTPHeaderField:@"If-Modified-Since"];
     }
+    if (self.ifUnmodifiedModifiedSince) {
+        [self.requestData setValue:self.ifUnmodifiedModifiedSince forHTTPHeaderField:@"If-Unmodified-Since"];
+    }
+    if (self.ifMatch) {
+        [self.requestData setValue:self.ifMatch forHTTPHeaderField:@"If-Match"];
+    }
+    if (self.ifNoneMatch) {
+        [self.requestData setValue:self.ifNoneMatch forHTTPHeaderField:@"If-None-Match"];
+    }
     if (!self.object || ([self.object isKindOfClass:NSString.class] && ((NSString*)self.object).length == 0)) {
         if (error != NULL) {
             *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid message:[NSString stringWithFormat:@"paramter[object] is invalid (nil), it must have some value. please check it"]];
@@ -116,6 +126,10 @@ NS_ASSUME_NONNULL_BEGIN
     NSMutableArray* __pathComponents = [NSMutableArray arrayWithArray:self.requestData.URIComponents];
     if(self.object) [__pathComponents addObject:self.object];
     self.requestData.URIComponents = __pathComponents;
+    if (![self customBuildRequestData:error]) return NO;
+    for (NSString* key  in self.customHeaders.allKeys.copy) {
+    [self.requestData setValue:self.customHeaders[key] forHTTPHeaderField:key];
+    }
     return YES;
 }
 
