@@ -213,15 +213,20 @@ static const int64_t   kCopySliceLength    = 5242880;
 }
 
 - (QCloudCOSXMLService*)tempService {
-    QCloudServiceConfiguration* configuration = [QCloudServiceConfiguration new];
-    configuration.signatureProvider = self.transferManager.configuration.signatureProvider;
-    configuration.appID = self.sourceAPPID;
-    QCloudCOSXMLEndPoint* endpoint = [[QCloudCOSXMLEndPoint alloc] init];
-    endpoint.regionName = self.sourceRegion;
-    endpoint.serviceName = self.transferManager.configuration.endpoint.serviceName;
-    endpoint.useHTTPS = self.transferManager.configuration.endpoint.useHTTPS;
-    configuration.endpoint = endpoint;
-    return [QCloudCOSXMLService registerCOSXMLWithConfiguration:configuration withKey:kTempServiceKey];
+    static dispatch_once_t onceToken;
+    static QCloudCOSXMLService* service ;
+    dispatch_once(&onceToken, ^{
+        QCloudServiceConfiguration* configuration = [QCloudServiceConfiguration new];
+        configuration.signatureProvider = self.transferManager.configuration.signatureProvider;
+        configuration.appID = self.sourceAPPID;
+        QCloudCOSXMLEndPoint* endpoint = [[QCloudCOSXMLEndPoint alloc] init];
+        endpoint.regionName = self.sourceRegion;
+        endpoint.serviceName = self.transferManager.configuration.endpoint.serviceName;
+        endpoint.useHTTPS = self.transferManager.configuration.endpoint.useHTTPS;
+        configuration.endpoint = endpoint;
+        service = [QCloudCOSXMLService registerCOSXMLWithConfiguration:configuration withKey:kTempServiceKey];
+    });
+    return service;
 }
 
 - (void) setFinishBlock:(void (^)(QCloudCopyObjectResult* result, NSError * error))QCloudRequestFinishBlock {

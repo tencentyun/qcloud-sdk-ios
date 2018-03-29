@@ -356,11 +356,6 @@ NSString* TaskMapKey(NSURLSessionTask* task) {
 - (void) executeRestHTTPReqeust:(QCloudHTTPRequest*)httpRequest
 {
     [httpRequest willStart];
-    if (![[QCloudNetEnv shareEnv] isReachable] ) {
-        NSError* nonetwork = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeNoNetwork message:@"当前无网络连接"] ;
-        [httpRequest onError:nonetwork];
-        return;
-    }
     NSError* error;
     NSMutableURLRequest* urlRequest = [[httpRequest buildURLRequest:&error] mutableCopy];
     if (error) {
