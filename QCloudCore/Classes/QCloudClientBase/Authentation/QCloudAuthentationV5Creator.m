@@ -40,7 +40,45 @@
 }
 @end
 
+@implementation NSURL(QCloudExtension)
 
+/**
+ 返回 COS 签名中用到的 path , 。如果没有path时，为 /
+ 
+ 例如
+ 1. URL 为: http://test-123456.cos.ap-shanghai.myqcloud.com?delimiter=%2F&max-keys=1000&prefix=test%2F
+ 
+ path为 /
+ 
+ 2. URL为: http://test-123456.cos.ap-shanghai.myqcloud.com/test
+ path 为 test
+ 
+ 3. URL为: http://test-123456.cos.ap-shanghai.myqcloud.com/test/
+ path 为 test/
+ 
+ 
+ @return COS签名中定义的 path
+ */
+
+- (NSString*)qcloud_path {
+    NSString* path = self.path;
+    NSRange pathRange = [self.absoluteString rangeOfString:path];
+    NSUInteger URLLength = self.absoluteString.length;
+    if ( pathRange.location == NSNotFound ) {
+        return path;
+    }
+    NSUInteger pathLocation = pathRange.location + pathRange.length;
+    if (pathLocation >= URLLength) {
+        return path;
+    }
+    if ( [self.absoluteString characterAtIndex:(pathLocation)] == '/' ) {
+        path = [path stringByAppendingString:@"/"];
+        return path;
+    }
+    return path;
+}
+
+@end
 
 @implementation QCloudAuthentationV5Creator
 
@@ -92,7 +130,7 @@
     };
     
     AppendFormatString(urlrequest.HTTPMethod.lowercaseString);
-    NSString* path = urlrequest.URL.path;
+    NSString* path = urlrequest.URL.qcloud_path;
     if (path.length == 0) {
         path = @"/";
     }
@@ -143,3 +181,4 @@
 
 
 @end
+
