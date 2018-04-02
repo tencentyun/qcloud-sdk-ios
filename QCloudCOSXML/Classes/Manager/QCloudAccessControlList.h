@@ -1,6 +1,6 @@
 //
-//  QCloudDeleteResult.m
-//  QCloudDeleteResult
+//  QCloudAccessControlList.h
+//  QCloudAccessControlList
 //
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.
@@ -24,65 +24,16 @@
 //
 
 
-#import "QCloudDeleteResult.h"
 
-#import "QCloudDeleteResultRow.h"
-
-@class QCloudDeleteResultRow;
+#import <Foundation/Foundation.h>
+#import <QCloudCore/QCloudCore.h>
+#import "QCloudACLGrant.h"
 
 NS_ASSUME_NONNULL_BEGIN
-@implementation QCloudDeleteResult
-
-+ (NSDictionary *)modelContainerPropertyGenericClass
-{
-   return @ {
-      @"deletedObjects":[QCloudDeleteResultRow class],
-  };
-}
-
-
-+ (NSDictionary *)modelCustomPropertyMapper
-{
-  return @{
-      @"deletedObjects" :@"Deleted",
-  };
-}
-
-
-- (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic
-{
-
-
-    return YES;
-}
-
-- (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dic
-{
-    if (!dic) {
-        return dic;
-    }
-    NSMutableDictionary* transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
-    NSArray* transformArrayKeypaths = @[
-    @"Deleted",
-    ];
-
-    for (NSString* keyPath in transformArrayKeypaths) {
-        id object = [dic valueForKeyPath:keyPath];
-        if (!object) {
-            continue;
-        }
-        if ([object isKindOfClass:[NSNull class]]) {
-            continue;
-        }
-        if (![object isKindOfClass:[NSArray class]]) {
-            [transfromDic setValue:@[object] forKeyPath:keyPath];
-        }
-    }
-
-    return transfromDic;
-}
-
+@interface QCloudAccessControlList : NSObject
+/**
+存放被授权者信息的数组
+*/
+@property (strong, nonatomic) NSArray<QCloudACLGrant*> *ACLGrants;
 @end
-
-
 NS_ASSUME_NONNULL_END

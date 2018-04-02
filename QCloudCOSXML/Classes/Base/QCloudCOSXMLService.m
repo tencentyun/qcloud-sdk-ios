@@ -104,5 +104,13 @@ static QCloudCOSXMLService* COSXMLService = nil;
     return [resultURL copy];
 }
 
++ (BOOL)hasServiceForKey:(NSString *)key {
+    if (nil == [QCloudCOSXMLServiceCache() objectForKey:key]) {
+        return NO;
+    } else {
+        return YES;
+    }
+}
+
 
 @end

@@ -27,19 +27,12 @@
 #import "QCloudACLPolicy.h"
 
 #import "QCloudACLOwner.h"
-#import "QCloudACLGrant.h"
+#import "QCloudAccessControlList.h"
 
-@class QCloudACLGrant;
 
 NS_ASSUME_NONNULL_BEGIN
 @implementation QCloudACLPolicy
 
-+ (NSDictionary *)modelContainerPropertyGenericClass
-{
-   return @ {
-      @"accessControlList":[QCloudACLGrant class],
-  };
-}
 
 
 + (NSDictionary *)modelCustomPropertyMapper
@@ -53,22 +46,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic
 {
-void(^TransformDictionary)(NSString* originKey, NSString* aimKey) = ^(NSString* originKey, NSString* aimKey) {
-    id object = [dic objectForKey:originKey];
-    if (!object) {
-        return;
-    }
-    if ([object isKindOfClass:[NSNull class]]) {
-        return;
-    }
-    if ([object isKindOfClass:[NSArray class]]) {
-        NSArray* objects = (NSArray*)object;
-        [dic removeObjectForKey:originKey];
-        NSMutableDictionary* transferDic = [@{aimKey:objects} mutableCopy];
-        [dic setObject:transferDic forKey:originKey];
-    }
-};
-    TransformDictionary(@"AccessControlList", @"Grant");
 
 
     return YES;
@@ -80,31 +57,6 @@ void(^TransformDictionary)(NSString* originKey, NSString* aimKey) = ^(NSString* 
         return dic;
     }
     NSMutableDictionary* transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
-    NSArray* transformArrayKeypaths = @[
-    @"AccessControlList",
-    ];
-
-    for (NSString* keyPath in transformArrayKeypaths) {
-        id object = [dic valueForKeyPath:keyPath];
-        if (!object) {
-            continue;
-        }
-        if ([object isKindOfClass:[NSNull class]]) {
-            continue;
-        }
-        if (![object isKindOfClass:[NSArray class]]) {
-          if ([object isKindOfClass:[NSDictionary class]] && [(NSDictionary*)object count] == 1) {
-            id value = [[object allValues] firstObject];
-            if ([value isKindOfClass:[NSArray class]]) {
-                [transfromDic setValue:value forKey:keyPath];
-            } else {
-                [transfromDic setValue:@[value] forKey:keyPath];
-            }
-          } else {
-              [transfromDic setValue:@[object] forKeyPath:keyPath];
-          }
-        }
-    }
 
     return transfromDic;
 }

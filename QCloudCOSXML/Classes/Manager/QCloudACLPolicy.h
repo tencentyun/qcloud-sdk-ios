@@ -28,7 +28,7 @@
 #import <Foundation/Foundation.h>
 #import <QCloudCore/QCloudCore.h>
 #import "QCloudACLOwner.h"
-#import "QCloudACLGrant.h"
+#import "QCloudAccessControlList.h"
 
 NS_ASSUME_NONNULL_BEGIN
 @interface QCloudACLPolicy : NSObject
@@ -39,6 +39,6 @@ NS_ASSUME_NONNULL_BEGIN
 /**
 被授权者与权限的信息
 */
-@property (strong, nonatomic) NSArray<QCloudACLGrant*> *accessControlList;
+@property (strong, nonatomic) QCloudAccessControlList *accessControlList;
 @end
 NS_ASSUME_NONNULL_END

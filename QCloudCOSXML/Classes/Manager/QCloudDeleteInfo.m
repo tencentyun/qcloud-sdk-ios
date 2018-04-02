@@ -88,16 +88,7 @@ NS_ASSUME_NONNULL_BEGIN
             continue;
         }
         if (![object isKindOfClass:[NSArray class]]) {
-          if ([object isKindOfClass:[NSDictionary class]] && [(NSDictionary*)object count] == 1) {
-            id value = [[object allValues] firstObject];
-            if ([value isKindOfClass:[NSArray class]]) {
-                [transfromDic setValue:value forKey:keyPath];
-            } else {
-                [transfromDic setValue:@[value] forKey:keyPath];
-            }
-          } else {
-              [transfromDic setValue:@[object] forKeyPath:keyPath];
-          }
+            [transfromDic setValue:@[object] forKeyPath:keyPath];
         }
     }
 

@@ -38,6 +38,15 @@
 #pragma Factory
 + (QCloudCOSXMLService*) defaultCOSXML;
 + (QCloudCOSXMLService*) cosxmlServiceForKey:(NSString*)key;
+
+/**
+ 检查是否存在key对应的service
+
+ @param key key
+ @return 存在与否
+
+ */
++ (BOOL) hasServiceForKey:(NSString*)key;
 + (QCloudCOSXMLService*) registerDefaultCOSXMLWithConfiguration:(QCloudServiceConfiguration*)configuration;
 + (QCloudCOSXMLService*) registerCOSXMLWithConfiguration:(QCloudServiceConfiguration*)configuration withKey:(NSString*)key;
 + (void) removeCOSXMLWithKey:(NSString*)key;

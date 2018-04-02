@@ -61,4 +61,11 @@
     NSURL* serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@-%@.%@.%@",scheme,formattedBucketName,appID,formattedRegionName,self.serviceName]];
     return serverURL;
 }
+
+- (id)copyWithZone:(NSZone *)zone {
+    QCloudCOSXMLEndPoint* endpoint = [[QCloudCOSXMLEndPoint alloc] init];
+    endpoint.regionName = self.regionName;
+    endpoint.serviceName = self.serviceName;
+    return endpoint;
+}
 @end

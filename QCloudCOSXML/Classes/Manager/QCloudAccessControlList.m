@@ -1,6 +1,6 @@
 //
-//  QCloudDeleteResult.m
-//  QCloudDeleteResult
+//  QCloudAccessControlList.m
+//  QCloudAccessControlList
 //
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.
@@ -24,19 +24,19 @@
 //
 
 
-#import "QCloudDeleteResult.h"
+#import "QCloudAccessControlList.h"
 
-#import "QCloudDeleteResultRow.h"
+#import "QCloudACLGrant.h"
 
-@class QCloudDeleteResultRow;
+@class QCloudACLGrant;
 
 NS_ASSUME_NONNULL_BEGIN
-@implementation QCloudDeleteResult
+@implementation QCloudAccessControlList
 
 + (NSDictionary *)modelContainerPropertyGenericClass
 {
    return @ {
-      @"deletedObjects":[QCloudDeleteResultRow class],
+      @"ACLGrants":[QCloudACLGrant class],
   };
 }
 
@@ -44,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSDictionary *)modelCustomPropertyMapper
 {
   return @{
-      @"deletedObjects" :@"Deleted",
+      @"ACLGrants" :@"Grant",
   };
 }
 
@@ -63,7 +63,7 @@ NS_ASSUME_NONNULL_BEGIN
     }
     NSMutableDictionary* transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
     NSArray* transformArrayKeypaths = @[
-    @"Deleted",
+    @"Grant",
     ];
 
     for (NSString* keyPath in transformArrayKeypaths) {
