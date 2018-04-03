@@ -14,6 +14,7 @@
 #import "QCloudCompleteMultipartUploadRequest.h"
 #import "QCloudCompleteMultipartUploadInfo.h"
 #import "QCloudHeadObjectRequest.h"
+#import "QCloudURLHelper.h"
 static NSString* const kTempServiceKey =   @"tempServiceKey";
 static NSString* const kContentLengthKey = @"Content-Length";
 static NSString* const kLastModifiedKey =  @"Last-Modified";
@@ -90,7 +91,7 @@ static const int64_t   kCopySliceLength    = 5242880;
     NSMutableString* objectCopySource = [NSMutableString string];
     NSString* serviceURL =[service.configuration.endpoint serverURLWithBucket:self.sourceBucket appID:self.sourceAPPID].absoluteString;
     [objectCopySource appendString:[serviceURL componentsSeparatedByString:@"://"][1]];
-    [objectCopySource appendFormat:@"/%@",self.sourceObject];
+    [objectCopySource appendFormat:@"/%@",QCloudPercentEscapedStringFromString(self.sourceObject)];
     request.objectCopySource = objectCopySource;
     QCloudLogDebug(@"Object copy source url %@", objectCopySource);
     [[QCloudCOSXMLService defaultCOSXML] PutObjectCopy:request];
@@ -145,7 +146,7 @@ static const int64_t   kCopySliceLength    = 5242880;
             NSMutableString* objectCopySource = [NSMutableString string];
             NSString* serviceURL =[service.configuration.endpoint serverURLWithBucket:self.sourceBucket appID:self.sourceAPPID].absoluteString;
             [objectCopySource appendString:[serviceURL componentsSeparatedByString:@"://"][1]];
-            [objectCopySource appendFormat:@"/%@",self.sourceObject];
+            [objectCopySource appendFormat:@"/%@",QCloudPercentEscapedStringFromString(self.sourceObject)];
             request.source = objectCopySource;
             request.uploadID = self.uploadID;
             request.partNumber = i+1;

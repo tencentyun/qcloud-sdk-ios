@@ -38,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
   return @{
       @"name" :@"Name",
       @"location" :@"Location",
-      @"createDate" :@"CreateDate",
+      @"createDate" :@"CreationDate",
   };
 }
 
