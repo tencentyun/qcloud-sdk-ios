@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDECodeSnippetCompletionPrefix</key>
+	<string>cos-xml-upload</string>
+	<key>IDECodeSnippetCompletionScopes</key>
+	<array>
+		<string>CodeBlock</string>
+	</array>
+	<key>IDECodeSnippetContents</key>
+	<string>
+QCloudCOSXMLUploadObjectRequest* put = [QCloudCOSXMLUploadObjectRequest new];
+  put.object = &lt;#Upload-object-name#&gt;;
+  put.bucket = &lt;#bucket#&gt;;
+  put.body =  &lt;#NSData* or NSURL* that reference to content of file#&gt;;
+  [put setSendProcessBlock:^(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
+     &lt;#progress call back#&gt;
+  }];
+  [put setFinishBlock:^(id outputObject, NSError *error) {
+     if (nil == error) {
+     &lt;#success call back#&gt;
+     } else {
+     &lt;#fail call back#&gt;
+     }
+  }];
+  [[QCloudCOSTransferMangerService defaultCOSTransferManager] UploadObject:put];
+</string>
+	<key>IDECodeSnippetIdentifier</key>
+	<string>4A0A057B-8C17-43BB-BDBA-3A315A940000</string>
+	<key>IDECodeSnippetLanguage</key>
+	<string>Xcode.SourceCodeLanguage.Objective-C</string>
+	<key>IDECodeSnippetTitle</key>
+	<string>COS XML Upload Object</string>
+	<key>IDECodeSnippetUserSnippet</key>
+	<true/>
+	<key>IDECodeSnippetVersion</key>
+	<integer>2</integer>
+</dict>
+</plist>

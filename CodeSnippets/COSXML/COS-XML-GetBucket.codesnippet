@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDECodeSnippetCompletionPrefix</key>
+	<string>cos-xml-getBucket</string>
+	<key>IDECodeSnippetCompletionScopes</key>
+	<array>
+		<string>CodeBlock</string>
+	</array>
+	<key>IDECodeSnippetContents</key>
+	<string>
+  QCloudGetBucketRequest* request = [QCloudGetBucketRequest new];
+  request.bucket = &lt;#bucket#&gt; ;
+  request.maxKeys = &lt;#1000#&gt; ;
+  [request setFinishBlock:^(id outputObject, NSError *error) {
+     if (nil == error) {
+     &lt;#success call back#&gt;
+     } else {
+     &lt;#fail call back#&gt;
+     }
+  }];
+  [[QCloudCOSXMLService defaultCOSXML] GetBucket:request];
+</string>
+	<key>IDECodeSnippetIdentifier</key>
+	<string>4A0A057B-8C17-43BB-BDBA-3A315A940001</string>
+	<key>IDECodeSnippetLanguage</key>
+	<string>Xcode.SourceCodeLanguage.Objective-C</string>
+	<key>IDECodeSnippetTitle</key>
+	<string>COS XML Get Bucket</string>
+	<key>IDECodeSnippetUserSnippet</key>
+	<true/>
+	<key>IDECodeSnippetVersion</key>
+	<integer>2</integer>
+</dict>
+</plist>

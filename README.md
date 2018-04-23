@@ -62,3 +62,39 @@ pod 'QCloudNewCOSV4'
 ## 日志
 默认情况下，SDK内部的日志并不会直接输出到控制台中。在Debug等情况下需要查看日志的话，可以设置对应的环境变量开启。开启的具体方式为：在Xcode左上角选择点击当前的target-Edit Scheme-在Enviriments Variables中填入QCloudLogLevel这个环境变量，如果需要输出所有debug信息，那么将值设置为6。
 ![](http://picturebad-1253653367.coscd.myqcloud.com/134C210F-6682-4BDF-A801-E146263150D0.png)
+
+
+
+## 代码块 Code Snippet
+为了提升用户体验和减少出错的概率，对于一些常见的接口我们提供了 XCode 中可以使用的代码块，将这些代码块集成进 XCode 以后，可以直接调用代码块来填充代码，减少重复的工作量。    
+
+集成方式: 将 CodeSnippets 文件夹下，所需要的代码块文件(以.codesnippet结尾)复制到以下文件夹中（可以在Finder里按 Command+Shift+G，填入路径跳转）
+```
+~/Library/Developer/Xcode/UserData/CodeSnippets
+```   
+
+集成后，重启 XCode ，并且输入快捷方式(例如 cos )，即可弹出对应的填充选项，直接填充完成该操作所需的基本代码, 按回车直接填充。
+![](http://imagebad-1253653367.cosgz.myqcloud.com/code-snippet.png  )
+## License
+Tencent Cloud SDK for iOS and samples are released under the MIT license.
+~~~
+Copyright (c) 2017 腾讯云
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+~~~
