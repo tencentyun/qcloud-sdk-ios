@@ -89,9 +89,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSURL* __serverURL = [self.runOnService.configuration.endpoint serverURLWithBucket:self.bucket appID:self.runOnService.configuration.appID];
     self.requestData.serverURL = __serverURL.absoluteString;
     [self.requestData setValue:__serverURL.host forHTTPHeaderField:@"Host"];
-    if (self.versionID) {
-        [self.requestData setValue:self.versionID forHTTPHeaderField:@"x-cos-version-id"];
-    }
+    [self.requestData setParameter:self.versionID withKey:@"versionId"];
     NSMutableArray* __pathComponents = [NSMutableArray arrayWithArray:self.requestData.URIComponents];
     if(self.object) [__pathComponents addObject:self.object];
     self.requestData.URIComponents = __pathComponents;

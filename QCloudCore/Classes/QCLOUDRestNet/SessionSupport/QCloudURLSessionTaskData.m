@@ -31,6 +31,13 @@
         [_writeFileHandler closeFile];
     }
 }
+
+- (void) closeWrite
+{
+    if (_writeFileHandler) {
+        [_writeFileHandler closeFile];
+    }
+}
 - (instancetype) init
 {
     self = [super init];

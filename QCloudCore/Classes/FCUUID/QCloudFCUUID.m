@@ -15,10 +15,10 @@
 NSString *const QCloudFCUUIDsOfUserDevicesDidChangeNotification = @"QCloudFCUUIDsOfUserDevicesDidChangeNotification";
 
 
-NSString *const _uuidForInstallationKey = @"fc_uuidForInstallation";
-NSString *const _uuidForDeviceKey = @"fc_uuidForDevice";
-NSString *const _uuidsOfUserDevicesKey = @"fc_uuidsOfUserDevices";
-NSString *const _uuidsOfUserDevicesToggleKey = @"fc_uuidsOfUserDevicesToggle";
+static NSString *const _uuidForInstallationKey = @"fc_uuidForInstallation";
+static NSString *const _uuidForDeviceKey = @"fc_uuidForDevice";
+static NSString *const _uuidsOfUserDevicesKey = @"fc_uuidsOfUserDevices";
+static NSString *const _uuidsOfUserDevicesToggleKey = @"fc_uuidsOfUserDevicesToggle";
 
 
 +(QCloudFCUUID *)sharedInstance

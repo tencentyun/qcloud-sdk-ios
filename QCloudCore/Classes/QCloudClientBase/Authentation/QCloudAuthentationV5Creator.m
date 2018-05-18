@@ -15,7 +15,7 @@
 #import "NSString+QCloudSHA.h"
 #import <CommonCrypto/CommonDigest.h>
 #import "QCloudLogger.h"
-
+#import "QCloudURLHelper.h"
 @implementation NSDictionary(HeaderFilter)
 - (NSDictionary*)filteHeaders; {
     NSMutableDictionary* signedHeaders = [[NSMutableDictionary alloc] init];
@@ -61,21 +61,23 @@
  */
 
 - (NSString*)qcloud_path {
-    NSString* path = self.path;
+    NSString* path = QCloudPercentEscapedStringFromString(self.path);
+    //absoluteString in NSURL is URLEncoded
     NSRange pathRange = [self.absoluteString rangeOfString:path];
     NSUInteger URLLength = self.absoluteString.length;
     if ( pathRange.location == NSNotFound ) {
-        return path;
+        return self.path;
     }
     NSUInteger pathLocation = pathRange.location + pathRange.length;
     if (pathLocation >= URLLength) {
-        return path;
+        return self.path;
     }
     if ( [self.absoluteString characterAtIndex:(pathLocation)] == '/' ) {
-        path = [path stringByAppendingString:@"/"];
+        path = [self.path stringByAppendingString:@"/"];
         return path;
     }
-    return path;
+   
+    return self.path;
 }
 
 @end

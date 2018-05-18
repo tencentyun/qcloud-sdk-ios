@@ -30,33 +30,6 @@
 #import "QCloudCopyObjectResult.h"
 NS_ASSUME_NONNULL_BEGIN
 /**
-获取所属账户的所有存储空间列表的方法.
-
-通过使用帯 Authorization 签名认证的请求，可以获取签名中 APPID 所属账户的所有存储空间列表 (Bucket list).
-
-关于获取所有存储空间列表接口的具体描述，请查看https://cloud.tencent.com/document/product/436/8291.
-
-cos iOS SDK 中获取所属账户的所有存储空间列表的方法具体步骤如下：
-
-1. 实例化 QCloudGetServiceRequest。
-
-2. 调用 QCloudCOSXMLService 对象中的 GetService 方法发出请求。
-
-3. 从回调的 finishBlock 中的 QCloudListAllMyBucketsResult 获取具体内容
-
-示例：
-@code
-QCloudGetServiceRequest* request = [[QCloudGetServiceRequest alloc] init];
-[request setFinishBlock:^(QCloudListAllMyBucketsResult* result, NSError* error) {
-//additional actions after finishing
-}];
-[[QCloudCOSXMLService defaultCOSXML] GetService:request];
-@endcode
-request GetService (UP.url CW.get DOWN.xml custom_build){
-    response QCloudListAllMyBucketsResult
-}
-
-/**
 分块复制的方法.
 
 COS 中复制对象可以完成如下功能:

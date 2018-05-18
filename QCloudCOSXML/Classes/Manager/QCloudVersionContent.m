@@ -38,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 {
   return @{
       @"object" :@"Key",
-      @"versionID" :@"versionId",
+      @"versionID" :@"VersionId",
       @"isLatest" :@"IsLatest",
       @"lastModified" :@"LastModified",
       @"ETag" :@"ETag",

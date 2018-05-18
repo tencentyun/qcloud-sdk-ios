@@ -177,4 +177,123 @@
     }];
     
 }
+
+
+- (BOOL)doesBucketExist:(NSString *)bucketName {
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    __block BOOL result = NO;
+    QCloudHeadBucketRequest* headBucketRequest = [[QCloudHeadBucketRequest alloc] init];
+    headBucketRequest.bucket = bucketName;
+    [headBucketRequest setFinishBlock:^(id outputObject, NSError *error) {
+        if (nil == error) {
+            result = YES;
+        } else {
+            QCloudLogDebug(@" Head Object Fail!\n%@",error);
+        }
+        dispatch_semaphore_signal(semaphore);
+    }];
+    [self HeadBucket:headBucketRequest];
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    return result;
+}
+
+
+- (BOOL)doesObjectExistWithBucket:(NSString *)bucket object:(NSString *)objectName {
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    __block BOOL result = NO;
+    QCloudHeadObjectRequest* headObjectRequest = [[QCloudHeadObjectRequest alloc] init];
+    headObjectRequest.bucket = bucket;
+    headObjectRequest.object = objectName;
+    [headObjectRequest setFinishBlock:^(id outputObject, NSError *error) {
+        if (nil == error) {
+            result = YES;
+        } else {
+            QCloudLogDebug(@" Head Object Fail!\n%@",error);
+        }
+        dispatch_semaphore_signal(semaphore);
+    }];
+    [self HeadObject:headObjectRequest];
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    return result;
+}
+
+
+- (void)deleteObjectWithBucket:(NSString *)bucket object:(NSString *)objectName {
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    QCloudDeleteObjectRequest* deleteObjectRequest = [QCloudDeleteObjectRequest new];
+    deleteObjectRequest.bucket = bucket;
+    deleteObjectRequest.object = objectName;
+    [deleteObjectRequest setFinishBlock:^(id outputObject, NSError *error) {
+        if (nil == error) {
+            //
+        } else {
+            QCloudLogDebug(@"%@",error.description);
+        }
+        dispatch_semaphore_signal(semaphore);
+    }];
+    
+    [self DeleteObject:deleteObjectRequest];
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+}
+
+- (void)deleteVersionWithBucket:(NSString *)bucket object:(NSString *)object version:(NSString *)versionID {
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    
+    QCloudDeleteObjectRequest* deleteObjectRequest = [QCloudDeleteObjectRequest new];
+    deleteObjectRequest.bucket = bucket;
+    deleteObjectRequest.object = object;
+    deleteObjectRequest.versionID = versionID;
+    [deleteObjectRequest setFinishBlock:^(id outputObject, NSError *error) {
+        if (nil == error) {
+            //
+        } else {
+            QCloudLogDebug(error.description);
+        }
+        dispatch_semaphore_signal(semaphore);
+    }];
+    
+    [self DeleteObject:deleteObjectRequest];
+}
+
+- (void)changeObjectStorageClassWithBucket:(NSString *)bucket object:(NSString *)object storageClass:(QCloudCOSStorageClass)storageClass {
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    QCloudCOSXMLCopyObjectRequest* copyObjectRequest =  [[QCloudCOSXMLCopyObjectRequest alloc] init];
+    copyObjectRequest.sourceRegion = self.configuration.endpoint.regionName;
+    copyObjectRequest.sourceBucket = bucket;
+    copyObjectRequest.sourceObject = object;
+    copyObjectRequest.bucket = bucket;
+    copyObjectRequest.object = object;
+    copyObjectRequest.storageClass = storageClass;
+    [copyObjectRequest setFinishBlock:^(QCloudCopyObjectResult *result, NSError *error) {
+        if (nil == error) {
+            //
+        } else {
+            QCloudLogDebug(error.description);
+        }
+        dispatch_semaphore_signal(semaphore);
+    }];
+    [self PutObjectCopy:copyObjectRequest];
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+}
+
+- (void)updateObjectMedaWithBucket:(NSString *)bucket object:(NSString *)object meta:(NSDictionary *)meta {
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    QCloudCOSXMLCopyObjectRequest* copyObjectRequest =  [[QCloudCOSXMLCopyObjectRequest alloc] init];
+    copyObjectRequest.sourceRegion = self.configuration.endpoint.regionName;
+    copyObjectRequest.sourceBucket = bucket;
+    copyObjectRequest.sourceObject = object;
+    copyObjectRequest.bucket = bucket;
+    copyObjectRequest.object = object;
+    copyObjectRequest.customHeaders = meta;
+    [copyObjectRequest setFinishBlock:^(QCloudCopyObjectResult *result, NSError *error) {
+        if (nil == error) {
+            //
+        } else {
+            QCloudLogDebug(error.description);
+        }
+        dispatch_semaphore_signal(semaphore);
+    }];
+    [self PutObjectCopy:copyObjectRequest];
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+}
 @end

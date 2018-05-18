@@ -459,7 +459,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     
     [self.requestCacheArray addPointer:(__bridge void * _Nullable)(complete)];
     [self.transferManager.cosService CompleteMultipartUpload:complete];
-    
+
 }
 
 
@@ -469,16 +469,26 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
 + (instancetype) requestWithRequestData:(QCloudCOSXMLUploadObjectResumeData)resumeData
 {
     QCloudCOSXMLUploadObjectRequest* request = [QCloudCOSXMLUploadObjectRequest qcloud_modelWithJSON:resumeData];
+    QCloudLogDebug(@"Generating request from resume data, body is %@",request.body);
     if ([request.body isKindOfClass:[NSString class]]) {
-        NSString* path = QCloudGenerateLocalPath(request.body);
+        NSString* path;
+        if ([request.body hasPrefix:@"/var/mobile/Media/DCIM"]) {
+                path = request.body;
+         } else {
+                path = QCloudGenerateLocalPath(request.body);
+        }
+
         if ([path hasPrefix:@"file"]) {
             request.body = [NSURL URLWithString:path];
         } else {
             request.body  = [NSURL fileURLWithPath:path];
         }
     }
+    QCloudLogDebug(@"Path after transfering is %@",request.body);
     return request;
+    
 }
+
 
 - (void) cancel
 {
