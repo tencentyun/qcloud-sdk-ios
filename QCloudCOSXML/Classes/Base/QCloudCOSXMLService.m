@@ -28,7 +28,7 @@
 #import "QCloudCOSXMLService+Configuration.h"
 #import "QCloudCOSXMLService+Private.h"
 #import <QCloudCore/QCloudThreadSafeMutableDictionary.h>
-#import "QCLoudError.h"
+#import <QCloudCore/QCLoudError.h>
 
 QCloudThreadSafeMutableDictionary* QCloudCOSXMLServiceCache()
 {
