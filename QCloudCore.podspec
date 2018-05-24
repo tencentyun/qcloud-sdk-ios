@@ -29,7 +29,7 @@ QCloudCore--腾讯云iOS-SDK Foundation。提供腾讯云iOS相关SDK的基础�
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
   s.ios.deployment_target = '8.0'
   s.source_files = "QCloudCore/Classes/**/**/*"
-  s.frameworks ='CoreMedia', "Accelerate"
+  s.frameworks ='CoreMedia', "Accelerate", "SystemConfiguration" 
   s.libraries = "z","c++"
   s.public_header_files = "QCloudCore/Classes/**/*.h"
   # s.public_header_files = 'Pod/Classes/**/*.h'
