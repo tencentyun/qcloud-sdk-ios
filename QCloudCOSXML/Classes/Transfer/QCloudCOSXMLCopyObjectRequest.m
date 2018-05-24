@@ -14,7 +14,7 @@
 #import "QCloudCompleteMultipartUploadRequest.h"
 #import "QCloudCompleteMultipartUploadInfo.h"
 #import "QCloudHeadObjectRequest.h"
-#import "QCloudURLHelper.h"
+#import <QCloudCore/QCloudURLHelper.h>
 static NSString* const kTempServiceKey =   @"tempServiceKey";
 static NSString* const kContentLengthKey = @"Content-Length";
 static NSString* const kLastModifiedKey =  @"Last-Modified";
