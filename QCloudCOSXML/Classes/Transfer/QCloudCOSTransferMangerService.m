@@ -25,8 +25,8 @@
 
 
 #import "QCloudCOSTransferMangerService.h"
-#import "QCloudThreadSafeMutableDictionary.h"
-#import "QCLoudError.h"
+#import <QCLoudCore/QCloudThreadSafeMutableDictionary.h>
+#import <QCloudCore/QCloudError.h>
 
 #import "QCloudPutObjectRequest.h"
 #import "QCloudInitiateMultipartUploadRequest.h"
