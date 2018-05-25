@@ -1,7 +1,7 @@
 //
 
 #import "QCloudRequestData+COSXMLVersion.h"
-#import "QCloudSDKModuleManager.h"
+#import <QCloudCore/QCloudSDKModuleManager.h>
 
 static NSString* const kCOSXMLModuleName = @"QCloudCOSXML";
 @implementation QCloudRequestData (COSXMLVersion)

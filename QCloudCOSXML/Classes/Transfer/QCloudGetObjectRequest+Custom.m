@@ -25,7 +25,7 @@
 
 
 #import "QCloudGetObjectRequest+Custom.h"
-#import "NSObject+HTTPHeadersContainer.h"
+#import <QCloudCore/NSObject+HTTPHeadersContainer.h>
 #import <objc/runtime.h>
 @interface QCloudBizHTTPRequest()
 - (void)__notifySuccess:(id)object;

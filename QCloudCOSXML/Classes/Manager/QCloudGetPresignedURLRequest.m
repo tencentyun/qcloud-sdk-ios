@@ -7,7 +7,7 @@
 
 #import "QCloudGetPresignedURLRequest.h"
 #import "QCloudCOSXMLService.h"
-#import "NSError+QCloudNetworking.h"
+#import <QCloudCore/NSError+QCloudNetworking.h>
 @interface QCloudGetPresignedURLRequest()
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *internalRequestParameters;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *internalRequestHeaders;
