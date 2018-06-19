@@ -17,9 +17,6 @@ QCloudCOSStorageClass QCloudCOSStorageClassDumpFromString(NSString* key) {
       else if ([key isEqualToString:@"Standard_IA"]) {
           return QCloudCOSStorageStandardIA;
       }
-      else if ([key isEqualToString:@"Nearline"]) {
-          return QCloudCOSStorageNearline;
-      }
       return 0;
 }
 NSString* QCloudCOSStorageClassTransferToString(QCloudCOSStorageClass type) {
@@ -31,10 +28,6 @@ NSString* QCloudCOSStorageClassTransferToString(QCloudCOSStorageClass type) {
         case QCloudCOSStorageStandardIA:
         {
             return @"Standard_IA";
-        }
-        case QCloudCOSStorageNearline:
-        {
-            return @"Nearline";
         }
         default:
             return nil;

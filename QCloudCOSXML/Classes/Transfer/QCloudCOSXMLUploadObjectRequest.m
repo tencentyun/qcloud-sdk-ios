@@ -448,11 +448,14 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     
     __weak typeof(self) weakSelf = self;
     [complete setFinishBlock:^(QCloudUploadObjectResult* outputObject, NSError *error) {
-        outputObject.location = QCloudFormattHTTPURL(outputObject.location,
-                                                     weakSelf.transferManager.cosService.configuration.endpoint.useHTTPS);
+
         if (error) {
             [weakSelf onError:error];
         } else {
+            if ( nil != outputObject.location) {
+                outputObject.location = QCloudFormattHTTPURL(outputObject.location,
+                                                             weakSelf.transferManager.cosService.configuration.endpoint.useHTTPS);
+            }
             [weakSelf onSuccess:outputObject];
         }
     }];
