@@ -63,7 +63,7 @@
 }
 
 - (id)copyWithZone:(NSZone *)zone {
-    QCloudCOSXMLEndPoint* endpoint = [[QCloudCOSXMLEndPoint alloc] init];
+    QCloudCOSXMLEndPoint* endpoint = [super copyWithZone:nil];
     endpoint.regionName = self.regionName;
     endpoint.serviceName = self.serviceName;
     return endpoint;
