@@ -10,9 +10,11 @@ s.version              = "5.4.5"
   s.ios.deployment_target = '8.0'
   s.source_files = 'QCloudCOSXML/Classes/**/*'
   s.dependency "QCloudCore",'5.4.5'
+  s.static_framework = true
 
   s.subspec 'Transfer' do |sbt|
     sbt.source_files = 'QCloudCOSXML/Classes/Transfer/*','QCloudCOSXML/Classes/Base/*'
     sbt.dependency "QCloudCore",'5.4.5'
+    sbt.static_framework=true
   end
 end
