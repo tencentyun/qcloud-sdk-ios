@@ -15,6 +15,6 @@ s.version              = "5.4.5"
   s.subspec 'Transfer' do |sbt|
     sbt.source_files = 'QCloudCOSXML/Classes/Transfer/*','QCloudCOSXML/Classes/Base/*'
     sbt.dependency "QCloudCore",'5.4.5'
-    sbt.static_framework=true
+ #   sbt.static_framework=true
   end
 end
