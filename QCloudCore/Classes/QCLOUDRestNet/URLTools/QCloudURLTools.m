@@ -10,6 +10,9 @@ NSString* const QCloudHTTPScheme = @"http://";
 NSString* const QCloudHTTPSScheme = @"https://";
 
 NSString* QCloudFormattHTTPURL(NSString* originURL, BOOL useHTTPS) {
+    if (!originURL) {
+        return nil;
+    }
     NSString* schema = useHTTPS ? QCloudHTTPSScheme: QCloudHTTPScheme;
     NSString* origin = originURL;
     if ([originURL.lowercaseString hasPrefix:schema.lowercaseString]) {

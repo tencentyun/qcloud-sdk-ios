@@ -7,7 +7,7 @@
 //
 
 #import "QCloudCOSXMLEndPoint.h"
-
+#import "NSString+RegularExpressionCategory.h"
 @implementation QCloudCOSXMLEndPoint
 
 - (instancetype) init
@@ -56,10 +56,31 @@
     if (!self.useHTTPS) {
         scheme = @"http";
     }
+    static NSString *regularExpression = @"[a-zA-Z0-9.-]*";
+    BOOL isLegal = [bucket matchesRegularExpression:regularExpression];
+    NSAssert(isLegal, @"bucket name contains illegal character! It can only contains a-z, A-Z, 0-9, '.' and '-' ");
+    if (!isLegal) {
+        QCloudLogDebug(@"bucket %@ contains illeagal character, building service url pregress  returns immediately", bucket);
+        return  nil;
+    }
+
     NSString* formattedRegionName = [self formattedRegionName:self.regionName];
     NSString* formattedBucketName = [self formattedBucket:bucket withAPPID:appID];
     NSURL* serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@-%@.%@.%@",scheme,formattedBucketName,appID,formattedRegionName,self.serviceName]];
     return serverURL;
+}
+
+- (void)setRegionName:(QCloudRegion)regionName {
+    //Region 仅允许由 a-z, A-Z, 0-9, 英文句号. 和 - 构成。
+    NSParameterAssert(regionName);
+    static NSString *regularExpression = @"[a-zA-Z0-9.-]*";
+    BOOL isLegal = [regionName matchesRegularExpression:regularExpression];
+    NSAssert(isLegal, @"Region name contains illegal character! It can only contains a-z, A-Z, 0-9, '.' and '-' ");
+    if (!isLegal) {
+        QCloudLogDebug(@"Region %@ contains illeagal character, setter returns immediately", regionName);
+        return ;
+    }
+    _regionName = regionName;
 }
 
 - (id)copyWithZone:(NSZone *)zone {

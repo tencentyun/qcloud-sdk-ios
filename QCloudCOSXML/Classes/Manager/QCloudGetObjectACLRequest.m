@@ -93,6 +93,9 @@ NS_ASSUME_NONNULL_BEGIN
             return NO;
         }
     }
+    if (self.versionID) {
+        [self.requestData setValue:self.versionID forHTTPHeaderField:@"x-cos-version-id"];
+    }
     self.requestData.URIMethod = @"acl";
     NSMutableArray* __pathComponents = [NSMutableArray arrayWithArray:self.requestData.URIComponents];
     if(self.object) [__pathComponents addObject:self.object];

@@ -102,6 +102,10 @@ RFC 2616 中定义的指定文件下载范围，以字节（bytes）为单位
 */
 @property (strong, nonatomic) NSString *ifNoneMatch;
 /**
+指定 Object 的 VersionID (在开启多版本的情况下)
+*/
+@property (strong, nonatomic) NSString *versionID;
+/**
 对象名
 */
 @property (strong, nonatomic) NSString *object;

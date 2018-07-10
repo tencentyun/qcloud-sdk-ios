@@ -108,6 +108,7 @@ NS_ASSUME_NONNULL_BEGIN
     if (self.ifNoneMatch) {
         [self.requestData setValue:self.ifNoneMatch forHTTPHeaderField:@"If-None-Match"];
     }
+    [self.requestData setParameter:self.versionID withKey:@"versionId"];
     if (!self.object || ([self.object isKindOfClass:NSString.class] && ((NSString*)self.object).length == 0)) {
         if (error != NULL) {
             *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid message:[NSString stringWithFormat:@"paramter[object] is invalid (nil), it must have some value. please check it"]];

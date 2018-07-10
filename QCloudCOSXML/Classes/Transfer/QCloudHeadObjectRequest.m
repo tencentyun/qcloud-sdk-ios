@@ -90,6 +90,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSURL* __serverURL = [self.runOnService.configuration.endpoint serverURLWithBucket:self.bucket appID:self.runOnService.configuration.appID];
     self.requestData.serverURL = __serverURL.absoluteString;
     [self.requestData setValue:__serverURL.host forHTTPHeaderField:@"Host"];
+    [self.requestData setParameter:self.versionID withKey:@"versionId"];
     if (self.ifModifiedSince) {
         [self.requestData setValue:self.ifModifiedSince forHTTPHeaderField:@"If-Modified-Since"];
     }

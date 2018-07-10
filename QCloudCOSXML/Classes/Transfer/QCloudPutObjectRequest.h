@@ -114,6 +114,10 @@ Object 的存储级别
 当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
 */
 @property (strong, nonatomic) NSString *grantFullControl;
+/**
+指定对象对应的Version ID（在开启了多版本的情况才有）
+*/
+@property (strong, nonatomic) NSString *versionID;
 
 /*
 在进行HTTP请求的时候，可以通过设置该参数来设置自定义的一些头部信息。

@@ -118,6 +118,9 @@ NS_ASSUME_NONNULL_BEGIN
     if (self.grantFullControl) {
         [self.requestData setValue:self.grantFullControl forHTTPHeaderField:@"x-cos-grant-full-control"];
     }
+    if (self.versionID) {
+        [self.requestData setValue:self.versionID forHTTPHeaderField:@"x-cos-version-id"];
+    }
     NSMutableArray* __pathComponents = [NSMutableArray arrayWithArray:self.requestData.URIComponents];
     if(self.object) [__pathComponents addObject:self.object];
     self.requestData.URIComponents = __pathComponents;
