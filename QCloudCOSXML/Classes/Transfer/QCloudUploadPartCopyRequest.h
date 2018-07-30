@@ -118,7 +118,7 @@ request.partNumber = 1; // 标志当前分块的序号
     */
 @property (strong, nonatomic) NSString *sourceIfNoneMatch;
 /**
-    指定源文件的版本号
+    指定 Object 的 Version ID （在开启了多版本的情况下）
     */
 @property (strong, nonatomic) NSString *versionID;
 

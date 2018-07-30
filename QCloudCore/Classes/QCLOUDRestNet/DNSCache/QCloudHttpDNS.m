@@ -8,7 +8,8 @@
 
 #import "QCloudHttpDNS.h"
 #import "QCloudHosts.h"
-
+#import "QCloudLogger.h"
+#import "NSError+QCloudNetworking.h"
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
@@ -49,29 +50,20 @@ BOOL QCloudCheckIPVaild(NSString* ip) {
 
 }
 
-- (BOOL) resolveDomain:(NSString*)domain error:(NSError* __autoreleasing*)error
+- (BOOL) resolveDomain:(NSString*)domain error:(NSError**)error
 {
-#warning  this host & port is not set
-    NSString* reqstr = [NSString stringWithFormat:@"http://**.**.**.**/?dn=%@", domain];
-    NSURL* url = [NSURL URLWithString:reqstr];
-    NSURLRequest* request = [NSURLRequest requestWithURL:url];
-    NSHTTPURLResponse* response;
-    NSData* data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:error];
-    if (response.statusCode != 200) {
+    NSString *ip;
+    if (self.delegate && [self.delegate respondsToSelector:@selector(resolveDomain:)]) {
+        ip = [self.delegate resolveDomain:domain];
+    }
+    if (!ip) {
+        QCloudLogDebug(@"Cannot resolve domain %@",domain);
+        *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeCannotResloveDomain message:[NSString  stringWithFormat: @"无法解析域名 %@",domain]];
         return NO;
     }
-    if (error != NULL) {
-        if (*error) {
-            return NO;
-        }
-    }
 
-    NSString* str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    NSArray* array = [str componentsSeparatedByString:@" "];
-    for (NSString* ip  in array) {
-        if (QCloudCheckIPVaild(ip)) {
-            [_hosts putDomain:domain ip:[ip stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" "]]];
-        }
+    if (QCloudCheckIPVaild(ip)) {
+        [_hosts putDomain:domain ip:[ip stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" "]]];
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:kQCloudHttpDNSCacheReady object:nil userInfo:@{
                                                                                                            kQCloudHttpDNSHost:domain
@@ -83,9 +75,9 @@ BOOL QCloudCheckIPVaild(NSString* ip) {
 - (NSString*) queryIPForHost:(NSString*)host
 {
     NSArray* hosts = [_hosts queryIPForDomain:host];
-    //always use the first one
+    //always use the last(lastest) one
     if (hosts.count) {
-        return hosts.firstObject;
+        return hosts.lastObject;
     }
     return nil;
 }
@@ -94,17 +86,22 @@ BOOL QCloudCheckIPVaild(NSString* ip) {
     if (!request) {
         return request;
     }
-    
-    NSString* ip = [self queryIPForHost:request.URL.host];
+    NSString *host = request.URL.host;
+    NSString* ip = [self queryIPForHost:host];
+    // Give it second chance to reslove domain by itself
+    if (!ip) {
+        NSError * resolveError;
+        [self resolveDomain:request.URL.host error:&resolveError];
+    }
+    ip = [self queryIPForHost:host];
     if (!ip) {
         return request;
     }
-
     NSString* url = request.URL.absoluteString;
-    NSRange range = [url rangeOfString:request.URL.host];
+    NSRange range = [url rangeOfString:host];
     NSString* originHost = request.URL.host;
     if (range.location != NSNotFound && range.length > 0) {
-        url = [url stringByReplacingOccurrencesOfString:request.URL.host withString:ip options:0 range:range];
+        url = [url stringByReplacingOccurrencesOfString:host withString:ip options:0 range:range];
         NSMutableURLRequest* mReq = [request mutableCopy];
         mReq.URL = [NSURL URLWithString:url];
         [mReq setValue:originHost forHTTPHeaderField:@"Host"] ;
@@ -114,6 +111,11 @@ BOOL QCloudCheckIPVaild(NSString* ip) {
     }
 }
 
+- (void)setIp:(NSString *)ip forDomain:(NSString *)domain {
+    if (QCloudCheckIPVaild(ip)) {
+        [_hosts putDomain:domain ip:ip];
+    }
+}
 
 - (BOOL) isTrustIP:(NSString*)ip
 {

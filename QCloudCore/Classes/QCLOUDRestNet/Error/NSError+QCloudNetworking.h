@@ -28,7 +28,8 @@ typedef NS_ENUM(int,QCloudNetworkErrorCode) {
     QCloudNetworkErrorCodeAborted = -340010,
     QCloudNetworkErrorCodeAlreadyFinish = -340011,
     QCloudNetworkErrorCodeCredentialNotReady = -340012,
-    QCloudNetworkErrorCodeMD5NotMatch = -340013
+    QCloudNetworkErrorCodeMD5NotMatch = -340013,
+    QCloudNetworkErrorCodeCannotResloveDomain = -340014
 };
 
 @protocol QCloudNetworkError <NSObject>
