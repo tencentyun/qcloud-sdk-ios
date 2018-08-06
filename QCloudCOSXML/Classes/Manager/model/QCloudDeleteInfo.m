@@ -1,6 +1,6 @@
 //
-//  QCloudLifecycleConfiguration.m
-//  QCloudLifecycleConfiguration
+//  QCloudDeleteInfo.m
+//  QCloudDeleteInfo
 //
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.
@@ -24,19 +24,18 @@
 //
 
 
-#import "QCloudLifecycleConfiguration.h"
+#import "QCloudDeleteInfo.h"
 
-#import "QCloudLifecycleRule.h"
+#import "QCloudDeleteObjectInfo.h"
 
-@class QCloudLifecycleRule;
 
 NS_ASSUME_NONNULL_BEGIN
-@implementation QCloudLifecycleConfiguration
+@implementation QCloudDeleteInfo
 
 + (NSDictionary *)modelContainerPropertyGenericClass
 {
    return @ {
-      @"rules":[QCloudLifecycleRule class],
+      @"objects":[QCloudDeleteObjectInfo class],
   };
 }
 
@@ -44,14 +43,27 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSDictionary *)modelCustomPropertyMapper
 {
   return @{
-      @"rules" :@"Rule",
+      @"quiet" :@"Quiet",
+      @"objects" :@"Object",
   };
 }
 
 
 - (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic
 {
+    void (^TransformBoolean)(NSString* originKey, NSString* trueStr , NSString* falseStr) = ^(NSString* originKey,NSString* trueStr , NSString* falseStr) {
+        id value = [dic objectForKey:originKey];
+        if (!value) {
+            return ;
+        }
+        if ([value boolValue]) {
+            [dic setObject:trueStr forKey:originKey];
+        } else {
+          [dic setObject:falseStr forKey:originKey];
+        }
+    };
 
+    TransformBoolean(@"Quiet", @"True", @"False");
 
     return YES;
 }
@@ -63,7 +75,7 @@ NS_ASSUME_NONNULL_BEGIN
     }
     NSMutableDictionary* transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
     NSArray* transformArrayKeypaths = @[
-    @"Rule",
+    @"Object",
     ];
 
     for (NSString* keyPath in transformArrayKeypaths) {
@@ -79,6 +91,21 @@ NS_ASSUME_NONNULL_BEGIN
         }
     }
 
+    void(^TransformBoolean)(NSString* originKey, NSString* trueStr , NSString* falseStr) = ^(NSString* originKey, NSString* trueStr , NSString* falseStr) {
+        id value = [dic objectForKey:originKey];
+        if (!value) {
+            return ;
+        }
+        if ([value isKindOfClass:[NSString class]]) {
+            NSString* boolean = (NSString*)value;
+            if ([value isEqualToString:trueStr]) {
+                [transfromDic setValue:@(YES) forKey:originKey];
+            } else if ([boolean isEqualToString:falseStr]) {
+                [transfromDic setValue:@(NO) forKey:originKey];
+            }
+        }
+    };
+    TransformBoolean(@"Quiet", @"True", @"False");
     return transfromDic;
 }
 

@@ -37,7 +37,7 @@
 #import "QCloudCOSXMLUploadObjectRequest.h"
 #import "QCloudCOSXMLUploadObjectRequest_Private.h"
 #import "QCloudCOSXMLCopyObjectRequest.h"
-
+#import "QCloudThreadSafeMutableDictionary.h"
 QCloudThreadSafeMutableDictionary* QCloudCOSTransferMangerServiceCache()
 {
     static QCloudThreadSafeMutableDictionary* CloudcostransfermangerService = nil;
@@ -112,5 +112,23 @@ static QCloudCOSTransferMangerService* COSTransferMangerService = nil;
     request.transferManager = self;
     QCloudFakeRequestOperation* operation = [[QCloudFakeRequestOperation alloc] initWithRequest:request];
     [self.uploadFileQueue addOpreation:operation];
+}
+#pragma mark - UIApplicationDelegate interceptor
+/**
+ This method needs to be called in the `- application:handleEventsForBackgroundURLSession:completionHandler:` application delegate.
+ @param application       The singleton app object.
+ @param identifier        The identifier of the URL session requiring attention.
+ @param completionHandler The completion handler to call when you finish processing the events.
+ */
++(void)interceptApplication:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)(void))completionHandler{
+
+        // For the SDK managed service clients
+        for (NSString *key in cloudBackGroundSessionManagersCache.allKeys) {
+            QCloudHTTPSessionManager *sessionManager = [cloudBackGroundSessionManagersCache objectForKey:key];
+            if ([identifier isEqualToString:sessionManager.configuration.identifier]) {
+                sessionManager.didFinishEventsForBackgroundURLSession  = completionHandler;
+            }
+        }
+    
 }
 @end

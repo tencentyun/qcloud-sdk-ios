@@ -1,6 +1,6 @@
 //
-//  QCloudListBucketResult.m
-//  QCloudListBucketResult
+//  QCloudListPartsResult.m
+//  QCloudListPartsResult
 //
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.
@@ -24,22 +24,20 @@
 //
 
 
-#import "QCloudListBucketResult.h"
+#import "QCloudListPartsResult.h"
 
-#import "QCloudBucketContents.h"
-#import "QCloudCommonPrefixes.h"
+#import "QCloudMultipartUploadInitiator.h"
+#import "QCloudMultipartUploadOwner.h"
+#import "QCloudMultipartUploadPart.h"
 
-@class QCloudBucketContents;
-@class QCloudCommonPrefixes;
 
 NS_ASSUME_NONNULL_BEGIN
-@implementation QCloudListBucketResult
+@implementation QCloudListPartsResult
 
 + (NSDictionary *)modelContainerPropertyGenericClass
 {
    return @ {
-      @"contents":[QCloudBucketContents class],
-      @"commonPrefixes":[QCloudCommonPrefixes class],
+      @"parts":[QCloudMultipartUploadPart class],
   };
 }
 
@@ -47,33 +45,32 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSDictionary *)modelCustomPropertyMapper
 {
   return @{
-      @"name" :@"Name",
-      @"prefix" :@"Prefix",
-      @"marker" :@"Marker",
-      @"maxKeys" :@"MaxKeys",
-      @"delimiter" :@"Delimiter",
+      @"bucket" :@"Bucket",
+      @"encodingType" :@"Encoding-type",
+      @"key" :@"Key",
+      @"uploadId" :@"UploadID",
+      @"storageClass" :@"StorageClass",
+      @"partNumberMarker" :@"PartNumberMarker",
+      @"nextNumberMarker" :@"NextPartNumberMarker",
+      @"maxParts" :@"MaxParts",
       @"isTruncated" :@"IsTruncated",
-      @"contents" :@"Contents",
-      @"commonPrefixes" :@"CommonPrefixes",
+      @"initiator" :@"Initiator",
+      @"owner" :@"Owner",
+      @"parts" :@"Part",
   };
 }
 
 
 - (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic
 {
-    void (^TransformBoolean)(NSString* originKey, NSString* trueStr , NSString* falseStr) = ^(NSString* originKey,NSString* trueStr , NSString* falseStr) {
-        id value = [dic objectForKey:originKey];
-        if (!value) {
-            return ;
-        }
-        if ([value boolValue]) {
-            [dic setObject:trueStr forKey:originKey];
-        } else {
-          [dic setObject:falseStr forKey:originKey];
-        }
-    };
 
-    TransformBoolean(@"IsTruncated", @"True", @"False");
+    NSNumber* COSStorageClassenumValue = dic[@"StorageClass"];
+    if (COSStorageClassenumValue) {
+        NSString* value = QCloudCOSStorageClassTransferToString([COSStorageClassenumValue intValue]);
+        if (value) {
+            dic[@"StorageClass"] = value;
+        }
+    }
 
     return YES;
 }
@@ -85,8 +82,7 @@ NS_ASSUME_NONNULL_BEGIN
     }
     NSMutableDictionary* transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
     NSArray* transformArrayKeypaths = @[
-    @"Contents",
-    @"CommonPrefixes",
+    @"Part",
     ];
 
     for (NSString* keyPath in transformArrayKeypaths) {
@@ -102,21 +98,11 @@ NS_ASSUME_NONNULL_BEGIN
         }
     }
 
-    void(^TransformBoolean)(NSString* originKey, NSString* trueStr , NSString* falseStr) = ^(NSString* originKey, NSString* trueStr , NSString* falseStr) {
-        id value = [dic objectForKey:originKey];
-        if (!value) {
-            return ;
+        NSString* COSStorageClassenumValue = transfromDic[@"StorageClass"];
+        if (COSStorageClassenumValue && [COSStorageClassenumValue isKindOfClass:[NSString class]] && COSStorageClassenumValue.length > 0) {
+            int value = QCloudCOSStorageClassDumpFromString(COSStorageClassenumValue);
+            transfromDic[@"StorageClass"] = @(value);
         }
-        if ([value isKindOfClass:[NSString class]]) {
-            NSString* boolean = (NSString*)value;
-            if ([value isEqualToString:trueStr]) {
-                [transfromDic setValue:@(YES) forKey:originKey];
-            } else if ([boolean isEqualToString:falseStr]) {
-                [transfromDic setValue:@(NO) forKey:originKey];
-            }
-        }
-    };
-    TransformBoolean(@"IsTruncated", @"True", @"False");
     return transfromDic;
 }
 

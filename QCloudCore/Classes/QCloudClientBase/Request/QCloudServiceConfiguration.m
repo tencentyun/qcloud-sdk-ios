@@ -44,6 +44,9 @@ static NSString *const QCloudServiceConfigurationUnknown = @"Unknown";
     config.userAgentProductKey = self.userAgentProductKey;
     config.endpoint = [self.endpoint copy];
     config.productVersion = self.productVersion;
+    config.backgroundIdentifier = self.backgroundIdentifier;
+    config.backgroundEnable = self.backgroundEnable;
+    config.backgroundIn4GEnable = self.backgroundIn4GEnable;
     return config;
 }
 @end

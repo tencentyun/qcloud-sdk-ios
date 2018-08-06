@@ -10,12 +10,14 @@
 #import "QCloudHTTPSessionManager.h"
 #import "QCloudServiceConfiguration_Private.h"
 #import "NSError+QCloudNetworking.h"
+
 @interface QCloudService ()
 {
     NSMutableDictionary* _signatureCache;
     dispatch_queue_t _writeReadQueue;
     NSMutableDictionary* _requestingSignatureFileds;
 }
+@property (nonatomic,strong)NSString *backgroundTransmitIdentifier;
 @end
 
 @implementation QCloudService
@@ -41,9 +43,6 @@
     _requestingSignatureFileds = [NSMutableDictionary new];
     _writeReadQueue = dispatch_queue_create("com.tencent.qcloud.service.lock", DISPATCH_QUEUE_CONCURRENT);
     return self;
-}
-- (QCloudHTTPSessionManager*) sessionManager {
-    return [QCloudHTTPSessionManager shareClient];
 }
 
 - (QCloudSignatureFields*) signatureFiledsForRequest:(QCloudBizHTTPRequest*)request
@@ -113,6 +112,7 @@
 }
 - (int) performRequest:(QCloudBizHTTPRequest*)httpRequst
 {
+    httpRequst.runOnService = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSError* error;
         [self fillCommonParamtersForRequest:httpRequst error:&error];
@@ -120,7 +120,7 @@
             [httpRequst onError:error];
             return ;
         }
-        [[QCloudHTTPSessionManager shareClient] performRequest:httpRequst];
+        [self.sessionManager performRequest:httpRequst];
     });
 
     return (int)httpRequst.requestID;
@@ -128,6 +128,8 @@
 
 - (int) performRequest:(QCloudBizHTTPRequest *)httpRequst withFinishBlock:(QCloudRequestFinishBlock)block
 {
+    httpRequst.runOnService = self
+    ;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSError* error;
         [self fillCommonParamtersForRequest:httpRequst error:&error];
@@ -135,7 +137,7 @@
             [httpRequst onError:error];
             return ;
         }
-        [[QCloudHTTPSessionManager shareClient] performRequest:httpRequst withFinishBlock:block];
+         [self.sessionManager performRequest:httpRequst];
     });
     return (int)httpRequst.requestID;
 }

@@ -1,6 +1,6 @@
 //
-//  QCloudCompleteMultipartUploadInfo.m
-//  QCloudCompleteMultipartUploadInfo
+//  QCloudCORSConfiguration.m
+//  QCloudCORSConfiguration
 //
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.
@@ -24,19 +24,18 @@
 //
 
 
-#import "QCloudCompleteMultipartUploadInfo.h"
+#import "QCloudCORSConfiguration.h"
 
-#import "QCloudMultipartInfo.h"
+#import "QCloudCORSRule.h"
 
-@class QCloudMultipartInfo;
 
 NS_ASSUME_NONNULL_BEGIN
-@implementation QCloudCompleteMultipartUploadInfo
+@implementation QCloudCORSConfiguration
 
 + (NSDictionary *)modelContainerPropertyGenericClass
 {
    return @ {
-      @"parts":[QCloudMultipartInfo class],
+      @"rules":[QCloudCORSRule class],
   };
 }
 
@@ -44,7 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSDictionary *)modelCustomPropertyMapper
 {
   return @{
-      @"parts" :@"Part",
+      @"rules" :@"CORSRule",
   };
 }
 
@@ -63,7 +62,7 @@ NS_ASSUME_NONNULL_BEGIN
     }
     NSMutableDictionary* transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
     NSArray* transformArrayKeypaths = @[
-    @"Part",
+    @"CORSRule",
     ];
 
     for (NSString* keyPath in transformArrayKeypaths) {

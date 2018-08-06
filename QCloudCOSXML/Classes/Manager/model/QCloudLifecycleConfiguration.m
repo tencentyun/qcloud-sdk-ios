@@ -1,6 +1,6 @@
 //
-//  QCloudBucketReplicationConfiguation.m
-//  QCloudBucketReplicationConfiguation
+//  QCloudLifecycleConfiguration.m
+//  QCloudLifecycleConfiguration
 //
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.
@@ -24,19 +24,18 @@
 //
 
 
-#import "QCloudBucketReplicationConfiguation.h"
+#import "QCloudLifecycleConfiguration.h"
 
-#import "QCloudBucketReplicationRule.h"
+#import "QCloudLifecycleRule.h"
 
-@class QCloudBucketReplicationRule;
 
 NS_ASSUME_NONNULL_BEGIN
-@implementation QCloudBucketReplicationConfiguation
+@implementation QCloudLifecycleConfiguration
 
 + (NSDictionary *)modelContainerPropertyGenericClass
 {
    return @ {
-      @"rule":[QCloudBucketReplicationRule class],
+      @"rules":[QCloudLifecycleRule class],
   };
 }
 
@@ -44,8 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSDictionary *)modelCustomPropertyMapper
 {
   return @{
-      @"role" :@"Role",
-      @"rule" :@"Rule",
+      @"rules" :@"Rule",
   };
 }
 

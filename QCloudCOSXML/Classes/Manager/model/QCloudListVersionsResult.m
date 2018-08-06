@@ -1,6 +1,6 @@
 //
-//  QCloudAccessControlList.m
-//  QCloudAccessControlList
+//  QCloudListVersionsResult.m
+//  QCloudListVersionsResult
 //
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.
@@ -24,19 +24,20 @@
 //
 
 
-#import "QCloudAccessControlList.h"
+#import "QCloudListVersionsResult.h"
 
-#import "QCloudACLGrant.h"
+#import "QCloudDeleteMarker.h"
+#import "QCloudVersionContent.h"
 
-@class QCloudACLGrant;
 
 NS_ASSUME_NONNULL_BEGIN
-@implementation QCloudAccessControlList
+@implementation QCloudListVersionsResult
 
 + (NSDictionary *)modelContainerPropertyGenericClass
 {
    return @ {
-      @"ACLGrants":[QCloudACLGrant class],
+      @"deleteMarker":[QCloudDeleteMarker class],
+      @"versionContent":[QCloudVersionContent class],
   };
 }
 
@@ -44,7 +45,13 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSDictionary *)modelCustomPropertyMapper
 {
   return @{
-      @"ACLGrants" :@"Grant",
+      @"name" :@"Name",
+      @"prefix" :@"Prefix",
+      @"versionIDMarkder" :@"VersionIdMarker",
+      @"maxKeys" :@"MaxKeys",
+      @"isTruncated" :@"IsTruncated",
+      @"deleteMarker" :@"DeleteMarker",
+      @"versionContent" :@"Version",
   };
 }
 
@@ -63,7 +70,8 @@ NS_ASSUME_NONNULL_BEGIN
     }
     NSMutableDictionary* transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
     NSArray* transformArrayKeypaths = @[
-    @"Grant",
+    @"DeleteMarker",
+    @"Version",
     ];
 
     for (NSString* keyPath in transformArrayKeypaths) {

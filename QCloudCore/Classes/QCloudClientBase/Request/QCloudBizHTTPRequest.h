@@ -26,10 +26,13 @@ extern _Nonnull QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilize
 
 @class QCloudServiceConfiguration;
 @interface QCloudBizHTTPRequest : QCloudHTTPRequest
+
+
 /**
  该任务所处的服务
  */
 @property (nonatomic, weak) QCloudService* _Nullable runOnService;
+
 
 /**
  请求序列化的过程

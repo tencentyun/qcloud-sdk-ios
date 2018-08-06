@@ -20,21 +20,7 @@
     return self;
 }
 
-- (NSString*)formattedRegionName:(NSString*)regionName {
-    NSArray* oldRegionNameArray = @[@"cn-east",@"cn-south",@"cn-south-2",@"cn-north",@"cn-southwest",@"sg"];
-    BOOL isOldRegion = NO;
-    for (NSString* oldRegionName in oldRegionNameArray) {
-        if ([regionName isEqualToString:oldRegionName]) {
-            isOldRegion = YES;
-            break;
-        }
-    }
-    if (isOldRegion) {
-        return regionName;
-    } else {
-        return [NSString stringWithFormat:@"cos.%@",self.regionName];
-    }
-}
+
 
 - (NSString *)formattedBucket:(NSString*)bucket withAPPID:(NSString*)APPID {
     NSInteger subfixLength = APPID.length + 1;
@@ -52,6 +38,10 @@
 
 - (NSURL*) serverURLWithBucket:(NSString *)bucket appID:(NSString *)appID
 {
+    if (self.serverURLLiteral) {
+        return self.serverURLLiteral;
+    }
+    
     NSString* scheme = @"https";
     if (!self.useHTTPS) {
         scheme = @"http";
@@ -63,10 +53,9 @@
         QCloudLogDebug(@"bucket %@ contains illeagal character, building service url pregress  returns immediately", bucket);
         return  nil;
     }
-
-    NSString* formattedRegionName = [self formattedRegionName:self.regionName];
+    
     NSString* formattedBucketName = [self formattedBucket:bucket withAPPID:appID];
-    NSURL* serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@-%@.%@.%@",scheme,formattedBucketName,appID,formattedRegionName,self.serviceName]];
+    NSURL* serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@-%@.cos.%@.%@",scheme,formattedBucketName,appID,self.regionName,self.serviceName]];
     return serverURL;
 }
 

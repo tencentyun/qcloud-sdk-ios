@@ -32,8 +32,14 @@
 @class QCloudCOSXMLService;
 @class QCloudCOSXMLUploadObjectRequest;
 @class QCloudCOSXMLCopyObjectRequest;
+
 @interface QCloudCOSTransferMangerService : QCloudService
+
+
+
 @property (nonatomic, strong, readonly) QCloudCOSXMLService* cosService;
+
+
 #pragma hidden super selectors
 - (int) performRequest:(QCloudBizHTTPRequest *)httpRequst NS_UNAVAILABLE;
 - (int) performRequest:(QCloudBizHTTPRequest *)httpRequst withFinishBlock:(QCloudRequestFinishBlock)block NS_UNAVAILABLE;

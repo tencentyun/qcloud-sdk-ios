@@ -42,6 +42,9 @@
 
 - (NSURL*) serverURLLiteral
 {
+    if (!_serverURLLiteral) {
+        return nil;
+    }
     NSString* url = _serverURLLiteral.absoluteString;
     if ([url.lowercaseString hasPrefix:QCloudHTTPSScheme]) {
         url = [url substringFromIndex:QCloudHTTPSScheme.length];

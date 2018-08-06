@@ -21,7 +21,7 @@
 #import "QCloudHTTPSessionManager.h"
 #import "NSError+QCloudNetworking.h"
 #import "NSObject+HTTPHeadersContainer.h"
-
+#import "QCloudService.h"
 @interface QCloudHTTPRequest ()
 {
     BOOL _requesting;

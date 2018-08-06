@@ -19,8 +19,13 @@
 #import "QCloudCOSXMLServiceUtilities.h"
 #import "QCloudCOSTransferMangerService.h"
 #import "QCloudAbortMultipfartUploadRequest.h"
+#import "QCloudUniversalPath.h"
+#import "QCloudSandboxPath.h"
+#import "QCloudMediaPath.h"
+#import "QCloudBundlePath.h"
 #import <QCloudCore/QCloudNetworkingAPI.h>
-//#import <QCloudCore/QCloudEncrypt.h>
+#import <QCloudCore/QCloudUniversalPathFactory.h>
+#import "QCloudCOSTransferMangerService.h"
 static NSUInteger kQCloudCOSXMLUploadLengthLimit = 1*1024*1024;
 static NSUInteger kQCloudCOSXMLUploadSliceLength = 1*1024*1024;
 
@@ -77,6 +82,37 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     _recursiveLock = [NSRecursiveLock new];
     _progressLock = [NSRecursiveLock new];
     return self;
+}
+- (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dictionary {
+    NSMutableDictionary *dict = [dictionary mutableCopy];
+    if ([dictionary valueForKey:@"body"]) {
+        NSDictionary *universalPathDict = [dictionary valueForKey:@"body"];
+        QCloudUniversalPathType type = [[universalPathDict valueForKey:@"type"] integerValue];
+        NSString *originURL = [universalPathDict valueForKey:@"originURL"];
+        QCloudUniversalPath *path ;
+        switch (type) {
+            case QCLOUD_UNIVERSAL_PATH_TYPE_FIXED:
+                path = [[QCloudUniversalFixedPath alloc] initWithStrippedURL:originURL];
+                break;
+            case QCLOUD_UNIVERSAL_PATH_TYPE_ADJUSTABLE:
+                path = [[QCloudUniversalAdjustablePath alloc] initWithStrippedURL:originURL];
+                break;
+            case QCLOUD_UNIVERSAL_PATH_TYPE_SANDBOX:
+                path = [[QCloudSandboxPath alloc] initWithStrippedURL:originURL];
+                break;
+            case QCLOUD_UNIVERSAL_PATH_TYPE_BUNDLE:
+                path = [[QCloudBundlePath alloc] initWithStrippedURL:originURL];
+                break;
+            case QCLOUD_UNIVERSAL_PATH_TYPE_MEDIA:
+                path = [[QCloudMediaPath alloc] initWithStrippedURL:originURL];
+                break;
+            default:
+                break;
+        }
+        [dict setValue:path forKey:@"body"];
+    }
+    
+    return [dict copy];
 }
 
 - (void) continueMultiUpload:(QCloudListPartsResult*)existParts
@@ -471,22 +507,12 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
 //
 + (instancetype) requestWithRequestData:(QCloudCOSXMLUploadObjectResumeData)resumeData
 {
-    QCloudCOSXMLUploadObjectRequest* request = [QCloudCOSXMLUploadObjectRequest qcloud_modelWithJSON:resumeData];
-    QCloudLogDebug(@"Generating request from resume data, body is %@",request.body);
-    if ([request.body isKindOfClass:[NSString class]]) {
-        NSString* path;
-        if ([request.body hasPrefix:@"/var/mobile/Media/DCIM"]) {
-                path = request.body;
-         } else {
-                path = QCloudGenerateLocalPath(request.body);
-        }
 
-        if ([path hasPrefix:@"file"]) {
-            request.body = [NSURL URLWithString:path];
-        } else {
-            request.body  = [NSURL fileURLWithPath:path];
-        }
-    }
+    QCloudCOSXMLUploadObjectRequest* request = [QCloudCOSXMLUploadObjectRequest qcloud_modelWithJSON:resumeData];
+
+    QCloudLogDebug(@"Generating request from resume data, body is %@",request.body);
+    QCloudUniversalPath* path = request.body; 
+    request.body = [path fileURL];
     QCloudLogDebug(@"Path after transfering is %@",request.body);
     return request;
     
@@ -547,9 +573,8 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     }
     [_recursiveLock lock];
         NSURL* url = (NSURL*)self.body;
-        NSString* path = url.path;
-        path = QCloudFilteLocalPath(path);
-        self.body = path;
+        QCloudUniversalPath *universalPath = [QCloudUniversalPathFactory universalPathWithURL:url];
+        self.body = universalPath;
         NSData* info = [self qcloud_modelToJSONData];
         QCloudLogDebug(@"RESUME data %@",info);
         self.body = url;
@@ -568,6 +593,10 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     } else {
         if (self.uploadId) {
             QCloudAbortMultipfartUploadRequest* abortRequest = [QCloudAbortMultipfartUploadRequest new];
+//            abortRequest.enableBackgroundTransmitService = self.enableBackgroundTransmitService;
+//            if (self.enableBackgroundTransmitService) {
+//                abortRequest.backgroundIdentifier = self.backgroundIdentifier;
+//            }
             abortRequest.object = self.object;
             abortRequest.bucket = self.bucket;
             abortRequest.uploadId = self.uploadId;

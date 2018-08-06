@@ -1,6 +1,6 @@
 //
-//  QCloudListMultipartUploadsResult.m
-//  QCloudListMultipartUploadsResult
+//  QCloudListBucketResult.m
+//  QCloudListBucketResult
 //
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.
@@ -24,19 +24,20 @@
 //
 
 
-#import "QCloudListMultipartUploadsResult.h"
+#import "QCloudListBucketResult.h"
 
-#import "QCloudListMultipartUploadContent.h"
+#import "QCloudBucketContents.h"
+#import "QCloudCommonPrefixes.h"
 
-@class QCloudListMultipartUploadContent;
 
 NS_ASSUME_NONNULL_BEGIN
-@implementation QCloudListMultipartUploadsResult
+@implementation QCloudListBucketResult
 
 + (NSDictionary *)modelContainerPropertyGenericClass
 {
    return @ {
-      @"uploads":[QCloudListMultipartUploadContent class],
+      @"contents":[QCloudBucketContents class],
+      @"commonPrefixes":[QCloudCommonPrefixes class],
   };
 }
 
@@ -44,21 +45,33 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSDictionary *)modelCustomPropertyMapper
 {
   return @{
-      @"bucket" :@"Bucket",
-      @"encodingType" :@"Encoding-Type",
-      @"keyMarker" :@"KeyMarker",
-      @"maxUploads" :@"MaxUploads",
+      @"name" :@"Name",
       @"prefix" :@"Prefix",
+      @"marker" :@"Marker",
+      @"maxKeys" :@"MaxKeys",
       @"delimiter" :@"Delimiter",
       @"isTruncated" :@"IsTruncated",
-      @"uploads" :@"Upload",
+      @"contents" :@"Contents",
+      @"commonPrefixes" :@"CommonPrefixes",
   };
 }
 
 
 - (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic
 {
+    void (^TransformBoolean)(NSString* originKey, NSString* trueStr , NSString* falseStr) = ^(NSString* originKey,NSString* trueStr , NSString* falseStr) {
+        id value = [dic objectForKey:originKey];
+        if (!value) {
+            return ;
+        }
+        if ([value boolValue]) {
+            [dic setObject:trueStr forKey:originKey];
+        } else {
+          [dic setObject:falseStr forKey:originKey];
+        }
+    };
 
+    TransformBoolean(@"IsTruncated", @"True", @"False");
 
     return YES;
 }
@@ -70,7 +83,8 @@ NS_ASSUME_NONNULL_BEGIN
     }
     NSMutableDictionary* transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
     NSArray* transformArrayKeypaths = @[
-    @"Upload",
+    @"Contents",
+    @"CommonPrefixes",
     ];
 
     for (NSString* keyPath in transformArrayKeypaths) {
@@ -86,6 +100,21 @@ NS_ASSUME_NONNULL_BEGIN
         }
     }
 
+    void(^TransformBoolean)(NSString* originKey, NSString* trueStr , NSString* falseStr) = ^(NSString* originKey, NSString* trueStr , NSString* falseStr) {
+        id value = [dic objectForKey:originKey];
+        if (!value) {
+            return ;
+        }
+        if ([value isKindOfClass:[NSString class]]) {
+            NSString* boolean = (NSString*)value;
+            if ([value isEqualToString:trueStr]) {
+                [transfromDic setValue:@(YES) forKey:originKey];
+            } else if ([boolean isEqualToString:falseStr]) {
+                [transfromDic setValue:@(NO) forKey:originKey];
+            }
+        }
+    };
+    TransformBoolean(@"IsTruncated", @"True", @"False");
     return transfromDic;
 }
 

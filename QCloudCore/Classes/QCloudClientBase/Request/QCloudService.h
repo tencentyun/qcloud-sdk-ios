@@ -20,7 +20,6 @@ NS_ASSUME_NONNULL_BEGIN
     @protected
     QCloudServiceConfiguration* _configuration;
 }
-
 /**
  改服务的配置信息，您可以通过在初始化接口中设置改参数来控制服务的行为。该属性为只读，只能在初始化中配置一次。后序的修改会无效。
  */
@@ -29,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  当前服务所运行的HTTP Session Manager。一般情况下，所有服务都运行在统一的全局单例上面。
  */
-@property (nonatomic, strong, readonly) QCloudHTTPSessionManager* sessionManager;
+@property (nonatomic, strong,readonly) QCloudHTTPSessionManager* sessionManager;
 
 /**
  通过服务配置信息初始化服务
@@ -57,8 +56,6 @@ NS_ASSUME_NONNULL_BEGIN
  @return 请求的序列号
  */
 - (int) performRequest:(QCloudBizHTTPRequest *)httpRequst withFinishBlock:(QCloudRequestFinishBlock)block;
-//
-
 #pragma mark ---权限相关函数
 - (void) loadCOSXMLAuthorizationForBiz:(QCloudBizHTTPRequest *)request urlRequest:(NSURLRequest *)urlrequest compelete:(QCloudHTTPAuthentationContinueBlock)cotinueBlock;
 - (void) loadCOSV4AuthorizationForBiz:(QCloudBizHTTPRequest *)request urlRequest:(NSURLRequest *)urlrequest compelete:(QCloudHTTPAuthentationContinueBlock)cotinueBlock;
@@ -68,5 +65,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL) fillCommonParamtersForRequest:(QCloudBizHTTPRequest *)request error:(NSError* __autoreleasing*)error;
 
 - (QCloudSignatureFields*) signatureFiledsForRequest:(QCloudBizHTTPRequest*)request;
++ (void)interceptApplication:(UIApplication *)application
+handleEventsForBackgroundURLSession:(NSString *)identifier
+           completionHandler:(void (^)(void))completionHandler;
 @end
 NS_ASSUME_NONNULL_END

@@ -1,6 +1,6 @@
 //
-//  QCloudListPartsResult.m
-//  QCloudListPartsResult
+//  QCloudListAllMyBucketsResult.m
+//  QCloudListAllMyBucketsResult
 //
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.
@@ -24,21 +24,19 @@
 //
 
 
-#import "QCloudListPartsResult.h"
+#import "QCloudListAllMyBucketsResult.h"
 
-#import "QCloudMultipartUploadInitiator.h"
-#import "QCloudMultipartUploadOwner.h"
-#import "QCloudMultipartUploadPart.h"
+#import "QCloudOwner.h"
+#import "QCloudBucket.h"
 
-@class QCloudMultipartUploadPart;
 
 NS_ASSUME_NONNULL_BEGIN
-@implementation QCloudListPartsResult
+@implementation QCloudListAllMyBucketsResult
 
 + (NSDictionary *)modelContainerPropertyGenericClass
 {
    return @ {
-      @"parts":[QCloudMultipartUploadPart class],
+      @"buckets":[QCloudBucket class],
   };
 }
 
@@ -46,18 +44,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSDictionary *)modelCustomPropertyMapper
 {
   return @{
-      @"bucket" :@"Bucket",
-      @"encodingType" :@"Encoding-type",
-      @"key" :@"Key",
-      @"uploadId" :@"UploadID",
-      @"storageClass" :@"StorageClass",
-      @"partNumberMarker" :@"PartNumberMarker",
-      @"nextNumberMarker" :@"NextPartNumberMarker",
-      @"maxParts" :@"MaxParts",
-      @"isTruncated" :@"IsTruncated",
-      @"initiator" :@"Initiator",
       @"owner" :@"Owner",
-      @"parts" :@"Part",
+      @"buckets" :@"Buckets",
   };
 }
 
@@ -65,13 +53,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic
 {
 
-    NSNumber* COSStorageClassenumValue = dic[@"StorageClass"];
-    if (COSStorageClassenumValue) {
-        NSString* value = QCloudCOSStorageClassTransferToString([COSStorageClassenumValue intValue]);
-        if (value) {
-            dic[@"StorageClass"] = value;
-        }
-    }
 
     return YES;
 }
@@ -83,7 +64,7 @@ NS_ASSUME_NONNULL_BEGIN
     }
     NSMutableDictionary* transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
     NSArray* transformArrayKeypaths = @[
-    @"Part",
+    @"Buckets",
     ];
 
     for (NSString* keyPath in transformArrayKeypaths) {
@@ -99,11 +80,6 @@ NS_ASSUME_NONNULL_BEGIN
         }
     }
 
-        NSString* COSStorageClassenumValue = transfromDic[@"StorageClass"];
-        if (COSStorageClassenumValue && [COSStorageClassenumValue isKindOfClass:[NSString class]] && COSStorageClassenumValue.length > 0) {
-            int value = QCloudCOSStorageClassDumpFromString(COSStorageClassenumValue);
-            transfromDic[@"StorageClass"] = @(value);
-        }
     return transfromDic;
 }
 

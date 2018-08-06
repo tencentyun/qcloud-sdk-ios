@@ -29,7 +29,7 @@
 #import "QCloudCOSXMLService+Private.h"
 #import <QCloudCore/QCloudThreadSafeMutableDictionary.h>
 #import <QCloudCore/QCLoudError.h>
-
+#import "UIDevice+FCUUID.h"
 QCloudThreadSafeMutableDictionary* QCloudCOSXMLServiceCache()
 {
     static QCloudThreadSafeMutableDictionary* CloudcosxmlService = nil;
@@ -39,8 +39,8 @@ QCloudThreadSafeMutableDictionary* QCloudCOSXMLServiceCache()
     });
     return CloudcosxmlService;
 }
-
 @implementation QCloudCOSXMLService
+@synthesize sessionManager = _sessionManager;
 static QCloudCOSXMLService* COSXMLService = nil;
 
 
@@ -52,6 +52,25 @@ static QCloudCOSXMLService* COSXMLService = nil;
         }
         return COSXMLService;
     }
+}
+- (QCloudHTTPSessionManager*) sessionManager {
+    
+    @synchronized(self) {
+        if (self.configuration.backgroundEnable) {
+            if (self.configuration.backgroundIn4GEnable) {
+                return [QCloudHTTPSessionManager sessionManagerWithBackgroundIdentifier:self.configuration.backgroundIdentifier];
+            }else{
+                if (([QCloudNetEnv shareEnv].currentNetStatus == QCloudReachableViaWiFi)) {
+                      return [QCloudHTTPSessionManager sessionManagerWithBackgroundIdentifier:self.configuration.backgroundIdentifier];
+                }else{
+                    return [QCloudHTTPSessionManager shareClient];
+                }
+            }
+            
+        }
+    }
+    
+    return [QCloudHTTPSessionManager shareClient];
 }
 
 + (QCloudCOSXMLService*) registerDefaultCOSXMLWithConfiguration:(QCloudServiceConfiguration*)configuration
@@ -111,6 +130,5 @@ static QCloudCOSXMLService* COSXMLService = nil;
         return YES;
     }
 }
-
 
 @end

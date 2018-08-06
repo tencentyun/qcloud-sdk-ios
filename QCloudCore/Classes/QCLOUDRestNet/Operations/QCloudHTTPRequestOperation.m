@@ -41,7 +41,6 @@
 - (void) main
 {
     @autoreleasepool {
-    
         QCloudRequestFinishBlock originFinishBlock = self.httpRequest.finishBlock;
         if (self.httpRequest.canceled) {
             QCloudRemoveFileByPath(self.tempFilePath);
@@ -66,7 +65,7 @@
         }];
         
         QCloudLogDebug(@"开始执行一个请求:%lld", self.httpRequest.requestID);
-        [[QCloudHTTPSessionManager shareClient] executeRestHTTPReqeust:self.httpRequest];
+        [self.sessionManager executeRestHTTPReqeust:self.httpRequest];
     }
 }
 @end

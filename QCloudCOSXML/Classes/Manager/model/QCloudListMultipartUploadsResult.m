@@ -1,6 +1,6 @@
 //
-//  QCloudListAllMyBucketsResult.m
-//  QCloudListAllMyBucketsResult
+//  QCloudListMultipartUploadsResult.m
+//  QCloudListMultipartUploadsResult
 //
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.
@@ -24,20 +24,18 @@
 //
 
 
-#import "QCloudListAllMyBucketsResult.h"
+#import "QCloudListMultipartUploadsResult.h"
 
-#import "QCloudOwner.h"
-#import "QCloudBucket.h"
+#import "QCloudListMultipartUploadContent.h"
 
-@class QCloudBucket;
 
 NS_ASSUME_NONNULL_BEGIN
-@implementation QCloudListAllMyBucketsResult
+@implementation QCloudListMultipartUploadsResult
 
 + (NSDictionary *)modelContainerPropertyGenericClass
 {
    return @ {
-      @"buckets":[QCloudBucket class],
+      @"uploads":[QCloudListMultipartUploadContent class],
   };
 }
 
@@ -45,8 +43,14 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSDictionary *)modelCustomPropertyMapper
 {
   return @{
-      @"owner" :@"Owner",
-      @"buckets" :@"Buckets",
+      @"bucket" :@"Bucket",
+      @"encodingType" :@"Encoding-Type",
+      @"keyMarker" :@"KeyMarker",
+      @"maxUploads" :@"MaxUploads",
+      @"prefix" :@"Prefix",
+      @"delimiter" :@"Delimiter",
+      @"isTruncated" :@"IsTruncated",
+      @"uploads" :@"Upload",
   };
 }
 
@@ -65,7 +69,7 @@ NS_ASSUME_NONNULL_BEGIN
     }
     NSMutableDictionary* transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
     NSArray* transformArrayKeypaths = @[
-    @"Buckets",
+    @"Upload",
     ];
 
     for (NSString* keyPath in transformArrayKeypaths) {

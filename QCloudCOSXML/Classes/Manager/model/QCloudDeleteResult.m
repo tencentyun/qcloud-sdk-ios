@@ -1,6 +1,6 @@
 //
-//  QCloudListVersionsResult.m
-//  QCloudListVersionsResult
+//  QCloudDeleteResult.m
+//  QCloudDeleteResult
 //
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.
@@ -24,22 +24,18 @@
 //
 
 
-#import "QCloudListVersionsResult.h"
+#import "QCloudDeleteResult.h"
 
-#import "QCloudDeleteMarker.h"
-#import "QCloudVersionContent.h"
+#import "QCloudDeleteResultRow.h"
 
-@class QCloudDeleteMarker;
-@class QCloudVersionContent;
 
 NS_ASSUME_NONNULL_BEGIN
-@implementation QCloudListVersionsResult
+@implementation QCloudDeleteResult
 
 + (NSDictionary *)modelContainerPropertyGenericClass
 {
    return @ {
-      @"deleteMarker":[QCloudDeleteMarker class],
-      @"versionContent":[QCloudVersionContent class],
+      @"deletedObjects":[QCloudDeleteResultRow class],
   };
 }
 
@@ -47,13 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSDictionary *)modelCustomPropertyMapper
 {
   return @{
-      @"name" :@"Name",
-      @"prefix" :@"Prefix",
-      @"versionIDMarkder" :@"VersionIdMarker",
-      @"maxKeys" :@"MaxKeys",
-      @"isTruncated" :@"IsTruncated",
-      @"deleteMarker" :@"DeleteMarker",
-      @"versionContent" :@"Version",
+      @"deletedObjects" :@"Deleted",
   };
 }
 
@@ -72,8 +62,7 @@ NS_ASSUME_NONNULL_BEGIN
     }
     NSMutableDictionary* transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
     NSArray* transformArrayKeypaths = @[
-    @"DeleteMarker",
-    @"Version",
+    @"Deleted",
     ];
 
     for (NSString* keyPath in transformArrayKeypaths) {

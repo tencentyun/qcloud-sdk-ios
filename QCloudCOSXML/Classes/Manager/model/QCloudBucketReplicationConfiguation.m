@@ -1,6 +1,6 @@
 //
-//  QCloudCORSConfiguration.m
-//  QCloudCORSConfiguration
+//  QCloudBucketReplicationConfiguation.m
+//  QCloudBucketReplicationConfiguation
 //
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.
@@ -24,19 +24,18 @@
 //
 
 
-#import "QCloudCORSConfiguration.h"
+#import "QCloudBucketReplicationConfiguation.h"
 
-#import "QCloudCORSRule.h"
+#import "QCloudBucketReplicationRule.h"
 
-@class QCloudCORSRule;
 
 NS_ASSUME_NONNULL_BEGIN
-@implementation QCloudCORSConfiguration
+@implementation QCloudBucketReplicationConfiguation
 
 + (NSDictionary *)modelContainerPropertyGenericClass
 {
    return @ {
-      @"rules":[QCloudCORSRule class],
+      @"rule":[QCloudBucketReplicationRule class],
   };
 }
 
@@ -44,7 +43,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSDictionary *)modelCustomPropertyMapper
 {
   return @{
-      @"rules" :@"CORSRule",
+      @"role" :@"Role",
+      @"rule" :@"Rule",
   };
 }
 
@@ -63,7 +63,7 @@ NS_ASSUME_NONNULL_BEGIN
     }
     NSMutableDictionary* transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
     NSArray* transformArrayKeypaths = @[
-    @"CORSRule",
+    @"Rule",
     ];
 
     for (NSString* keyPath in transformArrayKeypaths) {

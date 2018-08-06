@@ -30,6 +30,10 @@ extern NSString* const kQCloudHttpDNSHost;
 
 @interface QCloudHttpDNS : NSObject
 @property (nonatomic, strong, readonly) QCloudHosts* hosts;
+
+/**
+ 实现自定义解析ip的代理，当在记录里查询不到对应的host时，会向代理去再次请求解析。
+ */
 @property (nonatomic, weak) id<QCloudHTTPDNSProtocol> delegate;
 + (instancetype) shareDNS;
 /**
