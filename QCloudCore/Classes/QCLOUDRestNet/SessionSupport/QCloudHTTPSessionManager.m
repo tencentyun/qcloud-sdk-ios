@@ -25,7 +25,7 @@
 #import "QCloudFileOffsetBody.h"
 #import "QCloudRequestData.h"
 #import "QCloudService.h"
-#import "UIDevice+FCUUID.h"
+#import "UIDevice+QCloudFCUUID.h"
 #import "QCloudThreadSafeMutableDictionary.h"
 #import "QCloudWeakProxy.h"
 NSString* TaskDataKey(int64_t identifier){

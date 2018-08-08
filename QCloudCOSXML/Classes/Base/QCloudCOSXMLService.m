@@ -29,7 +29,7 @@
 #import "QCloudCOSXMLService+Private.h"
 #import <QCloudCore/QCloudThreadSafeMutableDictionary.h>
 #import <QCloudCore/QCLoudError.h>
-#import "UIDevice+FCUUID.h"
+#import "UIDevice+QCloudFCUUID.h"
 QCloudThreadSafeMutableDictionary* QCloudCOSXMLServiceCache()
 {
     static QCloudThreadSafeMutableDictionary* CloudcosxmlService = nil;

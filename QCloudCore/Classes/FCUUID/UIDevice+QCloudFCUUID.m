@@ -5,7 +5,7 @@
 //  Copyright © 2015 Fabio Caccamo. All rights reserved.
 //
 
-#import "UIDevice+FCUUID.h"
+#import "UIDevice+QCloudFCUUID.h"
 
 @implementation UIDevice (QCloudFCUUID)
 
