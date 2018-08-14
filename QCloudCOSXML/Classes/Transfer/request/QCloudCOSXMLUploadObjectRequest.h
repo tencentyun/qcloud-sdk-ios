@@ -112,6 +112,12 @@ typedef void(^InitMultipleUploadFinishBlock)(QCloudInitiateMultipartUploadResult
  */
 @property (nonatomic, copy) InitMultipleUploadFinishBlock initMultipleUploadFinishBlock;
 
+
+/**
+ 是否在上传完成以后，将 COS 返回的文件MD5与本地文件算出来的md5进行校验。默认开启，如果校验出错，文件仍然会被上传到 COS, 不过我们会在本地抛出校验失败的error。
+ */
+@property (nonatomic, assign) BOOL enableMD5Verification;
+
 /**
  上传完成后会通过该block回调。若error为空，可视为成功。
 

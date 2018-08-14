@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class QCloudHTTPRequest;
 @class QCloudSignatureFields;
+@class UIApplication;
 @interface QCloudService : NSObject
 {
     @protected
