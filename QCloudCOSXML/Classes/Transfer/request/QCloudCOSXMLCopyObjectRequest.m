@@ -38,6 +38,7 @@ static const int64_t   kCopySliceLength    = 5242880;
     if (!self) {
         return nil;
     }
+    _customHeaders = [NSMutableDictionary dictionary];
     _fileSize = 0;
     _sliceCount = 0;
     return self;
@@ -45,6 +46,19 @@ static const int64_t   kCopySliceLength    = 5242880;
 
 - (void)fackStart {
     QCloudHeadObjectRequest* headObjectRequest = [[QCloudHeadObjectRequest alloc] init];
+    NSMutableDictionary *customHeaders = [NSMutableDictionary dictionary];
+    if (self.customHeaders) {
+        if ([self.customHeaders objectForKey:@"x-cos-copy-source-server-side-encryption-customer-algorithm"]) {
+            customHeaders[@"x-cos-server-side-encryption-customer-algorithm"] =self.customHeaders[@"x-cos-copy-source-server-side-encryption-customer-algorithm"];
+        }
+        if ([self.customHeaders objectForKey:@"x-cos-copy-source-server-side-encryption-customer-key"]) {
+            customHeaders[@"x-cos-server-side-encryption-customer-key"] =self.customHeaders[@"x-cos-copy-source-server-side-encryption-customer-key"];
+        }
+        if ([self.customHeaders objectForKey:@"x-cos-copy-source-server-side-encryption-customer-key-MD5"]) {
+            customHeaders[@"x-cos-server-side-encryption-customer-key-MD5"] =self.customHeaders[@"x-cos-copy-source-server-side-encryption-customer-key-MD5"];
+        }
+    }
+    headObjectRequest.customHeaders = [customHeaders mutableCopy];
     headObjectRequest.bucket = self.sourceBucket;
     headObjectRequest.object = self.sourceObject;
     headObjectRequest.ifModifiedSince = self.objectCopyIfModifiedSince;
@@ -76,6 +90,7 @@ static const int64_t   kCopySliceLength    = 5242880;
 
 - (void)simpleCopy {
     QCloudPutObjectCopyRequest* request = [[QCloudPutObjectCopyRequest alloc] init];
+    request.customHeaders =[self.customHeaders mutableCopy];
     request.bucket = self.bucket;
     request.object = self.object;
     request.objectCopyIfMatch = self.objectCopyIfMatch;
@@ -94,14 +109,14 @@ static const int64_t   kCopySliceLength    = 5242880;
     [objectCopySource appendFormat:@"/%@",QCloudPercentEscapedStringFromString(self.sourceObject)];
     request.objectCopySource = objectCopySource;
     QCloudLogDebug(@"Object copy source url %@", objectCopySource);
-    [[QCloudCOSXMLService defaultCOSXML] PutObjectCopy:request];
+    [self.transferManager.cosService PutObjectCopy:request];
 }
 
 - (void)multipleCopy {
     QCloudInitiateMultipartUploadRequest* initMultipartUploadRequest = [[QCloudInitiateMultipartUploadRequest alloc] init];
     initMultipartUploadRequest.bucket = self.bucket;
     initMultipartUploadRequest.object = self.object;
-    initMultipartUploadRequest.customHeaders = self.customHeaders;
+    initMultipartUploadRequest.customHeaders = [self.customHeaders mutableCopy];
     __weak typeof(self) weakSelf = self;
     [initMultipartUploadRequest setFinishBlock:^(QCloudInitiateMultipartUploadResult* result, NSError* error) {
         if (nil == error) {
@@ -114,7 +129,7 @@ static const int64_t   kCopySliceLength    = 5242880;
         }
     }];
     
-    [[QCloudCOSXMLService defaultCOSXML] InitiateMultipartUpload:initMultipartUploadRequest];
+    [self.transferManager.cosService InitiateMultipartUpload:initMultipartUploadRequest];
     
 }
 
@@ -142,6 +157,7 @@ static const int64_t   kCopySliceLength    = 5242880;
         @autoreleasepool {
             QCloudUploadPartCopyRequest* request = [[QCloudUploadPartCopyRequest alloc] init];
             request.bucket = self.bucket;
+            request.customHeaders = [self.customHeaders mutableCopy];
             request.object = self.object;
             NSMutableString* objectCopySource = [NSMutableString string];
             NSString* serviceURL =[service.configuration.endpoint serverURLWithBucket:self.sourceBucket appID:self.sourceAPPID].absoluteString;
@@ -210,7 +226,7 @@ static const int64_t   kCopySliceLength    = 5242880;
             }
         }
     }];
-    [[QCloudCOSXMLService defaultCOSXML] CompleteMultipartUpload:request];
+    [self.transferManager.cosService CompleteMultipartUpload:request];
 }
 
 - (QCloudCOSXMLService*)tempService {
@@ -220,6 +236,7 @@ static const int64_t   kCopySliceLength    = 5242880;
         QCloudServiceConfiguration* configuration = [QCloudServiceConfiguration new];
         configuration.signatureProvider = self.transferManager.configuration.signatureProvider;
         configuration.appID = self.sourceAPPID;
+        configuration.endpoint.useHTTPS = self.transferManager.configuration.endpoint.useHTTPS;
         QCloudCOSXMLEndPoint* endpoint = [[QCloudCOSXMLEndPoint alloc] init];
         endpoint.regionName = self.sourceRegion;
         endpoint.serviceName = self.transferManager.configuration.endpoint.serviceName;
@@ -255,6 +272,14 @@ static const int64_t   kCopySliceLength    = 5242880;
 }
 - (void)setCopyProgressBlock:(void (^)(int64_t, int64_t))copyProgressBlock {
     self.copyProgressBlock = copyProgressBlock;
+}
+-(void)setCOSServerSideEncyptionWithCustomerKey:(NSString *)customerKey{
+    NSData *data = [customerKey dataUsingEncoding:NSUTF8StringEncoding];
+    NSString* excryptAES256Key = [data base64EncodedStringWithOptions:0]; // base64格式的字符串
+    NSString *base64md5key = QCloudEncrytNSDataMD5Base64(data);
+    self.customHeaders[@"x-cos-copy-source-server-side-encryption-customer-algorithm"] = @"AES256";
+    self.customHeaders[@"x-cos-copy-source-server-side-encryption-customer-key"] = excryptAES256Key;
+    self.customHeaders[@"x-cos-copy-source-server-side-encryption-customer-key-MD5"] = base64md5key;
 }
 
 @end

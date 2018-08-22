@@ -80,6 +80,10 @@
     });
 }
 
+- (QCloudHTTPSessionManager *)sessionManager {
+    return [QCloudHTTPSessionManager shareClient];
+}
+
 - (void) loadCOSV4AuthorizationForBiz:(QCloudBizHTTPRequest *)request urlRequest:(NSURLRequest *)urlrequest compelete:(QCloudHTTPAuthentationContinueBlock)cotinueBlock {
     NSAssert([self.configuration.signatureProvider respondsToSelector:@selector(signatureWithFields:request:urlRequest:compelete:)], @"您没有提供用于签名的委托者，请设置后再调用API");
     request.runOnService = self;

@@ -5,6 +5,7 @@
 //  Created by Dong Zhao on 2017/3/20.
 //
 //
+#if TARGET_OS_IPHONE
 
 #import "UIImage+QCloudBundle.h"
 #import "QCloudMainBundle.h"
@@ -21,3 +22,5 @@
 }
 
 @end
+#endif
+

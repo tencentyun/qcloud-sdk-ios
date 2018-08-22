@@ -15,7 +15,8 @@
 #import "QCloudSignatureFields.h"
 #import "QCloudHTTPSessionManager.h"
 #import "QCloudService.h"
-
+#import <CommonCrypto/CommonDigest.h>
+#import <CommonCrypto/CommonCrypto.h>
 NS_ASSUME_NONNULL_BEGIN
 
 QCloudResponseSerializerBlock QCloudResponseObjectSerilizerBlock(Class modelClass) {
@@ -58,7 +59,14 @@ QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilizerBlock = ^(NSHTT
 
 @implementation QCloudBizHTTPRequest
 
-
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _customHeaders = [NSMutableDictionary dictionary];
+    }
+    return self;
+}
 - (void) loadConfigureBlock
 {
     __weak typeof(self) weakSelf = self;
@@ -69,6 +77,7 @@ QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilizerBlock = ^(NSHTT
 
 - (void) configureReuqestSerializer:(QCloudRequestSerializer *)requestSerializer  responseSerializer:(QCloudResponseSerializer *)responseSerializer
 {
+    _customHeaders = [NSMutableDictionary dictionary];
     [requestSerializer setSerializerBlocks:[self customRequestSerizliers]];
     [responseSerializer setSerializerBlocks:[self customResponseSerializers]];
 }
@@ -122,12 +131,15 @@ QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilizerBlock = ^(NSHTT
             dispatch_semaphore_signal(semaphore);
         }];
     });
-
-    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    
+    dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, 15*NSEC_PER_SEC));
     if (localError) {
         if (NULL != error) {
             *error = localError;
         }
+        return NO;
+    } else  if (![urlRequest.allHTTPHeaderFields.allKeys containsObject:@"Authorization"]){
+        *error = [NSError errorWithDomain:@"com.tencent.qcloud.request" code:QCloudNetworkErrorCodeSignatureTimeOut userInfo:@{@"Description":@"获取签名超时，请检查是否实现签名回调，签名回调是否有调用,并且在最后是否有调用 ContinueBlock 传入签名"}];
         return NO;
     } else {
         return YES;
@@ -136,7 +148,29 @@ QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilizerBlock = ^(NSHTT
 - (void) loadQCloudSignature {
     
 }
+NSString* EncrytNSDataMD5Base64(NSData* data)
+{
+    if (!data) {
+        return nil;
+    }
+    
+    unsigned char result[CC_MD5_DIGEST_LENGTH];
+    CC_MD5( data.bytes, (CC_LONG)data.length, result ); // This is the md5 call
+    NSData* md5data = [NSData dataWithBytes:result length:CC_MD5_DIGEST_LENGTH];
+    return [md5data base64EncodedStringWithOptions:0];
+}
+-(void)setCOSServerSideEncyption{
+     self.customHeaders[@"x-cos-server-side-encryption"] = @"AES256";
+}
 
+-(void)setCOSServerSideEncyptionWithCustomerKey:(NSString *)customerKey{
+    NSData *data = [customerKey dataUsingEncoding:NSUTF8StringEncoding];
+    NSString* excryptAES256Key = [data base64EncodedStringWithOptions:0]; // base64格式的字符串
+    NSString *base64md5key = EncrytNSDataMD5Base64(data);
+    self.customHeaders[@"x-cos-server-side-encryption-customer-algorithm"] = @"AES256";
+    self.customHeaders[@"x-cos-server-side-encryption-customer-key"] = excryptAES256Key;
+    self.customHeaders[@"x-cos-server-side-encryption-customer-key-MD5"] = base64md5key;
+}
 
 @end
 

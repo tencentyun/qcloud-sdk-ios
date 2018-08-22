@@ -13,6 +13,8 @@ static NSString *const QCloudServiceConfigurationUnknown = @"Unknown";
 @implementation QCloudServiceConfiguration
 - (NSString*) userAgent
 {
+#if TARGET_OS_IPHONE
+
     NSString*(^UserAgent)(NSString* productKey) = ^(NSString* productKey) {
             NSString *systemName = [[[UIDevice currentDevice] systemName] stringByReplacingOccurrencesOfString:@" " withString:@"-"];
             if (!systemName) {
@@ -33,6 +35,9 @@ static NSString *const QCloudServiceConfigurationUnknown = @"Unknown";
     } else {
         return UserAgent(@"");
     }
+#elif TARGET_OS_MAC
+    return @"Test-Mac-Agent";
+#endif
 }
 
 

@@ -5,7 +5,7 @@
 //  Copyright © 2015 Fabio Caccamo. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
 #import "QCloudFCUUID.h"
 
@@ -14,4 +14,5 @@
 -(NSString *)qcloud_uuid;
 
 @end
+#endif
 

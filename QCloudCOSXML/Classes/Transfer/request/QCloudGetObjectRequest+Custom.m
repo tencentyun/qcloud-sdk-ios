@@ -54,7 +54,7 @@
     NSError* resultError;
     if ( ![localMD5String isEqualToString:MD5FromETag]) {
         NSMutableString* errorMessageString = [[NSMutableString alloc] init];
-        [errorMessageString appendFormat:@"下载过程中MD5校验与本地不一致，建议删除文件重新下载"];
+        [errorMessageString appendFormat:@"下载过程中MD5校验与本地不一致，建议删除文件重新下载, 本地计算的 MD5 值:%@, 返回的 ETag值:%@",localMD5String,MD5FromETag];
         if ( [((NSObject*)object).__originHTTPURLResponse__ allHeaderFields][@"x-cos-request-id"]!= nil) {
             NSString* requestID = [((NSObject*)object).__originHTTPURLResponse__ allHeaderFields][@"x-cos-request-id"];
             [errorMessageString appendFormat:@", Request id:%@",requestID];

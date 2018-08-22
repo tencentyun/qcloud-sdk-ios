@@ -8,7 +8,6 @@
 
 #import "QCloudClientContext.h"
 #import "QCloudUICKeyChainStore.h"
-#import <UIKit/UIKit.h>
 #import <sys/types.h>
 #import <sys/sysctl.h>
 #import "QCloudLogger.h"
@@ -23,7 +22,8 @@ static NSString *const QCloudClientContextKeychainService = @"com.qcloud.ClientC
 static NSString *const QCloudClientContextKeychainInstallationIdKey = @"com.qcloud.QCloudClientContextKeychainInstallationIdKey";
 @implementation QCloudClientContext
 #pragma mark - Public methods
-    
+#if TARGET_OS_IPHONE
+
 - (instancetype)init {
     if (self = [super init]) {
         QCloudUICKeyChainStore *keychain = [QCloudUICKeyChainStore keyChainStoreWithService:QCloudClientContextKeychainService];
@@ -183,5 +183,5 @@ static NSString *const QCloudClientContextKeychainInstallationIdKey = @"com.qclo
     free(machine);
     return modelVersionCode;
 }
-
+#endif
 @end

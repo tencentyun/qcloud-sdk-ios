@@ -53,13 +53,13 @@
     }
     _fileHandler = [NSFileHandle fileHandleForWritingAtPath:path];
     [_fileHandler seekToEndOfFile];
-    
+#if TARGET_OS_IPHONE
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(flushAllFiles) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(flushAllFiles) name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(flushAllFiles) name:UIApplicationWillTerminateNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(flushAllFiles) name:UIApplicationDidEnterBackgroundNotification object:nil];
     //
-
+#endif
     return self;
 }
 

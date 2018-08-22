@@ -97,6 +97,9 @@ NS_ASSUME_NONNULL_BEGIN
     NSMutableArray* __pathComponents = [NSMutableArray arrayWithArray:self.requestData.URIComponents];
     if(self.object) [__pathComponents addObject:self.object];
     self.requestData.URIComponents = __pathComponents;
+    for (NSString* key  in self.customHeaders.allKeys.copy) {
+        [self.requestData setValue:self.customHeaders[key] forHTTPHeaderField:key];
+    }
     return YES;
 }
 

@@ -26,6 +26,7 @@
 #import <QCloudCore/QCloudNetworkingAPI.h>
 #import <QCloudCore/QCloudUniversalPathFactory.h>
 #import "QCloudCOSTransferMangerService.h"
+#import "QCloudPutObjectRequest+Custom.h"
 static NSUInteger kQCloudCOSXMLUploadLengthLimit = 1*1024*1024;
 static NSUInteger kQCloudCOSXMLUploadSliceLength = 1*1024*1024;
 
@@ -78,10 +79,11 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
         return self;
     }
     _requestCacheArray = [NSPointerArray weakObjectsPointerArray];
+    _customHeaders = [NSMutableDictionary dictionary];
     _aborted = NO;
-    _enableMD5Verification = YES;
     _recursiveLock = [NSRecursiveLock new];
     _progressLock = [NSRecursiveLock new];
+    _enableMD5Verification = YES;
     return self;
 }
 - (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dictionary {
@@ -189,6 +191,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
 - (void) startSimpleUpload
 {
     QCloudPutObjectRequest* request = [QCloudPutObjectRequest new];
+    request.enableMD5Verification = self.enableMD5Verification;
     __weak typeof(self) weakSelf = self;
     request.finishBlock = ^(id outputObject, NSError *error) {
         if (error) {
@@ -200,27 +203,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
                 result.versionID = outputObject[@"x-cos-version-id"];
             }
             
-            if(self.enableMD5Verification) {
-                result.eTag = [outputObject valueForKey:@"Etag"];
-                NSString* localMD5 ;
-                if ([weakSelf.body isKindOfClass:[NSData class]]) {
-                    localMD5 = QCloudEncrytNSDataMD5(weakSelf.body);
-                } else if ([weakSelf.body isKindOfClass:[NSURL class]]) {
-                    localMD5 = QCloudEncrytFileMD5(((NSURL*)weakSelf.body).path);
-                }
-                NSString* MD5FromCOS = [result.eTag substringWithRange:NSMakeRange(1, result.eTag.length - 2)];
-                if ( (localMD5 != nil)  && (![localMD5.lowercaseString isEqualToString:MD5FromCOS]) ) {
-                    NSMutableString* errorMessageString = [[NSMutableString alloc] init];
-                    [errorMessageString appendFormat:@"简单上传过程中MD5校验与本地不一致，请检查本地文件在上传过程中是否发生了变化,建议调用删除接口将COS上的文件删除并重新上传"];
-                    if ( outputObject[@"x-cos-request-id"]!= nil) {
-                        NSString* requestID = outputObject[@"x-cos-request-id"];
-                        [errorMessageString appendFormat:@", Request id:%@",requestID];
-                    }
-                    NSError* error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeMD5NotMatch message:errorMessageString];
-                    [weakSelf onError:error];
-                    return ;
-                }
-            }
+
             result.key = weakSelf.object;
             result.bucket = weakSelf.bucket;
             result.location = QCloudCOSXMLObjectLocation(weakSelf.transferManager.configuration.endpoint,
@@ -246,7 +229,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     request.grantFullControl = self.grantFullControl;
     request.sendProcessBlock = self.sendProcessBlock;
     request.delegate = self.delegate;
-    request.customHeaders = self.customHeaders;
+    request.customHeaders = [self.customHeaders mutableCopy];
     [self.requestCacheArray addPointer:(__bridge void * _Nullable)(request)];
     [self.transferManager.cosService PutObject:request];
 }
@@ -266,7 +249,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     uploadRequet.grantRead = self.grantRead;
     uploadRequet.grantWrite = self.grantWrite;
     uploadRequet.grantFullControl = self.grantFullControl;
-    uploadRequet.customHeaders = self.customHeaders;
+    uploadRequet.customHeaders = [self.customHeaders mutableCopy];
     __weak typeof(self) weakSelf = self;
 
     [uploadRequet setFinishBlock:^(QCloudInitiateMultipartUploadResult * _Nonnull result,
@@ -364,7 +347,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
         request.priority = QCloudAbstractRequestPriorityLow;
         request.partNumber = (int)body.index + 1;
         request.uploadId = self.uploadId;
-        request.customHeaders = self.customHeaders;
+        request.customHeaders = [self.customHeaders mutableCopy];
         request.body = body;
         
         __block int64_t partBytesSent = 0;
@@ -401,7 +384,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
                     NSString* localMD5String = [QCloudEncrytFileOffsetMD5(body.fileURL.path, body.offset, body.sliceLength) lowercaseString];
                     if (![MD5FromeETag isEqualToString:localMD5String]) {
                         NSMutableString* errorMessageString = [[NSMutableString alloc] init];
-                        [errorMessageString appendFormat:@"分片上传过程中MD5校验与本地不一致，请检查本地文件在上传过程中是否发生了变化,建议调用删除接口将COS上的文件删除并重新上传"];
+                        [errorMessageString appendFormat:@"分片上传过程中MD5校验与本地不一致，请检查本地文件在上传过程中是否发生了变化,建议调用删除接口将COS上的文件删除并重新上传,本地计算的 MD5 值:%@, 返回的 ETag值:%@",localMD5String,MD5FromeETag];
                         if ( [outputObject __originHTTPURLResponse__]&& [[outputObject __originHTTPURLResponse__].allHeaderFields valueForKey:@"x-cos-request-id"]!= nil) {
                             NSString* requestID = [[outputObject __originHTTPURLResponse__].allHeaderFields valueForKey:@"x-cos-request-id"];
                             [errorMessageString appendFormat:@", Request id:%@",requestID];
@@ -616,6 +599,31 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     _aborted = YES;
     [self cancel];
 }
+-(void)setCOSServerSideEncyption{
+    self.enableMD5Verification = NO;
+    self.customHeaders[@"x-cos-server-side-encryption"] = @"AES256";
+}
+-(void)setCOSServerSideEncyptionWithCustomerKey:(NSString *)customerKey{
+    self.enableMD5Verification = NO;
+    NSData *data = [customerKey dataUsingEncoding:NSUTF8StringEncoding];
+    NSString* excryptAES256Key = [data base64EncodedStringWithOptions:0]; // base64格式的字符串
+    NSString *base64md5key = QCloudEncrytNSDataMD5Base64(data);
+    self.customHeaders[@"x-cos-server-side-encryption-customer-algorithm"] = @"AES256";
+    self.customHeaders[@"x-cos-server-side-encryption-customer-key"] = excryptAES256Key;
+    self.customHeaders[@"x-cos-server-side-encryption-customer-key-MD5"] = base64md5key;
+    
+}
 
-
+-(void)setCOSServerSideEncyptionWithKMSCustomKey:(NSString *)customerKey jsonStr:(NSString *)jsonStr{
+    self.enableMD5Verification = NO;
+    self.customHeaders[@"x-cos-server-side-encryption"] = @"cos/kms";
+    if(customerKey){
+        self.customHeaders[@"x-cos-server-side-encryption-cos-kms-key-id"] = customerKey;
+    }
+    if(jsonStr){
+        //先将string转换成data
+        NSData *data = [jsonStr dataUsingEncoding:NSUTF8StringEncoding];
+        self.customHeaders[@"x-cos-server-side-encryption-context"] = [data base64EncodedStringWithOptions:0];
+    }
+}
 @end

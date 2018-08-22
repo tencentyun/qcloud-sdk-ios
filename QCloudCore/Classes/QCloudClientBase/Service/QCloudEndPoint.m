@@ -72,7 +72,6 @@
     endpoint.serviceName = self.serviceName;
     endpoint.regionName = self.regionName;
     endpoint.serverURLLiteral = _serverURLLiteral;
-    
     return endpoint;
 }
 @end

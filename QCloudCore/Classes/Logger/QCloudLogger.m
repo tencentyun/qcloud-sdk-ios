@@ -95,10 +95,11 @@ NSString* const kQCloudLogExtension = @"log";
     _maxStoarageSize = 70*1024*1024;
     _keepDays = 3;
     //
+#if TARGET_OS_IPHONE
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tryCleanLogs) name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tryCleanLogs) name:UIApplicationWillTerminateNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tryCleanLogs) name:UIApplicationDidEnterBackgroundNotification object:nil];
-    //
+#endif
     return self;
 }
 

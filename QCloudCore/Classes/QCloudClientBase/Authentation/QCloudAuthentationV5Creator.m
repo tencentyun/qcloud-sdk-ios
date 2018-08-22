@@ -19,9 +19,9 @@
 @implementation NSDictionary(HeaderFilter)
 - (NSDictionary*)filteHeaders; {
     NSMutableDictionary* signedHeaders = [[NSMutableDictionary alloc] init];
-    __block  const NSArray* shouldSignedHeaderList = @[ @"Content-Length", @"Content-MD5",@"Host"];
+    __block  const NSMutableArray* shouldSignedHeaderList = @[ @"Content-Length", @"Content-MD5"];
     [self enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-        //签名的Headers列表：x开头的(x-cos-之类的),host,content-length,content-MD5
+        //签名的Headers列表：x开头的(x-cos-之类的),content-length,content-MD5
         BOOL shouldSigned = NO;
         for (NSString* header in shouldSignedHeaderList) {
             if ([header isEqualToString:((NSString*)key)]) {
@@ -141,11 +141,11 @@
     AppendFormatString(headerFormat);
     
     NSString* formatStringSHA = [formatString qcloud_sha1];
-    
+    QCloudLogDebug(@"format string is %@",formatString);
     // step 3 计算StringToSign
     
     NSString* stringToSign = [NSString stringWithFormat:@"%@\n%@\n%@\n", @"sha1", signTime, formatStringSHA];
-    
+    QCloudLogDebug(@"StringToSign is %@",stringToSign);
     // step 4 计算签名
     
     

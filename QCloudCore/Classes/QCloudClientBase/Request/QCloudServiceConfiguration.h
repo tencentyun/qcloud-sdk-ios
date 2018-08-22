@@ -28,7 +28,7 @@
 /**
  您的服务所在的区域,请您一定要设置该参数！
  */
-@property (nonatomic, copy) QCloudEndPoint* endpoint;
+@property (nonatomic, strong) QCloudEndPoint* endpoint;
 /**
  是否开启了后台传输，默认是NO
  */

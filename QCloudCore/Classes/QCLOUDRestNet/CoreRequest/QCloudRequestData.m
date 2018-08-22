@@ -7,7 +7,6 @@
 //
 
 #import "QCloudRequestData.h"
-#import <UIKit/UIKit.h>
 #import "NSError+QCloudNetworking.h"
 #import "QCloudHTTPBodyPart.h"
 
@@ -56,8 +55,11 @@ NSString* const HTTPHeaderUserAgent = @"User-Agent";
     static NSDictionary* httpHeaders;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
+#if TARGET_OS_IPHONE
         NSString*  userAgent = [NSString stringWithFormat:@"%@/%@ (%@; iOS %@; Scale/%0.2f)", [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleExecutableKey] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleIdentifierKey], [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleVersionKey], [[UIDevice currentDevice] model], [[UIDevice currentDevice] systemVersion], [[UIScreen mainScreen] scale]];
-        
+#elif TARGET_OS_MAC
+        NSString*  userAgent = @"Test-Mac-Agent";
+#endif
         httpHeaders = @{@"Connection":@"keep-alive",
                         HTTPHeaderUserAgent : userAgent};
     });

@@ -46,9 +46,11 @@
     }
     _hostIps = [NSMutableDictionary new];
     _readWriteQueue = dispatch_queue_create("com.tencent.supervisory.log", DISPATCH_QUEUE_CONCURRENT);
+#if TARGET_OS_IPHONE
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleEnterForground) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleEnterBackground) name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleTerminal) name:UIApplicationWillTerminateNotification object:nil];
+#endif
     [self alternateActiveSession];
     [self handleEnterForground];
     _uploading = NO;

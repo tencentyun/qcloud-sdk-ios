@@ -50,7 +50,6 @@ typedef void (^QCloudRequestDownProcessBlock)(int64_t bytesDownload, int64_t tot
 @property (nonatomic, strong) QCloudRequestDownProcessBlock downProcessBlock;
 
 
-
 - (void) setFinishBlock:(void(^)(id outputObject, NSError* error))QCloudRequestFinishBlock;
 
 
@@ -78,4 +77,5 @@ typedef void (^QCloudRequestDownProcessBlock)(int64_t bytesDownload, int64_t tot
                       totalBytesSend:(int64_t)totalBytesSend
             totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend;
 - (void) cancel;
+
 @end
