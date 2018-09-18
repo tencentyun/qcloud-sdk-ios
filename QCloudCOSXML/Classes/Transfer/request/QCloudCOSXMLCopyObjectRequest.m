@@ -60,6 +60,7 @@ static const int64_t   kCopySliceLength    = 5242880;
     }
     headObjectRequest.customHeaders = [customHeaders mutableCopy];
     headObjectRequest.bucket = self.sourceBucket;
+    headObjectRequest.regionName = self.regionName;
     headObjectRequest.object = self.sourceObject;
     headObjectRequest.ifModifiedSince = self.objectCopyIfModifiedSince;
     __weak typeof(self) weakSelf = self;
@@ -91,6 +92,7 @@ static const int64_t   kCopySliceLength    = 5242880;
 - (void)simpleCopy {
     QCloudPutObjectCopyRequest* request = [[QCloudPutObjectCopyRequest alloc] init];
     request.customHeaders =[self.customHeaders mutableCopy];
+    request.regionName = self.regionName;
     request.bucket = self.bucket;
     request.object = self.object;
     request.objectCopyIfMatch = self.objectCopyIfMatch;
@@ -104,7 +106,7 @@ static const int64_t   kCopySliceLength    = 5242880;
     QCloudCOSXMLService* service = [self tempService];
     [request setFinishBlock:self.finishBlock];
     NSMutableString* objectCopySource = [NSMutableString string];
-    NSString* serviceURL =[service.configuration.endpoint serverURLWithBucket:self.sourceBucket appID:self.sourceAPPID].absoluteString;
+    NSString* serviceURL =[service.configuration.endpoint serverURLWithBucket:self.sourceBucket appID:self.sourceAPPID regionName:self.regionName].absoluteString;
     [objectCopySource appendString:[serviceURL componentsSeparatedByString:@"://"][1]];
     [objectCopySource appendFormat:@"/%@",QCloudPercentEscapedStringFromString(self.sourceObject)];
     request.objectCopySource = objectCopySource;
@@ -115,6 +117,7 @@ static const int64_t   kCopySliceLength    = 5242880;
 - (void)multipleCopy {
     QCloudInitiateMultipartUploadRequest* initMultipartUploadRequest = [[QCloudInitiateMultipartUploadRequest alloc] init];
     initMultipartUploadRequest.bucket = self.bucket;
+    initMultipartUploadRequest.regionName = self.regionName;
     initMultipartUploadRequest.object = self.object;
     initMultipartUploadRequest.customHeaders = [self.customHeaders mutableCopy];
     __weak typeof(self) weakSelf = self;
@@ -159,8 +162,9 @@ static const int64_t   kCopySliceLength    = 5242880;
             request.bucket = self.bucket;
             request.customHeaders = [self.customHeaders mutableCopy];
             request.object = self.object;
+            request.regionName = self.regionName;
             NSMutableString* objectCopySource = [NSMutableString string];
-            NSString* serviceURL =[service.configuration.endpoint serverURLWithBucket:self.sourceBucket appID:self.sourceAPPID].absoluteString;
+            NSString* serviceURL =[service.configuration.endpoint serverURLWithBucket:self.sourceBucket appID:self.sourceAPPID regionName:self.regionName].absoluteString;
             [objectCopySource appendString:[serviceURL componentsSeparatedByString:@"://"][1]];
             [objectCopySource appendFormat:@"/%@",QCloudPercentEscapedStringFromString(self.sourceObject)];
             request.source = objectCopySource;
@@ -200,6 +204,7 @@ static const int64_t   kCopySliceLength    = 5242880;
     QCloudCompleteMultipartUploadRequest* request = [[QCloudCompleteMultipartUploadRequest alloc] init];
     request.bucket = self.bucket;
     request.object = self.object;
+    request.regionName = self.regionName;
     request.uploadId = self.uploadID;
     QCloudCompleteMultipartUploadInfo* info = [[QCloudCompleteMultipartUploadInfo alloc ] init];
     [self.uploadParts sortUsingComparator:^NSComparisonResult(QCloudMultipartInfo* obj1, QCloudMultipartInfo* obj2) {
@@ -271,7 +276,7 @@ static const int64_t   kCopySliceLength    = 5242880;
     return _uploadParts;
 }
 - (void)setCopyProgressBlock:(void (^)(int64_t, int64_t))copyProgressBlock {
-    self.copyProgressBlock = copyProgressBlock;
+    _copyProgressBlock = copyProgressBlock;
 }
 -(void)setCOSServerSideEncyptionWithCustomerKey:(NSString *)customerKey{
     NSData *data = [customerKey dataUsingEncoding:NSUTF8StringEncoding];

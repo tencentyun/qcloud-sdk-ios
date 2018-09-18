@@ -36,6 +36,7 @@
 #import "QCloudCOSXMLService.h"
 #import "QCloudCOSXMLUploadObjectRequest.h"
 #import "QCloudCOSXMLUploadObjectRequest_Private.h"
+#import "QCloudCOSXMLDownloadObjectRequest.h"
 #import "QCloudCOSXMLCopyObjectRequest.h"
 #import "QCloudThreadSafeMutableDictionary.h"
 QCloudThreadSafeMutableDictionary* QCloudCOSTransferMangerServiceCache()
@@ -108,9 +109,16 @@ static QCloudCOSTransferMangerService* COSTransferMangerService = nil;
     [self.uploadFileQueue addOpreation:operation];
 }
 
+
 - (void) CopyObject:(QCloudCOSXMLCopyObjectRequest*)request {
     request.transferManager = self;
     QCloudFakeRequestOperation* operation = [[QCloudFakeRequestOperation alloc] initWithRequest:request];
+    [self.uploadFileQueue addOpreation:operation];
+}
+
+-(void)DownloadObject:(QCloudCOSXMLDownloadObjectRequest *)request{
+    request.transferManager = self;
+    QCloudFakeRequestOperation *operation = [[QCloudFakeRequestOperation alloc]initWithRequest:request];
     [self.uploadFileQueue addOpreation:operation];
 }
 #pragma mark - UIApplicationDelegate interceptor

@@ -39,10 +39,17 @@
         return ;
     }
 
-    NSString* MD5FromETag = [((NSObject*)object).__originHTTPURLResponse__ allHeaderFields][@"eTag"];
-    if (MD5FromETag) {
+    NSString* MD5FromETag = [((NSObject*)object).__originHTTPURLResponse__ allHeaderFields][@"Etag"];
+    if (MD5FromETag ) {
+        if ([[MD5FromETag substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"W"]) {
+            NSRange range = NSMakeRange(3,MD5FromETag.length-4);
+            MD5FromETag =[MD5FromETag substringWithRange:range];
+        }else{
         MD5FromETag =[MD5FromETag substringWithRange:NSMakeRange(1, MD5FromETag.length-2)];
+            
+        }
     }
+    
     NSString* localMD5String ;
     if (self.downloadingURL) {
         localMD5String = [QCloudEncrytFileMD5(self.downloadingURL.path) lowercaseString];

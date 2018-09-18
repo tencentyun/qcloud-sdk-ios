@@ -65,6 +65,6 @@
  @param withAuthorization 是否需要签名，如果是私有读的Bucket，那么该URL需要带上签名才能访问
  @return object URL
  */
-- (NSString*)getURLWithBucket:(NSString*)bucket object:(NSString*)object withAuthorization:(BOOL)withAuthorization;
+- (NSString*)getURLWithBucket:(NSString*)bucket object:(NSString*)object withAuthorization:(BOOL)withAuthorization regionName:(NSString *)regionName;
 
 @end

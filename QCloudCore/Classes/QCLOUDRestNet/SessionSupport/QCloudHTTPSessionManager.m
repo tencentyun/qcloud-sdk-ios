@@ -263,13 +263,17 @@ QCloudThreadSafeMutableDictionary* QCloudBackgroundSessionManagerCache()
         [taskData.httpRequest.benchMarkMan benginWithKey:kRNBenchmarkDownploadTime];
         [taskData.httpRequest.benchMarkMan benginWithKey:kRNBenchmarkResponse];
     }
-    [taskData appendData:data];
-    if (taskData.httpRequest) {
-        [taskData.httpRequest notifyDownloadProgressBytesDownload:(int64_t)data.length
-                                               totalBytesDownload:(int64_t)taskData.totalRecivedLength
-                                     totalBytesExpectedToDownload:(int64_t)[dataTask.response expectedContentLength]];
+    if ([@[@(400), @(403), @(404), @(405)] containsObject:@(taskData.response.statusCode)]) {
+        // should not write data or callback
+    } else {
+        [taskData appendData:data];
+        if (taskData.httpRequest) {
+            [taskData.httpRequest notifyDownloadProgressBytesDownload:(int64_t)data.length
+                                                   totalBytesDownload:(int64_t)taskData.totalRecivedLength
+                                         totalBytesExpectedToDownload:(int64_t)[dataTask.response expectedContentLength]];
+        }
+        [[QCloudNetProfile shareProfile] pointDownload:data.length];
     }
-    [[QCloudNetProfile shareProfile] pointDownload:data.length];
 }
 
 

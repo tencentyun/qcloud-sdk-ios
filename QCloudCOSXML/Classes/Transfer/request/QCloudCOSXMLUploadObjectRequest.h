@@ -69,7 +69,7 @@ typedef void(^InitMultipleUploadFinishBlock)(QCloudInitiateMultipartUploadResult
 
 
 /**
- 定义 Object 的 ACL(Access Control List) 属性。有效值：private，public-read-write，public-read；默认值：private
+ 定义 Object 的 ACL(Access Control List) 属性。有效值：private，public-read-write，public-read,默认值：private
  */
 @property (strong, nonatomic) NSString *accessControlList;
 
@@ -119,6 +119,7 @@ typedef void(^InitMultipleUploadFinishBlock)(QCloudInitiateMultipartUploadResult
  通常情况下，携带特定的额外HTTP头部可以使用某项功能，如果是这类需求，可以通过设置该属性来实现。
  */
 @property (strong, nonatomic) NSMutableDictionary* customHeaders;
+@property (strong,nonatomic) NSString *regionName;
 /**
  上传完成后会通过该block回调。若error为空，可视为成功。
 
@@ -126,7 +127,13 @@ typedef void(^InitMultipleUploadFinishBlock)(QCloudInitiateMultipartUploadResult
  */
 - (void) setFinishBlock:(void (^)(QCloudUploadObjectResult* result, NSError* error))QCloudRequestFinishBlock;
 #pragma resume
+/**
+ 在初始化分片上传完成以后会回调的block中获取 resumeData,通过 resumeData 生成一个分片上传的请求;
+ */
 + (instancetype) requestWithRequestData:(QCloudCOSXMLUploadObjectResumeData)resumeData;
+/**
+ 主动调用取消，并且产生 resumetData 
+ */
 - (QCloudCOSXMLUploadObjectResumeData) cancelByProductingResumeData:(NSError* __autoreleasing*)error;
 
 

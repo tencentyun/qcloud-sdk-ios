@@ -123,7 +123,6 @@ request.partNumber = 1; // 标志当前分块的序号
 @property (strong, nonatomic) NSString *versionID;
 
 
-
 - (void) setFinishBlock:(void (^)(QCloudCopyObjectResult* result, NSError * error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

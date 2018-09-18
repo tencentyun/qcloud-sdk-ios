@@ -97,7 +97,7 @@ typedef void(^CopyProgressBlock)(int64_t partsSent, int64_t totalPartsExpectedTo
  通常情况下，携带特定的额外HTTP头部可以使用某项功能，如果是这类需求，可以通过设置该属性来实现。
  */
 @property (strong, nonatomic) NSMutableDictionary* customHeaders;
-
+@property (strong,nonatomic) NSString *regionName;
 /**
  在对大文件进行复制的过程中，会通过分片的方式进行复制。从该进度回调里可以获取当前已经复制了多少分片。
 

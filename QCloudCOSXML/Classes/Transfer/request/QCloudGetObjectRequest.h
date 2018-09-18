@@ -115,5 +115,6 @@ RFC 2616 中定义的指定文件下载范围，以字节（bytes）为单位
 @property (strong, nonatomic) NSString *bucket;
 
 
+
 @end
 NS_ASSUME_NONNULL_END

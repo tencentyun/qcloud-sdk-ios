@@ -99,6 +99,11 @@ NSString* const kQCloudLogExtension = @"log";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tryCleanLogs) name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tryCleanLogs) name:UIApplicationWillTerminateNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tryCleanLogs) name:UIApplicationDidEnterBackgroundNotification object:nil];
+#elif TARGET_OS_MAC
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tryCleanLogs) name:NSApplicationWillResignActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tryCleanLogs) name:NSApplicationWillTerminateNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tryCleanLogs) name:NSApplicationWillHideNotification object:nil];
+
 #endif
     return self;
 }

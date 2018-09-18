@@ -115,7 +115,6 @@ RFC 2616 中定义的文件名称，将作为 Object 元数据保存。
 @property (strong, nonatomic) NSString *grantFullControl;
 
 
-
 - (void) setFinishBlock:(void (^)(QCloudInitiateMultipartUploadResult* result, NSError * error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

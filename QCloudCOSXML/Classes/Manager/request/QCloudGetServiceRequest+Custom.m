@@ -33,6 +33,10 @@
         return NO;
     }
     self.requestData.serverURL = @"http://service.cos.myqcloud.com";
+    if (![self.runOnService.configuration.endpoint.serviceName isEqualToString:@"myqcloud.com"]) {
+          self.requestData.serverURL = [NSString stringWithFormat:@"http://service.cos.%@.%@",self.runOnService.configuration.endpoint.regionName,self.runOnService.configuration.endpoint.serviceName];
+    }
+
     return YES;
 }
 @end

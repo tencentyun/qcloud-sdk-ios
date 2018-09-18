@@ -55,6 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) NSString *expect;
 
 
+
 - (void) setFinishBlock:(void (^)(QCloudUploadPartResult* result, NSError * error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

@@ -114,7 +114,7 @@ QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilizerBlock = ^(NSHTT
 - (BOOL) prepareInvokeURLRequest:(NSMutableURLRequest *)urlRequest error:(NSError* __autoreleasing*)error
 {
     
-    NSAssert(self.runOnService, @"RUN ON SERVICE is nil%@", self.runOnService);
+//    NSAssert(self.runOnService, @"RUN ON SERVICE is nil%@", self.runOnService);
     __block dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     __block NSError* localError;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{

@@ -43,7 +43,7 @@ NSString* QCloudStrigngURLEncode(NSString *string , NSStringEncoding stringEncod
                                                                                                     NULL,
                                                                                                     (CFStringRef)string,
                                                                                                     NULL,
-                                                                                                    CFSTR(":/?#[]@!$ &'()*+,;=\"<>%{}|\\^~`"),
+                                                                                                    CFSTR(":/?#[]@!$ &'()*+,;=\"<>%{}|\\^`"),
                                                                                                     CFStringConvertNSStringEncodingToEncoding(stringEncoding)));
     if (escaped_value) {
         return escaped_value;

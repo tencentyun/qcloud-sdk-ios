@@ -38,7 +38,7 @@ extern _Nonnull QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilize
  通常情况下，携带特定的额外HTTP头部可以使用某项功能，如果是这类需求，可以通过设置该属性来实现。
  */
 @property (strong, nonatomic) NSMutableDictionary* customHeaders;
-
+@property (strong,nonatomic) NSString *regionName;
 /**
  请求序列化的过程
 

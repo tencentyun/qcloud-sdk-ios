@@ -87,7 +87,7 @@ NS_ASSUME_NONNULL_BEGIN
             return NO;
         }
     }
-    NSURL* __serverURL = [self.runOnService.configuration.endpoint serverURLWithBucket:self.bucket appID:self.runOnService.configuration.appID];
+    NSURL* __serverURL = [self.runOnService.configuration.endpoint serverURLWithBucket:self.bucket appID:self.runOnService.configuration.appID regionName:self.regionName];
     self.requestData.serverURL = __serverURL.absoluteString;
     [self.requestData setValue:__serverURL.host forHTTPHeaderField:@"Host"];
     [self.requestData setParameter:self.versionID withKey:@"versionId"];
@@ -98,7 +98,7 @@ NS_ASSUME_NONNULL_BEGIN
     if(self.object) [__pathComponents addObject:self.object];
     self.requestData.URIComponents = __pathComponents;
     for (NSString* key  in self.customHeaders.allKeys.copy) {
-        [self.requestData setValue:self.customHeaders[key] forHTTPHeaderField:key];
+    [self.requestData setValue:self.customHeaders[key] forHTTPHeaderField:key];
     }
     return YES;
 }

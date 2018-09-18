@@ -36,8 +36,7 @@
     return bucket;
 }
 
-- (NSURL*) serverURLWithBucket:(NSString *)bucket appID:(NSString *)appID
-{
+-(NSURL *)serverURLWithBucket:(NSString *)bucket appID:(NSString *)appID regionName:(NSString *)regionName{
     if (self.serverURLLiteral) {
         return self.serverURLLiteral;
     }
@@ -55,7 +54,13 @@
     }
     
     NSString* formattedBucketName = [self formattedBucket:bucket withAPPID:appID];
-    NSURL* serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@-%@.cos.%@.%@",scheme,formattedBucketName,appID,self.regionName,self.serviceName]];
+    NSString *regionNametmp = nil;
+    if (regionName) {
+        regionNametmp = regionName;
+    }else{
+        regionNametmp = self.regionName;
+    }
+    NSURL* serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@-%@.cos.%@.%@",scheme,formattedBucketName,appID,regionNametmp,self.serviceName]];
     return serverURL;
 }
 
@@ -71,7 +76,6 @@
     }
     _regionName = regionName;
 }
-
 - (id)copyWithZone:(NSZone *)zone {
     QCloudCOSXMLEndPoint* endpoint = [super copyWithZone:nil];
     endpoint.regionName = self.regionName;

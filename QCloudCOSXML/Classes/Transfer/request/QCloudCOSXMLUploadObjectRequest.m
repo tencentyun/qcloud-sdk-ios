@@ -152,6 +152,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
 {
     QCloudListMultipartRequest* request = [QCloudListMultipartRequest new];
     request.object = self.object;
+    request.regionName = self.regionName;
     request.bucket = self.bucket;
     request.uploadId = self.uploadId;
     
@@ -191,6 +192,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
 - (void) startSimpleUpload
 {
     QCloudPutObjectRequest* request = [QCloudPutObjectRequest new];
+    request.regionName = self.regionName;
     request.enableMD5Verification = self.enableMD5Verification;
     __weak typeof(self) weakSelf = self;
     request.finishBlock = ^(id outputObject, NSError *error) {
@@ -209,7 +211,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
             result.location = QCloudCOSXMLObjectLocation(weakSelf.transferManager.configuration.endpoint,
                                                          weakSelf.transferManager.configuration.appID,
                                                          weakSelf.bucket,
-                                                         weakSelf.object);
+                                                         weakSelf.object,self.regionName);
             result.__originHTTPURLResponse__ = [outputObject __originHTTPURLResponse__];
             [weakSelf onSuccess:result];
         }
@@ -238,6 +240,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     _uploadParts = [NSMutableArray new];
     QCloudInitiateMultipartUploadRequest* uploadRequet = [QCloudInitiateMultipartUploadRequest new];
     uploadRequet.bucket = self.bucket;
+    uploadRequet.regionName = self.regionName;
     uploadRequet.object = self.object;
     uploadRequet.cacheControl = self.cacheControl;
     uploadRequet.contentDisposition = self.contentDisposition;
@@ -343,6 +346,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
 
         QCloudUploadPartRequest* request = [QCloudUploadPartRequest new];
         request.bucket = self.bucket;
+        request.regionName = self.regionName;
         request.object = self.object;
         request.priority = QCloudAbstractRequestPriorityLow;
         request.partNumber = (int)body.index + 1;
@@ -452,7 +456,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     complete.object = self.object;
     complete.bucket = self.bucket;
     complete.uploadId = self.uploadId;
-    
+    complete.regionName = self.regionName;
     QCloudCompleteMultipartUploadInfo* info = [QCloudCompleteMultipartUploadInfo new];
     [self.uploadParts sortUsingComparator:^NSComparisonResult(QCloudMultipartInfo*  _Nonnull obj1,
                                                               QCloudMultipartInfo*  _Nonnull obj2) {
@@ -585,6 +589,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
 //                abortRequest.backgroundIdentifier = self.backgroundIdentifier;
 //            }
             abortRequest.object = self.object;
+            abortRequest.regionName = self.regionName;
             abortRequest.bucket = self.bucket;
             abortRequest.uploadId = self.uploadId;
             abortRequest.finishBlock = finishBlock;

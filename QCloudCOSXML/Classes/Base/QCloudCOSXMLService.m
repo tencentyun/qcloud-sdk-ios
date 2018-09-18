@@ -100,11 +100,11 @@ static QCloudCOSXMLService* COSXMLService = nil;
     [QCloudCOSXMLServiceCache() setObject:cosxmlService  forKey:key];
     return cosxmlService;
 }
-- (NSString*)getURLWithBucket:(NSString *)bucket object:(NSString *)object withAuthorization:(BOOL)withAuthorization {
+- (NSString*)getURLWithBucket:(NSString *)bucket object:(NSString *)object withAuthorization:(BOOL)withAuthorization regionName:(NSString*)regionName {
     NSParameterAssert(bucket);
     NSParameterAssert(object);
     __block NSMutableString* resultURL = [[NSMutableString alloc] init];
-    NSString* bucketURL = [[self.configuration.endpoint serverURLWithBucket:bucket appID:self.configuration.appID] absoluteString];
+    NSString* bucketURL = [[self.configuration.endpoint serverURLWithBucket:bucket appID:self.configuration.appID regionName:regionName] absoluteString];
     [resultURL appendString:bucketURL];
     [resultURL appendFormat:@"/%@",object];
     if (withAuthorization) {

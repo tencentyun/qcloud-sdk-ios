@@ -136,6 +136,7 @@ request.objectCopySource = @"objectCopySource";
 @property (strong, nonatomic) NSString *versionID;
 
 
+
 - (void) setFinishBlock:(void (^)(QCloudCopyObjectResult* result, NSError * error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

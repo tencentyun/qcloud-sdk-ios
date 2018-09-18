@@ -16,13 +16,13 @@ typedef id (^QCloudResponseSerializerBlock)(NSHTTPURLResponse* response,  id inp
 
 QCloudResponseSerializerBlock QCloudResponseXMLSerializerBlock = ^(NSHTTPURLResponse* response,  id inputData, NSError* __autoreleasing* error)
 {
+    QCloudLogInfo(@"-----------  %@",response);
     if(![inputData isKindOfClass:[NSData class]]) {
         if (NULL != error) {
             *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeDecodeError message:[NSString stringWithFormat:@"XML解析器读入的数据不是NSData"]];
         }
         return (id)nil;
     }
-    
     BOOL contentTypeXML = NO;
     for(NSString* key in response.allHeaderFields.allKeys) {
         if ([key caseInsensitiveCompare:@"content-type"] == NSOrderedSame) {
