@@ -16,6 +16,7 @@
     if (!self) {
         return self;
     }
+    _isPrefixURL = YES;
     _serviceName = @"myqcloud.com";
     return self;
 }
@@ -53,33 +54,59 @@
         return  nil;
     }
     
-    NSString* formattedBucketName = [self formattedBucket:bucket withAPPID:appID];
+    NSString* formattedBucketName = [self formattedBucket:bucket withAPPID:appID]; ;
     NSString *regionNametmp = nil;
     if (regionName) {
         regionNametmp = regionName;
     }else{
         regionNametmp = self.regionName;
     }
-    NSURL* serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@-%@.cos.%@.%@",scheme,formattedBucketName,appID,regionNametmp,self.serviceName]];
+    NSString *tmpBucket = formattedBucketName;
+    if (appID) {
+        tmpBucket = [NSString stringWithFormat:@"%@-%@",formattedBucketName,appID];
+    }
+    NSURL *serverURL;
+
+        if (_isPrefixURL) {
+            if (regionNametmp) {
+                    serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@.cos.%@.%@",scheme,tmpBucket,regionNametmp,self.serviceName]];
+                }else{
+                    serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@.cos.%@",scheme,tmpBucket,self.serviceName]];
+                }
+        }else{
+            if (regionNametmp) {
+                    serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://cos.%@.%@/%@",scheme,regionNametmp,self.serviceName,tmpBucket]];
+                }else{
+                    serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://cos.%@/%@",scheme,self.serviceName,tmpBucket]];
+                }
+            }
+   
     return serverURL;
 }
-
+-(void)setIsPrefixURL:(BOOL)isPrefixURL{
+    _isPrefixURL = isPrefixURL;
+}
 - (void)setRegionName:(QCloudRegion)regionName {
     //Region 仅允许由 a-z, A-Z, 0-9, 英文句号. 和 - 构成。
-    NSParameterAssert(regionName);
-    static NSString *regularExpression = @"[a-zA-Z0-9.-]*";
-    BOOL isLegal = [regionName matchesRegularExpression:regularExpression];
-    NSAssert(isLegal, @"Region name contains illegal character! It can only contains a-z, A-Z, 0-9, '.' and '-' ");
-    if (!isLegal) {
-        QCloudLogDebug(@"Region %@ contains illeagal character, setter returns immediately", regionName);
-        return ;
+    if ([self.serviceName isEqualToString:@"myqcloud.com"]) {
+        NSParameterAssert(regionName);
+        static NSString *regularExpression = @"[a-zA-Z0-9.-]*";
+        BOOL isLegal = [regionName matchesRegularExpression:regularExpression];
+        NSAssert(isLegal, @"Region name contains illegal character! It can only contains a-z, A-Z, 0-9, '.' and '-' ");
+        if (!isLegal) {
+            QCloudLogDebug(@"Region %@ contains illeagal character, setter returns immediately", regionName);
+            return ;
+        }
     }
+   
+   
     _regionName = regionName;
 }
 - (id)copyWithZone:(NSZone *)zone {
     QCloudCOSXMLEndPoint* endpoint = [super copyWithZone:nil];
     endpoint.regionName = self.regionName;
     endpoint.serviceName = self.serviceName;
+    endpoint.isPrefixURL = self.isPrefixURL;
     return endpoint;
 }
 @end

@@ -32,12 +32,17 @@
     if (!configuration.endpoint) {
         @throw [NSException exceptionWithName:kQCloudNetworkDomain reason:[NSString stringWithFormat:@"您没有配置EndPoint就使用了服务%@", self.class] userInfo:nil];
     }
-    if (!configuration.appID) {
-        @throw [NSException exceptionWithName:kQCloudNetworkDomain reason:[NSString stringWithFormat:@"您没有配置AppID就使用了服务%@", self.class] userInfo:nil];
+    if ([configuration.endpoint.serviceName  isEqualToString:@"myqcloud.com"]) {
+        if (!configuration.appID) {
+            @throw [NSException exceptionWithName:kQCloudNetworkDomain reason:[NSString stringWithFormat:@"您没有配置AppID就使用了服务%@", self.class] userInfo:nil];
+        }
     }
+    
     if (![configuration.signatureProvider conformsToProtocol:NSProtocolFromString(@"QCloudSignatureProvider")]) {
         @throw [NSException exceptionWithName:kQCloudNetworkDomain reason:[NSString stringWithFormat:@"您没有配置signatureProvider或者没有实现对应的方法就使用了服务%@", self.class] userInfo:nil];
     }
+    
+   
     _configuration = configuration;
     _signatureCache = [NSMutableDictionary new];
     _requestingSignatureFileds = [NSMutableDictionary new];

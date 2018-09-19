@@ -106,5 +106,10 @@ NS_ASSUME_NONNULL_BEGIN
     return fileds;
 }
 
+
+-(QCloudSignature *)signature{
+    QCloudSignature *sig = [QCloudSignature new];
+    return sig;
+}
 @end
 NS_ASSUME_NONNULL_END
