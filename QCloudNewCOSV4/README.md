@@ -198,7 +198,7 @@ SDK里绝大部分的请求都要通过签名来鉴权。在前面初始化过�
     if (nil == error) {
         NSLog(@"Upload finished!");
         //获取可以用于以后下载的URL
-        NSStrung* downloadURL = result.url;
+       	NSString* downloadURL = result.url;
     }
   }];
 
@@ -239,7 +239,7 @@ request.filePath = @"填入文件在本地的URL";
 	if (nil == error) {
 			NSLog(@"Upload finished!");
 			//获取可以用于以后下载的URL
-			NSStrung* downloadURL = result.url;
+			NSString* downloadURL = result.url;
 	}
 }];
 
