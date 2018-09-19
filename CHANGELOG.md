@@ -1,3 +1,6 @@
+# 5.5.5    
+- bug修复
+    
 # 5.5.4    
 - 支持自定义Request的Region的时候支持校验 
  - ACL设置增加Default有效值

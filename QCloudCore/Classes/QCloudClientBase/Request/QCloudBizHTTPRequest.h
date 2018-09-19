@@ -10,6 +10,7 @@
 @class QCloudTask;
 @class QCloudService;
 @class QCloudSignatureFields;
+@class QCloudSignature;
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -32,6 +33,7 @@ extern _Nonnull QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilize
  该任务所处的服务
  */
 @property (nonatomic, weak) QCloudService* _Nullable runOnService;
+
 
 /*
  在进行HTTP请求的时候，可以通过设置该参数来设置自定义的一些头部信息。
