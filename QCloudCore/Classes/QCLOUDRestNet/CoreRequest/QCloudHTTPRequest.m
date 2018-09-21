@@ -22,6 +22,7 @@
 #import "NSError+QCloudNetworking.h"
 #import "NSObject+HTTPHeadersContainer.h"
 #import "QCloudService.h"
+
 @interface QCloudHTTPRequest ()
 {
     BOOL _requesting;
@@ -76,6 +77,7 @@
 
 - (void) loadConfigureBlock
 {
+
     [self setConfigureBlock:^(QCloudRequestSerializer *requestSerializer, QCloudResponseSerializer *responseSerializer) {
       
         requestSerializer.HTTPMethod = HTTPMethodGET;

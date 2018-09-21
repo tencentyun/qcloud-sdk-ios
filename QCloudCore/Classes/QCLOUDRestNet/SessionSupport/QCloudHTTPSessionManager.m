@@ -190,7 +190,7 @@ QCloudThreadSafeMutableDictionary* QCloudBackgroundSessionManagerCache()
     return [self performRequest:httpRequst];
 }
 
-- (int) performRequest:(QCloudHTTPRequest *)request
+- (int)  performRequest:(QCloudHTTPRequest *)request
 {
     QCloudHTTPRequestOperation* operation = [[QCloudHTTPRequestOperation alloc] initWithRequest:request];
     operation.sessionManager = self;

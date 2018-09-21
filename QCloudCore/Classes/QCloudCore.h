@@ -37,5 +37,5 @@
 #import "QCloudAuthentationV4Creator.h"
 #import "QCloudCredentailFenceQueue.h"
 #import "QCloudMultiDelegateProxy.h"
-
+#import "COSXMLGetSignatureTool.h"
 #endif /* QCloudCore_h */
