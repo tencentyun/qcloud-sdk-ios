@@ -159,7 +159,7 @@
     _httpURLResponse = (NSHTTPURLResponse*)response;
     _httpURLError  = error;
     if (NSURLErrorCancelled == error.code && [NSURLErrorDomain isEqualToString:error.domain]) {
-        error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeCanceled message:@"The request is canceled"];
+        error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeCanceled message:@"UserCancelled:The request is canceled"];
     }
     _httpURLError.__originHTTPURLResponse__ = _httpURLResponse;
     error.__originHTTPURLResponse__ = _httpURLResponse;
@@ -212,7 +212,7 @@
 - (void) cancel
 {
     [super cancel];
-    [[QCloudHTTPSessionManager shareClient] cancelRequestWithID:(int)self.requestID];
+    [self.runOnService.sessionManager cancelRequestWithID:(int)self.requestID];
 }
 
 

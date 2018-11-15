@@ -30,6 +30,9 @@
 #import <QCloudCore/QCloudThreadSafeMutableDictionary.h>
 #import <QCloudCore/QCLoudError.h>
 #import "UIDevice+QCloudFCUUID.h"
+#if TARGET_OS_IPHONE
+#import "QCloudLogManager.h"
+#endif
 QCloudThreadSafeMutableDictionary* QCloudCOSXMLServiceCache()
 {
     static QCloudThreadSafeMutableDictionary* CloudcosxmlService = nil;
@@ -77,6 +80,9 @@ static QCloudCOSXMLService* COSXMLService = nil;
 {
     @synchronized (self) {
         COSXMLService = [[QCloudCOSXMLService alloc] initWithConfiguration:configuration];
+        #if TARGET_OS_IPHONE
+        [QCloudLogManager sharedInstance];
+        #endif
     }
     return COSXMLService;
 }

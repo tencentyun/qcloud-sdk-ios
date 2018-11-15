@@ -9,11 +9,9 @@
 #import <QCloudCore/MTA.h>
 
 @interface QualityDataUploader : NSObject
-+ (void)trackUploadSuccessWithType;
-+ (void)trackUploadFailWithError:(NSError *)error;
+
 + (void)trackRequestSentWithType:(Class)cls;
-+ (void)trackRequestSuccessWithType:(Class)cls;
-+ (void)trackRequestFailWithError:(NSError *)error;
++ (void)trackRequestFailWithType:(Class)cls Error:(NSError *)error;
 @end
 
 

@@ -84,9 +84,10 @@ QCloudThreadSafeMutableDictionary* QCloudBackgroundSessionManagerCache()
 
 +(QCloudHTTPSessionManager *)sessionManagerWithBackgroundIdentifier:(NSString *)backgroundIdentifier{
     QCloudHTTPSessionManager *sessionManager = nil;
-    for (NSString *backgroundIdentifier in cloudBackGroundSessionManagersCache.allKeys) {
+    for (NSString *backgroundIdentifier in QCloudBackgroundSessionManagerCache().allKeys) {
         return [cloudBackGroundSessionManagersCache objectForKey:backgroundIdentifier];
     }
+    
     sessionManager = [[QCloudHTTPSessionManager alloc]initWithBackgroundSessionWithBackgroundIdentifier:backgroundIdentifier];
     [QCloudBackgroundSessionManagerCache() setObject:sessionManager forKey:backgroundIdentifier];
     return sessionManager;
@@ -97,6 +98,7 @@ QCloudThreadSafeMutableDictionary* QCloudBackgroundSessionManagerCache()
     if (!self) {
         return self;
     }
+   
     //for restful request-response using the default session configuration ,and the most import thing is that you must not set the timeout for session configuration
     _configuration = configuration;
     _sessionTaskQueue = [[NSOperationQueue alloc] init];
@@ -104,6 +106,7 @@ QCloudThreadSafeMutableDictionary* QCloudBackgroundSessionManagerCache()
     _buildDataQueue = dispatch_queue_create("com.tencent.qcloud.build.data", NULL);
     _taskQueue = [NSMutableDictionary new];
     _operationQueue = [QCloudOperationQueue new];
+    NSLog(@"我被调用了:%@",_operationQueue);
     return self;
 }
 
@@ -195,6 +198,7 @@ QCloudThreadSafeMutableDictionary* QCloudBackgroundSessionManagerCache()
     QCloudHTTPRequestOperation* operation = [[QCloudHTTPRequestOperation alloc] initWithRequest:request];
     operation.sessionManager = self;
     [_operationQueue addOpreation:operation];
+      QCloudLogInfo(@"我是add的queue%@",self.operationQueue);
     return (int)request.requestID;
 }
 
@@ -371,6 +375,7 @@ QCloudThreadSafeMutableDictionary* QCloudBackgroundSessionManagerCache()
 }
 
 - (void) cancelRequestsWithID:(NSArray<NSNumber*>*)requestIDs {
+    QCloudLogInfo(@"我是cancle的queue%@",self.operationQueue);
     [self.operationQueue cancelByRequestIDs:requestIDs];
     for (NSNumber* requestID in requestIDs) {
         [self cancelRequestWithID:[requestID intValue]];
@@ -437,7 +442,7 @@ QCloudThreadSafeMutableDictionary* QCloudBackgroundSessionManagerCache()
         } else if ([body isKindOfClass:[NSURL class]]) {
             NSURL* fileURL = (NSURL*)body;
             if (![fileURL isFileURL]) {
-                directError = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeContentError message:@"您输入的body的URL不是本地URL，请检查后使用！！"];
+                directError = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid message:@"InvalidArgument:您输入的body的URL不是本地URL，请检查后使用！！"];
             }
             NSUInteger fileSize = QCloudFileSize(fileURL.path);
             [mutableRequest setValue:[@(fileSize) stringValue] forHTTPHeaderField:@"Content-Length"];
@@ -447,7 +452,7 @@ QCloudThreadSafeMutableDictionary* QCloudBackgroundSessionManagerCache()
         } else if ([body isKindOfClass:[QCloudFileOffsetBody class]]) {
             QCloudFileOffsetBody* fileBody = (QCloudFileOffsetBody*)body;
             if (![fileBody.fileURL isFileURL]) {
-                directError = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeContentError message:@"您输入的body的URL不是本地URL，请检查后使用！！"];
+                directError = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid message:@"InvalidArgument:您输入的body的URL不是本地URL，请检查后使用！！"];
             }
             
             NSFileHandle* handler = [NSFileHandle fileHandleForReadingAtPath:fileBody.fileURL.path];
@@ -523,6 +528,7 @@ QCloudThreadSafeMutableDictionary* QCloudBackgroundSessionManagerCache()
 }
 
 - (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session {
+    QCloudLogInfo(@"URLSessionDidFinishEventsForBackgroundURLSession %@",self.didFinishEventsForBackgroundURLSession);
     if (self.didFinishEventsForBackgroundURLSession) {
         self.didFinishEventsForBackgroundURLSession();
     }

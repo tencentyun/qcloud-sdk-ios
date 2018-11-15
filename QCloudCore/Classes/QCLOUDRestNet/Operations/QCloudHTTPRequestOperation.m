@@ -48,7 +48,7 @@
                 [self.delagte requestOperationFinish:self];
             }
             if (originFinishBlock) {
-                NSError* cancel = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeCanceled message:@"已经取消了，不再执行"];
+                NSError* cancel = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeCanceled message:@"UserCancelled:已经取消了，不再执行"];
                 originFinishBlock(nil, cancel);
             }
             return;

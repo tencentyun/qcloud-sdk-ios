@@ -14,6 +14,9 @@
 #import "QCloudAbstractRequest.h"
 @class QCloudHTTPRetryHanlder;
 @class QCloudHTTPSessionManager;
+@class QCloudService;
+
+
 typedef void(^QCloudHTTPRequestConfigure)(QCloudRequestSerializer* requestSerializer, QCloudResponseSerializer* responseSerializer);
 
 
@@ -34,7 +37,10 @@ typedef void(^QCloudHTTPRequestConfigure)(QCloudRequestSerializer* requestSerial
 
 
 
-
+/**
+ 该任务所处的服务
+ */
+@property (nonatomic, weak) QCloudService* _Nullable runOnService;
 /**
  如果存在改参数，则数据会下载到改路径指名的地址下面，而不会写入内存中。
  */

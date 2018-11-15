@@ -7,7 +7,7 @@
 //
 
 #import "QCloudFakeRequestOperation.h"
-#import "QCloudAbstractRequest_FackRequest.h"
+#import "QCloudAbstractRequest_FakeRequest.h"
 @implementation QCloudFakeRequestOperation
 - (void) main
 {
@@ -23,7 +23,7 @@
                 originFinishBlock(outputObject, error);
             }
         }];
-        [self.request fackStart];
+        [self.request fakeStart];
     }
 }
 

@@ -60,9 +60,9 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(flushAllFiles) name:UIApplicationDidEnterBackgroundNotification object:nil];
     //
 #elif TARGET_OS_MAC
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tryCleanLogs) name:NSApplicationWillResignActiveNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tryCleanLogs) name:NSApplicationWillTerminateNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tryCleanLogs) name:NSApplicationWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(flushAllFiles) name:NSApplicationWillResignActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(flushAllFiles) name:NSApplicationWillTerminateNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(flushAllFiles) name:NSApplicationWillHideNotification object:nil];
 #endif
     return self;
 }

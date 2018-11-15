@@ -164,7 +164,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     
     [self.transferManager.cosService ListMultipart:request];
 }
-- (void) fackStart {
+- (void) fakeStart {
     [self.benchMarkMan benginWithKey:kRNBenchmarkRTT];
     
     if (self.uploadId) {
@@ -193,7 +193,6 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
 {
     QCloudPutObjectRequest* request = [QCloudPutObjectRequest new];
     request.regionName = self.regionName;
-    request.enableMD5Verification = self.enableMD5Verification;
     __weak typeof(self) weakSelf = self;
     request.finishBlock = ^(id outputObject, NSError *error) {
         if (error) {
@@ -388,7 +387,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
                     NSString* localMD5String = [QCloudEncrytFileOffsetMD5(body.fileURL.path, body.offset, body.sliceLength) lowercaseString];
                     if (![MD5FromeETag isEqualToString:localMD5String]) {
                         NSMutableString* errorMessageString = [[NSMutableString alloc] init];
-                        [errorMessageString appendFormat:@"分片上传过程中MD5校验与本地不一致，请检查本地文件在上传过程中是否发生了变化,建议调用删除接口将COS上的文件删除并重新上传,本地计算的 MD5 值:%@, 返回的 ETag值:%@",localMD5String,MD5FromeETag];
+                        [errorMessageString appendFormat:@"DataIntegrityError分片:上传过程中MD5校验与本地不一致，请检查本地文件在上传过程中是否发生了变化,建议调用删除接口将COS上的文件删除并重新上传,本地计算的 MD5 值:%@, 返回的 ETag值:%@",localMD5String,MD5FromeETag];
                         if ( [outputObject __originHTTPURLResponse__]&& [[outputObject __originHTTPURLResponse__].allHeaderFields valueForKey:@"x-cos-request-id"]!= nil) {
                             NSString* requestID = [[outputObject __originHTTPURLResponse__].allHeaderFields valueForKey:@"x-cos-request-id"];
                             [errorMessageString appendFormat:@", Request id:%@",requestID];
@@ -457,6 +456,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     complete.bucket = self.bucket;
     complete.uploadId = self.uploadId;
     complete.regionName = self.regionName;
+    complete.customHeaders = [self.customHeaders mutableCopy];
     QCloudCompleteMultipartUploadInfo* info = [QCloudCompleteMultipartUploadInfo new];
     [self.uploadParts sortUsingComparator:^NSComparisonResult(QCloudMultipartInfo*  _Nonnull obj1,
                                                               QCloudMultipartInfo*  _Nonnull obj2) {
@@ -525,7 +525,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
             [cancelledRequestIDs addObject:[NSNumber numberWithLongLong:request.requestID]];
         }
     }
-    [[QCloudHTTPSessionManager shareClient] cancelRequestsWithID:cancelledRequestIDs];
+    [self.transferManager.cosService.sessionManager cancelRequestsWithID:cancelledRequestIDs];
 }
 - (QCloudCOSXMLUploadObjectResumeData) cancelByProductingResumeData:(NSError *__autoreleasing *)error
 {
@@ -545,21 +545,21 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     if (_dataContentLength <= kQCloudCOSXMLUploadLengthLimit) {
         if (NULL != error) {
             *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeContentError
-                                           message:@"无法暂停当前的上传请求，因为使用的是单次上传"];
+                                           message:@"UnsupportOperation:无法暂停当前的上传请求，因为使用的是单次上传"];
         }
         return nil;
     }
     if (![self.body isKindOfClass:[NSURL class]]) {
         if (NULL != error) {
             *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeContentError
-                                           message:@"无法暂停当前的上传请求，因为使用的是非持久化存储上传"];
+                                           message:@"UnsupportOperation:无法暂停当前的上传请求，因为使用的是非持久化存储上传"];
         }
         return nil;
     }
     if ([self finished]) {
         if (NULL != error) {
             *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeAlreadyFinish
-                                           message:@"无法暂停当前的上传请求，因为该请求已经结束"];
+                                           message:@"AlreadyFinished:无法暂停当前的上传请求，因为该请求已经结束"];
         }
         return nil;
     }
@@ -585,10 +585,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     } else {
         if (self.uploadId) {
             QCloudAbortMultipfartUploadRequest* abortRequest = [QCloudAbortMultipfartUploadRequest new];
-//            abortRequest.enableBackgroundTransmitService = self.enableBackgroundTransmitService;
-//            if (self.enableBackgroundTransmitService) {
-//                abortRequest.backgroundIdentifier = self.backgroundIdentifier;
-//            }
+            abortRequest.customHeaders = [self.customHeaders mutableCopy];
             abortRequest.object = self.object;
             abortRequest.regionName = self.regionName;
             abortRequest.bucket = self.bucket;

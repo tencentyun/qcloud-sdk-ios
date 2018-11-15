@@ -64,7 +64,7 @@ typedef void(^__QCloudFenceActionBlock)(QCloudAuthentationCreator *, NSError *);
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         [self invalidTimeoutTimter];
-        NSError* error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeCredentialNotReady message:@"获取签名错误"];
+        NSError* error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeCredentialNotReady message:@"InvalidCredentials：获取签名错误"];
         [self postError:error];
     });
 }
@@ -122,7 +122,7 @@ typedef void(^__QCloudFenceActionBlock)(QCloudAuthentationCreator *, NSError *);
         [self postError:error];
     } else {
         if (!creator.credential.valid) {
-            NSError* error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeCredentialNotReady message:@"获取签名错误"];
+            NSError* error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeCredentialNotReady message:@"InvalidCredentials：获取签名错误"];
             [self postError:error];
         } else {
             [self postCreator:creator];

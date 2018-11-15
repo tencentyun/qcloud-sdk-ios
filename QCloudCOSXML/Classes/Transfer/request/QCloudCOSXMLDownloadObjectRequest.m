@@ -20,7 +20,7 @@
 
     return self;
 }
--(void)fackStart{
+-(void)fakeStart{
     [self.benchMarkMan benginWithKey:kRNBenchmarkRTT];
     [self startGetObject];
 }

@@ -13,6 +13,7 @@
 #import <QCloudCore/QualityAssuranceDefine.h>
 #import <QCloudCore/QCloudCore.h>
 #import <QCloudCore/QCloudLogger.h>
+#import "QCloudCOSXMLVersion.h"
 @implementation QCloudCOSXMLService (Quality)
 
 + (void)load {
@@ -42,6 +43,7 @@
     QCloudLogDebug(@"Quality assurence service start");
     TACMTAConfig* config =  [TACMTAConfig getInstance];
     config.reportStrategy = kQAUploadStrategy;
+    config.customerAppVersion = QCloudCOSXMLModuleVersion;
     [TACMTA startWithAppkey:kQAccount];
 }
 @end

@@ -48,6 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
       @"name" :@"Name",
       @"prefix" :@"Prefix",
       @"marker" :@"Marker",
+      @"nextMarker":@"NextMarker",
       @"maxKeys" :@"MaxKeys",
       @"delimiter" :@"Delimiter",
       @"isTruncated" :@"IsTruncated",

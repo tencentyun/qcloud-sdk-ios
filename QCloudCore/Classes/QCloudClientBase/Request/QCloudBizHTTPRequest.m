@@ -24,7 +24,7 @@ QCloudResponseSerializerBlock QCloudResponseObjectSerilizerBlock(Class modelClas
     return ^(NSHTTPURLResponse* response,  id inputData, NSError* __autoreleasing* error) {
         if (![inputData isKindOfClass:[NSDictionary class]]){
             if (error != NULL) {
-                *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeDecodeError message:[NSString stringWithFormat:@"希望获得字典类型数据,但是得到%@", [inputData class]]];
+                *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeResponseDataTypeInvalid message:[NSString stringWithFormat:@"ServerError:希望获得字典类型数据,但是得到%@", [inputData class]]];
             }
             return (id)nil;
         }
@@ -45,7 +45,7 @@ QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilizerBlock = ^(NSHTT
     }
     if (![transformData isKindOfClass:[QCloudNetResponse class]]) {
         if(error != NULL) {
-            *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeDecodeError message:[NSString stringWithFormat:@"希望获得QCloudNetResponse类型数据,但是得到%@", inputData]];
+            *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeResponseDataTypeInvalid message:[NSString stringWithFormat:@"ServerError:希望获得QCloudNetResponse类型数据,但是得到%@", inputData]];
         }
         return (id)nil;
     }
@@ -140,7 +140,7 @@ QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilizerBlock = ^(NSHTT
         }
         return NO;
     } else  if (![urlRequest.allHTTPHeaderFields.allKeys containsObject:@"Authorization"]){
-        *error = [NSError errorWithDomain:@"com.tencent.qcloud.request" code:QCloudNetworkErrorCodeSignatureTimeOut userInfo:@{@"Description":@"获取签名超时，请检查是否实现签名回调，签名回调是否有调用,并且在最后是否有调用 ContinueBlock 传入签名"}];
+        *error = [NSError errorWithDomain:@"com.tencent.qcloud.request" code:QCloudNetworkErrorCodeCredentialNotReady userInfo:@{@"Description":@"InvalidCredentials：获取签名超时，请检查是否实现签名回调，签名回调是否有调用,并且在最后是否有调用 ContinueBlock 传入签名"}];
         return NO;
     } else {
         return YES;

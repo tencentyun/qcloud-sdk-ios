@@ -82,7 +82,7 @@ NS_ASSUME_NONNULL_BEGIN
     }
     if (!self.bucket || ([self.bucket isKindOfClass:NSString.class] && ((NSString*)self.bucket).length == 0)) {
         if (error != NULL) {
-            *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid message:[NSString stringWithFormat:@"paramter[bucket] is invalid (nil), it must have some value. please check it"]];
+            *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid message:[NSString stringWithFormat:@"InvalidArgument:paramter[bucket] is invalid (nil), it must have some value. please check it"]];
             return NO;
         }
     }
@@ -91,7 +91,7 @@ NS_ASSUME_NONNULL_BEGIN
     [self.requestData setValue:__serverURL.host forHTTPHeaderField:@"Host"];
     if (!self.deleteObjects) {
         if (error != NULL) {
-            *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid message:[NSString stringWithFormat:@"paramter[deleteObjects] is invalid (nil), it must have some value. please check it"]];
+            *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid message:[NSString stringWithFormat:@"InvalidArgument:paramter[deleteObjects] is invalid (nil), it must have some value. please check it"]];
             return NO;
         }
     }

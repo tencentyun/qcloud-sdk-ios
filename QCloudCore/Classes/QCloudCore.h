@@ -28,7 +28,7 @@
 #import "QCloudFileOffsetBody.h"
 #import "QCloudNetEnv.h"
 #import "QCloudSDKModuleManager.h"
-#import "QCloudAbstractRequest_FackRequest.h"
+#import "QCloudAbstractRequest_FakeRequest.h"
 #import "QCloudFakeRequestOperation.h"
 #import "QCloudEncryt.h"
 #import "QCloudWeakProxy.h"

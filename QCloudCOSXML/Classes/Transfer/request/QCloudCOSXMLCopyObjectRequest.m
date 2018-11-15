@@ -44,7 +44,7 @@ static const int64_t   kCopySliceLength    = 5242880;
     return self;
 }
 
-- (void)fackStart {
+- (void)fakeStart {
     QCloudHeadObjectRequest* headObjectRequest = [[QCloudHeadObjectRequest alloc] init];
     NSMutableDictionary *customHeaders = [NSMutableDictionary dictionary];
     if (self.customHeaders) {

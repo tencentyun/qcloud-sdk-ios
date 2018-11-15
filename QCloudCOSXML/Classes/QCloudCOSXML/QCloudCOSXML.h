@@ -26,6 +26,7 @@
 #import "QCloudListMultipartRequest.h"
 #import "QCloudDeleteObjectInfo.h"
 #import "QCloudDeleteInfo.h"
+#import "QCloudLogManager.h"
 #import "QCloudHeadObjectRequest.h"
 #import "QCloudAppendObjectRequest.h"
 #import "QCloudGetObjectRequest.h"

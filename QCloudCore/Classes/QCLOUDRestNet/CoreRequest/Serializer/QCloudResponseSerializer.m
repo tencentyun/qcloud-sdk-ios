@@ -16,10 +16,10 @@ typedef id (^QCloudResponseSerializerBlock)(NSHTTPURLResponse* response,  id inp
 
 QCloudResponseSerializerBlock QCloudResponseXMLSerializerBlock = ^(NSHTTPURLResponse* response,  id inputData, NSError* __autoreleasing* error)
 {
-    QCloudLogInfo(@"-----------  %@",response);
+    QCloudLogInfo(@"response  %@",response);
     if(![inputData isKindOfClass:[NSData class]]) {
         if (NULL != error) {
-            *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeDecodeError message:[NSString stringWithFormat:@"XML解析器读入的数据不是NSData"]];
+            *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeResponseDataTypeInvalid message:[NSString stringWithFormat:@"ServerError:XML解析器读入的数据不是NSData"]];
         }
         return (id)nil;
     }
@@ -35,7 +35,7 @@ QCloudResponseSerializerBlock QCloudResponseXMLSerializerBlock = ^(NSHTTPURLResp
     }
     if(!contentTypeXML) {
         if (NULL != error) {
-            *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeResponseDataTypeInvalid message:@"接口器待服务器返回XML类型数据，但是服务器返回了错误类型数据"];
+            *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeResponseDataTypeInvalid message:@"ServerError:接口器待服务器返回XML类型数据，但是服务器返回了错误类型数据"];
         }
         return (id)nil;
     }
@@ -53,7 +53,7 @@ QCloudResponseSerializerBlock QCloudResponseXMLSerializerBlock = ^(NSHTTPURLResp
     
     if(!output) {
         if (NULL != error) {
-            *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeDecodeError message:[NSString stringWithFormat:@"尝试解析XML类型数据出错:\n%@", [[NSString alloc] initWithData:inputData encoding:NSUTF8StringEncoding]]];
+            *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeResponseDataTypeInvalid message:[NSString stringWithFormat:@"ServerError:尝试解析XML类型数据出错:\n%@", [[NSString alloc] initWithData:inputData encoding:NSUTF8StringEncoding]]];
         }
         return (id)nil;
     }

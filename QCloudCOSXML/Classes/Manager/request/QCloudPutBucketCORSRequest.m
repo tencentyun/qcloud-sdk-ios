@@ -78,14 +78,14 @@ NS_ASSUME_NONNULL_BEGIN
     }
     if (!self.corsConfiguration) {
         if (error != NULL) {
-            *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid message:[NSString stringWithFormat:@"paramter[corsConfiguration] is invalid (nil), it must have some value. please check it"]];
+            *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid message:[NSString stringWithFormat:@"InvalidArgument:paramter[corsConfiguration] is invalid (nil), it must have some value. please check it"]];
             return NO;
         }
     }
     [self.requestData setParameter:[self.corsConfiguration qcloud_modelToJSONObject] withKey:@"CORSConfiguration"];
     if (!self.bucket || ([self.bucket isKindOfClass:NSString.class] && ((NSString*)self.bucket).length == 0)) {
         if (error != NULL) {
-            *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid message:[NSString stringWithFormat:@"paramter[bucket] is invalid (nil), it must have some value. please check it"]];
+            *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid message:[NSString stringWithFormat:@"InvalidArgument:paramter[bucket] is invalid (nil), it must have some value. please check it"]];
             return NO;
         }
     }

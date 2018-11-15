@@ -198,7 +198,10 @@
 }
 
 - (void)parser:(__unused NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(__unused NSString *)namespaceURI qualifiedName:(__unused NSString *)qName attributes:(NSDictionary *)attributeDict
-{	
+{
+    if ([elementName isEqualToString:@"CommonPrefixes"] || [elementName isEqualToString:@"Key"] ) {
+        self.trimWhiteSpace = NO;
+    }
 	[self endText];
 	
 	NSMutableDictionary<NSString *, id> *node = [NSMutableDictionary dictionary];

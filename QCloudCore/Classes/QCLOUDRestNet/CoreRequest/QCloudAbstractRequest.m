@@ -110,7 +110,7 @@
     @synchronized (self) {
         _canceled = YES;
     }
-    NSError* cancelError = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeCanceled message:@"The request is canceled"];
+    NSError* cancelError = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeCanceled message:@"UserCancelled:The request is canceled"];
     [self onError:cancelError];
 }
 

@@ -7,16 +7,11 @@
 
 #import "QualityDataUploader.h"
 #import <QCloudCore/QCloudLogger.h>
-
+#import "NSError+QCloudNetworking.h"
 static  NSString * kRequestSentKey = @"request_sent";
-static  NSString * kRequsetSuccessKey = @"request_success";
-static  NSString * kRequestFailKey = @"request_fail";
-static  NSString * kUploadFailKey = @"upload_fail";
-static  NSString * kUploadSuccessKey = @"upload_success";
+static  NSString * kRequestFailKey = @"request_failed";
 static  NSString * kErrorCodeKey = @"error_code";
-static  NSString * kErrorDescriptionKey = @"error_description";
 static  NSString * kClassNameKey = @"class_name";
-
 
 @interface NSError(QualityDataUploader)
 
@@ -26,7 +21,14 @@ static  NSString * kClassNameKey = @"class_name";
 @implementation NSError(QualityDataUploader)
 
 - (NSDictionary*) toUploadEventParamters  {
-    return @{kErrorCodeKey:[NSString stringWithFormat:@"%ld",(long)self.code],kErrorDescriptionKey:self.description};
+    NSDictionary *userinfoDic = self.userInfo;
+    NSString *detailDescription = @"";
+    if (userinfoDic) {
+        if (userinfoDic[@"Code"]) {
+         detailDescription  = userinfoDic[@"Code"];
+        }
+    }
+    return @{kErrorCodeKey:[NSString stringWithFormat:@"%ld %@",(long)self.code,detailDescription]};
     
 }
 @end
@@ -43,29 +45,40 @@ static  NSString * kClassNameKey = @"class_name";
 
 
 @implementation QualityDataUploader
+
+NSArray * filterUploadEventClass(){
+    NSArray *arr = @[@"QCloudPutObjectRequest",@"QCloudInitiateMultipartUploadRequest",@"QCloudUploadPartRequest",@"QCloudCompleteMultipartUploadRequest",@"QCloudAbortMultipfartUploadRequest",@"QCloudGetObjectRequest",@"QCloudListMultipartRequest",@"QCloudAbortMultipfartUploadRequest",@"QCloudPutObjectCopyRequest",@"QCloudUploadPartCopyRequest"];
+    return arr;
+}
+
++(BOOL)isNeedQuality:(Class)cls{
+    NSString *clas = [NSString stringWithClass:cls] ;
+    NSArray *array =filterUploadEventClass();
+    if ([array containsObject:clas]) {
+        return YES;
+    }
+    return NO;
+}
+
 +(TACMTAErrorCode)internalUploadEvent:(NSString *)eventKey withParamter:(NSDictionary *)paramter {
     TACMTAErrorCode result =  [TACMTA trackCustomKeyValueEvent:eventKey props:paramter];
-    QCloudLogDebug(@"track event :%@\nParamters:%@\nresult:%@",eventKey,paramter,result);
     return result;
 }
 
-
-
-+ (void)trackUploadFailWithError:(NSError *)error class:(Class)cls {
-    NSMutableDictionary* dict = [NSMutableDictionary dictionaryWithDictionary:error.toUploadEventParamters];
-    [dict setObject:kClassNameKey forKey:[NSString stringWithClass:cls]];
-    [self internalUploadEvent:kUploadFailKey withParamter:dict];
-}
 + (void)trackRequestSentWithType:(Class)cls {
-    [self internalUploadEvent:kRequestSentKey withParamter:@{kClassNameKey:[NSString stringWithClass:cls]}];
+    if ([self isNeedQuality:cls]) {
+        [self internalUploadEvent:kRequestSentKey withParamter:@{kClassNameKey:[NSString stringWithClass:cls]}];
+    }
+  
 }
 
-+ (void)trackRequestSuccessWithType:(Class)cls {
-    [self internalUploadEvent:kRequsetSuccessKey withParamter:@{kClassNameKey:[NSString stringWithClass:cls]}];
-}
-
-+ (void)trackRequestFailWithError:(NSError *)error {
-    [self internalUploadEvent:kRequestFailKey withParamter:error.toUploadEventParamters];
++ (void)trackRequestFailWithType:(Class)cls Error:(NSError *)error {
+    if ([self isNeedQuality:cls]) {
+        NSMutableDictionary *parameters = [error.toUploadEventParamters mutableCopy];
+        parameters[kClassNameKey] = [NSString stringWithClass:cls];
+        [self internalUploadEvent:kRequestFailKey withParamter:parameters];
+    }
+ 
 }
 
 

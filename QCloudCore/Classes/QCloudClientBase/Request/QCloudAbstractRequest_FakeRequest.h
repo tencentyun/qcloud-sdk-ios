@@ -1,5 +1,5 @@
 //
-//  QCloudAbstractRequest_FackRequest.h
+//  QCloudAbstractRequest_FakeRequest.h
 //  Pods
 //
 //  Created by Dong Zhao on 2017/6/21.
@@ -13,5 +13,5 @@
 /**
  伪装一个请求开发
  */
-- (void) fackStart;
+- (void) fakeStart;
 @end

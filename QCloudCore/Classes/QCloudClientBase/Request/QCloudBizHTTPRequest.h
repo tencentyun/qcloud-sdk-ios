@@ -8,7 +8,6 @@
 
 #import "QCloudHTTPRequest.h"
 @class QCloudTask;
-@class QCloudService;
 @class QCloudSignatureFields;
 @class QCloudSignature;
 NS_ASSUME_NONNULL_BEGIN
@@ -29,10 +28,6 @@ extern _Nonnull QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilize
 @interface QCloudBizHTTPRequest : QCloudHTTPRequest
 
 
-/**
- 该任务所处的服务
- */
-@property (nonatomic, weak) QCloudService* _Nullable runOnService;
 
 
 /*
