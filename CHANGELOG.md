@@ -1,5 +1,11 @@
 # 5.5.8    
-- fixbug(文件名带有?上传失败安全移除观察者）
+- 移除观察者做安全处理
+- 文件名带有?上传失败
+- 增加suffix:支持用户自定义http://bucketName.自定义
+- 增加closeShareLog的接口
+- 增加网络性能检测的接口
+- mta删除idfa
+
     
 # 5.5.7    
 -传输无法cancle的bug\ - 增加捞取log的功能
