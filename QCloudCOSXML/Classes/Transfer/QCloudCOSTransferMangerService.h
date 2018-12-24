@@ -41,8 +41,8 @@
 
 
 #pragma hidden super selectors
-- (int) performRequest:(QCloudBizHTTPRequest *)httpRequst NS_UNAVAILABLE;
-- (int) performRequest:(QCloudBizHTTPRequest *)httpRequst withFinishBlock:(QCloudRequestFinishBlock)block NS_UNAVAILABLE;
+- (int) performRequest:(QCloudBizHTTPRequest *)httpRequst isHaveBody:(BOOL)body NS_UNAVAILABLE;
+- (int) performRequest:(QCloudBizHTTPRequest *)httpRequst isHaveBody:(BOOL)body withFinishBlock:(QCloudRequestFinishBlock)block NS_UNAVAILABLE;
 
 #pragma Factory
 + (QCloudCOSTransferMangerService*) defaultCOSTransferManager;

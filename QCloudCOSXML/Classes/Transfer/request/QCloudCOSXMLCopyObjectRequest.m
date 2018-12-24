@@ -1,3 +1,4 @@
+
 //
 //  QCloudCOSXMLCopyObjectRequest.m
 //  QCloudCOSXML
@@ -29,6 +30,7 @@ static const int64_t   kCopySliceLength    = 5242880;
 @property (nonatomic, strong) NSMutableArray* uploadParts;
 @property (nonatomic, copy) NSString* lastModified;
 @property (nonatomic, copy) CopyProgressBlock copyProgressBlock;
+@property (strong,nonatomic) NSMutableArray *requstMetricArray;
 @end
 
 @implementation QCloudCOSXMLCopyObjectRequest
@@ -39,6 +41,7 @@ static const int64_t   kCopySliceLength    = 5242880;
         return nil;
     }
     _customHeaders = [NSMutableDictionary dictionary];
+     _requstMetricArray = [NSMutableArray array];
     _fileSize = 0;
     _sliceCount = 0;
     return self;
@@ -58,13 +61,19 @@ static const int64_t   kCopySliceLength    = 5242880;
             customHeaders[@"x-cos-server-side-encryption-customer-key-MD5"] =self.customHeaders[@"x-cos-copy-source-server-side-encryption-customer-key-MD5"];
         }
     }
+    
     headObjectRequest.customHeaders = [customHeaders mutableCopy];
     headObjectRequest.bucket = self.sourceBucket;
     headObjectRequest.regionName = self.regionName;
     headObjectRequest.object = self.sourceObject;
     headObjectRequest.ifModifiedSince = self.objectCopyIfModifiedSince;
+    __weak typeof(headObjectRequest)weakRequest  = headObjectRequest;
     __weak typeof(self) weakSelf = self;
     [headObjectRequest setFinishBlock:^(id outputObject, NSError* error) {
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        __strong typeof(weakRequest)strongRequst = weakRequest;
+        [strongSelf.requstMetricArray addObject: @{[NSString stringWithFormat:@"%@",strongRequst]:weakRequest.benchMarkMan.tastMetrics}];
+   
         if (error) {
             if (self.finishBlock) {
                 self.finishBlock(nil, error);
@@ -104,7 +113,18 @@ static const int64_t   kCopySliceLength    = 5242880;
     request.grantWrite = self.grantWrite;
     request.grantFullControl = self.grantFullControl;
     QCloudCOSXMLService* service = [self tempService];
-    [request setFinishBlock:self.finishBlock];
+    __weak typeof(request)weakRequest  = request;
+    __weak typeof(self) weakSelf = self;
+    [request setFinishBlock:^(QCloudCopyObjectResult * _Nonnull result, NSError * _Nonnull error) {
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        __strong typeof(weakRequest)strongRequst = weakRequest;
+        [strongSelf.requstMetricArray addObject: @{[NSString stringWithFormat:@"%@",strongRequst]:weakRequest.benchMarkMan.tastMetrics}];
+        
+        if (self.requstsMetricArrayBlock) {
+            self.requstsMetricArrayBlock(self.requstMetricArray);
+        }
+        self.finishBlock(result, error);
+    }];
     NSMutableString* objectCopySource = [NSMutableString string];
     NSString* serviceURL =[service.configuration.endpoint serverURLWithBucket:self.sourceBucket appID:self.sourceAPPID regionName:self.regionName].absoluteString;
     [objectCopySource appendString:[serviceURL componentsSeparatedByString:@"://"][1]];
@@ -121,7 +141,12 @@ static const int64_t   kCopySliceLength    = 5242880;
     initMultipartUploadRequest.object = self.object;
     initMultipartUploadRequest.customHeaders = [self.customHeaders mutableCopy];
     __weak typeof(self) weakSelf = self;
+    __weak typeof(initMultipartUploadRequest)weakRequest  = initMultipartUploadRequest;
     [initMultipartUploadRequest setFinishBlock:^(QCloudInitiateMultipartUploadResult* result, NSError* error) {
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        __strong typeof(weakRequest)strongRequst = weakRequest;
+        [strongSelf.requstMetricArray addObject: @{[NSString stringWithFormat:@"%@",strongRequst]:weakRequest.benchMarkMan.tastMetrics}];
+        
         if (nil == error) {
             weakSelf.uploadID = result.uploadId;
             [weakSelf uploadCopyParts];
@@ -173,10 +198,13 @@ static const int64_t   kCopySliceLength    = 5242880;
             request.priority = QCloudAbstractRequestPriorityLow;
             int64_t currentOffset = i * kCopySliceLength;
             int64_t sliceLength = MIN(self.fileSize - currentOffset, kCopySliceLength);
-            
             request.sourceRange = [self copySourceRangeWithFirst:currentOffset last:sliceLength + currentOffset - 1];
+            __weak typeof(request)weakRequest  = request;
             __weak typeof(self) weakSelf = self;
             [request setFinishBlock:^(QCloudCopyObjectResult* result, NSError* error) {
+                __strong typeof(weakSelf)strongSelf = weakSelf;
+                __strong typeof(weakRequest)strongRequst = weakRequest;
+                [strongSelf.requstMetricArray addObject: @{[NSString stringWithFormat:@"%@",strongRequst]:weakRequest.benchMarkMan.tastMetrics}];
                 if (error) {
                     [weakSelf onError:error];
                     [weakSelf cancel];
@@ -201,13 +229,15 @@ static const int64_t   kCopySliceLength    = 5242880;
 }
 
 - (void)finishUploadParts {
+
     QCloudCompleteMultipartUploadRequest* request = [[QCloudCompleteMultipartUploadRequest alloc] init];
     request.bucket = self.bucket;
     request.object = self.object;
     request.regionName = self.regionName;
     request.uploadId = self.uploadID;
+
     QCloudCompleteMultipartUploadInfo* info = [[QCloudCompleteMultipartUploadInfo alloc ] init];
-    [self.uploadParts sortUsingComparator:^NSComparisonResult(QCloudMultipartInfo* obj1, QCloudMultipartInfo* obj2) {
+    [self.uploadParts sortUsingComparator:^NSComparisonResult(QCloudMultipartInfo* obj1, QCloudMultipartInfo* obj2) {\
         if (obj1.partNumber.longLongValue > obj2.partNumber.longLongValue) {
             return NSOrderedDescending;
         } else {
@@ -216,8 +246,16 @@ static const int64_t   kCopySliceLength    = 5242880;
     }];
     info.parts = self.uploadParts;
     request.parts = info;
+    __weak typeof(request)weakRequest  = request;
     __weak typeof(self) weakSelf = self;
     [request setFinishBlock:^(QCloudUploadObjectResult* result, NSError* error) {
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        __strong typeof(weakRequest)strongRequst = weakRequest;
+        [strongSelf.requstMetricArray addObject: @{[NSString stringWithFormat:@"%@",strongRequst]:weakRequest.benchMarkMan.tastMetrics}];
+        
+        if (self.requstsMetricArrayBlock) {
+            self.requstsMetricArrayBlock(self.requstMetricArray);
+        }
         if (nil == error) {
             QCloudCopyObjectResult* copyResult = [[QCloudCopyObjectResult alloc] init];
             copyResult.eTag = result.eTag;

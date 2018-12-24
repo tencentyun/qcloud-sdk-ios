@@ -51,7 +51,7 @@ static NSString *const QCloudServiceConfigurationUnknown = @"Unknown";
     config.productVersion = self.productVersion;
     config.backgroundIdentifier = self.backgroundIdentifier;
     config.backgroundEnable = self.backgroundEnable;
-    config.backgroundIn4GEnable = self.backgroundIn4GEnable;
+    config.isCloseShareLog = self.isCloseShareLog;
     return config;
 }
 @end

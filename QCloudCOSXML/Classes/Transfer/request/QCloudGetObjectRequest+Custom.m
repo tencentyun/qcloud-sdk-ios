@@ -75,13 +75,10 @@
         self.finishBlock(object, resultError);
     });
     
-    [self.benchMarkMan benginWithKey:kRNBenchmarkLogicOnly];
     if ([self.delegate respondsToSelector:@selector(QCloudHTTPRequestDidFinished:succeedWithObject:)]){
         [self.delegate QCloudHTTPRequestDidFinished:self succeedWithObject:object];
     }
     
-    
-    [self.benchMarkMan markFinishWithKey:kRNBenchmarkLogicOnly];
 }
 
 - (BOOL)enableMD5Verification {

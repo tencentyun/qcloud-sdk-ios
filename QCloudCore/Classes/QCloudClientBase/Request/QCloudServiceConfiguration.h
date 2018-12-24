@@ -38,9 +38,10 @@
  */
 @property (nonatomic, strong) NSString* backgroundIdentifier;
 /**
- 是否在4G的网络下开启后台传输，默认是NO
+ 是否关闭分享Log日志的功能
  */
-@property (nonatomic, assign) BOOL backgroundIn4GEnable;
+@property (nonatomic,assign) BOOL isCloseShareLog;
+
 @end
 
 

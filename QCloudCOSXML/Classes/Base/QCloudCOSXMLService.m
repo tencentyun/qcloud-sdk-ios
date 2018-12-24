@@ -59,20 +59,17 @@ static QCloudCOSXMLService* COSXMLService = nil;
 - (QCloudHTTPSessionManager*) sessionManager {
     
     @synchronized(self) {
-        if (self.configuration.backgroundEnable) {
-            if (self.configuration.backgroundIn4GEnable) {
+        if (self.isHaveBody) {
+            if (self.configuration.backgroundEnable) {
                 return [QCloudHTTPSessionManager sessionManagerWithBackgroundIdentifier:self.configuration.backgroundIdentifier];
             }else{
-                if (([QCloudNetEnv shareEnv].currentNetStatus == QCloudReachableViaWiFi)) {
-                      return [QCloudHTTPSessionManager sessionManagerWithBackgroundIdentifier:self.configuration.backgroundIdentifier];
-                }else{
-                    return [QCloudHTTPSessionManager shareClient];
-                }
+                 return [QCloudHTTPSessionManager shareClient];;
             }
-            
+        }else{
+            return [QCloudHTTPSessionManager shareClient];;
         }
+      
     }
-    
     return [QCloudHTTPSessionManager shareClient];
 }
 
@@ -80,9 +77,12 @@ static QCloudCOSXMLService* COSXMLService = nil;
 {
     @synchronized (self) {
         COSXMLService = [[QCloudCOSXMLService alloc] initWithConfiguration:configuration];
-        #if TARGET_OS_IPHONE
-        [QCloudLogManager sharedInstance];
-        #endif
+        if (!configuration.isCloseShareLog) {
+            #if TARGET_OS_IPHONE
+            [QCloudLogManager sharedInstance];
+            #endif
+        }
+       
     }
     return COSXMLService;
 }

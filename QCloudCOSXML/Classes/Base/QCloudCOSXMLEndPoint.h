@@ -20,6 +20,7 @@
  服务的基础名称, 默认值为: myqcloud.com
  */
 @property (nonatomic, copy) QCloudServiceName   serviceName;
+@property (nonatomic, copy) NSString *suffix;
 @end
 
 #pragma clang diagnostic pop

@@ -10,8 +10,7 @@
 #import "QCloudCopyObjectResult.h"
 #import "QCloudCOSTransferMangerService.h"
 typedef void(^CopyProgressBlock)(int64_t partsSent, int64_t totalPartsExpectedToSent) ;
-
-
+typedef void(^RequestsMetricArrayBlock)(NSMutableArray *requstMetricArray);
 @interface QCloudCOSXMLCopyObjectRequest : QCloudAbstractRequest
 /**
  对象名
@@ -104,7 +103,7 @@ typedef void(^CopyProgressBlock)(int64_t partsSent, int64_t totalPartsExpectedTo
  @param copyProgressBlock 进度回调block
  */
 - (void)setCopyProgressBlock:(void(^)(int64_t partsSent, int64_t totalPartsExpectedToSent))copyProgressBlock;
-
+@property (nonatomic,copy) RequestsMetricArrayBlock requstsMetricArrayBlock;
 
 
 /**

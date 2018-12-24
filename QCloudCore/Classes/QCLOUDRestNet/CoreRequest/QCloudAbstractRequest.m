@@ -19,7 +19,7 @@
     if (!self) {
         return self;
     }
-    _benchMarkMan = [RNAsyncBenchMark new];
+    _benchMarkMan = [QCloudHttpMetrics new];
     _priority = QCloudAbstractRequestPriorityHigh;
     static int64_t requestID = 3333;
     _requestID = requestID + 1;
@@ -27,9 +27,10 @@
     _finished = NO;
     return self;
 }
+
 - (void) __notifyError:(NSError*)error
 {
-    [self.benchMarkMan benginWithKey:kRNBenchmarkLogicOnly];
+//    [self.benchMarkMan benginWithKey:kRNBenchmarkLogicOnly];
     if ([self.delegate respondsToSelector:@selector(QCloudHTTPRequestDidFinished:failed:)]) {
         [self.delegate QCloudHTTPRequestDidFinished:self failed:error];
     }
@@ -37,7 +38,7 @@
         self.finishBlock(nil, error);
     }
     self.finishBlock = nil;
-    [self.benchMarkMan markFinishWithKey:kRNBenchmarkLogicOnly];
+//    [self.benchMarkMan markFinishWithKey:kRNBenchmarkLogicOnly];
 }
 - (void) notifyError:(NSError*)error
 {
@@ -56,10 +57,8 @@
         }
         _finished = YES;
     }
-    [self.benchMarkMan benginWithKey:kRNBenchmarkLogic];
-    [self.benchMarkMan markFinishWithKey:kRNBenchmarkRTT];
+    [self.benchMarkMan markFinishWithKey:kTaskTookTime];
     [self notifyError:error];
-    [self.benchMarkMan markFinishWithKey:kRNBenchmarkLogic];
     _finished = YES;
     QCloudLogError(@"[%@][%lld]当前网络环境为%d 请求失败%@", [self class],self.requestID, QCloudNetworkShareEnv.currentNetStatus, error);
     QCloudLogVerbose(@"[%@][%lld]性能监控 %@",[self class],self.requestID ,[self.benchMarkMan readablityDescription]);
@@ -67,7 +66,7 @@
 
 - (void) __notifySuccess:(id)object
 {
-    [self.benchMarkMan benginWithKey:kRNBenchmarkLogicOnly];
+    
     if ([self.delegate respondsToSelector:@selector(QCloudHTTPRequestDidFinished:succeedWithObject:)]){
         [self.delegate QCloudHTTPRequestDidFinished:self succeedWithObject:object];
     }
@@ -77,7 +76,6 @@
         }
         self.finishBlock = nil;
     });
-    [self.benchMarkMan markFinishWithKey:kRNBenchmarkLogicOnly];
 }
 
 - (void) notifySuccess:(id)object
@@ -97,13 +95,12 @@
         }
         _finished = YES;
     }
-    [self.benchMarkMan benginWithKey:kRNBenchmarkLogic];
-    [self.benchMarkMan markFinishWithKey:kRNBenchmarkRTT];
+    [self.benchMarkMan markFinishWithKey:kTaskTookTime];
     [self notifySuccess:object];
-    [self.benchMarkMan markFinishWithKey:kRNBenchmarkLogic];
     _finished = YES;
     QCloudLogVerbose(@"[%@][%lld]性能监控\n%@", [self class],self.requestID, [self.benchMarkMan readablityDescription]);
 }
+
 
 - (void) cancel
 {

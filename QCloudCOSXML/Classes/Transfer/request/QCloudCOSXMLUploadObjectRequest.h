@@ -12,11 +12,12 @@
 FOUNDATION_EXTERN NSString* const QCloudUploadResumeDataKey;
 
 typedef NSData* QCloudCOSXMLUploadObjectResumeData;
+
 @class QCloudUploadObjectResult;
 @class QCloudInitiateMultipartUploadResult;
 @class QCloudCOSXMLUploadObjectRequest;
 typedef void(^InitMultipleUploadFinishBlock)(QCloudInitiateMultipartUploadResult* multipleUploadInitResult, QCloudCOSXMLUploadObjectResumeData resumeData);
-
+typedef void (^RequestsMetricArrayBlock)(NSMutableArray *requstMetricArray);
 /**
  COSXML上传对象接口。在上传小于1MB的文件时，通过该request来上传的话，会生成一个简单上传putObjectRequset，将整个对象直接上传。
  
@@ -97,7 +98,6 @@ typedef void(^InitMultipleUploadFinishBlock)(QCloudInitiateMultipartUploadResult
  */
 @property (strong, nonatomic) NSString *grantFullControl;
 
-
 /**
  表明该请求是否已经被中断
  */
@@ -107,7 +107,7 @@ typedef void(^InitMultipleUploadFinishBlock)(QCloudInitiateMultipartUploadResult
  如果该request产生了分片上传的请求，那么在分片上传初始化完成后，会通过这个block来回调，可以在该回调block中获取分片完成后的bucket, key, uploadID,以及用于后续上传失败后恢复上传的ResumeData。
  */
 @property (nonatomic, copy) InitMultipleUploadFinishBlock initMultipleUploadFinishBlock;
-
+@property (nonatomic,copy) RequestsMetricArrayBlock requstsMetricArrayBlock;
 
 /**
  是否在上传完成以后，将 COS 返回的文件MD5与本地文件算出来的md5进行校验。默认开启，如果校验出错，文件仍然会被上传到 COS, 不过我们会在本地抛出校验失败的error。
@@ -126,6 +126,7 @@ typedef void(^InitMultipleUploadFinishBlock)(QCloudInitiateMultipartUploadResult
  @param QCloudRequestFinishBlock 上传完成后的回调
  */
 - (void) setFinishBlock:(void (^)(QCloudUploadObjectResult* result, NSError* error))QCloudRequestFinishBlock;
+
 #pragma resume
 /**
  在初始化分片上传完成以后会回调的block中获取 resumeData,通过 resumeData 生成一个分片上传的请求;

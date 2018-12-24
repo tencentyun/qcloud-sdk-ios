@@ -27,6 +27,7 @@
 #import <QCloudCore/QCloudUniversalPathFactory.h>
 #import "QCloudCOSTransferMangerService.h"
 #import "QCloudPutObjectRequest+Custom.h"
+#import "QCloudSupervisoryRecord.h"
 static NSUInteger kQCloudCOSXMLUploadLengthLimit = 1*1024*1024;
 static NSUInteger kQCloudCOSXMLUploadSliceLength = 1*1024*1024;
 
@@ -35,6 +36,7 @@ static NSUInteger kQCloudCOSXMLUploadSliceLength = 1*1024*1024;
 @property (nonatomic, strong) NSString* localPath;
 @property (strong, nonatomic) NSString *object;
 @property (strong, nonatomic) NSString *bucket;
+
 @end
 
 
@@ -55,12 +57,14 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
 @property (nonatomic, strong) NSMutableArray<QCloudMultipartInfo*>* uploadParts;
 @property (nonatomic, strong) NSString* uploadId;
 @property (nonatomic, strong) NSPointerArray* requestCacheArray;
+@property (strong,nonatomic) NSMutableArray *requstMetricArray;
 @end
 
 @implementation QCloudCOSXMLUploadObjectRequest
 
 - (void) dealloc
 {
+    QCloudLogDebug(@"dealloc ------- ");
     if (NULL != _queueSource) {
         dispatch_source_cancel(_queueSource);
     }
@@ -83,6 +87,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     _aborted = NO;
     _recursiveLock = [NSRecursiveLock new];
     _progressLock = [NSRecursiveLock new];
+    _requstMetricArray = [NSMutableArray array];;
     _enableMD5Verification = YES;
     return self;
 }
@@ -155,18 +160,21 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     request.regionName = self.regionName;
     request.bucket = self.bucket;
     request.uploadId = self.uploadId;
-    
+    __weak typeof(request)weakRequest = request;
     __weak typeof(self) weakSelf = self;
     [request setFinishBlock:^(QCloudListPartsResult * _Nonnull result,
                               NSError * _Nonnull error) {
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        __strong typeof(weakRequest)strongRequst = weakRequest;
+        [strongSelf.requstMetricArray addObject: @{[NSString stringWithFormat:@"%@",strongRequst]:weakRequest.benchMarkMan.tastMetrics}];
+        
         [weakSelf continueMultiUpload:result];
     }];
     
     [self.transferManager.cosService ListMultipart:request];
 }
 - (void) fakeStart {
-    [self.benchMarkMan benginWithKey:kRNBenchmarkRTT];
-    
+    [self.benchMarkMan benginWithKey:kTaskTookTime];
     if (self.uploadId) {
         [self resumeUpload];
         return;
@@ -179,7 +187,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
         NSURL* url = (NSURL*)self.body;
         self.dataContentLength = QCloudFileSize(url.path);
         if (self.dataContentLength > kQCloudCOSXMLUploadLengthLimit) {
-            [self startMultiUpload];
+           [self startMultiUpload];
         } else {
             [self startSimpleUpload];
         }
@@ -194,7 +202,12 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     QCloudPutObjectRequest* request = [QCloudPutObjectRequest new];
     request.regionName = self.regionName;
     __weak typeof(self) weakSelf = self;
+    __weak typeof(request)weakRequest  = request;
     request.finishBlock = ^(id outputObject, NSError *error) {
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        __strong typeof(weakRequest)strongRequst = weakRequest;
+        [strongSelf.requstMetricArray addObject: @{[NSString stringWithFormat:@"%@",strongRequst]:weakRequest.benchMarkMan.tastMetrics}];
+        
         if (error) {
             [weakSelf onError:error];
             [self cancel];
@@ -252,10 +265,16 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     uploadRequet.grantWrite = self.grantWrite;
     uploadRequet.grantFullControl = self.grantFullControl;
     uploadRequet.customHeaders = [self.customHeaders mutableCopy];
+    
+    __weak typeof(uploadRequet)weakRequest  = uploadRequet;
     __weak typeof(self) weakSelf = self;
 
     [uploadRequet setFinishBlock:^(QCloudInitiateMultipartUploadResult * _Nonnull result,
                                    NSError * _Nonnull error) {
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        __strong typeof(weakRequest)strongRequst = weakRequest;
+        [strongSelf.requstMetricArray addObject: @{[NSString stringWithFormat:@"%@",strongRequst]:weakRequest.benchMarkMan.tastMetrics}];
+        
         if (error) {
             [weakSelf onError:error];
         } else {
@@ -272,6 +291,8 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     
     [self.requestCacheArray addPointer:(__bridge void * _Nullable)(uploadRequet)];
     [self.transferManager.cosService InitiateMultipartUpload:uploadRequet];
+    
+    QCloudLogDebug(@"initPart self.transferManager :%@  self.transferManager.cosService :%@",self.transferManager,self.transferManager.cosService);
 }
 
 
@@ -352,7 +373,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
         request.uploadId = self.uploadId;
         request.customHeaders = [self.customHeaders mutableCopy];
         request.body = body;
-        
+        __weak typeof(request)weakRequest  = request;
         __block int64_t partBytesSent = 0;
         int64_t partSize = body.sliceLength;
         [request setSendProcessBlock:^(int64_t bytesSent,
@@ -372,6 +393,10 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
             if (!weakSelf) {
                 return ;
             }
+            __strong typeof(weakSelf)strongSelf = weakSelf;
+            __strong typeof(weakRequest)strongRequst = weakRequest;
+            [strongSelf.requstMetricArray addObject: @{[NSString stringWithFormat:@"%@",strongRequst]:weakRequest.benchMarkMan.tastMetrics}];
+            
             if (error && error.code != QCloudNetworkErrorCodeCanceled) {
                 NSError* transferError = [weakSelf tranformErrorToResume:error];
                 __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -408,7 +433,9 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
         }];
         
         [self.requestCacheArray addPointer:(__bridge void * _Nullable)(request)];
+        QCloudLogDebug(@"分片上传 所在的uploadRequest %@: 运行的transferManager：%@ 运行的cosxmlservice：%@",self,self.transferManager,self.transferManager.cosService);
         [self.transferManager.cosService UploadPart:request];
+        
     }
 }
 
@@ -474,8 +501,15 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     complete.parts = info;
     
     __weak typeof(self) weakSelf = self;
+   __weak typeof(complete)weakRequest  = complete;
     [complete setFinishBlock:^(QCloudUploadObjectResult* outputObject, NSError *error) {
-
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        __strong typeof(weakRequest)strongRequst = weakRequest;
+        [strongSelf.requstMetricArray addObject: @{[NSString stringWithFormat:@"%@",strongRequst]:weakRequest.benchMarkMan.tastMetrics}];
+        
+        if (self.requstsMetricArrayBlock) {
+            self.requstsMetricArrayBlock(weakSelf.requstMetricArray);
+        }
         if (error) {
             [weakSelf onError:error];
         } else {
@@ -498,13 +532,12 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
 //
 + (instancetype) requestWithRequestData:(QCloudCOSXMLUploadObjectResumeData)resumeData
 {
-
     QCloudCOSXMLUploadObjectRequest* request = [QCloudCOSXMLUploadObjectRequest qcloud_modelWithJSON:resumeData];
-
     QCloudLogDebug(@"Generating request from resume data, body is %@",request.body);
-    QCloudUniversalPath* path = request.body; 
+    QCloudUniversalPath* path = request.body;
     request.body = [path fileURL];
     QCloudLogDebug(@"Path after transfering is %@",request.body);
+    
     return request;
     
 }
@@ -517,7 +550,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     if (NULL != _queueSource) {
         dispatch_source_cancel(_queueSource);
     }
-
+    
     NSMutableArray* cancelledRequestIDs = [NSMutableArray array];
     NSArray *tmpRequestCacheArray = [self.requestCacheArray copy];
     for (QCloudHTTPRequest* request  in tmpRequestCacheArray) {
@@ -525,12 +558,16 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
             [cancelledRequestIDs addObject:[NSNumber numberWithLongLong:request.requestID]];
         }
     }
+    QCloudLogDebug(@"cancelledRequestIDs :%@",cancelledRequestIDs);
+    QCloudLogDebug(@"begin cancelRequestsWithID transferManager: %@ sessionManager: %@ cosService: %@ ",self.transferManager,self.transferManager.cosService,self.transferManager.cosService.sessionManager);
     [self.transferManager.cosService.sessionManager cancelRequestsWithID:cancelledRequestIDs];
 }
 - (QCloudCOSXMLUploadObjectResumeData) cancelByProductingResumeData:(NSError *__autoreleasing *)error
 {
+    QCloudLogDebug(@"cancelByProductingResumeData begin");
     //延迟取消 让函数先返回
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        QCloudLogDebug(@"⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️ ：cancel");
         [self cancel];
     });
     return [self productingReqsumeData:error];
@@ -629,4 +666,6 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
         self.customHeaders[@"x-cos-server-side-encryption-context"] = [data base64EncodedStringWithOptions:0];
     }
 }
+
+   
 @end

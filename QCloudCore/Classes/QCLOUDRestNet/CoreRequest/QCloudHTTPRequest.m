@@ -14,7 +14,7 @@
 #import "QCloudHttpDNS.h"
 #import "QCloudIntelligenceTimeOutAdapter.h"
 #import "QCloudHTTPRequest_RequestID.h"
-#import "RNAsyncBenchMark.h"
+#import "QCloudHttpMetrics.h"
 #import "QCloudLogger.h"
 #import "QCloudObjectModel.h"
 #import "QCloudSupervisory.h"
@@ -45,6 +45,10 @@
     _responseSerializer = [QCloudResponseSerializer new];
     _requesting = NO;
     _requestSerializer.timeoutInterval = [QCloudIntelligenceTimeOutAdapter recommendTimeOut];
+    //if request  is download request ,timeoutInterval = 30
+    if (self.downloadingURL) {
+        _requestSerializer.timeoutInterval = 30;
+    }
     _isCancel = NO;
 }
 
@@ -133,23 +137,22 @@
 
 - (NSURLRequest*) buildURLRequest:(NSError* __autoreleasing*)error
 {
-    [self.benchMarkMan benginWithKey:kRNBenchmarkRTT];
-    [self.benchMarkMan benginWithKey:kRNBenchmarkRequest];
-    [self.benchMarkMan benginWithKey:kRNBenchmarkBuildData];
+
     if(![self buildRequestData:error])
     {
         return nil;
     }
 
-    [self.benchMarkMan markFinishWithKey:kRNBenchmarkBuildData];
-    [self.benchMarkMan benginWithKey:kRNBenchmarkBuildRequest];
-
+    [self.benchMarkMan benginWithKey:kCalculateMD5STookTime];
     NSURLRequest*  request = [self.requestSerializer requestWithData:self.requestData error:error];
+    if ([request.allHTTPHeaderFields objectForKey:@"Content-MD5"]) {
+         [self.benchMarkMan markFinishWithKey:kCalculateMD5STookTime];
+    }
+   
     if (*error) {
         QCloudLogError(@"[%@][%lld]序列化失败",self.class, self.requestID);
         return nil;
     }
-    [self.benchMarkMan markFinishWithKey:kRNBenchmarkBuildRequest];
     QCloudLogDebug(@"SendingRequest [%lld]\n%@\n%@ \nrequest content:%@", self.requestID, request,request.allHTTPHeaderFields,[[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding] );
     return request;
 }
@@ -183,14 +186,10 @@
                 headerLength = headerData.length;
             }
         }
-        
-        [self.benchMarkMan directSetCost:headerLength forKey:kRNBenchmarkSizeResponseHeader];
-        [self.benchMarkMan directSetCost:bodyLength forKey:kRNBenchmarkSizeResponseBody];
     }
     
     NSError* localError;
     id outputObject = [self.responseSerializer decodeWithWithResponse:response data:data error:&localError];
-    [self.benchMarkMan markFinishWithKey:kRNBenchmarkResponse];
     if (localError) {
         localError.__originHTTPURLResponse__ = response;
         localError.__originHTTPResponseData__ = data;
@@ -212,7 +211,9 @@
 - (void) cancel
 {
     [super cancel];
+     QCloudLogDebug(@"QCloudHTTPRequest:%@ runOnService.sessionManager:%@",self.runOnService ,self.runOnService.sessionManager);
     [self.runOnService.sessionManager cancelRequestWithID:(int)self.requestID];
+   
 }
 
 

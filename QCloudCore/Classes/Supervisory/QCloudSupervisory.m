@@ -119,19 +119,15 @@
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         QCloudSupervisoryNetworkRecord* record = [QCloudSupervisoryNetworkRecord new];
-        record.rtt = [request.benchMarkMan costTimeForKey:kRNBenchmarkRTT];
-        record.connection = [request.benchMarkMan costTimeForKey:kRNBenchmarkConnectionTime];
-        record.securetyConnection = [request.benchMarkMan costTimeForKey:kRNBenchmarkSecureConnectionTime];
-        record.upload = [request.benchMarkMan costTimeForKey:kRNBenchmarkUploadTime];
-        record.request = [request.benchMarkMan costTimeForKey:kRNBenchmarkRequest];
-        record.download = [request.benchMarkMan costTimeForKey:kRNBenchmarkDownploadTime];
-        record.response = [request.benchMarkMan costTimeForKey:kRNBenchmarkResponse];
-        record.dns = [request.benchMarkMan costTimeForKey:kRNBenchmarkDNSLoopupTime];
-        record.server = [request.benchMarkMan costTimeForKey:kRNBenchmarkServerCost];
-        record.uploadHeaderSize = (int64_t)[request.benchMarkMan costTimeForKey:kRNBenchmarkSizeRequeqstHeader];
-        record.uploadBodySize = (int64_t)[request.benchMarkMan costTimeForKey:kRNBenchmarkSizeRequeqstBody];
-        record.downloadHeaderSize = (int64_t)[request.benchMarkMan costTimeForKey:kRNBenchmarkSizeResponseHeader];
-        record.downloadBodySize = (int64_t)[request.benchMarkMan costTimeForKey:kRNBenchmarkSizeResponseBody];
+        record.taskTookTime = [request.benchMarkMan costTimeForKey:kTaskTookTime];
+        record.calculateMD5STookTime = [request.benchMarkMan costTimeForKey:kCalculateMD5STookTime];
+         record.signRequestTookTime = [request.benchMarkMan costTimeForKey:kSignRequestTookTime];
+        record.dnsLookupTookTime = [request.benchMarkMan costTimeForKey:kDnsLookupTookTime];
+        record.connectTookTime = [request.benchMarkMan costTimeForKey:kConnectTookTime];
+        record.secureConnectTookTime = [request.benchMarkMan costTimeForKey:kSecureConnectTookTime];
+        record.writeRequestBodyTookTime = [request.benchMarkMan costTimeForKey:kWriteRequestBodyTookTime];
+        record.readResponseHeaderTookTime = [request.benchMarkMan costTimeForKey:kReadResponseHeaderTookTime];
+        record.readResponseBodyTookTime = [request.benchMarkMan costTimeForKey:kReadResponseBodyTookTime];
         NSString* host = nil;
         for (NSString* key  in request.requestData.httpHeaders.allKeys) {
             if ([key.lowercaseString isEqualToString:@"host"]) {
@@ -155,6 +151,7 @@
             record.errorMessage = error.localizedDescription;
         }
         record.userAgent = [request.requestData.httpHeaders objectForKey:HTTPHeaderUserAgent];
+        
         [self record:record];
     });
 }

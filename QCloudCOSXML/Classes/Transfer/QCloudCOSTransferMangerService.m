@@ -105,6 +105,7 @@ static QCloudCOSTransferMangerService* COSTransferMangerService = nil;
 - (void) UploadObject:(QCloudCOSXMLUploadObjectRequest *)request
 {
     request.transferManager = self;
+    QCloudLogDebug(@"UploadObject set transferManager %@",request.transferManager);
     QCloudFakeRequestOperation* operation = [[QCloudFakeRequestOperation alloc] initWithRequest:request];
     [self.uploadFileQueue addOpreation:operation];
 }

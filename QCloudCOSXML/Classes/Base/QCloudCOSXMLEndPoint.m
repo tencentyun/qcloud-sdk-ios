@@ -29,10 +29,17 @@
         return bucket;
     }
     NSString* APPIDSubfix = [NSString stringWithFormat:@"-%@",APPID];
-    NSString* subfixString = [bucket substringWithRange:NSMakeRange(bucket.length - subfixLength  , subfixLength)];
-    if ([subfixString isEqualToString:APPIDSubfix]) {
-        return [bucket substringWithRange:NSMakeRange(0, bucket.length - subfixLength)];
+    if (APPIDSubfix) {
+        NSString* subfixString = [bucket substringWithRange:NSMakeRange(bucket.length - subfixLength  , subfixLength)];
+        if ([subfixString isEqualToString:APPIDSubfix]) {
+            return [bucket substringWithRange:NSMakeRange(0, bucket.length - subfixLength)];
+        }
+    }else{
+        if (!APPID) {
+             @throw [NSException exceptionWithName:kQCloudNetworkDomain reason:[NSString stringWithFormat:@"您没有配置AppID就使用了服务%@", self.class] userInfo:nil];
+        }
     }
+   
     //should not reach here
     return bucket;
 }
@@ -53,34 +60,58 @@
         QCloudLogDebug(@"bucket %@ contains illeagal character, building service url pregress  returns immediately", bucket);
         return  nil;
     }
-    
-    NSString* formattedBucketName = [self formattedBucket:bucket withAPPID:appID]; ;
+    NSString* formattedBucketName = [self formattedBucket:bucket withAPPID:appID];
+    if (appID) {
+        formattedBucketName = [NSString stringWithFormat:@"%@-%@",formattedBucketName,appID];
+    }
     NSString *regionNametmp = nil;
     if (regionName) {
         regionNametmp = regionName;
     }else{
         regionNametmp = self.regionName;
     }
-    NSString *tmpBucket = formattedBucketName;
-    if (appID) {
-        tmpBucket = [NSString stringWithFormat:@"%@-%@",formattedBucketName,appID];
-    }
     NSURL *serverURL;
 
-        if (_isPrefixURL) {
-            if (regionNametmp) {
-                    serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@.cos.%@.%@",scheme,tmpBucket,regionNametmp,self.serviceName]];
-                }else{
-                    serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@.cos.%@",scheme,tmpBucket,self.serviceName]];
-                }
-        }else{
-            if (regionNametmp) {
-                    serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://cos.%@.%@/%@",scheme,regionNametmp,self.serviceName,tmpBucket]];
-                }else{
-                    serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://cos.%@/%@",scheme,self.serviceName,tmpBucket]];
-                }
-            }
-   
+    serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@.cos.%@.%@",scheme,formattedBucketName,regionNametmp,self.serviceName]];
+    if (!self.isPrefixURL) {
+         serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@.cos.%@/%@",scheme,regionNametmp,self.serviceName,formattedBucketName]];
+    }
+    if (self.suffix) {
+        serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@.%@",scheme,formattedBucketName,self.suffix]];
+        if (!self.isPrefixURL) {
+            serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@/%@",scheme,self.suffix,formattedBucketName]];
+        }
+    }
+    
+//    NSString* formattedBucketName = [self formattedBucket:bucket withAPPID:appID]; ;
+//    NSString *regionNametmp = nil;
+//    if (regionName) {
+//        regionNametmp = regionName;
+//    }else{
+//        regionNametmp = self.regionName;
+//    }
+//    NSString *tmpBucket = formattedBucketName;
+//    if (appID) {
+//        tmpBucket = [NSString stringWithFormat:@"%@-%@",formattedBucketName,appID];
+//    }
+//    NSURL *serverURL;
+//
+//        if (_isPrefixURL) {
+//            if (regionNametmp) {
+//                    serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@.cos.%@.%@",scheme,tmpBucket,regionNametmp,self.serviceName]];
+//                }else{
+//                    serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@.cos.%@",scheme,tmpBucket,self.serviceName]];
+//                }
+//        }else{
+//            if (regionNametmp) {
+//                    serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://cos.%@.%@/%@",scheme,regionNametmp,self.serviceName,tmpBucket]];
+//                }else{
+//                    serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://cos.%@/%@",scheme,self.serviceName,tmpBucket]];
+//                }
+//            }
+
+
+    
     return serverURL;
 }
 -(void)setIsPrefixURL:(BOOL)isPrefixURL{
@@ -107,6 +138,7 @@
     endpoint.regionName = self.regionName;
     endpoint.serviceName = self.serviceName;
     endpoint.isPrefixURL = self.isPrefixURL;
+    endpoint.suffix = self.suffix;
     return endpoint;
 }
 @end

@@ -43,114 +43,114 @@
 @implementation QCloudCOSXMLService (Manager)
 - (void) AppendObject:(QCloudAppendObjectRequest*)request
 {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 - (void) GetObjectACL:(QCloudGetObjectACLRequest*)request
 {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 
 - (void) PutObjectACL:(QCloudPutObjectACLRequest*)request
 {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 - (void) DeleteObject:(QCloudDeleteObjectRequest*)request
 {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 - (void) DeleteMultipleObject:(QCloudDeleteMultipleObjectRequest*)request
 {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 
 - (void) OptionsObject:(QCloudOptionsObjectRequest*)request
 {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 
 
 - (void) PutBucket:(QCloudPutBucketRequest*)request
 {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 - (void) GetBucket:(QCloudGetBucketRequest*)request
 {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 - (void) GetBucketACL:(QCloudGetBucketACLRequest*)request
 {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 - (void) GetBucketCORS:(QCloudGetBucketCORSRequest*)request
 {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 - (void) GetBucketLocation:(QCloudGetBucketLocationRequest*)request
 {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 - (void) GetBucketLifecycle:(QCloudGetBucketLifecycleRequest*)request
 {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 
 - (void) PutBucketACL:(QCloudPutBucketACLRequest*)request
 {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 - (void) PutBucketCORS:(QCloudPutBucketCORSRequest*)request
 {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 - (void) PutBucketLifecycle:(QCloudPutBucketLifecycleRequest*)request
 {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 
 - (void) DeleteBucketCORS:(QCloudDeleteBucketCORSRequest*)request
 {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 - (void) DeleteBucketLifeCycle:(QCloudDeleteBucketLifeCycleRequest*)request
 {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 
 - (void) DeleteBucket:(QCloudDeleteBucketRequest*)request
 {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 - (void) HeadBucket:(QCloudHeadBucketRequest*)request
 {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 - (void) ListBucketMultipartUploads:(QCloudListBucketMultipartUploadsRequest*)request
 {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 - (void) PutBucketVersioning:(QCloudPutBucketVersioningRequest*)request {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 - (void) GetBucketVersioning:(QCloudGetBucketVersioningRequest*)request {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 - (void) PutBucketRelication:(QCloudPutBucketReplicationRequest*)request {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 - (void) GetBucketReplication:(QCloudGetBucketReplicationRequest*)request {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 - (void) DeleteBucketReplication:(QCloudDeleteBucketReplicationRequest*)request {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 - (void) GetService:(QCloudGetServiceRequest*)request {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 - (void) PostObjectRestore:(QCloudPostObjectRestoreRequest*)request {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 - (void) ListObjectVersions:(QCloudListObjectVersionsRequest *)request {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 - (void) getPresignedURL:(QCloudGetPresignedURLRequest*)request {
     

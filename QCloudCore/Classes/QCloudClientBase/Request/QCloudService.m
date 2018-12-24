@@ -10,12 +10,13 @@
 #import "QCloudHTTPSessionManager.h"
 #import "QCloudServiceConfiguration_Private.h"
 #import "NSError+QCloudNetworking.h"
-
+#import "QCloudLogger.h"
 @interface QCloudService ()
 {
     NSMutableDictionary* _signatureCache;
     dispatch_queue_t _writeReadQueue;
     NSMutableDictionary* _requestingSignatureFileds;
+ 
 }
 @property (nonatomic,strong)NSString *backgroundTransmitIdentifier;
 @end
@@ -31,11 +32,6 @@
     configuration = [configuration copy];
     if (!configuration.endpoint) {
         @throw [NSException exceptionWithName:kQCloudNetworkDomain reason:[NSString stringWithFormat:@"您没有配置EndPoint就使用了服务%@", self.class] userInfo:nil];
-    }
-    if ([configuration.endpoint.serviceName  isEqualToString:@"myqcloud.com"]) {
-        if (!configuration.appID) {
-            @throw [NSException exceptionWithName:kQCloudNetworkDomain reason:[NSString stringWithFormat:@"您没有配置AppID就使用了服务%@", self.class] userInfo:nil];
-        }
     }
     
     if (![configuration.signatureProvider conformsToProtocol:NSProtocolFromString(@"QCloudSignatureProvider")]) {
@@ -119,8 +115,9 @@
         cotinueBlock(nil, nil);
     }
 }
-- (int) performRequest:(QCloudBizHTTPRequest*)httpRequst
+- (int) performRequest:(QCloudBizHTTPRequest*)httpRequst isHaveBody:(BOOL)body
 {
+    _isHaveBody = body;
      httpRequst.runOnService = self;
      dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSError* error;
@@ -129,14 +126,17 @@
             [httpRequst onError:error];
             return ;
         }
+       
         [self.sessionManager performRequest:httpRequst];
+        QCloudLogDebug(@"performRequest after set runOnService: %@  after set sessionManager: %@",httpRequst.runOnService,httpRequst.runOnService.sessionManager);
     });
-
+    
     return (int)httpRequst.requestID;
 }
 
-- (int) performRequest:(QCloudBizHTTPRequest *)httpRequst withFinishBlock:(QCloudRequestFinishBlock)block
+- (int) performRequest:(QCloudBizHTTPRequest *)httpRequst isHaveBody:(BOOL)body  withFinishBlock:(QCloudRequestFinishBlock)block
 {
+     _isHaveBody = body;
     httpRequst.runOnService = self
     ;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{

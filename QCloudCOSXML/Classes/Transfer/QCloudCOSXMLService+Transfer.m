@@ -21,47 +21,47 @@
 
 - (void) PutObject:(QCloudPutObjectRequest*)request
 {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:YES];
 }
 
 - (void) GetObject:(QCloudGetObjectRequest*)request
 {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 
 - (void) InitiateMultipartUpload:(QCloudInitiateMultipartUploadRequest*)request
 {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 
 - (void) UploadPart:(QCloudUploadPartRequest*)request
 {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:YES];
 }
 
 - (void) CompleteMultipartUpload:(QCloudCompleteMultipartUploadRequest*)request
 {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 
 - (void) AbortMultipfartUpload:(QCloudAbortMultipfartUploadRequest*)request
 {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 
 - (void) ListMultipart:(QCloudListMultipartRequest*)request
 {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 - (void) HeadObject:(QCloudHeadObjectRequest*)request
 {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 - (void) PutObjectCopy:(QCloudPutObjectCopyRequest*)request
 {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 - (void) UploadPartCopy:(QCloudUploadPartCopyRequest*)request {
-    [super performRequest:request];
+    [super performRequest:request isHaveBody:NO];
 }
 @end

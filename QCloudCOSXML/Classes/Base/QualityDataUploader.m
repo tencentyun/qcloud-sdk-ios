@@ -62,6 +62,7 @@ NSArray * filterUploadEventClass(){
 
 +(TACMTAErrorCode)internalUploadEvent:(NSString *)eventKey withParamter:(NSDictionary *)paramter {
     TACMTAErrorCode result =  [TACMTA trackCustomKeyValueEvent:eventKey props:paramter];
+    QCloudLogDebug(@"%@ :%@",eventKey,paramter);
     return result;
 }
 

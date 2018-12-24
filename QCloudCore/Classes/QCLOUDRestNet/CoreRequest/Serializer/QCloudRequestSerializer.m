@@ -461,7 +461,11 @@ static void *QCloudHTTPRequestSerializerObserverContext = &QCloudHTTPRequestSeri
 {
     for (NSString* selector in QCloudHTTPReqeustSerializerObservedKeyPath()) {
         if ([self respondsToSelector:NSSelectorFromString(selector)]) {
-            [self removeObserver:self forKeyPath:selector];
+            @try {
+                [self removeObserver:self forKeyPath:selector];
+            } @catch (NSException *exception) {
+                QCloudLogDebug(@"没有该观察者");
+            }
         }
     }
 }
@@ -518,6 +522,7 @@ static void *QCloudHTTPRequestSerializerObserverContext = &QCloudHTTPRequestSeri
     NSAssert(self.serializerBlocks.count != 0, @"没有添加任何的序列化匿名函数，请检查配置！！！");
     NSError* localError;
     for (QCloudRequestSerializerBlock sBlock in self.serializerBlocks) {
+        
         request = sBlock(request,data, &localError);
         
         if (localError != nil) {

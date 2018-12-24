@@ -105,14 +105,14 @@
     
     NSLog(@"request Body:  %@",[[NSString alloc]initWithData:request.HTTPBody encoding:NSUTF8StringEncoding]);
     [[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        QCloudLogInfo(@"response data:%@",[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding]);
+        QCloudLogDebug(@"response data:%@",[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding]);
         if (data && !error) {
             id obj = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
             if (!obj) {
                  @throw [NSException exceptionWithName:QCloudErrorDomain reason:@"返回的不是json数据" userInfo:nil];
             }
             NSDictionary *dic = (NSDictionary *)obj;
-            QCloudLogInfo(@"%@ 的签名%@",urlRequest.URL,dic[@"sign"]);
+            QCloudLogDebug(@"%@ 的签名%@",urlRequest.URL,dic[@"sign"]);
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (success) {
                     success(obj[@"sign"]);
