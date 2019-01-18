@@ -1213,6 +1213,9 @@ static id ModelToJSONObjectRecursive(NSObject *model) {
     NSMutableDictionary *result = [[NSMutableDictionary alloc] initWithCapacity:64];
     __unsafe_unretained NSMutableDictionary *dic = result; // avoid retain and release in block
     [modelMeta->_mapper enumerateKeysAndObjectsUsingBlock:^(NSString *propertyMappedKey, _QCloudModelPropertyMeta *propertyMeta, BOOL *stop) {
+        if ([propertyMappedKey isEqualToString:@"retryHandler"]) {
+            return;
+        }
         if (!propertyMeta->_getter) return;
         
         id value = nil;

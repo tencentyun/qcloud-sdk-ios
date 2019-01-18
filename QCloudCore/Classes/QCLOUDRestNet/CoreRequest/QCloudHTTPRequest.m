@@ -23,6 +23,8 @@
 #import "NSObject+HTTPHeadersContainer.h"
 #import "QCloudService.h"
 
+#import "NSDate+QCLOUD.h"
+#import "NSDate+QCloudInternetDateTime.h"
 @interface QCloudHTTPRequest ()
 {
     BOOL _requesting;
@@ -187,13 +189,32 @@
             }
         }
     }
+    NSString *dateStr = [[response allHeaderFields] objectForKey:@"Date"];
+    NSDate *serverTime = nil;
+    NSDate *deviceTime =  [NSDate date];
+    if ([dateStr length] > 0) {
+        serverTime =  [NSDate qcloud_dateFromRFC822String:dateStr];
+    }else {
+        // The response header does not have the 'Date' field.
+        // This should not happen.
+        QCloudLogError(@"Date header does not exist. Not able to fix the time");
+    }
     
+    NSTimeInterval skewTime = [deviceTime timeIntervalSinceDate:serverTime];
+   // If the time difference between the device and the server is large, fix device time
+    NSLog(@"skewTime: %llf",skewTime);
+    if (skewTime>=1*60) {
+        [NSDate qcloud_setTimeDeviation:skewTime];
+    }
     NSError* localError;
     id outputObject = [self.responseSerializer decodeWithWithResponse:response data:data error:&localError];
     if (localError) {
         localError.__originHTTPURLResponse__ = response;
         localError.__originHTTPResponseData__ = data;
         QCloudLogError(@"[%@][%lld] %@", [self class], self.requestID, localError);
+        if ( [self isFixTime:localError]) {
+             [NSDate qcloud_setTimeDeviation:skewTime];
+        }
         [self onError:localError];
     } else {
         QCloudLogDebug(@"[%@][%lld] RESPONSE \n%@ ", [self class], self.requestID, [outputObject qcloud_modelToJSONString]);
@@ -203,6 +224,14 @@
     }
 }
 
+//Error code to be fix
+-(BOOL)isFixTime:(NSError *)error{
+    NSString *errorCode = error.userInfo[@"Code"];
+    if ([error.userInfo[@"Code"] isEqualToString:@"RequestTimeTooSkewed"] ||([error.userInfo[@"Code"] isEqualToString:@"AccessDenied"] || [error.userInfo[@"Message"] isEqualToString:@"Request has expired"])) {
+        return YES;
+    }
+    return NO;
+}
 - (BOOL) prepareInvokeURLRequest:(NSMutableURLRequest*)urlRequest error:(NSError* __autoreleasing*)error
 {
     return YES;

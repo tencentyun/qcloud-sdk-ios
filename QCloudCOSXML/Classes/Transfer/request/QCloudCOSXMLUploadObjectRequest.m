@@ -28,6 +28,7 @@
 #import "QCloudCOSTransferMangerService.h"
 #import "QCloudPutObjectRequest+Custom.h"
 #import "QCloudSupervisoryRecord.h"
+#import <QCloudCore/QCloudHTTPRetryHanlder.h>
 static NSUInteger kQCloudCOSXMLUploadLengthLimit = 1*1024*1024;
 static NSUInteger kQCloudCOSXMLUploadSliceLength = 1*1024*1024;
 
@@ -46,7 +47,7 @@ static NSUInteger kQCloudCOSXMLUploadSliceLength = 1*1024*1024;
 
 NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
 
-@interface QCloudCOSXMLUploadObjectRequest ()
+@interface QCloudCOSXMLUploadObjectRequest ()<QCloudHttpRetryHandlerProtocol>
 {
     NSRecursiveLock* _recursiveLock;
     NSRecursiveLock* _progressLock;
@@ -89,6 +90,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     _progressLock = [NSRecursiveLock new];
     _requstMetricArray = [NSMutableArray array];;
     _enableMD5Verification = YES;
+    _retryHandler = [QCloudHTTPRetryHanlder defaultRetryHandler];
     return self;
 }
 - (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dictionary {
@@ -160,6 +162,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     request.regionName = self.regionName;
     request.bucket = self.bucket;
     request.uploadId = self.uploadId;
+    request.retryPolicy .delegate = self;
     __weak typeof(request)weakRequest = request;
     __weak typeof(self) weakSelf = self;
     [request setFinishBlock:^(QCloudListPartsResult * _Nonnull result,
@@ -203,6 +206,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     request.regionName = self.regionName;
     __weak typeof(self) weakSelf = self;
     __weak typeof(request)weakRequest  = request;
+    request.retryPolicy.delegate = self;
     request.finishBlock = ^(id outputObject, NSError *error) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
         __strong typeof(weakRequest)strongRequst = weakRequest;
@@ -243,6 +247,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     request.grantFullControl = self.grantFullControl;
     request.sendProcessBlock = self.sendProcessBlock;
     request.delegate = self.delegate;
+    request.retryPolicy.delegate = self;
     request.customHeaders = [self.customHeaders mutableCopy];
     [self.requestCacheArray addPointer:(__bridge void * _Nullable)(request)];
     [self.transferManager.cosService PutObject:request];
@@ -265,7 +270,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     uploadRequet.grantWrite = self.grantWrite;
     uploadRequet.grantFullControl = self.grantFullControl;
     uploadRequet.customHeaders = [self.customHeaders mutableCopy];
-    
+    uploadRequet.retryPolicy.delegate = self;
     __weak typeof(uploadRequet)weakRequest  = uploadRequet;
     __weak typeof(self) weakSelf = self;
 
@@ -373,6 +378,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
         request.uploadId = self.uploadId;
         request.customHeaders = [self.customHeaders mutableCopy];
         request.body = body;
+        request.retryPolicy.delegate = self;
         __weak typeof(request)weakRequest  = request;
         __block int64_t partBytesSent = 0;
         int64_t partSize = body.sliceLength;
@@ -484,6 +490,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     complete.uploadId = self.uploadId;
     complete.regionName = self.regionName;
     complete.customHeaders = [self.customHeaders mutableCopy];
+    complete.retryPolicy.delegate = self;
     QCloudCompleteMultipartUploadInfo* info = [QCloudCompleteMultipartUploadInfo new];
     [self.uploadParts sortUsingComparator:^NSComparisonResult(QCloudMultipartInfo*  _Nonnull obj1,
                                                               QCloudMultipartInfo*  _Nonnull obj2) {
@@ -535,7 +542,9 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     QCloudCOSXMLUploadObjectRequest* request = [QCloudCOSXMLUploadObjectRequest qcloud_modelWithJSON:resumeData];
     QCloudLogDebug(@"Generating request from resume data, body is %@",request.body);
     QCloudUniversalPath* path = request.body;
-    request.body = [path fileURL];
+    //fileURLWithPath会再次编码，所以需要一次解码
+    NSString *bodyUrl =  QCloudURLDecodeUTF8([path fileURL].absoluteString);
+    request.body = [NSURL URLWithString:bodyUrl];
     QCloudLogDebug(@"Path after transfering is %@",request.body);
     
     return request;
@@ -666,6 +675,10 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
         self.customHeaders[@"x-cos-server-side-encryption-context"] = [data base64EncodedStringWithOptions:0];
     }
 }
-
-   
+-(BOOL)shouldRetry:(NSURLSessionTask *)task error:(NSError *)error{
+    if ([self.retryHandler.delegate respondsToSelector:@selector(shouldRetry:error:)]) {
+        return [self.retryHandler.delegate shouldRetry:task error:error];
+    }
+    return YES;
+}
 @end

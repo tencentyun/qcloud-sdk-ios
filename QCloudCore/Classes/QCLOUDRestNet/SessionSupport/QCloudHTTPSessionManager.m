@@ -233,6 +233,7 @@ QCloudThreadSafeMutableDictionary* QCloudBackgroundSessionManagerCache()
 
 - (void) URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler
 {
+    QCloudLogDebug(@"didReceiveResponse: %@",response);
     QCloudURLSessionTaskData* taskData = [self taskDataForTask:dataTask];
     [taskData.httpRequest.benchMarkMan benginWithKey:kReadResponseHeaderTookTime];
     taskData.response = (NSHTTPURLResponse*)response;
@@ -250,7 +251,6 @@ QCloudThreadSafeMutableDictionary* QCloudBackgroundSessionManagerCache()
 }
 - (void) URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend
 {
-    QCloudLogDebug(@"test1111  %lld %lld %lld ",bytesSent,totalBytesSent,totalBytesExpectedToSend);
     QCloudURLSessionTaskData* taskData = [self taskDataForTask:task];
     if (totalBytesSent<=32768) {
          [taskData.httpRequest.benchMarkMan benginWithKey:kWriteRequestBodyTookTime];
@@ -312,6 +312,13 @@ QCloudThreadSafeMutableDictionary* QCloudBackgroundSessionManagerCache()
         if (!taskData.retryHandler) {
             EndRetryFunc();
         } else {
+            if ([taskData.retryHandler.delegate respondsToSelector:@selector(shouldRetry:error:)]) {
+                BOOL isRetry = [taskData.retryHandler.delegate shouldRetry:taskData error:error];
+                if (!isRetry) {
+                    EndRetryFunc();
+                    return;
+                }
+            }
             if (![taskData.retryHandler retryFunction:^{
                 QCloudLogDebug(@"[%i] 错误，开始重试",seq);
                 QCloudURLSessionTaskData* taskData = [weakSelf taskDataForTask:task];

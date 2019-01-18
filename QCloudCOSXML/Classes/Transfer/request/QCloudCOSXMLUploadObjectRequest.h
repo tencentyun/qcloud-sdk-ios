@@ -28,6 +28,7 @@ typedef void (^RequestsMetricArrayBlock)(NSMutableArray *requstMetricArray);
  上传文件（对象）的文件名，也是对象的key，请注意文件名中不可以含有问号即"?"字符
  */
 @property (strong, nonatomic) NSString *object;
+@property (strong,nonatomic)QCloudHTTPRetryHanlder *retryHandler;
 /**
  存储桶名称
  */

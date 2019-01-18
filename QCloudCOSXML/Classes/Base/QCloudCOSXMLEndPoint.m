@@ -82,36 +82,7 @@
             serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@/%@",scheme,self.suffix,formattedBucketName]];
         }
     }
-    
-//    NSString* formattedBucketName = [self formattedBucket:bucket withAPPID:appID]; ;
-//    NSString *regionNametmp = nil;
-//    if (regionName) {
-//        regionNametmp = regionName;
-//    }else{
-//        regionNametmp = self.regionName;
-//    }
-//    NSString *tmpBucket = formattedBucketName;
-//    if (appID) {
-//        tmpBucket = [NSString stringWithFormat:@"%@-%@",formattedBucketName,appID];
-//    }
-//    NSURL *serverURL;
-//
-//        if (_isPrefixURL) {
-//            if (regionNametmp) {
-//                    serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@.cos.%@.%@",scheme,tmpBucket,regionNametmp,self.serviceName]];
-//                }else{
-//                    serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@.cos.%@",scheme,tmpBucket,self.serviceName]];
-//                }
-//        }else{
-//            if (regionNametmp) {
-//                    serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://cos.%@.%@/%@",scheme,regionNametmp,self.serviceName,tmpBucket]];
-//                }else{
-//                    serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://cos.%@/%@",scheme,self.serviceName,tmpBucket]];
-//                }
-//            }
-
-
-    
+    QCloudLogDebug(@"serverURL:  %@",serverURL);
     return serverURL;
 }
 -(void)setIsPrefixURL:(BOOL)isPrefixURL{

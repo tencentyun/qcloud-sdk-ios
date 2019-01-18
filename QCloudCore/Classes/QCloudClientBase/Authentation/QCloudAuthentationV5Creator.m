@@ -16,6 +16,7 @@
 #import <CommonCrypto/CommonDigest.h>
 #import "QCloudLogger.h"
 #import "QCloudURLHelper.h"
+#import "NSDate+QCLOUD.h"
 @implementation NSDictionary(HeaderFilter)
 - (NSDictionary*)filteHeaders; {
     NSMutableDictionary* signedHeaders = [[NSMutableDictionary alloc] init];

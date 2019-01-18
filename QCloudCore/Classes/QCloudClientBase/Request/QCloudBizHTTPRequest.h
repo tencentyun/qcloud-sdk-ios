@@ -10,6 +10,7 @@
 @class QCloudTask;
 @class QCloudSignatureFields;
 @class QCloudSignature;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -36,6 +37,7 @@ extern _Nonnull QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilize
  */
 @property (strong, nonatomic) NSMutableDictionary* customHeaders;
 @property (strong,nonatomic) NSString *regionName;
+@property (copy,nonatomic) NSArray <NSMutableDictionary *>*scopesArray;
 /**
  请求序列化的过程
 

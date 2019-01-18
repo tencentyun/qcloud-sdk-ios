@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "QCloudCore"
-s.version              = "5.5.8"
+s.version              = "5.5.9"
   s.summary          = "QCloudCore--腾讯云iOS-SDK Foundation"
 
 # This description is used to generate tags and improve search results.

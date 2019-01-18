@@ -110,6 +110,24 @@ NS_ASSUME_NONNULL_BEGIN
 
     return fileds;
 }
+-(NSArray<NSMutableDictionary *> *)scopesArray{
+    NSArray *separatetmpArray = [self.requestData.serverURL componentsSeparatedByString:@"://"];
+    NSString *str = separatetmpArray[1];
+    NSArray *separateArray = [str  componentsSeparatedByString:@"."];
+    
+    NSMutableArray *array = [NSMutableArray array];
+    for (int i=0; i<self.deleteObjects.objects.count; i++) {
+         QCloudDeleteObjectInfo *info = (QCloudDeleteObjectInfo *)self.deleteObjects.objects[i];
+        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+        dic[@"bucket"] = separateArray[0];
+        dic[@"region"] = self.runOnService.configuration.endpoint.regionName;
+        dic[@"prefix"] = info.key;
+        dic[@"action"] = @"name/cos:DeleteObject";
+        [array addObject:dic];
+    }
+    return [array copy];
+}
+
 
 @end
 NS_ASSUME_NONNULL_END
