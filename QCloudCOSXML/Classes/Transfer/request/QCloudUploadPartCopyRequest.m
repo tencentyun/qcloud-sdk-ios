@@ -143,5 +143,47 @@ NS_ASSUME_NONNULL_BEGIN
     return fileds;
 }
 
+-(NSArray<NSMutableDictionary *> *)scopesArray{
+    NSMutableArray *array = [NSMutableArray array];
+    NSMutableDictionary *dic = [NSMutableDictionary new];
+    NSArray *tmpstrsArr = [self.source componentsSeparatedByString:@"/"];
+    NSString *path = @"";
+    for (int i= 1; i<tmpstrsArr.count; i++) {
+        if (i==tmpstrsArr.count-1) {
+            path = [path stringByAppendingString:tmpstrsArr[i]];
+        }else{
+            path = [path stringByAppendingString:tmpstrsArr[i]];
+            path = [path stringByAppendingString:@"/"];
+        }
+    }
+    NSArray *hostsArray = [tmpstrsArr[0] componentsSeparatedByString:@"."];
+    dic[@"bucket"] = hostsArray[0];
+    dic[@"region"] = hostsArray[2];
+    dic[@"prefix"] = path;
+    dic[@"action"] = @"name/cos:GetObject";
+    [array addObject:dic];
+
+    [array addObject:[self getScopeWithAction:@"name/cos:InitiateMultipartUpload"]];
+    [array addObject:[self getScopeWithAction:@"name/cos:ListParts"]];
+    [array addObject:[self getScopeWithAction:@"name/cos:PutObject"]];
+    [array addObject:[self getScopeWithAction:@"name/cos:CompleteMultipartUpload"]];
+    [array addObject:[self getScopeWithAction:@"name/cos:AbortMultipartUpload"]];
+    
+  
+    return [array copy];
+}
+-(NSMutableDictionary *)getScopeWithAction:(NSString *)action{
+    
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    NSArray *separatetmpArray = [self.requestData.serverURL componentsSeparatedByString:@"://"];
+    NSString *str = separatetmpArray[1];
+    NSArray *separateArray = [str  componentsSeparatedByString:@"."];
+    dic[@"bucket"] = separateArray[0];
+    dic[@"region"] = self.runOnService.configuration.endpoint.regionName;
+    dic[@"prefix"] = self.object;
+    dic[@"action"] = action;
+    return dic;
+}
+
 @end
 NS_ASSUME_NONNULL_END

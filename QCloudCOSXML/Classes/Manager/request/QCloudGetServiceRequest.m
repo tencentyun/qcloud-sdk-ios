@@ -93,6 +93,16 @@ NS_ASSUME_NONNULL_BEGIN
 
     return fileds;
 }
+-(NSArray<NSMutableDictionary *> *)scopesArray{
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    dic[@"bucket"] = @"";
+    dic[@"region"] = @"";
+    dic[@"prefix"] = @"*";
+    dic[@"action"] = @"name/cos:GetService";
+    NSMutableArray *array = [NSMutableArray array];
+    [array addObject:dic];
+    return [array copy];
+}
 
 @end
 NS_ASSUME_NONNULL_END

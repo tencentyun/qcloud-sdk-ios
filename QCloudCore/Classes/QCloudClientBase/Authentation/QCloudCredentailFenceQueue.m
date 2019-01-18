@@ -111,22 +111,17 @@ typedef void(^__QCloudFenceActionBlock)(QCloudAuthentationCreator *, NSError *);
     }
 }
 
+// if If authentationCreator is not nil ,check the validity of the Date
 - (void) recive:(QCloudAuthentationCreator*)creator error:(NSError*)error
 {
     [self invalidTimeoutTimter];
     [_lock lock];
     _authentationCreator = creator;
     [_lock unlock];
- 
     if (error) {
-        [self postError:error];
-    } else {
-        if (!creator.credential.valid) {
-            NSError* error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeCredentialNotReady message:@"InvalidCredentials：获取签名错误"];
-            [self postError:error];
-        } else {
-            [self postCreator:creator];
-        }
+       [self postError:error];
+    }else if(creator.credential) {
+        [self postCreator:creator];
     }
 }
 @end

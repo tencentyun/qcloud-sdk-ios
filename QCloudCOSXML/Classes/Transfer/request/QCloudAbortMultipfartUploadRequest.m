@@ -108,6 +108,26 @@ NS_ASSUME_NONNULL_BEGIN
 
     return fileds;
 }
-
+-(NSArray<NSMutableDictionary *> *)scopesArray{
+    NSMutableArray *array = [NSMutableArray array];
+    [array addObject:[self getScopeWithAction:@"name/cos:InitiateMultipartUpload"]];
+    [array addObject:[self getScopeWithAction:@"name/cos:ListParts"]];
+    [array addObject:[self getScopeWithAction:@"name/cos:UploadPart"]];
+    [array addObject:[self getScopeWithAction:@"name/cos:CompleteMultipartUpload"]];
+    [array addObject:[self getScopeWithAction:@"name/cos:AbortMultipartUpload"]];
+    return [array copy];
+}
+-(NSMutableDictionary *)getScopeWithAction:(NSString *)action{
+    
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    NSArray *separatetmpArray = [self.requestData.serverURL componentsSeparatedByString:@"://"];
+    NSString *str = separatetmpArray[1];
+    NSArray *separateArray = [str  componentsSeparatedByString:@"."];
+    dic[@"bucket"] = separateArray[0];
+    dic[@"region"] = self.runOnService.configuration.endpoint.regionName;
+    dic[@"prefix"] = self.object;
+    dic[@"action"] = action;
+    return dic;
+}
 @end
 NS_ASSUME_NONNULL_END

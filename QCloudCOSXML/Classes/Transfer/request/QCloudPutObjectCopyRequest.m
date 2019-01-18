@@ -147,6 +147,41 @@ NS_ASSUME_NONNULL_BEGIN
 
     return fileds;
 }
+-(NSArray<NSMutableDictionary *> *)scopesArray{
+    NSMutableDictionary *orginDic = [NSMutableDictionary dictionary];
+    NSArray *tmpstrsArr = [self.objectCopySource componentsSeparatedByString:@"/"];
+    NSString *path = @"";
+    for (int i= 1; i<tmpstrsArr.count; i++) {
+        if (i==tmpstrsArr.count-1) {
+            path = [path stringByAppendingString:tmpstrsArr[i]];
+        }else{
+            path = [path stringByAppendingString:tmpstrsArr[i]];
+            path = [path stringByAppendingString:@"/"];
+        }
+    }
+    NSArray *hostsArray = [tmpstrsArr[0] componentsSeparatedByString:@"."];
+    orginDic[@"bucket"] = hostsArray[0];
+    orginDic[@"region"] = hostsArray[2];
+    orginDic[@"prefix"] = path;
+    orginDic[@"action"] =  @"name/cos:GetObject";
+    
+    
+    NSMutableDictionary *desDic = [NSMutableDictionary dictionary];
+    NSArray *separatetmpArray = [self.requestData.serverURL componentsSeparatedByString:@"://"];
+    NSString *str = separatetmpArray[1];
+    NSArray *separateArray = [str  componentsSeparatedByString:@"."];
+    desDic[@"bucket"] = separateArray[0];
+    desDic[@"region"] = self.runOnService.configuration.endpoint.regionName;
+    desDic[@"prefix"] = self.object;
+    desDic[@"action"] =  @"name/cos:PutObject";
+    
+ 
+    
+    NSMutableArray *array = [NSMutableArray array];
+    [array addObject:orginDic];
+    [array addObject:desDic];
+    return [array copy];
+}
 
 @end
 NS_ASSUME_NONNULL_END

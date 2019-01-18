@@ -107,5 +107,20 @@ NS_ASSUME_NONNULL_BEGIN
     return fileds;
 }
 
+
+-(NSArray<NSMutableDictionary *> *)scopesArray{
+    
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    NSArray *separatetmpArray = [self.requestData.serverURL componentsSeparatedByString:@"://"];
+    NSString *str = separatetmpArray[1];
+    NSArray *separateArray = [str  componentsSeparatedByString:@"."];
+    dic[@"bucket"] = separateArray[0];
+    dic[@"region"] = self.runOnService.configuration.endpoint.regionName;
+    dic[@"prefix"] = (self.prefix==nil)?@"":self.prefix;
+    dic[@"action"] = @"name/cos:GetBucketObjectVersions";
+    NSMutableArray *array = [NSMutableArray array];
+    [array addObject:dic];
+    return [array copy];
+}
 @end
 NS_ASSUME_NONNULL_END
