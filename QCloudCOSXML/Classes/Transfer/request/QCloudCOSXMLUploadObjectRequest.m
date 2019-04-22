@@ -51,10 +51,15 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
 {
     NSRecursiveLock* _recursiveLock;
     NSRecursiveLock* _progressLock;
+    NSUInteger uploadedSize;
+    //标记下标，从0开始
+    NSUInteger startPartNumber;
+    BOOL isChange;
 }
 @property (nonatomic, assign) int64_t totalBytesSent;
 @property (nonatomic, assign) NSUInteger dataContentLength;
 @property (nonatomic, strong) dispatch_source_t queueSource;
+//存储所有的分片
 @property (nonatomic, strong) NSMutableArray<QCloudMultipartInfo*>* uploadParts;
 @property (nonatomic, strong) NSString* uploadId;
 @property (nonatomic, strong) NSPointerArray* requestCacheArray;
@@ -91,6 +96,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     _requstMetricArray = [NSMutableArray array];;
     _enableMD5Verification = YES;
     _retryHandler = [QCloudHTTPRetryHanlder defaultRetryHandler];
+    startPartNumber = -1;
     return self;
 }
 - (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dictionary {
@@ -134,26 +140,76 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
         [existMap setObject:part forKey:part.partNumber];
     }
     QCloudLogDebug(@"SERVER EXIST PARTS %@", [existParts qcloud_modelToJSONString]);
-    
+
     NSMutableArray* restParts = [NSMutableArray new];
     for (QCloudFileOffsetBody* offsetBody in allParts) {
         NSString* key = [@(offsetBody.index+1) stringValue];
         QCloudMultipartUploadPart* part = [existMap objectForKey:key];
+     
         if (!part) {
             [restParts addObject:offsetBody];
         } else {
+            if (part.size != offsetBody.sliceLength) {
+                isChange = YES;
+                break;
+            }
             QCloudMultipartInfo* info = [QCloudMultipartInfo new];
             info.eTag = part.eTag;
             info.partNumber = part.partNumber;
             [_uploadParts addObject:info];
         }
     }
-    if (restParts.count == 0) {
-        [self finishUpload:self.uploadId];
-    } else {
-        [self uploadOffsetBodys:restParts];
+
+    if (!isChange) {
+        if (restParts.count == 0) {
+             [self finishUpload:self.uploadId];
+        }else{
+            [self uploadOffsetBodys:restParts];
+        }
+    }else{
+        //重新分片
+        [self getContinueInfo:existParts.parts];
+        if (uploadedSize == self.dataContentLength) {
+            [self finishUpload:self.uploadId];
+        } else {
+        //开始分片
+            [self uploadOffsetBodys:[self getFileLocalUploadParts]];
+        }
     }
 }
+
+-(void)getContinueInfo:(NSArray *)existParts{
+    _uploadParts = [NSMutableArray new];
+    int i=1;
+    QCloudMultipartUploadPart  *part = existParts[0];
+    QCloudMultipartInfo* info = [QCloudMultipartInfo new];
+    info.eTag = part.eTag;
+    info.partNumber = part.partNumber;
+    if ([info.partNumber integerValue]!=1){
+        return;
+    }
+
+    for (i = 0; i<existParts.count; i++) {
+        QCloudMultipartUploadPart  *part1 = existParts[i];
+        QCloudMultipartInfo* info1 = [QCloudMultipartInfo new];
+        info1.eTag = part1.eTag;
+        info1.partNumber = part1.partNumber;
+        uploadedSize+=part1.size;
+        [_uploadParts addObject:info1];
+        if (i == existParts.count-1) {
+            break;
+        }
+        QCloudMultipartUploadPart  *part2 = existParts[i+1];
+        if (([part1.partNumber integerValue]+1)!= [part2.partNumber integerValue]) {
+            break;
+        }
+       
+    }
+    startPartNumber = _uploadParts.count;
+    
+    QCloudLogDebug(@"resume startPartNumber =   offset =  %ld %ld",startPartNumber,uploadedSize);
+}
+
 
 - (void) resumeUpload
 {
@@ -179,6 +235,8 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
 - (void) fakeStart {
     [self.benchMarkMan benginWithKey:kTaskTookTime];
     if (self.uploadId) {
+        startPartNumber = 0;
+        uploadedSize = 0;
         [self resumeUpload];
         return;
     }
@@ -190,6 +248,9 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
         NSURL* url = (NSURL*)self.body;
         self.dataContentLength = QCloudFileSize(url.path);
         if (self.dataContentLength > kQCloudCOSXMLUploadLengthLimit) {
+            //开始分片上传的时候，上传的起始位置是0
+            uploadedSize = 0;
+            startPartNumber = 0;
            [self startMultiUpload];
         } else {
             [self startSimpleUpload];
@@ -305,12 +366,14 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
 {
     NSMutableArray* allParts = [NSMutableArray new];
     NSURL* url = (NSURL*)self.body;
-    int64_t restContentLength = self.dataContentLength;
-    int64_t offset = 0;
-    for (int i = 0; ;i++ ) {
+    int64_t restContentLength = self.dataContentLength-uploadedSize;
+    //便宜的起始位置
+    int64_t offset = uploadedSize;
+    for (int i = startPartNumber; ;i++ ) {
         int64_t slice = 0;
-        if (restContentLength >= kQCloudCOSXMLUploadSliceLength) {
-            slice = kQCloudCOSXMLUploadSliceLength;
+        NSUInteger uploadSliceLength = self.sliceSize>10?self.sliceSize:kQCloudCOSXMLUploadSliceLength;
+        if (restContentLength >= uploadSliceLength) {
+            slice = uploadSliceLength;
         } else {
             slice = restContentLength;
         }

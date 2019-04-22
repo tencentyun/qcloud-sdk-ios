@@ -7,12 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIImage.h>
 
 /**
  TACMTA版本号
  */
 
-#define MTA_SDK_VERSION @"2.4.0"
+#define MTA_SDK_VERSION @"2.5.1"
 
 #pragma mark - 接口监控相关数据结构
 /**
