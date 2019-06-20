@@ -15,7 +15,10 @@ NSString * const QCloudCOSXMLModuleName = @"QCloudCOSXML";
                                  } mutableCopy];
 
           NSString* buglyID = @"";
-          if (buglyID.length > 0) {
+          if (buglyID.length > 0)
+          {
+              int a = 0;
+              a++;
               module[@"crashID"] = buglyID;
           }
 
