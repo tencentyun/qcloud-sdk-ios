@@ -15,8 +15,7 @@ NSString * const QCloudCoreModuleName = @"QCloudCore";
                                  } mutableCopy];
 
           NSString* buglyID = @"";
-          if (buglyID.length > 0)
-          {
+          if (buglyID.length > 0) {
               module[@"crashID"] = buglyID;
           }
 

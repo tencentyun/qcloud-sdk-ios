@@ -17,7 +17,6 @@
 #import "QCloudInitiateMultipartUploadRequest.h"
 #import "QCloudCOSTransferMangerService.h"
 #import "QCloudCOSXMLUploadObjectRequest.h"
-#import "QCloudCOSXMLDownloadObjectRequest.h"
 #import "QCloudUploadObjectResult.h"
 
 #import "QCloudPutObjectACLRequest.h"
