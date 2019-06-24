@@ -7,7 +7,7 @@
 
 #import "QCloudCOSXMLService+Transfer.h"
 #import "QCloudPutObjectRequest.h"
-#import "QCloudGetObjectRequest.h"
+//#import "QCloudGetObjectRequest.h"
 #import "QCloudInitiateMultipartUploadRequest.h"
 #import "QCloudUploadPartRequest.h"
 #import "QCloudCompleteMultipartUploadRequest.h"
@@ -24,10 +24,10 @@
     [super performRequest:request isHaveBody:YES];
 }
 
-- (void) GetObject:(QCloudGetObjectRequest*)request
-{
-    [super performRequest:request isHaveBody:NO];
-}
+//- (void) GetObject:(QCloudGetObjectRequest*)request
+//{
+//    [super performRequest:request isHaveBody:NO];
+//}
 
 - (void) InitiateMultipartUpload:(QCloudInitiateMultipartUploadRequest*)request
 {

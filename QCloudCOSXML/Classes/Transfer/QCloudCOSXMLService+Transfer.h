@@ -79,7 +79,7 @@
  [[QCloudCOSXMLService defaultCOSXML] GetObject:request];
  @endcode
  */
-- (void) GetObject:(QCloudGetObjectRequest*)request;
+//- (void) GetObject:(QCloudGetObjectRequest*)request;
 /**
  初始化分块上传的方法.
  
