@@ -6,7 +6,6 @@
 //
 
 #import "QCloudService+Quality.h"
-#import "QualityDataUploader.h"
 #import <objc/runtime.h>
 @implementation QCloudService (Quality)
 + (void)load {
@@ -27,7 +26,6 @@
 
 - (int) __quality_performRequest:(QCloudBizHTTPRequest*)httpRequst {
     int result = [self __quality_performRequest:httpRequst];
-    [QualityDataUploader trackRequestSentWithType:object_getClass(httpRequst)];
     return result;
 }
 

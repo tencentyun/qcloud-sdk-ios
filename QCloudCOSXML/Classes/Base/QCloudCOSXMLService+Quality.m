@@ -7,9 +7,6 @@
 
 #import "QCloudCOSXMLService+Quality.h"
 #import <objc/runtime.h>
-#import <QCloudCore/MTA.h>
-#import <QCloudCore/MTA+Account.h>
-#import <QCloudCore/MTAConfig.h>
 
 #import <QCloudCore/QualityAssuranceDefine.h>
 #import <QCloudCore/QCloudCore.h>
@@ -35,16 +32,9 @@
 
 + (QCloudCOSXMLService*) Quality_registerDefaultCOSXMLWithConfiguration:(QCloudServiceConfiguration*)configuration {
     id result = [self Quality_registerDefaultCOSXMLWithConfiguration:configuration];
-    [self initMTA];
+//    [self initMTA];
     return result;
 }
 
 
-+ (void) initMTA {
-    QCloudLogDebug(@"Quality assurence service start");
-    TACMTAConfig* config =  [TACMTAConfig getInstance];
-    config.reportStrategy = kQAUploadStrategy;
-    config.customerAppVersion = QCloudCOSXMLModuleVersion;
-    [TACMTA startWithAppkey:kQAccount];
-}
 @end

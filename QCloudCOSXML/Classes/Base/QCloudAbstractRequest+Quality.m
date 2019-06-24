@@ -7,7 +7,6 @@
 
 #import "QCloudAbstractRequest+Quality.h"
 #import <objc/runtime.h>
-#import "QualityDataUploader.h"
 
 @implementation QCloudAbstractRequest (Quality)
 + (void) load{
@@ -30,7 +29,6 @@
 
 - (void)__quality__notifyError:(NSError *)error {
     [self __quality__notifyError:error];
-    [QualityDataUploader trackRequestFailWithType:self.class Error:error];
 }
 
 
