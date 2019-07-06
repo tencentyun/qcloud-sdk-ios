@@ -32,6 +32,7 @@
 @class QCloudCOSXMLService;
 @class QCloudCOSXMLUploadObjectRequest;
 @class QCloudCOSXMLCopyObjectRequest;
+@class QCloudCOSXMLDownloadObjectRequest;
 @interface QCloudCOSTransferMangerService : QCloudService
 
 
@@ -51,4 +52,5 @@
 
 - (void) UploadObject:(QCloudCOSXMLUploadObjectRequest*)upload;
 - (void) CopyObject:(QCloudCOSXMLCopyObjectRequest*)copy;
+- (void) DownloadObject: (QCloudCOSXMLDownloadObjectRequest*)get;
 @end
