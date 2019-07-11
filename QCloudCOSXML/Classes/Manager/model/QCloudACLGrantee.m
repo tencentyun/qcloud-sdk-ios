@@ -41,6 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
       @"displayName" :@"DisplayName",
       @"type" :@"_type",
       @"xmlns" :@"_xmlns",
+      @"xmlns" :@"URI",
   };
 }
 

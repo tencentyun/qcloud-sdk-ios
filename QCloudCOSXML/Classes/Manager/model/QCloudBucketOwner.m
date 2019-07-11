@@ -37,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 {
   return @{
       @"identifier" :@"ID",
+      @"displayName" :@"DisplayName",
   };
 }
 

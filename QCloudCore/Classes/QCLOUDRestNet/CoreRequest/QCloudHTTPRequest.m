@@ -188,6 +188,7 @@
                 headerLength = headerData.length;
             }
         }
+
     }
     NSString *dateStr = [[response allHeaderFields] objectForKey:@"Date"];
     NSDate *serverTime = nil;
@@ -198,6 +199,7 @@
         // The response header does not have the 'Date' field.
         // This should not happen.
         QCloudLogError(@"Date header does not exist. Not able to fix the time");
+
     }
     
     NSTimeInterval skewTime = [deviceTime timeIntervalSinceDate:serverTime];

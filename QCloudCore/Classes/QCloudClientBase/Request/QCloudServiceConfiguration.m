@@ -8,12 +8,16 @@
 
 #import "QCloudServiceConfiguration.h"
 #import "QCloudServiceConfiguration_Private.h"
+#if TARGET_OS_IOS
+#import <UIKit/UIKit.h>
+#endif
+
 static NSString *const QCloudServiceConfigurationUnknown = @"Unknown";
 
 @implementation QCloudServiceConfiguration
 - (NSString*) userAgent
 {
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IOS
 
     NSString*(^UserAgent)(NSString* productKey) = ^(NSString* productKey) {
             NSString *systemName = [[[UIDevice currentDevice] systemName] stringByReplacingOccurrencesOfString:@" " withString:@"-"];

@@ -7,7 +7,7 @@
 //
 
 #import "NSDate+QCloudInternetDateTime.h"
-
+#import "QCloudLogger.h"
 // Always keep the formatter around as they're expensive to instantiate
 static NSDateFormatter *_internetDateTimeFormatter = nil;
 
@@ -92,7 +92,7 @@ static NSDateFormatter *_internetDateTimeFormatter = nil;
                     date = [dateFormatter dateFromString:RFC822String];
                 }
             }
-            if (!date) NSLog(@"Could not parse RFC822 date: \"%@\" Possible invalid format.", dateString);
+            if (!date) QCloudLogDebug(@"Could not parse RFC822 date: \"%@\" Possible invalid format.", dateString);
             
         }
     }
@@ -131,7 +131,7 @@ static NSDateFormatter *_internetDateTimeFormatter = nil;
                 [dateFormatter setDateFormat:@"yyyy'-'MM'-'dd'T'HH':'mm':'ss"]; 
                 date = [dateFormatter dateFromString:RFC3339String];
             }
-            if (!date) NSLog(@"Could not parse RFC3339 date: \"%@\" Possible invalid format.", dateString);
+            if (!date) QCloudLogDebug(@"Could not parse RFC3339 date: \"%@\" Possible invalid format.", dateString);
             
         }
     }

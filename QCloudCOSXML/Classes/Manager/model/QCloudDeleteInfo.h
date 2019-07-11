@@ -31,6 +31,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 @interface QCloudDeleteInfo : NSObject
+/**
+ 布尔值，这个值决定了是否启动 Quiet 模式。
+ 值为 true 启动 Quiet 模式，值为 false 则启动 Verbose 模式，默认值为 False
+ */
 @property (assign, nonatomic) BOOL quiet;
 /**
 存放需要删除对象信息的数组

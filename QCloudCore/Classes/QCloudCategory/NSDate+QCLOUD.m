@@ -6,10 +6,11 @@
 //
 
 #import "NSDate+QCLOUD.h"
+#import "QCloudLogger.h"
 static NSTimeInterval _timeDeviation = 0.0;
 @implementation NSDate (QCLOUD)
 +(NSDate *)qcloud_calibrateTime{
-    NSLog(@"fix skew time %@",[self qcloud_stringFromDate:[[NSDate date]dateByAddingTimeInterval:-1*_timeDeviation]]);
+    QCloudLogDebug(@"fix skew time %@",[self qcloud_stringFromDate:[[NSDate date]dateByAddingTimeInterval:-1*_timeDeviation]]);
     return [[NSDate date]dateByAddingTimeInterval:-1*_timeDeviation];
 }
 +(void)qcloud_setTimeDeviation:(NSTimeInterval)timeDeviation{

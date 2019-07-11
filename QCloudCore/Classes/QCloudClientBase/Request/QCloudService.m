@@ -117,8 +117,10 @@
 }
 - (int) performRequest:(QCloudBizHTTPRequest*)httpRequst isHaveBody:(BOOL)body
 {
+    QCloudLogDebug(@"performRequest begin httpRequst.runOnService :%@",httpRequst.runOnService);
     _isHaveBody = body;
      httpRequst.runOnService = self;
+    QCloudLogDebug(@"performRequest after set runOnService: %@  begin set sessionManager: %@",httpRequst.runOnService,httpRequst.runOnService.sessionManager);
      dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSError* error;
         [self fillCommonParamtersForRequest:httpRequst error:&error];

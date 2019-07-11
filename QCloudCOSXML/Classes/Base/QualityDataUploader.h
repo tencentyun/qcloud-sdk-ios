@@ -6,7 +6,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <QCloudCore/MTA.h>
 
 @interface QualityDataUploader : NSObject
 

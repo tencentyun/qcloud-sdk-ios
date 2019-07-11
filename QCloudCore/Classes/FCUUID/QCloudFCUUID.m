@@ -7,7 +7,7 @@
 
 #import "QCloudFCUUID.h"
 #import "QCloudUICKeyChainStore.h"
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IOS
 #import <UIKit/UIKit.h>
 #endif
 @implementation QCloudFCUUID
@@ -153,7 +153,7 @@ static NSString *const _uuidsOfUserDevicesToggleKey = @"fc_uuidsOfUserDevicesTog
 -(NSString *)uuidForVendor
 {
     if( _uuidForVendor == nil ){
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IOS
         _uuidForVendor = [[[[[UIDevice currentDevice] identifierForVendor] UUIDString] lowercaseString] stringByReplacingOccurrencesOfString:@"-" withString:@""];
         
 #elif TARGET_OS_MAC

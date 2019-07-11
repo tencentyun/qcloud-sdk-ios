@@ -12,6 +12,9 @@
 #import <time.h>
 #import <xlocale.h>
 #import "QCloudFileLogger.h"
+#if TARGET_OS_IOS
+#import <UIKit/UIKit.h>
+#endif
 
 #define QCloudEachLogFileSize  10*1024*1024
 
@@ -95,7 +98,7 @@ NSString* const kQCloudLogExtension = @"log";
     _maxStoarageSize = 70*1024*1024;
     _keepDays = 3;
     //
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IOS
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tryCleanLogs) name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tryCleanLogs) name:UIApplicationWillTerminateNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tryCleanLogs) name:UIApplicationDidEnterBackgroundNotification object:nil];

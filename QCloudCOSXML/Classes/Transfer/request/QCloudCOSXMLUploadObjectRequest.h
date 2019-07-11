@@ -24,6 +24,7 @@ typedef void (^RequestsMetricArrayBlock)(NSMutableArray *requstMetricArray);
  如果上传的对象大小大于1MB时，我们会在内部进行分片上传的处理，将文件切分成数个1MB大小的块，然后通过并行分快上传的方式进行上传。
  */
 @interface QCloudCOSXMLUploadObjectRequest<BodyType> : QCloudAbstractRequest
+@property (nonatomic,assign)NSUInteger sliceSize;
 /**
  上传文件（对象）的文件名，也是对象的key，请注意文件名中不可以含有问号即"?"字符
  */
@@ -34,7 +35,7 @@ typedef void (^RequestsMetricArrayBlock)(NSMutableArray *requstMetricArray);
  */
 @property (strong, nonatomic) NSString *bucket;
 
-
+@property (nonatomic, strong) NSString* uploadid;
 
 /**
  需要上传的对象内容。可以传入NSData*或者NSURL*类型的变量
