@@ -5,7 +5,6 @@
 //  Created by Dong Zhao on 2017/3/29.
 //
 //
-
 #ifndef QCloudCore_h
 #define QCloudCore_h
 

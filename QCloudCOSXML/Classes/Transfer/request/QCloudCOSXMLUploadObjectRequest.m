@@ -174,30 +174,8 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
         //开始分片
             [self uploadOffsetBodys:[self getFileLocalUploadParts]];
         }
-
     }
-
-    for (i = 0; i<existParts.count; i++) {
-        QCloudMultipartUploadPart  *part1 = existParts[i];
-        QCloudMultipartInfo* info1 = [QCloudMultipartInfo new];
-        info1.eTag = part1.eTag;
-        info1.partNumber = part1.partNumber;
-        uploadedSize+=part1.size;
-        [_uploadParts addObject:info1];
-        if (i == existParts.count-1) {
-            break;
-        }
-        QCloudMultipartUploadPart  *part2 = existParts[i+1];
-        if (([part1.partNumber integerValue]+1)!= [part2.partNumber integerValue]) {
-            break;
-        }
-       
-    }
-    startPartNumber = _uploadParts.count;
-    
-    QCloudLogDebug(@"resume startPartNumber =   offset =  %ld %ld",startPartNumber,uploadedSize);
 }
-
 
 -(void)getContinueInfo:(NSArray *)existParts{
     _uploadParts = [NSMutableArray new];
@@ -230,7 +208,6 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     
     QCloudLogDebug(@"resume startPartNumber =   offset =  %ld %ld",startPartNumber,uploadedSize);
 }
-
 
 
 - (void) resumeUpload
@@ -779,4 +756,5 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     }
     return YES;
 }
+
 @end

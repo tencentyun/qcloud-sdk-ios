@@ -7,7 +7,6 @@
 
 #import "QualityDataUploader.h"
 #import <QCloudCore/QCloudLogger.h>
-
 #import <QCloudCore/NSError+QCloudNetworking.h>
 #import <QCloudCore/MTA.h>
 #import <QCloudCore/MTA+Account.h>

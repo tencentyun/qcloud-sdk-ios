@@ -9,8 +9,6 @@
 #import <objc/runtime.h>
 
 
-
-
 #import <QCloudCore/QCloudCore.h>
 #import <QCloudCore/QCloudLogger.h>
 #import "QCloudCOSXMLVersion.h"
