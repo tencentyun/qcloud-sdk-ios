@@ -31,15 +31,15 @@
 NS_ASSUME_NONNULL_BEGIN
 @interface QCloudBucket : NSObject
 /**
-存储桶名称
+Bucket 的名称
 */
 @property (strong, nonatomic) NSString *name;
 /**
-存储桶所在区域
+Bucket 所在地域。枚举值参见 可用地域 文档，如：ap-beijing, ap-hongkong, eu-frankfurt 等
 */
 @property (strong, nonatomic) NSString *location;
 /**
-存储桶创建时间
+ Bucket 创建时间。ISO8601 格式，例如 2016-11-09T08:46:32.000Z 
 */
 @property (strong, nonatomic) NSString *createDate;
 @end

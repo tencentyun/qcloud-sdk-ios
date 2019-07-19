@@ -1,6 +1,8 @@
 Pod::Spec.new do |s|
   s.name             = "QCloudCOSXML"
-s.version              = "5.6.1"
+
+s.version              = "5.6.2"
+
   s.summary          = "QCloudCOSXML 腾讯云iOS-SDK组件"
 
   s.homepage         = "https://cloud.tencent.com/"
@@ -9,12 +11,20 @@ s.version              = "5.6.1"
   s.source           = { :git => "https://github.com/tencentyun/qcloud-sdk-ios.git", :tag => s.version.to_s }
   s.ios.deployment_target = '8.0'
   s.source_files = 'QCloudCOSXML/Classes/**/*'
+<<<<<<< HEAD
   s.dependency "QCloudCore",'5.6.1'
+=======
+  s.dependency "QCloudCore",'5.6.2'
+>>>>>>> carthage
   s.static_framework = true
 
   s.subspec 'Transfer' do |sbt|
     sbt.source_files = 'QCloudCOSXML/Classes/*','QCloudCOSXML/Classes/Transfer/**/*','QCloudCOSXML/Classes/Base/*'
+<<<<<<< HEAD
     sbt.dependency "QCloudCore",'5.6.1'
+=======
+    sbt.dependency "QCloudCore",'5.6.2'
+>>>>>>> carthage
  #   sbt.static_framework=true
   end
 end

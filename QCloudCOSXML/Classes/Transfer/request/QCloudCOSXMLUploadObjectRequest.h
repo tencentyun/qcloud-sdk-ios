@@ -35,7 +35,7 @@ typedef void (^RequestsMetricArrayBlock)(NSMutableArray *requstMetricArray);
  */
 @property (strong, nonatomic) NSString *bucket;
 
-
+@property (nonatomic, strong) NSString* uploadid;
 
 /**
  需要上传的对象内容。可以传入NSData*或者NSURL*类型的变量

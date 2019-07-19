@@ -83,9 +83,10 @@ static const NSInteger kWeakNetworkConcurrentCount = 1;
             if (operation.request.priority > QCloudAbstractRequestPriorityNormal) {
                 [highPerfomanceRequest addObject:operation];
             } else if (operation.request.priority < QCloudAbstractRequestPriorityNormal){
-                [normalPerformanceRequest addObject:operation];
-            } else {
                 [lowPerformanceRequest addObject:operation];
+            } else {
+                 [normalPerformanceRequest addObject:operation];
+               
             }
         }
         for (QCloudRequestOperation* op  in highPerfomanceRequest) {

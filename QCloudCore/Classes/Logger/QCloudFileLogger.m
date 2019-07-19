@@ -10,6 +10,10 @@
 #import "QCloudLogModel.h"
 #import "QCloudFileUtils.h"
 #import <zlib.h>
+#if TARGET_OS_IOS
+#import <UIKit/UIKit.h>
+#endif
+
 #import "QCloudSDKModuleManager.h"
 #import "NSObject+QCloudModel.h"
 @interface QCloudFileLogger ()
@@ -53,7 +57,7 @@
     }
     _fileHandler = [NSFileHandle fileHandleForWritingAtPath:path];
     [_fileHandler seekToEndOfFile];
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IOS
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(flushAllFiles) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(flushAllFiles) name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(flushAllFiles) name:UIApplicationWillTerminateNotification object:nil];

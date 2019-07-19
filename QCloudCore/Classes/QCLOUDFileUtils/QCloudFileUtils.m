@@ -24,6 +24,7 @@ void QCloudEnsurePathExist(NSString* path)
 
 BOOL QCloudFileExist(NSString* path) {
     return  [NSShareFileManager fileExistsAtPath:path];
+    
 }
 
 NSString * QCloudApplicationDocumentsPath() {

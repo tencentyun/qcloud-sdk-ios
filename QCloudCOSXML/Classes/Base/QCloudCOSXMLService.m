@@ -27,10 +27,7 @@
 #import "QCloudCOSXMLService.h"
 #import "QCloudCOSXMLService+Configuration.h"
 #import "QCloudCOSXMLService+Private.h"
-#import <QCloudCore/QCloudThreadSafeMutableDictionary.h>
-#import <QCloudCore/QCLoudError.h>
-#import "UIDevice+QCloudFCUUID.h"
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IOS
 #import "QCloudLogManager.h"
 #endif
 QCloudThreadSafeMutableDictionary* QCloudCOSXMLServiceCache()
@@ -61,15 +58,17 @@ static QCloudCOSXMLService* COSXMLService = nil;
     @synchronized(self) {
         if (self.isHaveBody) {
             if (self.configuration.backgroundEnable) {
+                   QCloudLogDebug(@"get background sessionManager: %@ ",[QCloudHTTPSessionManager shareClient]);
                 return [QCloudHTTPSessionManager sessionManagerWithBackgroundIdentifier:self.configuration.backgroundIdentifier];
             }else{
-                 return [QCloudHTTPSessionManager shareClient];;
+                return [QCloudHTTPSessionManager shareClient];;
             }
         }else{
             return [QCloudHTTPSessionManager shareClient];;
         }
-      
+        
     }
+    QCloudLogDebug(@"get client sessionManager: %@ ",[QCloudHTTPSessionManager shareClient]);
     return [QCloudHTTPSessionManager shareClient];
 }
 
@@ -78,11 +77,11 @@ static QCloudCOSXMLService* COSXMLService = nil;
     @synchronized (self) {
         COSXMLService = [[QCloudCOSXMLService alloc] initWithConfiguration:configuration];
         if (!configuration.isCloseShareLog) {
-            #if TARGET_OS_IPHONE
+#if TARGET_OS_IOS
             [QCloudLogManager sharedInstance];
-            #endif
+#endif
         }
-       
+        
     }
     return COSXMLService;
 }

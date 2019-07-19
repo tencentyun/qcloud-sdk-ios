@@ -11,6 +11,10 @@
 #import <sys/types.h>
 #import <sys/sysctl.h>
 #import "QCloudLogger.h"
+#if TARGET_OS_IOS
+#import <UIKit/UIKit.h>
+#endif
+
 // Public constants
 NSString *const QCloudClientContextVersion = @"1.0";
 NSString *const QCloudClientContextHeader = @"x-qcloud-Client-Context";
@@ -22,7 +26,7 @@ static NSString *const QCloudClientContextKeychainService = @"com.qcloud.ClientC
 static NSString *const QCloudClientContextKeychainInstallationIdKey = @"com.qcloud.QCloudClientContextKeychainInstallationIdKey";
 @implementation QCloudClientContext
 #pragma mark - Public methods
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IOS
 
 - (instancetype)init {
     if (self = [super init]) {

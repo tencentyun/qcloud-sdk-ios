@@ -85,10 +85,13 @@ QCloudThreadSafeMutableDictionary* QCloudBackgroundSessionManagerCache()
 +(QCloudHTTPSessionManager *)sessionManagerWithBackgroundIdentifier:(NSString *)backgroundIdentifier{
     QCloudHTTPSessionManager *sessionManager = nil;
     for (NSString *backgroundIdentifier in QCloudBackgroundSessionManagerCache().allKeys) {
+        QCloudLogInfo(@"已经存在的session %@",QCloudBackgroundSessionManagerCache().allKeys);
+        QCloudLogInfo(@"我是根据key找到的session：%@",[cloudBackGroundSessionManagersCache objectForKey:backgroundIdentifier]);
         return [cloudBackGroundSessionManagersCache objectForKey:backgroundIdentifier];
     }
     
     sessionManager = [[QCloudHTTPSessionManager alloc]initWithBackgroundSessionWithBackgroundIdentifier:backgroundIdentifier];
+    QCloudLogInfo(@"新创建的sessionManger %@",sessionManager);
     [QCloudBackgroundSessionManagerCache() setObject:sessionManager forKey:backgroundIdentifier];
     return sessionManager;
 }
@@ -251,6 +254,7 @@ QCloudThreadSafeMutableDictionary* QCloudBackgroundSessionManagerCache()
 }
 - (void) URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend
 {
+    QCloudLogDebug(@"test1111  %lld %lld %lld ",bytesSent,totalBytesSent,totalBytesExpectedToSend);
     QCloudURLSessionTaskData* taskData = [self taskDataForTask:task];
     if (totalBytesSent<=32768) {
          [taskData.httpRequest.benchMarkMan benginWithKey:kWriteRequestBodyTookTime];

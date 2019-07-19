@@ -7,7 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
+
+#if  TARGET_OS_IOS
 #import <UIKit/UIImage.h>
+#endif
 
 /**
  TACMTA版本号

@@ -37,5 +37,14 @@
 #import "QCloudAuthentationV4Creator.h"
 #import "QCloudCredentailFenceQueue.h"
 #import "QCloudMultiDelegateProxy.h"
+
 #import "COSXMLGetSignatureTool.h"
+#import "QCloudThreadSafeMutableDictionary.h"
+#import "QCloudError.h"
+#import "UIDevice+QCloudFCUUID.h"
+#import "MTA.h"
+#import "MTAConfig.h"
+#import "MTACrashReporter.h"
+#import "QualityAssuranceDefine.h"
+
 #endif /* QCloudCore_h */

@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 */
 @property (strong, nonatomic) QCloudACLGrantee *grantee;
 /**
-指明授予被授权者的权限信息，枚举值
+指明授予被授权者的权限信息，枚举值：QCloudCOSPermissionRead，QCloudCOSPermissionWrite，QCloudCOSPermissionFullControl
 */
 @property (assign, nonatomic) QCloudCOSPermission permission;
 @end

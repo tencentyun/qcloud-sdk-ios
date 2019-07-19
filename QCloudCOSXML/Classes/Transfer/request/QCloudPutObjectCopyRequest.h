@@ -105,33 +105,27 @@ request.objectCopySource = @"objectCopySource";
 */
 @property (strong, nonatomic) NSString *objectCopyIfNoneMatch;
 /**
-    Object 的存储级别
-    */
+对象的存储级别，枚举值：STANDARD（QCloudCOSStorageStandard），STANDARD_IA（QCloudCOSStorageStandardIA）。默认值：STANDARD（QCloudCOSStorageStandard）
+*/
 @property (assign, nonatomic) QCloudCOSStorageClass storageClass;
 /**
     定义 Object 的 ACL 属性。有效值：private，public-read-write，public-read；默认值：private
-    */
+*/
 @property (strong, nonatomic) NSString *accessControlList;
 /**
-    赋予被授权者读的权限。格式：id=" ",id=" "；
-    当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
-    当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
-    */
+    赋予被授权者读的权限。格式：x-cos-grant-read: id="[OwnerUin]"
+*/
 @property (strong, nonatomic) NSString *grantRead;
 /**
-    赋予被授权者写的权限。格式：id=" ",id=" "；
-    当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
-    当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
-    */
+    赋予被授权者写的权限。格式：x-cos-grant-write: id="[OwnerUin]"；
+*/
 @property (strong, nonatomic) NSString *grantWrite;
 /**
-    赋予被授权者读写权限。格式: id=" ",id=" " ；
-    当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
-    当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
-    */
+    赋予被授权者读写权限。格式:x-cos-grant-full-control: id="[OwnerUin]"
+*/
 @property (strong, nonatomic) NSString *grantFullControl;
 /**
-    指定源文件的versionID
+    指定源文件的versionID,只有开启或开启后暂停的存储桶，才会响应此参数
     */
 @property (strong, nonatomic) NSString *versionID;
 

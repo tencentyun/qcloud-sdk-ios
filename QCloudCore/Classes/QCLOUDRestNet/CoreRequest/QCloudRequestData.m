@@ -9,6 +9,9 @@
 #import "QCloudRequestData.h"
 #import "NSError+QCloudNetworking.h"
 #import "QCloudHTTPBodyPart.h"
+#if TARGET_OS_IOS
+#import <UIKit/UIKit.h>
+#endif
 
 #define ENSURE_NOT_NIL_PARAMTER(p) if(p==nil) return;
 #define B_ENSURE_NOT_NIL_PARAMTER(p) if(p==nil) return NO;
@@ -55,7 +58,7 @@ NSString* const HTTPHeaderUserAgent = @"User-Agent";
     static NSDictionary* httpHeaders;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IOS
         NSString*  userAgent = [NSString stringWithFormat:@"%@/%@ (%@; iOS %@; Scale/%0.2f)", [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleExecutableKey] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleIdentifierKey], [[NSBundle mainBundle] infoDictionary][@"CFBundleShortVersionString"] ?: [[NSBundle mainBundle] infoDictionary][(__bridge NSString *)kCFBundleVersionKey], [[UIDevice currentDevice] model], [[UIDevice currentDevice] systemVersion], [[UIScreen mainScreen] scale]];
 #elif TARGET_OS_MAC
         NSString*  userAgent = @"Test-Mac-Agent";

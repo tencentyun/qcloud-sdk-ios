@@ -38,7 +38,7 @@
 #import "QCloudCOSXMLUploadObjectRequest_Private.h"
 #import "QCloudCOSXMLDownloadObjectRequest.h"
 #import "QCloudCOSXMLCopyObjectRequest.h"
-#import "QCloudThreadSafeMutableDictionary.h"
+#import <QCloudCore/QCloudThreadSafeMutableDictionary.h>
 QCloudThreadSafeMutableDictionary* QCloudCOSTransferMangerServiceCache()
 {
     static QCloudThreadSafeMutableDictionary* CloudcostransfermangerService = nil;

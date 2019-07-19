@@ -7,11 +7,10 @@
 
 #import "QCloudCOSXMLService+Quality.h"
 #import <objc/runtime.h>
-#import <QCloudCore/MTA.h>
-#import <QCloudCore/MTA+Account.h>
-#import <QCloudCore/MTAConfig.h>
 
-#import <QCloudCore/QualityAssuranceDefine.h>
+
+
+
 #import <QCloudCore/QCloudCore.h>
 #import <QCloudCore/QCloudLogger.h>
 #import "QCloudCOSXMLVersion.h"

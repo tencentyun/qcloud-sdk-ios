@@ -53,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
 */
 @property (strong, nonatomic) QCloudBucketOwner *owner;
 /**
-存储级别
+Object 的存储级别，枚举值：STANDARD，STANDARD_IA，ARCHIVE
 */
 @property (assign, nonatomic) QCloudCOSStorageClass storageClass;
 @end
