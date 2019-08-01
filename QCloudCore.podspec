@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
   s.name             = "QCloudCore"
 
-s.version              = "5.6.3"
+s.version              = "5.6.4"
 
   s.summary          = "QCloudCore--腾讯云iOS-SDK Foundation"
 
@@ -30,13 +30,17 @@ QCloudCore--腾讯云iOS-SDK Foundation。提供腾讯云iOS相关SDK的基础�
   s.source           = { :git => "https://github.com/tencentyun/qcloud-sdk-ios.git", :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
   s.ios.deployment_target = '8.0'
-  s.source_files = "QCloudCore/Classes/**/**/*"
+  s.osx.deployment_target = "10.12"
   s.frameworks ='CoreMedia', "Accelerate", "SystemConfiguration" 
   s.libraries = "z","c++"
-  s.public_header_files = "QCloudCore/Classes/**/*.h"
   s.static_framework = true
-  s.vendored_libraries='QCloudCore/Classes/QualityAssurance/libmtasdk.a'
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
+
+    s.default_subspec = 'Default'
+    s.subspec 'Default' do |default|
+        default.source_files = 'Pod/Classes/Base/**/*','Pod/Classes/QualityAssurance/*'
+    default.vendored_libraries='Pod/Classes/QualityAssurance/libmtasdk.a'
+    end
+    s.subspec 'WithoutMTA' do |withoutMTA|
+        withoutMTA.source_files = 'Pod/Classes/Base/**/*'
+    end
 end

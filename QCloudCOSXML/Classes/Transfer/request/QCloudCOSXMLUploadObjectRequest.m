@@ -562,7 +562,6 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     complete.customHeaders = [self.customHeaders mutableCopy];
     complete.retryPolicy.delegate = self;
     QCloudCompleteMultipartUploadInfo* info = [QCloudCompleteMultipartUploadInfo new];
-    complete.priority = self.priority;
     [self.uploadParts sortUsingComparator:^NSComparisonResult(QCloudMultipartInfo*  _Nonnull obj1,
                                                               QCloudMultipartInfo*  _Nonnull obj2) {
         int a = obj1.partNumber.intValue;
@@ -756,5 +755,4 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     }
     return YES;
 }
-
 @end

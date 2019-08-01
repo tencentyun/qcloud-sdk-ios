@@ -5,6 +5,7 @@
 //  Created by Dong Zhao on 2017/3/29.
 //
 //
+
 #ifndef QCloudCore_h
 #define QCloudCore_h
 
@@ -41,9 +42,6 @@
 #import "QCloudThreadSafeMutableDictionary.h"
 #import "QCloudError.h"
 #import "UIDevice+QCloudFCUUID.h"
-#import "MTA.h"
-#import "MTAConfig.h"
-#import "MTACrashReporter.h"
-#import "QualityAssuranceDefine.h"
+
 
 #endif /* QCloudCore_h */
