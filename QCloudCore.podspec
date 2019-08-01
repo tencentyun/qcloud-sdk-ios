@@ -37,10 +37,10 @@ QCloudCore--腾讯云iOS-SDK Foundation。提供腾讯云iOS相关SDK的基础�
 
     s.default_subspec = 'Default'
     s.subspec 'Default' do |default|
-        default.source_files = 'Pod/Classes/Base/**/*','Pod/Classes/QualityAssurance/*'
-    default.vendored_libraries='Pod/Classes/QualityAssurance/libmtasdk.a'
+        default.source_files = 'QCloudCore/Classes/Base/**/*','QCloudCore/Classes/QualityAssurance/*'
+    default.vendored_libraries='QCloudCore/Classes/QualityAssurance/libmtasdk.a'
     end
     s.subspec 'WithoutMTA' do |withoutMTA|
-        withoutMTA.source_files = 'Pod/Classes/Base/**/*'
+        withoutMTA.source_files = 'QCloudCore/Classes/Base/**/*'
     end
 end

@@ -16,15 +16,15 @@ s.version              = "5.6.4"
 
   s.default_subspec = 'Default'
   s.subspec 'Default' do |default|
-  default.source_files = 'Pod/Classes/**/*','Models/request.model','Pod/Classes/QCloudCOSXML/*'
+  default.source_files = 'QCloudCOSXML/Classes/**/*','Models/request.model','QCloudCOSXML/Classes/QCloudCOSXML/*'
     default.dependency "QCloudCore",'5.6.4'
     end
   s.subspec 'Slim' do |slim|
-  slim.source_files = 'Pod/Classes/**/*','Models/request.model','Pod/Classes/QCloudCOSXML/*'
+  slim.source_files = 'QCloudCOSXML/Classes/**/*','Models/request.model','QCloudCOSXML/Classes/QCloudCOSXML/*'
   slim.dependency "QCloudCore/WithoutMTA"
   end
   s.subspec 'Transfer' do |transfer|
-  transfer.source_files = 'Pod/Classes/*','Pod/Classes/Transfer/**/*','Pod/Classes/Base/*'
+  transfer.source_files = 'QCloudCOSXML/Classes/*','QCloudCOSXML/Classes/Transfer/**/*','QCloudCOSXML/Classes/Base/*'
   transfer.dependency "QCloudCore/WithoutMTA"
   end
 
