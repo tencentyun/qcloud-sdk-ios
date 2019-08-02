@@ -61,13 +61,15 @@ NSArray * filterUploadEventClass(){
     return NO;
 }
 
-+(id)internalUploadEvent:(NSString *)eventKey withParamter:(NSDictionary *)paramter {
-    Class cls = NSClassFromString(@"TACMTAErrorCode");
++(NSInteger)internalUploadEvent:(NSString *)eventKey withParamter:(NSDictionary *)paramter {
+    
+    Class cls = NSClassFromString(@"TACMTA");
     if (cls) {
-        Class result = [cls performSelector:NSSelectorFromString(@"trackCustomKeyValueEvent:props:") withObject:eventKey withObject:paramter];
-         return result;
+        NSInteger result = [[cls performSelector:NSSelectorFromString(@"trackCustomKeyValueEvent:props:") withObject:eventKey withObject:paramter] integerValue];
+        NSLog(@"test result === %ld",result);
+        return result;
     }
-    return nil;
+    return 0;
 }
 
 + (void)trackRequestSentWithType:(Class)cls {

@@ -47,7 +47,12 @@
         Class config = [cls performSelector:NSSelectorFromString(@"getInstance")];
         [config performSelector:NSSelectorFromString(@"setReportStrategy:") withObject:kQAUploadStrategy];
         [config performSelector:NSSelectorFromString(@"setCustomerAppVersion:") withObject:QCloudCOSXMLModuleVersion];
-        [cls performSelector:NSSelectorFromString(@"startWithAppkey") withObject:kQAccount];
+        Class tacCls = NSClassFromString(@"TACMTA");
+        if (tacCls) {
+             [tacCls performSelector:NSSelectorFromString(@"startWithAppkey") withObject:kQAccount];
+        }
+       
+       
      
     }else{
         QCloudLogDebug(@"please pod MTA");

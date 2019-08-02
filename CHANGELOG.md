@@ -1,3 +1,6 @@
+# 5.6.5    
+- mta bugfix
+    
 # 5.6.4    
 pods提供瘦身版的s（去除MTA）
     
