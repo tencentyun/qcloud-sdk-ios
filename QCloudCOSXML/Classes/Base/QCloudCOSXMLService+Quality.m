@@ -49,7 +49,7 @@
         [config performSelector:NSSelectorFromString(@"setCustomerAppVersion:") withObject:QCloudCOSXMLModuleVersion];
         Class tacCls = NSClassFromString(@"TACMTA");
         if (tacCls) {
-             [tacCls performSelector:NSSelectorFromString(@"startWithAppkey") withObject:kQAccount];
+            [tacCls performSelector:NSSelectorFromString(@"startWithAppkey:") withObject:kQAccount];
         }
        
        
