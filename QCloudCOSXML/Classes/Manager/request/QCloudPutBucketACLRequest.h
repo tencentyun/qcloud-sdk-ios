@@ -60,28 +60,21 @@ putACL.bucket = bucketName; //存储桶名称(cos v5 的 bucket格式为：xxx-a
 */
 @interface QCloudPutBucketACLRequest : QCloudBizHTTPRequest
 /**
-定义 Object 的 ACL 属性。有效值：private，public-read-write，public-read；默认值：private
+ 定义 Object 的 ACL 属性，有效值：private，public-read，default；默认值：default（继承 Bucket 权限）
+ 注意：当前访问策略条目限制为1000条，如果您不需要进行 Object ACL 控制，请填 default 或者此项不进行设置，默认继承 Bucket 权限
 */
 @property (strong, nonatomic) NSString *accessControlList;
 /**
-赋予被授权者读的权限。格式：x-cos-grant-read: id=" ",id=" "；
-当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
-当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
-其中，<OwnerUin>为根账户的uin，而<SubUin>为子账户的uin，使用时替换
+赋予被授权者读的权限。格式：id="OwnerUin"
+
 */
 @property (strong, nonatomic) NSString *grantRead;
 /**
-赋予被授权者写的权限。格式：x-cos-grant-write: id=" ",id=" "；
-当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
-当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
-其中，<OwnerUin>为根账户的uin，而<SubUin>为子账户的uin，使用时替换
+赋予被授权者写的权限。格式：id="OwnerUin"
 */
 @property (strong, nonatomic) NSString *grantWrite;
 /**
-赋予被授权者读写权限。格式: id=" ",id=" " ；
-当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
-当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
-其中，<OwnerUin>为根账户的uin，而<SubUin>为子账户的uin，使用时替换
+赋予被授权者读写权限。格式： id="OwnerUin"
 */
 @property (strong, nonatomic) NSString *grantFullControl;
 /**

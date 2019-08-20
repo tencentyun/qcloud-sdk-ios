@@ -64,25 +64,20 @@ object名
 */
 @property (strong, nonatomic) NSString *object;
 /**
-定义 Object 的 ACL 属性。有效值：private，public-read-write，public-read，default(后台会清除原本设置在 Object 上的 ACL，改为继承 Bucket 的 ACL)；默认值：private
+ 定义 Object 的 ACL 属性，有效值：private，public-read，default；默认值：default（继承 Bucket 权限）。
+ 注：当前访问策略条目限制为1000条，如果您不需要进行 Object ACL 控制，请填 default 或者此项不进行设置，默认继承 Bucket 权限
 */
 @property (strong, nonatomic) NSString *accessControlList;
 /**
-赋予被授权者读的权限。格式：id=" ",id=" "；
-当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
-当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
+ 赋予被授权者读的权限。格式：id="OwnerUin ";
 */
 @property (strong, nonatomic) NSString *grantRead;
 /**
-赋予被授权者写的权限。格式：id=" ",id=" "；
-当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
-当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
+ 赋予被授权者写的权限。格式：id="OwnerUin ";
 */
 @property (strong, nonatomic) NSString *grantWrite;
 /**
-赋予被授权者读写权限。格式: id=" ",id=" " ；
-当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
-当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
+ 赋予被授权者读写权限。格式: id="OwnerUin ";
 */
 @property (strong, nonatomic) NSString *grantFullControl;
 /**

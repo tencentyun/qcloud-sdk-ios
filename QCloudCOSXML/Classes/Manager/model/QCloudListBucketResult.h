@@ -58,7 +58,7 @@ NS_ASSUME_NONNULL_BEGIN
 响应请求条目是否被截断
 */
 @property (assign, nonatomic) BOOL isTruncated;
-@property (strong, nonatomic) NSArray<QCloudBucketContents*> *contents;
+@property (strong, nonatomic) NSArray<QCloudBucketContents*> * contents;
 /**
 将 Prefix 到 delimiter 之间的相同路径归为一类，定义为 Common Prefix
 */

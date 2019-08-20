@@ -4,7 +4,8 @@
 //
 //  Created by erichmzhang(张恒铭) on 2018/8/23.
 //
-
+#define kQAUploadStrategy @(2)
+#define kQAccount @"Iqcloud103800"
 #import "QCloudCOSXMLService+Quality.h"
 #import <objc/runtime.h>
 
@@ -37,4 +38,23 @@
 }
 
 
++ (void) initMTA {
+  
+    Class cls = NSClassFromString(@"TACMTAConfig");
+    if (cls) {
+        QCloudLogDebug(@"Quality assurence service start");
+        Class config = [cls performSelector:NSSelectorFromString(@"getInstance")];
+        [config performSelector:NSSelectorFromString(@"setReportStrategy:") withObject:kQAUploadStrategy];
+        [config performSelector:NSSelectorFromString(@"setCustomerAppVersion:") withObject:QCloudCOSXMLModuleVersion];
+        Class tacCls = NSClassFromString(@"TACMTA");
+        if (tacCls) {
+            [tacCls performSelector:NSSelectorFromString(@"startWithAppkey:") withObject:kQAccount];
+        }
+       
+       
+     
+    }else{
+        QCloudLogDebug(@"please pod MTA");
+    }
+}
 @end

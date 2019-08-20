@@ -28,8 +28,17 @@
 #import <Foundation/Foundation.h>
 #import <QCloudCore/QCloudCore.h>
 
+
 NS_ASSUME_NONNULL_BEGIN
 @interface QCloudBucketOwner : NSObject
+/**
+ Bucket 的 APPID
+ */
 @property (strong, nonatomic) NSString *identifier;
+/**
+ Object 持有者的名称
+ */
+@property (strong, nonatomic) NSString *displayName;
 @end
 NS_ASSUME_NONNULL_END
+

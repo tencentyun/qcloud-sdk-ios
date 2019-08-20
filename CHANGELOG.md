@@ -1,5 +1,20 @@
+# 5.6.6    
+- 优先级修复
+    
+# 5.6.5    
+- mta bugfix
+    
+# 5.6.4    
+pods提供瘦身版的s（去除MTA）
+    
+# 5.6.3    
+-bugfix
+    
+# 5.6.2    
+- 预签名url带有中文bugfix / - 跨区域复制bugfix / - 修复开启cocoapods的mutiple_pod_project功能之后编译报错
+    
 # 5.6.1    
-- mta去除idfa
+- mta去除idfa 
 - 增加自定义分片大小接口 
 - budfix
     

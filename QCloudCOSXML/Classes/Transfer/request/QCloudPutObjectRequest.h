@@ -89,7 +89,7 @@ RFC 2616 中定义的过期时间，将作为 Object 元数据保存
 @property (strong, nonatomic) NSString *expires;
 @property (strong, nonatomic) NSString *contentSHA1;
 /**
-Object 的存储级别
+对象的存储级别，枚举值：STANDARD（QCloudCOSStorageStandard），STANDARD_IA（QCloudCOSStorageStandardIA），ARCHIVE（QCloudCOSStorageARCHIVE）。默认值：STANDARD（QCloudCOSStorageStandard）
 */
 @property (assign, nonatomic) QCloudCOSStorageClass storageClass;
 /**
@@ -97,21 +97,18 @@ Object 的存储级别
 */
 @property (strong, nonatomic) NSString *accessControlList;
 /**
-赋予被授权者读的权限。格式：id=" ",id=" "；
-当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
-当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
+ 赋予被授权者读的权限。格式：id="OwnerUin";
+
 */
 @property (strong, nonatomic) NSString *grantRead;
 /**
-赋予被授权者写的权限。格式：id=" ",id=" "；
-当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
-当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
+赋予被授权者写的权限。格式：id="OwnerUin";
+
 */
 @property (strong, nonatomic) NSString *grantWrite;
 /**
-赋予被授权者读写权限。格式: id=" ",id=" " ；
-当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
-当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
+赋予被授权者读写权限。格式: id="OwnerUin";
+
 */
 @property (strong, nonatomic) NSString *grantFullControl;
 /**

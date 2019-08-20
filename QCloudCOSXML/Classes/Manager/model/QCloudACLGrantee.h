@@ -53,5 +53,9 @@ type 类型可以为 RootAccount， Subaccount；
 命名空间
 */
 @property (strong, nonatomic) NSString *xmlns;
+/**
+ 指定所有用户
+ */
+@property (strong, nonatomic) NSString *uri;
 @end
 NS_ASSUME_NONNULL_END

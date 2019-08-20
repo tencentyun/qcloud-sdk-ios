@@ -92,7 +92,20 @@
     } else {
         resultURL = [URLString copy];
     }
-    [mutableURLRequest setURL:[NSURL URLWithString:resultURL]];
+    
+    NSString *encodedString = (NSString *)
+    //当不管url中的中文是否已经utf-8转码了，都可以解决将中文字符转为utf-8的问题，且不是二次转码
+    CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+                                                              
+                                                              (CFStringRef)resultURL,
+                                                              
+                                                              (CFStringRef)@"!$&'()*+,-./:;=?@_~%#[]",
+                                                              
+                                                              NULL,
+                                                              
+                                                              kCFStringEncodingUTF8));
+    [mutableURLRequest setURL:[NSURL URLWithString:encodedString]];
+
     
     return mutableURLRequest;
 }

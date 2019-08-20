@@ -59,32 +59,23 @@ request.bucket = bucketName; //additional actions after finishing
 */
 @interface QCloudPutBucketRequest : QCloudBizHTTPRequest
 /**
-定义 Object 的 ACL 属性。有效值：private，public-read-write，public-read；默认值：private
+定义 bucket 的acl属性。有效值：private，public-read-write，public-read；默认值：private
 */
 @property (strong, nonatomic) NSString *accessControlList;
 /**
-赋予被授权者读的权限。格式：x-cos-grant-read: id=" ",id=" "；
-当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
-当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
-其中，<OwnerUin>为根账户的uin，而<SubUin>为子账户的uin，使用时替换
+赋予被授权者读的权限,id="OwnerUin"；
 */
 @property (strong, nonatomic) NSString *grantRead;
 /**
-赋予被授权者写的权限。格式：x-cos-grant-write: id=" ",id=" "；
-当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
-当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
-其中，<OwnerUin>为根账户的uin，而<SubUin>为子账户的uin，使用时替换
+赋予被授权者写的权限。格式: id="OwnerUin"；
 */
 @property (strong, nonatomic) NSString *grantWrite;
 /**
-赋予被授权者读写权限。格式: id=" ",id=" " ；
-当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
-当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
-其中，<OwnerUin>为根账户的uin，而<SubUin>为子账户的uin，使用时替换
+赋予被授权者读写权限。格式: id="OwnerUin"；
 */
 @property (strong, nonatomic) NSString *grantFullControl;
 /**
-要创建的存储桶名
+要创建的存储桶名称，命名规范请参阅 [存储桶命名规范](https://cloud.tencent.com/document/product/436/13312#.E5.91.BD.E5.90.8D.E8.A7.84.E8.8C.83)
 注意存储桶名只能由数字和小写字母组成，并且长度不能超过40个字符，否则会创建失败
 */
 @property (strong, nonatomic) NSString *bucket;
