@@ -7,6 +7,8 @@
 #define QCloudCoreModuleVersion_h
 #define QCloudCoreModuleVersionNumber 506006
 
+#define test 1
+
 //dependency
 
 //
