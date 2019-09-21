@@ -25,7 +25,7 @@
 
 
 #import "QCloudCOSTransferMangerService.h"
-#import <QCLoudCore/QCloudThreadSafeMutableDictionary.h>
+#import <QCloudCore/QCloudThreadSafeMutableDictionary.h>
 #import <QCloudCore/QCloudError.h>
 
 

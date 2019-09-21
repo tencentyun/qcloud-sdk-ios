@@ -28,7 +28,7 @@
 #import "QCloudCOSV4Service+Configuration.h"
 #import "QCloudCOSV4Service+Private.h"
 #import "QCloudThreadSafeMutableDictionary.h"
-#import "QCLoudError.h"
+#import "QCloudError.h"
 
 #import "QCloudCreateDirectoryRequest.h"
 #import "QCloudListDirectoryRequest.h"
