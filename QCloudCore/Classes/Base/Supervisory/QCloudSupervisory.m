@@ -97,10 +97,10 @@
     } else {
         __block QCloudSupervisorySession* oldSession;
         dispatch_barrier_async(_readWriteQueue, ^{
-             oldSession = _activeSession;
-            [_activeSession markFinish];
-            _activeSession = [[QCloudSupervisorySession alloc] init];
-            _activeSession.ips = [_hostIps copy];
+            oldSession = self->_activeSession;
+            [self->_activeSession markFinish];
+            self->_activeSession = [[QCloudSupervisorySession alloc] init];
+            self->_activeSession.ips = [self->_hostIps copy];
             [self flushSession:oldSession];
         });
 
@@ -203,9 +203,9 @@
     }
     
     dispatch_async(_readWriteQueue, ^{
-        NSString* existIPs = _hostIps[host];
+        NSString* existIPs = self->_hostIps[host];
         if (!existIPs) {
-            dispatch_barrier_async(_readWriteQueue, ^{
+            dispatch_barrier_async(self->_readWriteQueue, ^{
                 [self lookupDnsIp:host];
             });
         }

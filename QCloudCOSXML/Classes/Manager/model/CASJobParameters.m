@@ -64,7 +64,7 @@ NS_ASSUME_NONNULL_BEGIN
 
         NSString* CASTierenumValue = transfromDic[@"Tier"];
         if (CASTierenumValue && [CASTierenumValue isKindOfClass:[NSString class]] && CASTierenumValue.length > 0) {
-            int value = QCloudCASTierDumpFromString(CASTierenumValue);
+            NSInteger value = QCloudCASTierDumpFromString(CASTierenumValue);
             transfromDic[@"Tier"] = @(value);
         }
     return transfromDic;

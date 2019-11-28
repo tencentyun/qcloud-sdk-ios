@@ -57,32 +57,6 @@ NS_ASSUME_NONNULL_BEGIN
     return YES;
 }
 
-- (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dic
-{
-    if (!dic) {
-        return dic;
-    }
-    NSMutableDictionary* transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
-    NSArray* transformArrayKeypaths = @[
-    @"Buckets",
-    ];
-
-    for (NSString* keyPath in transformArrayKeypaths) {
-        id object = [dic valueForKeyPath:keyPath];
-        if (!object) {
-            continue;
-        }
-        if ([object isKindOfClass:[NSNull class]]) {
-            continue;
-        }
-        if (![object isKindOfClass:[NSArray class]]) {
-            [transfromDic setValue:@[object] forKeyPath:keyPath];
-        }
-    }
-
-    return transfromDic;
-}
-
 @end
 
 

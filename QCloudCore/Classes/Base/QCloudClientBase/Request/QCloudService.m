@@ -103,7 +103,7 @@
 - (BOOL) fillCommonParamtersForRequest:(QCloudBizHTTPRequest *)request error:(NSError * _Nullable __autoreleasing *)error
 {
     request.runOnService = self;
-    if ( nil == [request.requestData.httpHeaders valueForKey:HTTPHeaderUserAgent]) {
+    if (self.configuration.userAgent.length) {
         [request.requestData setValue:self.configuration.userAgent forHTTPHeaderField:HTTPHeaderUserAgent];
     }
     return YES;

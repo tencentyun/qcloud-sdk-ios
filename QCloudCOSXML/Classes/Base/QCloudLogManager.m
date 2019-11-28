@@ -179,7 +179,8 @@
     if ([currentViewController isKindOfClass:UINavigationController.class]) {
         [((UINavigationController *)currentViewController) pushViewController:tableViewController animated:YES];
     } else {
-        [currentViewController presentViewController:tableViewController animated:YES completion:nil];
+        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:tableViewController];
+               [currentViewController presentViewController:nav animated:YES completion:nil];
     }
 }
 - (UIViewController *)currentViewController {

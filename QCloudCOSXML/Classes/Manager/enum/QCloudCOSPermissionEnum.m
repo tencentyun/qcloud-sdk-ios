@@ -20,6 +20,14 @@ QCloudCOSPermission QCloudCOSPermissionDumpFromString(NSString* key) {
       else if ([key isEqualToString:@"FULL_CONTROL"]) {
           return QCloudCOSPermissionFullControl;
       }
+      else if ([key isEqualToString:@"READ_ACP"]) {
+          return QCloudCOSPermissionRead_ACP;
+      }
+      else if ([key isEqualToString:@"WRITE_ACP"]) {
+          return QCloudCOSPermissionWrite_ACP;
+      }
+    return 0;
+
       return 0;
 }
 NSString* QCloudCOSPermissionTransferToString(QCloudCOSPermission type) {
@@ -35,6 +43,14 @@ NSString* QCloudCOSPermissionTransferToString(QCloudCOSPermission type) {
         case QCloudCOSPermissionFullControl:
         {
             return @"FULL_CONTROL";
+        }
+        case QCloudCOSPermissionRead_ACP:
+        {
+            return @"READ_ACP";
+        }
+        case QCloudCOSPermissionWrite_ACP:
+        {
+            return @"WRITE_ACP";
         }
         default:
             return nil;

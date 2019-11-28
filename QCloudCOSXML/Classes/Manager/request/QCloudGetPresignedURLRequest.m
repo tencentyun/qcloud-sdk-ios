@@ -15,6 +15,15 @@
 @end
 
 @implementation QCloudGetPresignedURLRequest
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        self.internalRequestParameters = [NSMutableDictionary dictionary];
+        self.internalRequestHeaders = [NSMutableDictionary dictionary];
+    }
+    return self;
+}
 - (NSDictionary<NSString *, NSString *> *)requestHeaders {
     return [NSDictionary dictionaryWithDictionary:self.internalRequestHeaders];
 }
@@ -66,7 +75,7 @@
     }
     
     [self.requestHeaders enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, NSString * _Nonnull obj, BOOL * _Nonnull stop) {
-        [mutableURLRequest setValue:key forHTTPHeaderField:obj];
+        [mutableURLRequest setValue:obj forHTTPHeaderField:key];
     }];
     
     NSString* paramters = QCloudURLEncodeParamters(self.requestParameters, NO, NSUTF8StringEncoding);
@@ -87,7 +96,7 @@
                 }
             }
         } else {
-            resultURL = [NSString stringWithFormat:@"%@?%@",URLString, paramters];
+            resultURL = [NSString stringWithFormat:@"%@?%@&",URLString, paramters];
         }
     } else {
         resultURL = [URLString copy];

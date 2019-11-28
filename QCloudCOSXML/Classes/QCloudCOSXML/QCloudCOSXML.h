@@ -33,6 +33,17 @@
 #import "QCloudGetObjectRequest+Custom.h"
 #import "QCloudPutObjectRequest+Custom.h"
 
+#import "QCloudPutBucketLoggingRequest.h"
+#import "QCloudGetBucketLoggingRequest.h"
+#import "QCloudPutBucketTaggingRequest.h"
+#import "QCloudGetBucketTaggingRequest.h"
+#import "QCloudDeleteBucketTaggingRequest.h"
+
+#import "QCloudPutBucketInventoryRequest.h"
+#import "QCloudGetBucketInventoryRequest.h"
+#import "QCloudDeleteBucketInventoryRequest.h"
+#import "QCloudListBucketInventoryConfigurationsRequest.h"
+#import "QCloudSelectObjectContentRequest.h"
 /**
  简单复制对象的方法.
  
@@ -187,6 +198,7 @@
 
 #import "QCloudPutBucketVersioningRequest.h"
 #import "QCloudGetBucketVersioningRequest.h"
+
 #import "QCloudBucketReplicationConfiguation.h"
 
 #import "QCloudPutBucketReplicationRequest.h"
@@ -202,5 +214,16 @@
 #import "QCloudRestoreRequest.h"
 #import "QCloudListObjectVersionsRequest.h"
 #import "QCloudGetPresignedURLRequest.h"
+
+
+//domain
+#import "QCloudPutBucketDomainRequest.h"
+#import "QCloudGetBucketDomainRequest.h"
+
+//website
+
+#import "QCloudPutBucketWebsiteRequest.h"
+#import "QCloudGetBucketWebsiteRequest.h"
+#import "QCloudDeleteBucketWebsiteRequest.h"
 #endif /* QCloudCOSXML_h */
 

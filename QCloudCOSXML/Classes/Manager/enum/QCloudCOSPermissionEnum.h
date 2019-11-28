@@ -30,7 +30,9 @@ typedef NS_ENUM(NSInteger, QCloudCOSPermission) {
 
   QCloudCOSPermissionRead = 0,
   QCloudCOSPermissionWrite = 1,
-  QCloudCOSPermissionFullControl = 2,
+    QCloudCOSPermissionFullControl = 2,
+    QCloudCOSPermissionRead_ACP = 3,
+    QCloudCOSPermissionWrite_ACP = 4,
 };
 
 FOUNDATION_EXTERN QCloudCOSPermission QCloudCOSPermissionDumpFromString(NSString* key);

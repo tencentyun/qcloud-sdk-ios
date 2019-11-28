@@ -16,3 +16,4 @@ FOUNDATION_EXTERN NSString* QCloudEncrytFileOffsetMD5Base64(NSString* filePath, 
 FOUNDATION_EXTERN NSString* QCloudEncrytFileOffsetMD5(NSString* filePath, int64_t offset , int64_t siliceLength);
 FOUNDATION_EXTERN NSString* QCloudEncrytMD5String(NSString* originString);
 FOUNDATION_EXTERN NSString* QCloudHmacSha1Encrypt(NSString *data , NSString* key);
+FOUNDATION_EXTERN NSData* QCloudHmacEncrypt(NSString *data ,NSString *key);

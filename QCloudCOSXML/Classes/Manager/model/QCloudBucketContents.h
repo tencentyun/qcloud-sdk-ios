@@ -47,7 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
 文件大小，单位是Byte
 */
-@property (assign, nonatomic) int size;
+@property (assign, nonatomic) NSInteger size;
 /**
 存储桶持有者信息
 */

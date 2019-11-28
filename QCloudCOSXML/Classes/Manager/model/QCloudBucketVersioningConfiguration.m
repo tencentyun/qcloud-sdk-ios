@@ -64,7 +64,7 @@ NS_ASSUME_NONNULL_BEGIN
 
         NSString* COSBucketVersioningStatusenumValue = transfromDic[@"Status"];
         if (COSBucketVersioningStatusenumValue && [COSBucketVersioningStatusenumValue isKindOfClass:[NSString class]] && COSBucketVersioningStatusenumValue.length > 0) {
-            int value = QCloudCOSBucketVersioningStatusDumpFromString(COSBucketVersioningStatusenumValue);
+            NSInteger value = QCloudCOSBucketVersioningStatusDumpFromString(COSBucketVersioningStatusenumValue);
             transfromDic[@"Status"] = @(value);
         }
     return transfromDic;

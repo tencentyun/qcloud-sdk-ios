@@ -27,21 +27,12 @@ typedef NS_ENUM(int,QCloudNetworkErrorCode) {
     QCloudNetworkErrorCodeContentError = 10004,
     //ServerError 服务器返回了不合法的数据
     QCloudNetworkErrorCodeResponseDataTypeInvalid = 20001,
-    //PoorNetwork 网络异常
-    QCloudNetworkErrorCodeNoNetwork = 20003,
     //数据完整性校验失败
     QCloudNetworkErrorCodeMD5NotMatch = 20004,
     //UserCancelled 用户取消
     QCloudNetworkErrorCodeCanceled  = 30000,
     //AlreadyFinished 任务已完成
-     QCloudNetworkErrorCodeAlreadyFinish = 30001,
-    
-    QCloudNetworkErrorCodeDecodeError = -30005,
-    QCloudNetworkErrorCodeAborted = -340010,
-    //无法解析域名
-    QCloudNetworkErrorCodeCannotResloveDomain = -340014,
-    //获取签名超时
-    QCloudNetworkErrorCodeSignatureTimeOut = -340015
+    QCloudNetworkErrorCodeAlreadyFinish = 30001,
 };
 
 @protocol QCloudNetworkError <NSObject>
@@ -60,6 +51,7 @@ FOUNDATION_EXTERN NSString* const kQCloudNetworkDomain;
 FOUNDATION_EXTERN NSString* const kQCloudNetworkErrorObject;
 @interface NSError (QCloudNetworking)
 + (NSError*) qcloud_errorWithCode:(int)code message:(NSString*)message;
++ (BOOL) isNetworkErrorAndRecoverable:(NSError *)error;
 @end
 
 

@@ -17,31 +17,14 @@ static NSString *const QCloudServiceConfigurationUnknown = @"Unknown";
 @implementation QCloudServiceConfiguration
 - (NSString*) userAgent
 {
-#if TARGET_OS_IOS
-
     NSString*(^UserAgent)(NSString* productKey) = ^(NSString* productKey) {
-            NSString *systemName = [[[UIDevice currentDevice] systemName] stringByReplacingOccurrencesOfString:@" " withString:@"-"];
-            if (!systemName) {
-                systemName = QCloudServiceConfigurationUnknown;
-            }
-            NSString *systemVersion = [[UIDevice currentDevice] systemVersion];
-            if (!systemVersion) {
-                systemVersion = QCloudServiceConfigurationUnknown;
-            }
-            NSString *localeIdentifier = [[NSLocale currentLocale] localeIdentifier];
-            if (!localeIdentifier) {
-                localeIdentifier = QCloudServiceConfigurationUnknown;
-            }
-            return [NSString stringWithFormat:@"%@-iOS-%@ %@/%@ %@", productKey,self.productVersion, systemName, systemVersion, localeIdentifier];
+        return [NSString stringWithFormat:@"%@-%@", productKey,self.productVersion];
     };
-    if (self.userAgentProductKey.length) {
+    if (self.userAgentProductKey.length && self.productVersion.length) {
         return UserAgent(self.userAgentProductKey);
     } else {
-        return UserAgent(@"");
+        return nil;
     }
-#elif TARGET_OS_MAC
-    return @"Test-Mac-Agent";
-#endif
 }
 
 

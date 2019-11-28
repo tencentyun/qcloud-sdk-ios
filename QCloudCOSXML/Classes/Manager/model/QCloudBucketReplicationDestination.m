@@ -65,7 +65,7 @@ NS_ASSUME_NONNULL_BEGIN
 
         NSString* COSStorageClassenumValue = transfromDic[@"StorageClass"];
         if (COSStorageClassenumValue && [COSStorageClassenumValue isKindOfClass:[NSString class]] && COSStorageClassenumValue.length > 0) {
-            int value = QCloudCOSStorageClassDumpFromString(COSStorageClassenumValue);
+            NSInteger value = QCloudCOSStorageClassDumpFromString(COSStorageClassenumValue);
             transfromDic[@"StorageClass"] = @(value);
         }
     return transfromDic;

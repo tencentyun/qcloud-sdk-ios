@@ -18,6 +18,51 @@ NSString* const kQCloudNetworkErrorObject = @"kQCloudNetworkErrorObject";
     NSError* error = [NSError errorWithDomain:kQCloudNetworkDomain code:code userInfo:@{NSLocalizedDescriptionKey:message}];
     return error;
 }
+
++ (BOOL)isNetworkErrorAndRecoverable:(NSError *)error {
+    
+    static NSSet* kQCloudNetworkNotRecoverableCode;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        kQCloudNetworkNotRecoverableCode = [NSSet setWithObjects:
+                                                @(NSURLErrorCancelled),
+                                                @(NSURLErrorBadURL),
+
+                                                @(NSURLErrorSecureConnectionFailed),
+                                                @(NSURLErrorServerCertificateHasBadDate),
+                                                @(NSURLErrorServerCertificateUntrusted),
+                                                @(NSURLErrorServerCertificateHasUnknownRoot),
+                                                @(NSURLErrorServerCertificateNotYetValid),
+                                                @(NSURLErrorClientCertificateRejected),
+                                                @(NSURLErrorClientCertificateRequired),
+                                                @(NSURLErrorCannotLoadFromNetwork),
+                                                nil];
+    });
+    
+    if([error.domain isEqualToString:NSURLErrorDomain]) {
+        if (![kQCloudNetworkNotRecoverableCode containsObject:[NSNumber numberWithLong:error.code]]) {
+            return YES;
+        }
+    }
+    if ([error.domain isEqualToString:kQCloudNetworkDomain]) {
+        if (error.userInfo && error.userInfo[@"Code"]) {
+            NSString *serverCode = error.userInfo[@"Code"];
+            if ([serverCode isEqualToString:@"InvalidDigest"]
+                || [serverCode isEqualToString:@"BadDigest"]
+                || [serverCode isEqualToString:@"InvalidSHA1Digest"]
+                || [serverCode isEqualToString:@"RequestTimeOut"]) {
+                return YES;
+            }
+        }
+        
+        if (error.code == QCloudNetworkErrorCodeMD5NotMatch) {
+            return YES;
+        }
+    }
+    
+    return NO;
+}
+
 @end
 
 @implementation QCloudCommonNetworkError

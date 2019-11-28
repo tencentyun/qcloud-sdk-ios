@@ -13,9 +13,9 @@
 #import "QCloudURLHelper.h"
 #import <QCloudCore/QCloudError.h>
 @implementation NSDictionary(HeaderFilter)
-- (NSDictionary*)filteHeaders; {
+- (NSDictionary*)filterHeaders; {
     NSMutableDictionary* signedHeaders = [[NSMutableDictionary alloc] init];
-    __block  const NSMutableArray* shouldSignedHeaderList = @[ @"Content-Length", @"Content-MD5"];
+    __block  const NSArray* shouldSignedHeaderList = @[ @"Content-Length", @"Content-MD5"];
     [self enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
         //签名的Headers列表：x开头的(x-cos-之类的),content-length,content-MD5
         BOOL shouldSigned = NO;
@@ -90,7 +90,7 @@
 -(void)PutRequestWithUrl:(NSString *)urlString request:(NSMutableURLRequest* )urlRequest successBlock:(SuccessBlock)success;
 {
     //取出参数
-    NSDictionary* headers = [[urlRequest allHTTPHeaderFields] filteHeaders];
+    NSDictionary* headers = [[urlRequest allHTTPHeaderFields] filterHeaders];
     NSDictionary* paramas = QCloudURLReadQuery(urlRequest.URL);
     NSMutableDictionary *paramaters = [NSMutableDictionary dictionary];
     paramaters[@"path"] = urlRequest.URL.qcloud_csp_path;

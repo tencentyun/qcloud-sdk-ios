@@ -66,8 +66,5 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL) fillCommonParamtersForRequest:(QCloudBizHTTPRequest *)request error:(NSError* __autoreleasing*)error;
 
 - (QCloudSignatureFields*) signatureFiledsForRequest:(QCloudBizHTTPRequest*)request;
-+ (void)interceptApplication:(UIApplication *)application
-handleEventsForBackgroundURLSession:(NSString *)identifier
-           completionHandler:(void (^)(void))completionHandler;
 @end
 NS_ASSUME_NONNULL_END

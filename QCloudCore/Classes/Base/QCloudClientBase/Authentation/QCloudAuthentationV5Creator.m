@@ -17,10 +17,11 @@
 #import "QCloudLogger.h"
 #import "QCloudURLHelper.h"
 #import "NSDate+QCLOUD.h"
+
 @implementation NSDictionary(HeaderFilter)
 - (NSDictionary*)filteHeaders; {
     NSMutableDictionary* signedHeaders = [[NSMutableDictionary alloc] init];
-    __block  const NSMutableArray* shouldSignedHeaderList = @[ @"Content-Length", @"Content-MD5"];
+    __block  const NSArray* shouldSignedHeaderList = @[ @"Content-Length", @"Content-MD5"];
     [self enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
         //签名的Headers列表：x开头的(x-cos-之类的),content-length,content-MD5
         BOOL shouldSigned = NO;

@@ -33,10 +33,6 @@
 - (instancetype) initWithConfiguration:(QCloudServiceConfiguration *)configuration
 {
     configuration = [configuration copy];
-    //
-    configuration.productVersion = @"5.0.0";
-    configuration.userAgentProductKey = @"cosxml";
-    //
     self = [super initWithConfiguration:configuration];
     if (!self) {
         return self;

@@ -68,7 +68,7 @@ NS_ASSUME_NONNULL_BEGIN
 
         NSString* COSXMLStatusenumValue = transfromDic[@"Status"];
         if (COSXMLStatusenumValue && [COSXMLStatusenumValue isKindOfClass:[NSString class]] && COSXMLStatusenumValue.length > 0) {
-            int value = QCloudCOSXMLStatusDumpFromString(COSXMLStatusenumValue);
+            NSInteger value = QCloudCOSXMLStatusDumpFromString(COSXMLStatusenumValue);
             transfromDic[@"Status"] = @(value);
         }
     return transfromDic;

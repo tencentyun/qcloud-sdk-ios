@@ -58,7 +58,7 @@ BOOL QCloudCheckIPVaild(NSString* ip) {
     }
     if (!ip) {
         QCloudLogDebug(@"Cannot resolve domain %@",domain);
-        *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeCannotResloveDomain message:[NSString  stringWithFormat: @"NetworkException:无法解析域名 %@",domain]];
+        *error = [NSError qcloud_errorWithCode:kCFURLErrorDNSLookupFailed message:[NSString  stringWithFormat: @"NetworkException:无法解析域名 %@",domain]];
         return NO;
     }
 

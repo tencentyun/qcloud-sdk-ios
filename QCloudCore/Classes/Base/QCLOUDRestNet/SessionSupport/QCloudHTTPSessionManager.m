@@ -209,7 +209,7 @@ QCloudThreadSafeMutableDictionary* QCloudBackgroundSessionManagerCache()
 
 // only work at iOS 10 and up
 - (void) URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didFinishCollectingMetrics:(NSURLSessionTaskMetrics *)metrics
-{
+API_AVAILABLE(ios(10.0)){
         QCloudURLSessionTaskData* taskData = [self taskDataForTask:task];
 //        NSAssert(taskData, @"无法获取缓存的TaskData，请检查主动Cache的地方");
         NSURLSessionTaskTransactionMetrics* networkMetrics = nil;
@@ -240,21 +240,17 @@ QCloudThreadSafeMutableDictionary* QCloudBackgroundSessionManagerCache()
     QCloudURLSessionTaskData* taskData = [self taskDataForTask:dataTask];
     [taskData.httpRequest.benchMarkMan benginWithKey:kReadResponseHeaderTookTime];
     taskData.response = (NSHTTPURLResponse*)response;
+    NSURLSessionResponseDisposition disp = [taskData.httpRequest reciveResponse:response];
     if (taskData.httpRequest.downloadingURL) {
         // if http statue is not found will forbidden write to file
-        if ([@[@(400), @(403), @(404), @(405)] containsObject:@(taskData.response.statusCode)]) {
+        if (taskData.response.statusCode >= 400) {
             taskData.forbidenWirteToFile = YES;
-            completionHandler([taskData.httpRequest reciveResponse:response]);
-        } else {
-            completionHandler([taskData.httpRequest reciveResponse:response]);
         }
-    } else {
-        completionHandler([taskData.httpRequest reciveResponse:response]);
     }
+    completionHandler(disp);
 }
 - (void) URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend
 {
-    QCloudLogDebug(@"test1111  %lld %lld %lld ",bytesSent,totalBytesSent,totalBytesExpectedToSend);
     QCloudURLSessionTaskData* taskData = [self taskDataForTask:task];
     if (totalBytesSent<=32768) {
          [taskData.httpRequest.benchMarkMan benginWithKey:kWriteRequestBodyTookTime];
@@ -276,9 +272,16 @@ QCloudThreadSafeMutableDictionary* QCloudBackgroundSessionManagerCache()
         [taskData.httpRequest.benchMarkMan markFinishWithKey:kReadResponseHeaderTookTime];
         [taskData.httpRequest.benchMarkMan benginWithKey:kReadResponseBodyTookTime];
     }
-    if ([@[@(400), @(403), @(404), @(405)] containsObject:@(taskData.response.statusCode)]) {
+    if (taskData.response.statusCode >= 400) {
         // should not write data or callback
         [taskData appendData:data];
+        if (taskData.data.length >= [taskData.response.allHeaderFields[@"Content-Length"] longLongValue]) {
+            if (taskData.httpRequest.requestData.directBody) {
+                // 上传任务
+                taskData.isTaskCancelledByStatusCodeCheck = YES;
+                [dataTask cancel];
+            }
+        }
     } else {
         [taskData appendData:data];
         if (taskData.httpRequest) {
@@ -306,7 +309,7 @@ QCloudThreadSafeMutableDictionary* QCloudBackgroundSessionManagerCache()
     }
     int seq = [self seqForTask:task];
     __weak typeof(self)weakSelf = self;
-    if (error) {
+    if (!taskData.isTaskCancelledByStatusCodeCheck && error) {
         QCloudLogError(@"Network Error %@",error);
         void(^EndRetryFunc)(void) = ^(void) {
             [taskData.httpRequest onReviveErrorResponse:task.response error:error];
@@ -418,6 +421,7 @@ QCloudThreadSafeMutableDictionary* QCloudBackgroundSessionManagerCache()
     QCloudLogDebug(@"executeRestHTTPReqeust sessionManager session %@ %@",httpRequest.runOnService.sessionManager,httpRequest.runOnService.sessionManager.session);
     NSError* error;
     NSMutableURLRequest* urlRequest = [[httpRequest buildURLRequest:&error] mutableCopy];
+    
     if (error) {
         [httpRequest onError:error];
         return;
@@ -523,13 +527,13 @@ QCloudThreadSafeMutableDictionary* QCloudBackgroundSessionManagerCache()
     [self cacheTask:task data:taskData forSEQ:(int)httpRequest.requestID];
 //    [httpRequest.benchMarkMan benginWithKey:kRNBenchmarkOnlyNet];
     @try {
-        int length = [[urlRequest.allHTTPHeaderFields objectForKey:@"Content-Length"] intValue];
+//        int length = [[urlRequest.allHTTPHeaderFields objectForKey:@"Content-Length"] intValue];
 //        [httpRequest.benchMarkMan directSetCost:length forKey:kRNBenchmarkSizeRequeqstBody];
-        NSUInteger headerLength = [NSJSONSerialization dataWithJSONObject:urlRequest.allHTTPHeaderFields options:0 error:nil].length;
+//        NSUInteger headerLength = [NSJSONSerialization dataWithJSONObject:urlRequest.allHTTPHeaderFields options:0 error:nil].length;
 //        [httpRequest.benchMarkMan directSetCost:headerLength forKey:kRNBenchmarkSizeRequeqstHeader];
     }
     @catch (NSException *exception) {} @finally {}
-    
+    QCloudLogDebug(@"task Resume");
     [task resume];
     
    

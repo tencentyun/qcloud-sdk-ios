@@ -152,6 +152,69 @@
 - (void) ListObjectVersions:(QCloudListObjectVersionsRequest *)request {
     [super performRequest:request isHaveBody:NO];
 }
+
+
+
+-(void)PutBucketDomain:(QCloudPutBucketDomainRequest *)request{
+    [super performRequest:request isHaveBody:NO];
+}
+
+-(void)GetBucketDomain:(QCloudGetBucketDomainRequest *)request{
+    [super performRequest:request isHaveBody:NO];
+}
+
+-(void)PutBucketWebsite:(QCloudPutBucketWebsiteRequest *)request{
+    [super performRequest:request isHaveBody:NO];
+}
+
+-(void)GetBucketWebsite:(QCloudGetBucketWebsiteRequest *)request{
+    [super performRequest:request isHaveBody:NO];
+}
+
+-(void)DeleteBucketWebsite:(QCloudDeleteBucketWebsiteRequest *)request{
+    [super performRequest:request isHaveBody:NO];
+}
+
+
+-(void)GetBucketTagging:(QCloudGetBucketTaggingRequest *)request{
+    [super performRequest:request isHaveBody:NO];
+}
+
+-(void)PutBucketTagging:(QCloudPutBucketTaggingRequest *)request{
+    [super performRequest:request isHaveBody:NO];
+}
+
+-(void)DeleteBucketTagging:(QCloudDeleteBucketTaggingRequest *)request{
+    [super performRequest:request isHaveBody:NO];
+}
+
+-(void)SelectObjectContent:(QCloudSelectObjectContentRequest *)request{
+     [super performRequest:request isHaveBody:NO];
+}
+-(void)GetBucketLogging:(QCloudGetBucketLoggingRequest *)request{
+    [super performRequest:request isHaveBody:NO];
+}
+
+-(void)PutBucketLogging:(QCloudPutBucketLoggingRequest *)request{
+    [super performRequest:request isHaveBody:NO];
+}
+    
+-(void)PutBucketInventory:(QCloudPutBucketInventoryRequest *)request{
+    [super performRequest:request isHaveBody:NO];
+}
+    
+-(void)GetBucketInventory:(QCloudGetBucketInventoryRequest *)request{
+    [super performRequest:request isHaveBody:NO];
+}
+    
+-(void)DeleteBucketInventory:(QCloudDeleteBucketInventoryRequest *)request{
+    [super performRequest:request isHaveBody:NO];
+}
+    
+-(void)ListBucketInventory:(QCloudListBucketInventoryConfigurationsRequest *)request{
+    [super performRequest:request isHaveBody:NO];
+}
+
 - (void) getPresignedURL:(QCloudGetPresignedURLRequest*)request {
     
     request.runOnService = self;
@@ -272,7 +335,7 @@
         }
         dispatch_semaphore_signal(semaphore);
     }];
-    [self PutObjectCopy:copyObjectRequest];
+    [[QCloudCOSTransferMangerService defaultCOSTransferManager]CopyObject:copyObjectRequest];
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
 }
 
@@ -284,7 +347,7 @@
     copyObjectRequest.sourceObject = object;
     copyObjectRequest.bucket = bucket;
     copyObjectRequest.object = object;
-    copyObjectRequest.customHeaders = meta;
+    [copyObjectRequest.customHeaders addEntriesFromDictionary:meta];
     [copyObjectRequest setFinishBlock:^(QCloudCopyObjectResult *result, NSError *error) {
         if (nil == error) {
             //
@@ -293,7 +356,7 @@
         }
         dispatch_semaphore_signal(semaphore);
     }];
-    [self PutObjectCopy:copyObjectRequest];
+    [[QCloudCOSTransferMangerService defaultCOSTransferManager]CopyObject:copyObjectRequest];
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
 }
 @end

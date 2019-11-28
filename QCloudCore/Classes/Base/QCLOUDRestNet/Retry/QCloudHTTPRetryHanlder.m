@@ -9,8 +9,8 @@
 #import "QCloudHTTPRetryHanlder.h"
 #import "QCloudNetEnv.h"
 #import "QCloudLogger.h"
+#import "NSError+QCloudNetworking.h"
 @interface QCloudHTTPRetryHanlder()
-@property (nonatomic,strong) NSSet* errorRetryCode;
 @end
 
 @implementation QCloudHTTPRetryHanlder
@@ -32,20 +32,6 @@
     }
     _maxCount = maxCount;
     _sleepStep = sleepStep;
-    _errorRetryCode = [NSSet setWithObjects:@(kCFHostErrorHostNotFound),
-                       @(kCFURLErrorTimedOut),
-                        @(kCFURLErrorDNSLookupFailed),
-                       @(kCFSOCKS5ErrorBadState),
-                       @(kCFErrorHTTPProxyConnectionFailure),
-                       @(kCFErrorHTTPBadProxyCredentials),
-                       @(kCFErrorPACFileError),
-                       @(kCFErrorPACFileAuth),
-                       @(kCFURLErrorCannotConnectToHost),
-                       @(kCFURLErrorNetworkConnectionLost),
-                       @(kCFURLErrorNotConnectedToInternet),
-                       @(kCFURLErrorCallIsActive),
-                       @(kCFURLErrorRequestBodyStreamExhausted),
-                             nil];
     [self reset];
     return self;
 }
@@ -73,20 +59,18 @@
 
 - (BOOL) canRetryWhenError:(NSError*)error
 {
+    if ([error.domain isEqualToString:NSURLErrorDomain]) {
+        if (error.code == NSURLErrorTimedOut) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:kNetworkSituationChangeKey object:@(QCloudNetworkSituationWeakNetwork)];
+        }
+    }
+    
     if (_currentTryCount >= _maxCount) {
         QCloudLogDebug(@"超过了最大重试次数，不再重试");
         return NO;
     }
-    for (NSNumber* number in self.errorRetryCode) {
-        if (number.integerValue == error.code) {
-            QCloudLogDebug(@"Retry %ith times",_currentTryCount);
-            if (error.code == kCFURLErrorTimedOut) {
-                [[NSNotificationCenter defaultCenter] postNotificationName:kNetworkSituationChangeKey object:@(QCloudNetworkSituationWeakNetwork)];
-            }
-            return YES;
-        }
-    }
-    return NO;
+    
+    return [NSError isNetworkErrorAndRecoverable:error] || ([error.domain isEqualToString:kQCloudNetworkDomain] && error.code >= 500);
 }
 
 @end

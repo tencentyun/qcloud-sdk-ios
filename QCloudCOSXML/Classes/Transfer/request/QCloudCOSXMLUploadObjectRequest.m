@@ -523,6 +523,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     if (resumeData) {
         dic[QCloudUploadResumeDataKey] = resumeData;
     }
+    
     NSError* transferError = [NSError errorWithDomain:error.domain code:error.code userInfo:dic];
     return transferError;
 }
@@ -749,7 +750,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
         self.customHeaders[@"x-cos-server-side-encryption-context"] = [data base64EncodedStringWithOptions:0];
     }
 }
--(BOOL)shouldRetry:(NSURLSessionTask *)task error:(NSError *)error{
+-(BOOL)shouldRetry:(QCloudURLSessionTaskData *)task error:(NSError *)error{
     if ([self.retryHandler.delegate respondsToSelector:@selector(shouldRetry:error:)]) {
         return [self.retryHandler.delegate shouldRetry:task error:error];
     }

@@ -11,7 +11,7 @@
 
 
 
-void   DZEnsureMainThread(void(^mainSafeBlock)())
+void   DZEnsureMainThread(void(^mainSafeBlock)(void))
 {
     if (mainSafeBlock == NULL) {
         return;

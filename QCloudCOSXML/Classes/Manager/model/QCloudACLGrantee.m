@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
       @"displayName" :@"DisplayName",
       @"type" :@"_type",
       @"xmlns" :@"_xmlns",
-      @"xmlns" :@"URI",
+      @"uri" :@"URI",
   };
 }
 
@@ -69,7 +69,7 @@ NS_ASSUME_NONNULL_BEGIN
 
         NSString* COSAccountTypeenumValue = transfromDic[@"_type"];
         if (COSAccountTypeenumValue && [COSAccountTypeenumValue isKindOfClass:[NSString class]] && COSAccountTypeenumValue.length > 0) {
-            int value = QCloudCOSAccountTypeDumpFromString(COSAccountTypeenumValue);
+            NSInteger value = QCloudCOSAccountTypeDumpFromString(COSAccountTypeenumValue);
             transfromDic[@"_type"] = @(value);
         }
     return transfromDic;

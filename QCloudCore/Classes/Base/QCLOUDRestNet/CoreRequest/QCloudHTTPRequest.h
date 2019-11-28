@@ -17,7 +17,7 @@
 @class QCloudService;
 
 
-typedef void(^QCloudHTTPRequestConfigure)(QCloudRequestSerializer* requestSerializer, QCloudResponseSerializer* responseSerializer);
+typedef void(^QCloudHTTPRequestConfigure)(QCloudRequestSerializer*_Nonnull requestSerializer, QCloudResponseSerializer*_Nonnull responseSerializer);
 
 
 /**
@@ -31,9 +31,9 @@ typedef void(^QCloudHTTPRequestConfigure)(QCloudRequestSerializer* requestSerial
     QCloudResponseSerializer*       _responseSerializer;
     QCloudHTTPRetryHanlder*         _retryHandler;
 }
-@property (nonatomic, strong, readonly) QCloudRequestSerializer* requestSerializer;
-@property (nonatomic, strong, readonly) QCloudRequestData* requestData;
-@property (nonatomic, strong, readonly) QCloudResponseSerializer* responseSerializer;
+@property (nonatomic, strong, readonly) QCloudRequestSerializer* _Nonnull requestSerializer;
+@property (nonatomic, strong, readonly) QCloudRequestData* _Nonnull requestData;
+@property (nonatomic, strong, readonly) QCloudResponseSerializer* _Nonnull responseSerializer;
 
 
 
@@ -44,7 +44,7 @@ typedef void(^QCloudHTTPRequestConfigure)(QCloudRequestSerializer* requestSerial
 /**
  如果存在改参数，则数据会下载到改路径指名的地址下面，而不会写入内存中。
  */
-@property (nonatomic, strong) NSURL* downloadingURL;
+@property (nonatomic, strong) NSURL* _Nonnull downloadingURL;
 
 /**
  本地已经下载的数据偏移量，如果使用则会从改位置开始下载，如果不使用，则从头开始下载，如果您使用了Range参数，则需要注意改参数。
@@ -53,28 +53,28 @@ typedef void(^QCloudHTTPRequestConfigure)(QCloudRequestSerializer* requestSerial
 /**
  在特殊网络错误下，进行重试的策略，默认是不进行重试。可通过集成QCloudHTTPRetryHandler来自定义重试的出发条件和重试策略。
  */
-@property (nonatomic, strong, readonly) QCloudHTTPRetryHanlder* retryPolicy;
+@property (nonatomic, strong, readonly) QCloudHTTPRetryHanlder* _Nullable  retryPolicy;
 
 /**
   服务器返回数据，当服务器有返回数据的时候，该字段有值，其他时候该字段无意义
  */
-@property (nonatomic, strong, readonly) NSData* responseData;
+@property (nonatomic, strong, readonly) NSData* _Nullable  responseData;
 
 /**
   服务器响应结构，当服务器有返回数据的时候，该字段有值，其他时候该字段无意义
  */
-@property (nonatomic, strong, readonly) NSHTTPURLResponse* httpURLResponse;
+@property (nonatomic, strong, readonly) NSHTTPURLResponse* _Nullable httpURLResponse;
 
 /**
  当系统调用结束，并且出错的情况下，使用该字段表示错误信息，注意：只有在错误的情况下，该字段才会有数据
  */
-@property (nonatomic, strong, readonly) NSError* httpURLError;
+@property (nonatomic, strong, readonly) NSError* _Nullable httpURLError;
 
 
 /**
   用来配置协议中HTTP的请求参数和解析
  */
-@property (nonatomic, strong) QCloudHTTPRequestConfigure configureBlock;
+@property (nonatomic, strong) QCloudHTTPRequestConfigure _Nonnull configureBlock;
 
 
 
@@ -83,12 +83,12 @@ typedef void(^QCloudHTTPRequestConfigure)(QCloudRequestSerializer* requestSerial
  */
 - (void)    loadConfigureBlock;
 
-- (void) setConfigureBlock:(void(^)(QCloudRequestSerializer* requestSerializer, QCloudResponseSerializer* responseSerializer))configBlock;
+- (void) setConfigureBlock:(void(^_Nonnull )(QCloudRequestSerializer*_Nonnull  requestSerializer, QCloudResponseSerializer* _Nonnull responseSerializer))configBlock;
 
 /**
  构架RequestData，加载自定义的参数
  */
-- (BOOL)    buildRequestData:(NSError* __autoreleasing*)error;
+- (BOOL) buildRequestData:(NSError* _Nullable __autoreleasing*_Nullable)error;
 
 
 /**
@@ -97,7 +97,7 @@ typedef void(^QCloudHTTPRequestConfigure)(QCloudRequestSerializer* requestSerial
  @param error 当出错的时候，表示出错信息
  @return 用于构建真实网络请求的NSURLRequest
  */
-- (NSURLRequest*) buildURLRequest:(NSError* __autoreleasing*)error ;
+- (NSURLRequest*_Nullable) buildURLRequest:(NSError* _Nullable __autoreleasing*_Nullable )error ;
 
 @end
 
@@ -120,11 +120,11 @@ typedef void(^QCloudHTTPRequestConfigure)(QCloudRequestSerializer* requestSerial
 
 
 
-- (void) setConfigureBlock:(void(^)(QCloudRequestSerializer* requestSerializer, QCloudResponseSerializer* responseSerializer))confBlock;
+- (void) setConfigureBlock:(void(^_Nonnull )(QCloudRequestSerializer*_Nonnull requestSerializer, QCloudResponseSerializer*_Nonnull responseSerializer))confBlock;
 
 
 
-- (BOOL ) prepareInvokeURLRequest:(NSMutableURLRequest*)urlRequest error:(NSError* __autoreleasing*)error;
+- (BOOL ) prepareInvokeURLRequest:(NSMutableURLRequest* _Nonnull  )urlRequest error:(NSError*_Nullable __autoreleasing*_Nullable )error;
 @end
 
 
@@ -140,9 +140,9 @@ typedef void(^QCloudHTTPRequestConfigure)(QCloudRequestSerializer* requestSerial
  @param response 服务器返回的response（主要包含头部）
  @return NSURLSessionResponseDisposition
  */
-- (NSURLSessionResponseDisposition) reciveResponse:(NSURLResponse*)response;
+- (NSURLSessionResponseDisposition) reciveResponse:(NSURLResponse*_Nullable)response;
 
-- (void) onReviveErrorResponse:(NSURLResponse*)prsponse error:(NSError*)error;
-- (void) onReciveRespone:(NSURLResponse *)response data:(NSData *)data;
+- (void) onReviveErrorResponse:(NSURLResponse*_Nullable)prsponse error:(NSError*_Nullable)error;
+- (void) onReciveRespone:(NSURLResponse *_Nullable)response data:(NSData *_Nullable)data;
 
 @end

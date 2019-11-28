@@ -176,7 +176,6 @@
     _httpURLResponse = response;
     //
     {
-        NSUInteger bodyLength = data.length;
         NSUInteger headerLength = 0;
         NSDictionary* allHeaders = nil;
         if ([response respondsToSelector:@selector(allHeaderFields)]) {
@@ -204,8 +203,8 @@
     
     NSTimeInterval skewTime = [deviceTime timeIntervalSinceDate:serverTime];
    // If the time difference between the device and the server is large, fix device time
-    NSLog(@"skewTime: %llf",skewTime);
-    if (skewTime>=1*60) {
+    NSLog(@"skewTime: %f",skewTime);
+    if (skewTime >= 1*60) {
         [NSDate qcloud_setTimeDeviation:skewTime];
     }
     NSError* localError;
@@ -228,7 +227,6 @@
 
 //Error code to be fix
 -(BOOL)isFixTime:(NSError *)error{
-    NSString *errorCode = error.userInfo[@"Code"];
     if ([error.userInfo[@"Code"] isEqualToString:@"RequestTimeTooSkewed"] ||([error.userInfo[@"Code"] isEqualToString:@"AccessDenied"] || [error.userInfo[@"Message"] isEqualToString:@"Request has expired"])) {
         return YES;
     }

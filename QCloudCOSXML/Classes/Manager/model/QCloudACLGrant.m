@@ -66,7 +66,7 @@ NS_ASSUME_NONNULL_BEGIN
 
         NSString* COSPermissionenumValue = transfromDic[@"Permission"];
         if (COSPermissionenumValue && [COSPermissionenumValue isKindOfClass:[NSString class]] && COSPermissionenumValue.length > 0) {
-            int value = QCloudCOSPermissionDumpFromString(COSPermissionenumValue);
+            NSInteger value = QCloudCOSPermissionDumpFromString(COSPermissionenumValue);
             transfromDic[@"Permission"] = @(value);
         }
     return transfromDic;

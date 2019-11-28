@@ -9,6 +9,8 @@
 #import <QCloudCore/QCloudLogger.h>
 #import <QCloudCore/NSError+QCloudNetworking.h>
 
+#define AppKey @"I79GMXS2ZR8Y"
+
 static  NSString * kRequestSentKey = @"request_sent";
 static  NSString * kRequestFailKey = @"request_failed";
 static  NSString * kErrorCodeKey = @"error_code";
@@ -48,7 +50,12 @@ static  NSString * kClassNameKey = @"class_name";
 @implementation QualityDataUploader
 
 NSArray * filterUploadEventClass(){
-    NSArray *arr = @[@"QCloudPutObjectRequest",@"QCloudInitiateMultipartUploadRequest",@"QCloudUploadPartRequest",@"QCloudCompleteMultipartUploadRequest",@"QCloudAbortMultipfartUploadRequest",@"QCloudGetObjectRequest",@"QCloudListMultipartRequest",@"QCloudAbortMultipfartUploadRequest",@"QCloudPutObjectCopyRequest",@"QCloudUploadPartCopyRequest"];
+    NSArray *arr = @[@"QCloudHeadObjectRequest",
+                     @"QCloudPutObjectRequest",
+                     @"QCloudUploadPartRequest",
+                     @"QCloudGetObjectRequest",
+                     @"QCloudPutObjectCopyRequest",
+                     @"QCloudUploadPartCopyRequest"];
     return arr;
 }
 
@@ -61,15 +68,16 @@ NSArray * filterUploadEventClass(){
     return NO;
 }
 
-+(NSInteger)internalUploadEvent:(NSString *)eventKey withParamter:(NSDictionary *)paramter {
-    
++(BOOL)isErrorInsterested:(NSError *)error {
+    return [NSError isNetworkErrorAndRecoverable:error];
+}
+
++(void)internalUploadEvent:(NSString *)eventKey withParamter:(NSDictionary *)paramter {
     Class cls = NSClassFromString(@"TACMTA");
     if (cls) {
-        NSInteger result = [[cls performSelector:NSSelectorFromString(@"trackCustomKeyValueEvent:props:") withObject:eventKey withObject:paramter] integerValue];
-        NSLog(@"test result === %ld",result);
-        return result;
+        [self invokeClassMethod:cls sel:NSSelectorFromString(@"trackCustomKeyValueEvent:props:appkey:isRealTime:")
+            withObjects:@[eventKey, paramter, AppKey, @(NO)]];
     }
-    return 0;
 }
 
 + (void)trackRequestSentWithType:(Class)cls {
@@ -80,7 +88,7 @@ NSArray * filterUploadEventClass(){
 }
 
 + (void)trackRequestFailWithType:(Class)cls Error:(NSError *)error {
-    if ([self isNeedQuality:cls]) {
+    if ([self isNeedQuality:cls] && [self isErrorInsterested:error]) {
         NSMutableDictionary *parameters = [error.toUploadEventParamters mutableCopy];
         parameters[kClassNameKey] = [NSString stringWithClass:cls];
         [self internalUploadEvent:kRequestFailKey withParamter:parameters];
@@ -88,7 +96,44 @@ NSArray * filterUploadEventClass(){
  
 }
 
-
+//可以传多个参数的方法
++ (NSInteger)invokeClassMethod:(Class) cls sel:(SEL)selector withObjects:(NSArray *)objects
+{
+    NSInteger returnValue = -1;
+    
+    // 方法签名
+    NSMethodSignature *signature = [NSClassFromString(@"TACMTA") methodSignatureForSelector:selector];
+    if (signature == nil) {
+        return returnValue;
+    }
+    
+    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+    if (signature.numberOfArguments < 1) {
+        return returnValue;
+    }
+    
+    invocation.target = cls;
+    invocation.selector = selector;
+    
+    // 设置参数
+    NSInteger paramsCount = signature.numberOfArguments - 2; // 除self、_cmd以外的参数个数
+    paramsCount = MIN(paramsCount, objects.count);
+    for (NSInteger i = 0; i < paramsCount; i++) {
+        id object = objects[i];
+        if ([object isKindOfClass:[NSNull class]]) continue;
+        [invocation setArgument:&object atIndex:i + 2];
+    }
+    
+    // 调用方法
+    [invocation invoke];
+    
+    // 获取返回值
+    if (signature.methodReturnLength) {
+        [invocation getReturnValue:&returnValue];
+    }
+    
+    return returnValue;
+}
 
 
 

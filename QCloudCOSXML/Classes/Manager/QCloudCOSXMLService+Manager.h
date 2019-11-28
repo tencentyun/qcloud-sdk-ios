@@ -43,6 +43,24 @@
 @class QCloudListObjectVersionsRequest;
 @class QCloudGetPresignedURLRequest;
 
+@class QCloudGetBucketLoggingRequest;
+@class QCloudPutBucketLoggingRequest;
+@class QCloudPutBucketTaggingRequest;
+@class QCloudGetBucketTaggingRequest;
+@class QCloudDeleteBucketTaggingRequest;
+
+@class QCloudPutBucketInventoryRequest;
+@class QCloudGetBucketInventoryRequest;
+@class QCloudDeleteBucketInventoryRequest;
+
+
+@class QCloudPutBucketWebsiteRequest;
+@class QCloudGetBucketWebsiteRequest;
+@class QCloudGetBucketDomainRequest;
+@class QCloudPutBucketDomainRequest;
+@class QCloudDeleteBucketWebsiteRequest;
+@class QCloudListBucketInventoryConfigurationsRequest;
+@class QCloudSelectObjectContentRequest;
 @interface QCloudCOSXMLService (Manager)
 /**
  Android没有
@@ -203,69 +221,6 @@
  */
 - (void) OptionsObject:(QCloudOptionsObjectRequest*)request;
 
-/**
- 完成整个分块上传的方法.
- 
- 当使用分块上传（uploadPart(UploadPartRequest)）完对象的所有块以后，必须调用该 completeMultiUpload(CompleteMultiUploadRequest) 或者 completeMultiUploadAsync(CompleteMultiUploadRequest, CosXmlResultListener) 来完成整个文件的分块上传.且在该请求的 Body 中需要给出每一个块的 PartNumber 和 ETag，用来校验块的准 确性.
- 
- 分块上传适合于在弱网络或高带宽环境下上传较大的对象.SDK 支持自行切分对象并分别调用uploadPart(UploadPartRequest)上传各 个分块.
- 
- 关于分块上传的描述，请查看 https://cloud.tencent.com/document/product/436/14112.
- 
- 关于完成整个分片上传接口的描述，请查看 https://cloud.tencent.com/document/product/436/7742.
- 
- cos iOS SDK 中完成整个分块上传请求的同步方法具体步骤如下：
- 
- 1. 实例化 QCloudCompleteMultipartUploadRequest，填入需要的参数。
- 
- 2. 调用 QCloudCOSXMLService 对象中的 CompleteMultipartUpload 方法发出请求。
- 
- 3. 从回调的 finishBlock 中的 QCloudUploadObjectResult 获取具体内容。
- 
- 示例：
- 示例：
- @code
- QCloudCompleteMultipartUploadRequest *completeRequst = [QCloudCompleteMultipartUploadRequest new];
- completeRequst.bucket = @"bucketName";
- completeRequst.object = @"objectName";
- completeRequst.uploadId = @"uploadId"; //本次分片上传的UploadID
- [completeRequst setFinishBlock:^(QCloudUploadObjectResult * _Nonnull result, NSError * _Nonnull error) {
- 
- }];
- [[QCloudCOSXMLService defaultCOSXML] CompleteMultipartUpload:completeRequst];
- 
- */
-- (void) CompleteMultipartUpload:(QCloudCompleteMultipartUploadRequest*)request;
-/**
- 舍弃一个分块上传且删除已上传的分片块的方法.
- 
- COS 支持舍弃一个分块上传且删除已上传的分片块. 注意，已上传但是未终止的分片块会占用存储空间进 而产生存储费用.因此，建议及时完成分块上传 或者舍弃分块上传.
- 
- 关于分块上传的具体描述，请查看 https://cloud.tencent.com/document/product/436/14112.
- 
- 关于舍弃一个分块上传且删除已上传的分片块接口的描述，请查看 https://cloud.tencent.com/document/product/436/7740.
- 
- cos iOS SDK 中舍弃一个分块上传且删除已上传的分片块请求的方法具体步骤如下：
- 
- 1. 实例化 QCloudAbortMultipfartUploadRequest，填入需要的参数。
- 
- 2. 调用 QCloudCOSXMLService 对象中的 AbortMultipfartUpload 方法发出请求。
- 
- 3. 从回调的 finishBlock 中的 outputObject 获取具体内容。
- 示例：
- @code
- QCloudAbortMultipfartUploadRequest *abortRequest = [QCloudAbortMultipfartUploadRequest new];
- abortRequest.bucket = @"bucketName"; ////存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
- abortRequest.object = [[QCloudCOSXMLTestUtility sharedInstance]createCanbeDeleteTestObject];
- abortRequest.uploadId = @"uploadId";
- [abortRequest setFinishBlock:^(id outputObject, NSError *error) {
- //additional actions after finishing
- }];
- [[QCloudCOSXMLService defaultCOSXML]AbortMultipfartUpload:abortRequest];
- @endcode
- */
-
-- (void) AbortMultipfartUpload:(QCloudAbortMultipfartUploadRequest*)request;
 /**
  创建存储桶（Bucket）的方法.
  
@@ -815,8 +770,15 @@
  [[QCloudCOSXMLService defaultCOSXML] GetBucketReplication:request];
  @endcode
  */
+- (void)GetBucketLogging:(QCloudGetBucketLoggingRequest *)request;
+- (void)PutBucketLogging:(QCloudPutBucketLoggingRequest *)request;
 
+- (void)GetBucketTagging:(QCloudGetBucketTaggingRequest *)request;
+- (void)PutBucketTagging:(QCloudPutBucketTaggingRequest *)request;
 - (void) GetBucketReplication:(QCloudGetBucketReplicationRequest*)request;
+-(void)DeleteBucketTagging:(QCloudDeleteBucketTaggingRequest *)request;
+
+-(void)SelectObjectContent:(QCloudSelectObjectContentRequest *)request;
 /**
  删除跨区域复制配置的方法.
  
@@ -867,6 +829,26 @@
  @endcode
  */
 - (void) GetService:(QCloudGetServiceRequest*)request;
+
+
+
+- (void) PutBucketDomain:(QCloudPutBucketDomainRequest*)request;
+
+- (void) GetBucketDomain:(QCloudGetBucketDomainRequest*)request;
+
+- (void) PutBucketWebsite:(QCloudPutBucketWebsiteRequest*)request;
+
+- (void) GetBucketWebsite:(QCloudGetBucketWebsiteRequest*)request;
+
+- (void) DeleteBucketWebsite:(QCloudDeleteBucketWebsiteRequest*)request;
+
+    
+-(void)PutBucketInventory:(QCloudPutBucketInventoryRequest *)request;
+-(void)GetBucketInventory:(QCloudGetBucketInventoryRequest *)request;
+    
+-(void)DeleteBucketInventory:(QCloudDeleteBucketInventoryRequest *)request;
+    
+-(void)ListBucketInventory:(QCloudListBucketInventoryConfigurationsRequest *)request;
 
 - (void) PostObjectRestore:(QCloudPostObjectRestoreRequest*)request;
 - (void) ListObjectVersions:(QCloudListObjectVersionsRequest*)request;

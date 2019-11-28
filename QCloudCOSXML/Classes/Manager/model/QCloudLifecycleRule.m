@@ -77,7 +77,7 @@ NS_ASSUME_NONNULL_BEGIN
 
         NSString* LifecycleStatueenumValue = transfromDic[@"Status"];
         if (LifecycleStatueenumValue && [LifecycleStatueenumValue isKindOfClass:[NSString class]] && LifecycleStatueenumValue.length > 0) {
-            int value = QCloudLifecycleStatueDumpFromString(LifecycleStatueenumValue);
+            NSInteger value = QCloudLifecycleStatueDumpFromString(LifecycleStatueenumValue);
             transfromDic[@"Status"] = @(value);
         }
     return transfromDic;

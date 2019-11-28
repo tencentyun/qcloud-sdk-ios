@@ -18,6 +18,7 @@
 @property (nonatomic, assign, readonly) NSUInteger totalRecivedLength;
 @property (nonatomic, strong, readonly) NSData* data;
 @property (nonatomic, strong) NSHTTPURLResponse* response;
+@property (nonatomic, assign) BOOL isTaskCancelledByStatusCodeCheck;
 @property (nonatomic, strong, readonly) NSString* uploadTempFilePath;
 @property (nonatomic, assign) BOOL forbidenWirteToFile;
 - (instancetype) init;
