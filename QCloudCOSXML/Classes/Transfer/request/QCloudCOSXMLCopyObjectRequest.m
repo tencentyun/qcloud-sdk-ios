@@ -8,7 +8,7 @@
 
 #import "QCloudCOSXMLCopyObjectRequest.h"
 #import "QCloudCOSXMLService.h"
-#import "QCloudCOSXML.h"
+#import "QCloudCOSXMLService+Transfer.h"
 #import "QCloudPutObjectRequest.h"
 #import "QCloudMultipartInfo.h"
 #import "QCloudCOSXMLTransfer.h"

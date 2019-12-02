@@ -9,7 +9,7 @@
 #import "QCloudGetObjectRequest.h"
 #import "QCloudGetObjectRequest+Custom.h"
 #import "QCloudCOSTransferMangerService.h"
-#import "QCloudCOSXML.h"
+#import "QCloudCOSXMLService+Transfer.h"
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
 @implementation QCloudCOSXMLDownloadObjectRequest
