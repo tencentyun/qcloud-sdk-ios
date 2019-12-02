@@ -60,7 +60,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  @param finishBlock 请求完成回调
  */
-- (void) setFinishBlock:(void(^)(QCloudGetPresignedURLResult* result, NSError* error))finishBlock;
+- (void) setFinishBlock:(void(^_Nullable)(QCloudGetPresignedURLResult* _Nullable result, NSError* _Nullable error))finishBlock;
 @end
 
 

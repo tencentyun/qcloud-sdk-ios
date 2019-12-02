@@ -17,6 +17,7 @@
 @class QCloudHeadObjectRequest;
 @class QCloudPutObjectCopyRequest;
 @class QCloudUploadPartCopyRequest;
+NS_ASSUME_NONNULL_BEGIN
 @interface QCloudCOSXMLService (Transfer)
 /**
  简单上传的方法.
@@ -348,3 +349,4 @@
 - (void) UploadPartCopy:(QCloudUploadPartCopyRequest*)request;
 
 @end
+NS_ASSUME_NONNULL_END

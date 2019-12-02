@@ -43,5 +43,5 @@
 #import "QCloudError.h"
 #import "UIDevice+QCloudFCUUID.h"
 
-
+#import "NSObject+HTTPHeadersContainer.h"
 #endif /* QCloudCore_h */

@@ -89,7 +89,7 @@ NS_ASSUME_NONNULL_BEGIN
     self.requestData.URIMethod = @"tagging";
     return YES;
 }
-- (void) setFinishBlock:(void (^)(QCloudBucketTagging* result, NSError * error))QCloudRequestFinishBlock
+- (void) setFinishBlock:(void (^_Nullable )(QCloudBucketTagging* _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock
 {
     [super setFinishBlock:QCloudRequestFinishBlock];
 }

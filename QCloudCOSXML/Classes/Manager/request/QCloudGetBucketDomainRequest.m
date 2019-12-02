@@ -89,7 +89,7 @@ NS_ASSUME_NONNULL_BEGIN
     self.requestData.URIMethod = @"domain";
     return YES;
 }
-- (void) setFinishBlock:(void (^)(QCloudDomainConfiguration* result, NSError * error))QCloudRequestFinishBlock
+- (void) setFinishBlock:(void (^_Nullable )(QCloudDomainConfiguration* _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock
 {
     [super setFinishBlock:QCloudRequestFinishBlock];
 }

@@ -26,7 +26,7 @@
 
 
 #import <Foundation/Foundation.h>
-#import <QCloudCore/QCloudCore.h>
+
 #import "QCloudCASTierEnum.h"
 
 NS_ASSUME_NONNULL_BEGIN

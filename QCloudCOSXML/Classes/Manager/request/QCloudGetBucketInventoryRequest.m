@@ -96,7 +96,7 @@ NS_ASSUME_NONNULL_BEGIN
     self.requestData.URIMethod = @"inventory";
     return YES;
 }
-- (void) setFinishBlock:(void (^)(QCloudInventoryConfiguration* result, NSError * error))QCloudRequestFinishBlock
+- (void) setFinishBlock:(void (^_Nullable)(QCloudInventoryConfiguration* _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock
 {
     [super setFinishBlock:QCloudRequestFinishBlock];
 }

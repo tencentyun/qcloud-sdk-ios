@@ -89,7 +89,7 @@ NS_ASSUME_NONNULL_BEGIN
     self.requestData.URIMethod = @"location";
     return YES;
 }
-- (void) setFinishBlock:(void (^)(QCloudBucketLocationConstraint* result, NSError * error))QCloudRequestFinishBlock
+- (void) setFinishBlock:(void (^_Nullable)(QCloudBucketLocationConstraint* _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock
 {
     [super setFinishBlock:QCloudRequestFinishBlock];
 }

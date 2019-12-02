@@ -20,11 +20,12 @@
 #import "QCloudSupervisory.h"
 #import "QCloudHTTPSessionManager.h"
 #import "NSError+QCloudNetworking.h"
-#import "NSObject+HTTPHeadersContainer.h"
+#import "QCLOUDRestNet.h"
 #import "QCloudService.h"
 
 #import "NSDate+QCLOUD.h"
 #import "NSDate+QCloudInternetDateTime.h"
+#import "NSObject+HTTPHeadersContainer.h"
 @interface QCloudHTTPRequest ()
 {
     BOOL _requesting;

@@ -9,8 +9,9 @@
 #import "QCloudCOSStorageClassEnum.h"
 #import "QCloudCopyObjectResult.h"
 #import "QCloudCOSTransferMangerService.h"
+NS_ASSUME_NONNULL_BEGIN
 typedef void(^CopyProgressBlock)(int64_t partsSent, int64_t totalPartsExpectedToSent) ;
-typedef void(^RequestsMetricArrayBlock)(NSMutableArray *requstMetricArray);
+typedef void(^RequestsMetricArrayBlock)(NSMutableArray * _Nullable requstMetricArray);
 @interface QCloudCOSXMLCopyObjectRequest : QCloudAbstractRequest
 /**
  对象名
@@ -111,7 +112,7 @@ typedef void(^RequestsMetricArrayBlock)(NSMutableArray *requstMetricArray);
 
  @param QCloudRequestFinishBlock 完成回调
  */
-- (void) setFinishBlock:(void (^)(QCloudCopyObjectResult* result, NSError * error))QCloudRequestFinishBlock;
--(void)setCOSServerSideEncyption;
+- (void) setFinishBlock:(void (^ _Nullable )(QCloudCopyObjectResult* _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock;
 -(void)setCOSServerSideEncyptionWithCustomerKey:(NSString *)customerKey;
 @end
+NS_ASSUME_NONNULL_END

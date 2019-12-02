@@ -89,9 +89,9 @@ NS_ASSUME_NONNULL_BEGIN
     self.requestData.URIMethod = @"replication";
     return YES;
 }
-- (void) setFinishBlock:(void (^)(QCloudBucketReplicationConfiguation* result, NSError * error))QCloudRequestFinishBlock
-{
-    [super setFinishBlock:QCloudRequestFinishBlock];
+
+-(void)setFinishBlock:(void (^_Nullable)(QCloudBucketReplicationConfiguation * _Nullable, NSError * _Nullable))QCloudRequestFinishBlock{
+     [super setFinishBlock:QCloudRequestFinishBlock];
 }
 
 - (QCloudSignatureFields*) signatureFields

@@ -89,8 +89,8 @@ NS_ASSUME_NONNULL_BEGIN
     self.requestData.URIMethod = @"versioning";
     return YES;
 }
-- (void) setFinishBlock:(void (^)(QCloudBucketVersioningConfiguration* result, NSError * error))QCloudRequestFinishBlock
-{
+
+-(void)setFinishBlock:(void (^_Nullable)(QCloudBucketVersioningConfiguration * _Nullable, NSError * _Nullable))QCloudRequestFinishBlock{
     [super setFinishBlock:QCloudRequestFinishBlock];
 }
 

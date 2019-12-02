@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-typedef void(^QCloudRequestFinishBlock)(id outputObject, NSError* error);
+typedef void(^QCloudRequestFinishBlock)( id outputObject, NSError* error);
 
 @class QCloudAbstractRequest;
 @protocol QCloudHTTPRequestDelegate <NSObject>

@@ -9,8 +9,11 @@
 #import "QCloudGetObjectRequest.h"
 #import "QCloudGetObjectRequest+Custom.h"
 #import "QCloudCOSTransferMangerService.h"
-#import "QCloudCOSXMLService+Transfer.h"
+#import "QCloudCOSXML.h"
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
 @implementation QCloudCOSXMLDownloadObjectRequest
+#pragma clang diagnostic pop
 - (instancetype)init {
     self = [super init];
     if (!self) {

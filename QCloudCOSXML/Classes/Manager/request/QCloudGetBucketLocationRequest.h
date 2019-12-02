@@ -64,6 +64,6 @@ location = result;
 @property (strong, nonatomic) NSString *bucket;
 
 
-- (void) setFinishBlock:(void (^)(QCloudBucketLocationConstraint* result, NSError * error))QCloudRequestFinishBlock;
+- (void) setFinishBlock:(void (^_Nullable)(QCloudBucketLocationConstraint* _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

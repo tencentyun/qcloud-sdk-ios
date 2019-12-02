@@ -88,6 +88,6 @@ getBucketACl.bucket = @"testbucket-123456789";
 @property (strong, nonatomic) NSString *bucket;
 
 
-- (void) setFinishBlock:(void (^)(QCloudACLPolicy* result, NSError * error))QCloudRequestFinishBlock;
+- (void) setFinishBlock:(void (^_Nullable)(QCloudACLPolicy*  _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

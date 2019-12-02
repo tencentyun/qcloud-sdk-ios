@@ -115,9 +115,9 @@ NS_ASSUME_NONNULL_BEGIN
     self.requestData.URIComponents = __pathComponents;
     return YES;
 }
-- (void) setFinishBlock:(void (^)(QCloudListPartsResult* result, NSError * error))QCloudRequestFinishBlock
-{
-    [super setFinishBlock:QCloudRequestFinishBlock];
+
+-(void)setFinishBlock:(void (^_Nullable)(QCloudListPartsResult * _Nullable, NSError * _Nullable))QCloudRequestFinishBlock{
+      [super setFinishBlock:QCloudRequestFinishBlock];
 }
 
 - (QCloudSignatureFields*) signatureFields

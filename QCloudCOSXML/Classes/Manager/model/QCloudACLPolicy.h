@@ -26,7 +26,6 @@
 
 
 #import <Foundation/Foundation.h>
-#import <QCloudCore/QCloudCore.h>
 #import "QCloudACLOwner.h"
 #import "QCloudAccessControlList.h"
 

@@ -30,7 +30,7 @@
 #import <QCloudCore/QCloudService.h>
 #import <QCloudCore/QCloudCore.h>
 
-
+NS_ASSUME_NONNULL_BEGIN
 @interface QCloudCOSXMLService : QCloudService
 #pragma hidden super selectors
 - (int) performRequest:(QCloudBizHTTPRequest *)httpRequst isHaveBody:(BOOL)body NS_UNAVAILABLE;
@@ -68,3 +68,4 @@
 - (NSString*)getURLWithBucket:(NSString*)bucket object:(NSString*)object withAuthorization:(BOOL)withAuthorization regionName:(NSString *)regionName;
 
 @end
+NS_ASSUME_NONNULL_END

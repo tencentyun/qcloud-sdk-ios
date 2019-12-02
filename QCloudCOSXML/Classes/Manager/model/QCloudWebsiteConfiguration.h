@@ -26,7 +26,7 @@
 
 
 #import <Foundation/Foundation.h>
-#import <QCloudCore/QCloudCore.h>
+
 #import "QCloudWebsiteRoutingRules.h"
 #import "QCloudWebsiteIndexDocument.h"
 #import "QCloudWebisteErrorDocument.h"

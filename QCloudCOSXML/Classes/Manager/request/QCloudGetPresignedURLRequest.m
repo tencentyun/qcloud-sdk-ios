@@ -57,7 +57,7 @@
 
 
 
-- (void)setFinishBlock:(void (^)(QCloudGetPresignedURLResult *, NSError *))finishBlock {
+- (void)setFinishBlock:(void (^_Nullable )(QCloudGetPresignedURLResult *_Nullable result, NSError *_Nullable error))finishBlock {
     [super setFinishBlock:finishBlock];
 }
 

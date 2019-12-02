@@ -8,7 +8,7 @@
 
 #import "QCloudCOSXMLCopyObjectRequest.h"
 #import "QCloudCOSXMLService.h"
-#import "QCloudCOSXMLService+Transfer.h"
+#import "QCloudCOSXML.h"
 #import "QCloudPutObjectRequest.h"
 #import "QCloudMultipartInfo.h"
 #import "QCloudCOSXMLTransfer.h"
@@ -296,7 +296,7 @@ static const int64_t   kCopySliceLength    = 5242880;
     return service;
 }
 
-- (void) setFinishBlock:(void (^)(QCloudCopyObjectResult* result, NSError * error))QCloudRequestFinishBlock {
+- (void) setFinishBlock:(void (^)(QCloudCopyObjectResult* _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock {
     [super setFinishBlock:QCloudRequestFinishBlock];
 }
 

@@ -26,7 +26,6 @@
 
 
 #import <Foundation/Foundation.h>
-#import <QCloudCore/QCloudCore.h>
 #import "QCloudWebsiteRoutingRule.h"
 
 NS_ASSUME_NONNULL_BEGIN

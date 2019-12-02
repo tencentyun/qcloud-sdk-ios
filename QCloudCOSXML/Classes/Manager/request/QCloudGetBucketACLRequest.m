@@ -89,8 +89,8 @@ NS_ASSUME_NONNULL_BEGIN
     [self.requestData setValue:__serverURL.host forHTTPHeaderField:@"Host"];
     return YES;
 }
-- (void) setFinishBlock:(void (^)(QCloudACLPolicy* result, NSError * error))QCloudRequestFinishBlock
-{
+
+-(void)setFinishBlock:(void (^_Nullable )(QCloudACLPolicy * _Nullable, NSError * _Nullable))QCloudRequestFinishBlock{
     [super setFinishBlock:QCloudRequestFinishBlock];
 }
 

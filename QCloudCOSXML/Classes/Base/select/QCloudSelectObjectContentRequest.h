@@ -46,6 +46,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) QCloudSelectObjectContentConfig *selectObjectContentConfig;
 
 
-- (void) setFinishBlock:(void (^)(QCloudSelectObjectContentConfig* result, NSError * error))QCloudRequestFinishBlock;
+- (void) setFinishBlock:(void (^_Nullable)(QCloudSelectObjectContentConfig* _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

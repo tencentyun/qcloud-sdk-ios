@@ -81,6 +81,6 @@ completeRequst.uploadId = @"uploadId"; //本次分片上传的UploadID
 @property (strong, nonatomic) QCloudCompleteMultipartUploadInfo *parts;
 
 
-- (void) setFinishBlock:(void (^)(QCloudUploadObjectResult* result, NSError * error))QCloudRequestFinishBlock;
+- (void) setFinishBlock:(void (^ _Nullable )(QCloudUploadObjectResult* _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

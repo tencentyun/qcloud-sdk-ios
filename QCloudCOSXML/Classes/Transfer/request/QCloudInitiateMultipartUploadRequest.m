@@ -129,7 +129,7 @@ NS_ASSUME_NONNULL_BEGIN
     }
     return YES;
 }
-- (void) setFinishBlock:(void (^)(QCloudInitiateMultipartUploadResult* result, NSError * error))QCloudRequestFinishBlock
+- (void) setFinishBlock:(void (^ _Nullable)(QCloudInitiateMultipartUploadResult* _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock
 {
     [super setFinishBlock:QCloudRequestFinishBlock];
 }

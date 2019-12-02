@@ -26,7 +26,7 @@
 
 
 #import <Foundation/Foundation.h>
-#import <QCloudCore/QCloudCore.h>
+
 #import "QCloudWebsiteCondition.h"
 #import "QCloudWebsiteRedirect.h"
 

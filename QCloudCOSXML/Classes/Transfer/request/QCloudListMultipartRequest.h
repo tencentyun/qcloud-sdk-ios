@@ -82,6 +82,6 @@ request.uploadId = @"uploadID";
 @property (strong, nonatomic) NSString *encodingType;
 
 
-- (void) setFinishBlock:(void (^)(QCloudListPartsResult* result, NSError * error))QCloudRequestFinishBlock;
+- (void) setFinishBlock:(void (^_Nullable)(QCloudListPartsResult* _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

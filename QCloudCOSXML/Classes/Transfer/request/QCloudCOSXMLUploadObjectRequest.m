@@ -8,7 +8,7 @@
 
 #import "QCloudCOSXMLUploadObjectRequest.h"
 #import "QCloudPutObjectRequest.h"
-#import "QCloudCOSXMLService+Transfer.h"
+#import "QCloudCOSXML.h"
 #import "QCloudInitiateMultipartUploadRequest.h"
 #import "QCloudUploadPartRequest.h"
 #import "QCloudCompleteMultipartUploadRequest.h"
@@ -609,7 +609,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
 
 
 //
-+ (instancetype) requestWithRequestData:(QCloudCOSXMLUploadObjectResumeData)resumeData
++ (instancetype) requestWithRequestData:(QCloudCOSXMLUploadObjectResumeData _Nullable)resumeData
 {
     QCloudCOSXMLUploadObjectRequest* request = [QCloudCOSXMLUploadObjectRequest qcloud_modelWithJSON:resumeData];
     QCloudLogDebug(@"Generating request from resume data, body is %@",request.body);
@@ -694,7 +694,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     return info;
 }
 
-- (void) abort:(QCloudRequestFinishBlock)finishBlock
+- (void) abort:(QCloudRequestFinishBlock _Nullable)finishBlock
 {
     if (self.finished) {
         NSError* error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeContentError
@@ -755,5 +755,8 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
         return [self.retryHandler.delegate shouldRetry:task error:error];
     }
     return YES;
+}
+-(void)setFinishBlock:(void (^_Nullable)(QCloudUploadObjectResult * _Nullable, NSError * _Nullable))QCloudRequestFinishBlock{
+    [super setFinishBlock:QCloudRequestFinishBlock];
 }
 @end

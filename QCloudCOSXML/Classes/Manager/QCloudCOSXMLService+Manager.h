@@ -61,7 +61,10 @@
 @class QCloudDeleteBucketWebsiteRequest;
 @class QCloudListBucketInventoryConfigurationsRequest;
 @class QCloudSelectObjectContentRequest;
+
+NS_ASSUME_NONNULL_BEGIN
 @interface QCloudCOSXMLService (Manager)
+
 /**
  Android没有
  */
@@ -831,24 +834,24 @@
 - (void) GetService:(QCloudGetServiceRequest*)request;
 
 
-
-- (void) PutBucketDomain:(QCloudPutBucketDomainRequest*)request;
-
-- (void) GetBucketDomain:(QCloudGetBucketDomainRequest*)request;
-
-- (void) PutBucketWebsite:(QCloudPutBucketWebsiteRequest*)request;
-
-- (void) GetBucketWebsite:(QCloudGetBucketWebsiteRequest*)request;
-
-- (void) DeleteBucketWebsite:(QCloudDeleteBucketWebsiteRequest*)request;
-
-    
--(void)PutBucketInventory:(QCloudPutBucketInventoryRequest *)request;
--(void)GetBucketInventory:(QCloudGetBucketInventoryRequest *)request;
-    
--(void)DeleteBucketInventory:(QCloudDeleteBucketInventoryRequest *)request;
-    
--(void)ListBucketInventory:(QCloudListBucketInventoryConfigurationsRequest *)request;
+//
+//- (void) PutBucketDomain:(QCloudPutBucketDomainRequest*)request;
+//
+//- (void) GetBucketDomain:(QCloudGetBucketDomainRequest*)request;
+//
+//- (void) PutBucketWebsite:(QCloudPutBucketWebsiteRequest*)request;
+//
+//- (void) GetBucketWebsite:(QCloudGetBucketWebsiteRequest*)request;
+//
+//- (void) DeleteBucketWebsite:(QCloudDeleteBucketWebsiteRequest*)request;
+//
+//    
+//-(void)PutBucketInventory:(QCloudPutBucketInventoryRequest *)request;
+//-(void)GetBucketInventory:(QCloudGetBucketInventoryRequest *)request;
+//    
+//-(void)DeleteBucketInventory:(QCloudDeleteBucketInventoryRequest *)request;
+//    
+//-(void)ListBucketInventory:(QCloudListBucketInventoryConfigurationsRequest *)request;
 
 - (void) PostObjectRestore:(QCloudPostObjectRestoreRequest*)request;
 - (void) ListObjectVersions:(QCloudListObjectVersionsRequest*)request;
@@ -913,3 +916,4 @@
 - (void) updateObjectMedaWithBucket:(NSString*)bucket object:(NSString*)object meta:(NSDictionary*)meta;
 
 @end
+NS_ASSUME_NONNULL_END

@@ -82,11 +82,10 @@ NS_ASSUME_NONNULL_BEGIN
     if (![self customBuildRequestData:error]) return NO;
     return YES;
 }
-- (void) setFinishBlock:(void (^)(QCloudListAllMyBucketsResult* result, NSError * error))QCloudRequestFinishBlock
-{
+
+-(void)setFinishBlock:(void (^_Nullable)(QCloudListAllMyBucketsResult * _Nullable, NSError * _Nullable))QCloudRequestFinishBlock{
     [super setFinishBlock:QCloudRequestFinishBlock];
 }
-
 - (QCloudSignatureFields*) signatureFields
 {
     QCloudSignatureFields* fileds = [QCloudSignatureFields new];

@@ -59,6 +59,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (assign, nonatomic) int maxKeys;
 
 
-- (void) setFinishBlock:(void (^)(QCloudListVersionsResult* result, NSError * error))QCloudRequestFinishBlock;
+- (void) setFinishBlock:(void (^_Nullable)( QCloudListVersionsResult* _Nullable result, NSError * _Nullable  error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

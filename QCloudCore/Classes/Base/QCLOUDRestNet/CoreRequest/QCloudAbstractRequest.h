@@ -30,41 +30,41 @@ typedef void (^QCloudRequestDownProcessBlock)(int64_t bytesDownload, int64_t tot
 @property (atomic, assign, readonly) BOOL canceled;
 @property (nonatomic, assign, readonly) int64_t requestID;
 @property (nonatomic, assign) QCloudAbstractRequestPriority priority;
-@property (nonatomic, strong, readonly) QCloudHttpMetrics* benchMarkMan;
+@property (nonatomic, strong, readonly) QCloudHttpMetrics* _Nullable benchMarkMan;
 @property (atomic, assign, readonly) BOOL finished;
 
 /**
   协议执行结果向外通知的委托（delegate）主要包括成功和失败两种情况。与Block方式并存，当两者都设置的时候都会通知。
  */
-@property (nonatomic, weak) id<QCloudHTTPRequestDelegate> delegate;
+@property (nonatomic, weak) id<QCloudHTTPRequestDelegate> _Nullable delegate;
 /**
  协议执行结果向外通知的Block，与delegate方式并存，当两者都设置的时候都会通知。
  */
-@property (nonatomic, strong) QCloudRequestFinishBlock finishBlock;
+@property (nonatomic, strong) QCloudRequestFinishBlock _Nullable finishBlock;
 
 
-@property (nonatomic, strong) QCloudRequestSendProcessBlock sendProcessBlock;
+@property (nonatomic, strong) QCloudRequestSendProcessBlock _Nullable sendProcessBlock;
 
-@property (nonatomic, strong) QCloudRequestDownProcessBlock downProcessBlock;
+@property (nonatomic, strong) QCloudRequestDownProcessBlock _Nullable downProcessBlock;
 
 
-- (void) setFinishBlock:(void(^)(id outputObject, NSError* error))QCloudRequestFinishBlock;
-- (void) setDownProcessBlock:(void(^)(int64_t bytesDownload, int64_t totalBytesDownload, int64_t totalBytesExpectedToDownload))downloadProcessBlock;
-- (void) setSendProcessBlock:(void (^)(int64_t bytesSent , int64_t totalBytesSent , int64_t totalBytesExpectedToSend))sendProcessBlock;
+- (void) setFinishBlock:(void(^_Nullable)(id _Nullable outputObject, NSError* _Nullable error))QCloudRequestFinishBlock;
+- (void) setDownProcessBlock:(void(^_Nullable)(int64_t bytesDownload, int64_t totalBytesDownload, int64_t totalBytesExpectedToDownload))downloadProcessBlock;
+- (void) setSendProcessBlock:(void (^_Nullable)(int64_t bytesSent , int64_t totalBytesSent , int64_t totalBytesExpectedToSend))sendProcessBlock;
 /**
    请求过程出错，进行处理。默认只处理HTTP协议层错误信息。并进行delegate的通知。
       @param error 请求过程出错信息，默认只处理HTTP层错误信息
  */
-- (void) onError:(NSError*)error;
+- (void) onError:(NSError* _Nonnull)error;
 
 /**
    请求过程成功，并获取到了数据，进行处理。并进行delegate的通知。
       @param object  获取到的数据，经过responseserilizer处理的后的数据。
  */
-- (void) onSuccess:(id)object;
+- (void) onSuccess:(id _Nonnull)object;
 
-- (void) notifySuccess:(id)object;
-- (void) notifyError:(NSError*)error;
+- (void) notifySuccess:(id _Nonnull)object;
+- (void) notifyError:(NSError* _Nonnull)error;
 - (void) notifyDownloadProgressBytesDownload:(int64_t)bytesDownload
                           totalBytesDownload:(int64_t)totalBytesDownload
                 totalBytesExpectedToDownload:(int64_t)totalBytesExpectedToDownload;

@@ -88,6 +88,6 @@ localError = error;
 @property (strong, nonatomic) NSString *uploadIDMarker;
 
 
-- (void) setFinishBlock:(void (^)(QCloudListMultipartUploadsResult* result, NSError * error))QCloudRequestFinishBlock;
+- (void) setFinishBlock:(void (^_Nullable )(QCloudListMultipartUploadsResult* _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

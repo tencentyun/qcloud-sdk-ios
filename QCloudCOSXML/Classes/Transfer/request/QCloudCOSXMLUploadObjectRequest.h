@@ -8,16 +8,16 @@
 
 #import <QCloudCore/QCloudCore.h>
 #import "QCloudCOSStorageClassEnum.h"
-
-FOUNDATION_EXTERN NSString* const QCloudUploadResumeDataKey;
+NS_ASSUME_NONNULL_BEGIN
+FOUNDATION_EXTERN NSString* _Nullable const QCloudUploadResumeDataKey;
 
 typedef NSData* QCloudCOSXMLUploadObjectResumeData;
 
 @class QCloudUploadObjectResult;
 @class QCloudInitiateMultipartUploadResult;
 @class QCloudCOSXMLUploadObjectRequest;
-typedef void(^InitMultipleUploadFinishBlock)(QCloudInitiateMultipartUploadResult* multipleUploadInitResult, QCloudCOSXMLUploadObjectResumeData resumeData);
-typedef void (^RequestsMetricArrayBlock)(NSMutableArray *requstMetricArray);
+typedef void(^InitMultipleUploadFinishBlock)(QCloudInitiateMultipartUploadResult* _Nullable multipleUploadInitResult, QCloudCOSXMLUploadObjectResumeData _Nullable resumeData);
+typedef void (^RequestsMetricArrayBlock)(NSMutableArray *_Nullable requstMetricArray);
 /**
  COSXML上传对象接口。在上传小于1MB的文件时，通过该request来上传的话，会生成一个简单上传putObjectRequset，将整个对象直接上传。
  
@@ -28,8 +28,8 @@ typedef void (^RequestsMetricArrayBlock)(NSMutableArray *requstMetricArray);
 /**
  上传文件（对象）的文件名，也是对象的key，请注意文件名中不可以含有问号即"?"字符
  */
-@property (strong, nonatomic) NSString *object;
-@property (strong,nonatomic)QCloudHTTPRetryHanlder *retryHandler;
+@property (strong, nonatomic) NSString * object;
+@property (strong,nonatomic)QCloudHTTPRetryHanlder * _Nullable retryHandler;
 /**
  存储桶名称
  */
@@ -120,28 +120,29 @@ typedef void (^RequestsMetricArrayBlock)(NSMutableArray *requstMetricArray);
  在进行HTTP请求的时候，可以通过设置该参数来设置自定义的一些头部信息。
  通常情况下，携带特定的额外HTTP头部可以使用某项功能，如果是这类需求，可以通过设置该属性来实现。
  */
-@property (strong, nonatomic) NSMutableDictionary* customHeaders;
-@property (strong,nonatomic) NSString *regionName;
+@property (strong, nonatomic) NSMutableDictionary* _Nullable customHeaders;
+@property (strong,nonatomic) NSString *_Nullable regionName;
 /**
  上传完成后会通过该block回调。若error为空，可视为成功。
 
  @param QCloudRequestFinishBlock 上传完成后的回调
  */
-- (void) setFinishBlock:(void (^)(QCloudUploadObjectResult* result, NSError* error))QCloudRequestFinishBlock;
+- (void) setFinishBlock:(void (^_Nullable)(QCloudUploadObjectResult* _Nullable result, NSError* _Nullable error))QCloudRequestFinishBlock;
 
 #pragma resume
 /**
  在初始化分片上传完成以后会回调的block中获取 resumeData,通过 resumeData 生成一个分片上传的请求;
  */
-+ (instancetype) requestWithRequestData:(QCloudCOSXMLUploadObjectResumeData)resumeData;
++ (instancetype) requestWithRequestData:(QCloudCOSXMLUploadObjectResumeData _Nullable)resumeData;
 /**
  主动调用取消，并且产生 resumetData 
  */
 - (QCloudCOSXMLUploadObjectResumeData) cancelByProductingResumeData:(NSError* __autoreleasing*)error;
 
 
-- (void) abort:(QCloudRequestFinishBlock)finishBlock;
+- (void) abort:(QCloudRequestFinishBlock _Nullable )finishBlock;
 -(void)setCOSServerSideEncyption;
--(void)setCOSServerSideEncyptionWithCustomerKey:(NSString *)customerKey;
--(void)setCOSServerSideEncyptionWithKMSCustomKey:(NSString *)customerKey jsonStr:(NSString *)jsonStr;
+-(void)setCOSServerSideEncyptionWithCustomerKey:(NSString *_Nonnull)customerKey;
+-(void)setCOSServerSideEncyptionWithKMSCustomKey:(NSString *_Nonnull )customerKey jsonStr:(NSString *_Nonnull)jsonStr;
 @end
+NS_ASSUME_NONNULL_END

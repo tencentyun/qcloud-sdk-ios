@@ -95,7 +95,7 @@ NS_ASSUME_NONNULL_BEGIN
     self.requestData.URIMethod = @"versions";
     return YES;
 }
-- (void) setFinishBlock:(void (^)(QCloudListVersionsResult* result, NSError * error))QCloudRequestFinishBlock
+- (void) setFinishBlock:(void (^_Nullable )(QCloudListVersionsResult* _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock
 {
     [super setFinishBlock:QCloudRequestFinishBlock];
 }

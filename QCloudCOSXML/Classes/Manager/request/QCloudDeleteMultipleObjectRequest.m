@@ -99,8 +99,8 @@ NS_ASSUME_NONNULL_BEGIN
     self.requestData.URIMethod = @"delete";
     return YES;
 }
-- (void) setFinishBlock:(void (^)(QCloudDeleteResult* result, NSError * error))QCloudRequestFinishBlock
-{
+
+-(void)setFinishBlock:(void (^ _Nullable)(QCloudDeleteResult * _Nullable, NSError * _Nullable))QCloudRequestFinishBlock{
     [super setFinishBlock:QCloudRequestFinishBlock];
 }
 

@@ -58,6 +58,6 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param QCloudRequestFinishBlock 回调bock
  */
-- (void) setFinishBlock:(void (^)(QCloudListAllMyBucketsResult* result, NSError * error))QCloudRequestFinishBlock;
+- (void) setFinishBlock:(void (^_Nullable)(QCloudListAllMyBucketsResult* _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

@@ -70,6 +70,6 @@ request.object = @"objectName";
 @property (strong, nonatomic) NSString *versionID;
 
 
-- (void) setFinishBlock:(void (^)(QCloudACLPolicy* result, NSError * error))QCloudRequestFinishBlock;
+- (void) setFinishBlock:(void (^_Nullable )(QCloudACLPolicy*  _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

@@ -37,6 +37,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) NSString *inventoryID;
 
 
-- (void) setFinishBlock:(void (^)(QCloudInventoryConfiguration* result, NSError * error))QCloudRequestFinishBlock;
+- (void) setFinishBlock:(void (^_Nullable )(QCloudInventoryConfiguration* _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

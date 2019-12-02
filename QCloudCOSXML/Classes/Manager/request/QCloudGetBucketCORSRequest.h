@@ -65,6 +65,6 @@ corsReqeust.bucket = @"testBucket-123456789";
 @property (strong, nonatomic) NSString *bucket;
 
 
-- (void) setFinishBlock:(void (^)(QCloudCORSConfiguration* result, NSError * error))QCloudRequestFinishBlock;
+- (void) setFinishBlock:(void (^_Nullable)(QCloudCORSConfiguration* _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

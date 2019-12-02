@@ -89,8 +89,8 @@ NS_ASSUME_NONNULL_BEGIN
     self.requestData.URIMethod = @"lifecycle";
     return YES;
 }
-- (void) setFinishBlock:(void (^)(QCloudLifecycleConfiguration* result, NSError * error))QCloudRequestFinishBlock
-{
+
+-(void)setFinishBlock:(void (^_Nullable)(QCloudLifecycleConfiguration * _Nullable, NSError * _Nullable))QCloudRequestFinishBlock{
     [super setFinishBlock:QCloudRequestFinishBlock];
 }
 

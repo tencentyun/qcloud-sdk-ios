@@ -77,6 +77,6 @@ deleteResult = outputObject;
 @property (strong, nonatomic) QCloudDeleteInfo *deleteObjects;
 
 
-- (void) setFinishBlock:(void (^)(QCloudDeleteResult* result, NSError * error))QCloudRequestFinishBlock;
+- (void) setFinishBlock:(void (^_Nullable)(QCloudDeleteResult* _Nullable result, NSError *_Nullable error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

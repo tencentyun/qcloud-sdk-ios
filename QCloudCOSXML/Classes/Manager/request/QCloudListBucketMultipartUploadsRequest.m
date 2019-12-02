@@ -96,7 +96,7 @@ NS_ASSUME_NONNULL_BEGIN
     self.requestData.URIMethod = @"uploads";
     return YES;
 }
-- (void) setFinishBlock:(void (^)(QCloudListMultipartUploadsResult* result, NSError * error))QCloudRequestFinishBlock
+- (void) setFinishBlock:(void (^_Nullable)(QCloudListMultipartUploadsResult* _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock
 {
     [super setFinishBlock:QCloudRequestFinishBlock];
 }

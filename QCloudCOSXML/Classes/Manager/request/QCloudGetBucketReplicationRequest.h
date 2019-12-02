@@ -59,6 +59,6 @@ request.bucket = bucketBame; // //存储桶名称(cos v5 的 bucket格式为：x
 @property (strong, nonatomic) NSString *bucket;
 
 
-- (void) setFinishBlock:(void (^)(QCloudBucketReplicationConfiguation* result, NSError * error))QCloudRequestFinishBlock;
+- (void) setFinishBlock:(void (^_Nullable )(QCloudBucketReplicationConfiguation* _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

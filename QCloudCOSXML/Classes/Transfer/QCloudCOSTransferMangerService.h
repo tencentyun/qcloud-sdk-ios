@@ -33,6 +33,7 @@
 @class QCloudCOSXMLUploadObjectRequest;
 @class QCloudCOSXMLCopyObjectRequest;
 @class QCloudCOSXMLDownloadObjectRequest;
+NS_ASSUME_NONNULL_BEGIN
 @interface QCloudCOSTransferMangerService : QCloudService
 
 
@@ -55,3 +56,4 @@
 - (void) DownloadObject: (QCloudCOSXMLDownloadObjectRequest*)get;
 +(void)interceptApplication:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)(void))completionHandler;
 @end
+NS_ASSUME_NONNULL_END

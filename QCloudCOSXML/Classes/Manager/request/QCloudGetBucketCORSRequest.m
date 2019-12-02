@@ -89,8 +89,8 @@ NS_ASSUME_NONNULL_BEGIN
     self.requestData.URIMethod = @"cors";
     return YES;
 }
-- (void) setFinishBlock:(void (^)(QCloudCORSConfiguration* result, NSError * error))QCloudRequestFinishBlock
-{
+
+-(void)setFinishBlock:(void (^_Nullable)(QCloudCORSConfiguration * _Nullable, NSError * _Nullable))QCloudRequestFinishBlock{
     [super setFinishBlock:QCloudRequestFinishBlock];
 }
 

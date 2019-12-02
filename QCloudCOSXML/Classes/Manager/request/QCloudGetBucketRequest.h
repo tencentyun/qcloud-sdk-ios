@@ -92,6 +92,6 @@ request.maxKeys = 1000;
 @property (assign, nonatomic) int maxKeys;
 
 
-- (void) setFinishBlock:(void (^)(QCloudListBucketResult* result, NSError * error))QCloudRequestFinishBlock;
+- (void) setFinishBlock:(void (^_Nullable)(QCloudListBucketResult* _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

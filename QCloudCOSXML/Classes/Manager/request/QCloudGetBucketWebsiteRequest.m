@@ -89,7 +89,7 @@ NS_ASSUME_NONNULL_BEGIN
     self.requestData.URIMethod = @"website";
     return YES;
 }
-- (void) setFinishBlock:(void (^)(QCloudWebsiteConfiguration* result, NSError * error))QCloudRequestFinishBlock
+- (void) setFinishBlock:(void (^_Nullable )(QCloudWebsiteConfiguration* _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock
 {
     [super setFinishBlock:QCloudRequestFinishBlock];
 }

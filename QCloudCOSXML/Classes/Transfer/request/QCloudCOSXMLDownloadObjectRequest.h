@@ -7,6 +7,8 @@
 
 #import <QCloudCore/QCloudCore.h>
 @class QCloudCOSTransferMangerService;
+
+
 @interface QCloudCOSXMLDownloadObjectRequest : QCloudAbstractRequest
 
 /**
@@ -85,5 +87,5 @@
 @property (strong, nonatomic) NSMutableDictionary* customHeaders;
 -(void)setCOSServerSideEncyption;
 -(void)setCOSServerSideEncyptionWithCustomerKey:(NSString *)customerKey;
--(void)setCOSServerSideEncyptionWithKMSCustomKey:(NSString *)customerKey jsonStr:(NSString *)jsonStr;
+
 @end

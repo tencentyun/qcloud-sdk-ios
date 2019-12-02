@@ -136,9 +136,9 @@ NS_ASSUME_NONNULL_BEGIN
     }
     return YES;
 }
-- (void) setFinishBlock:(void (^)(QCloudCopyObjectResult* result, NSError * error))QCloudRequestFinishBlock
-{
-    [super setFinishBlock:QCloudRequestFinishBlock];
+
+-(void)setFinishBlock:(void (^_Nullable)(QCloudCopyObjectResult * _Nullable, NSError * _Nullable))QCloudRequestFinishBlock{
+     [super setFinishBlock:QCloudRequestFinishBlock];
 }
 
 - (QCloudSignatureFields*) signatureFields

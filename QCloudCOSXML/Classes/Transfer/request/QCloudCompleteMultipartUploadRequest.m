@@ -116,7 +116,7 @@ NS_ASSUME_NONNULL_BEGIN
     }
     return YES;
 }
-- (void) setFinishBlock:(void (^)(QCloudUploadObjectResult* result, NSError * error))QCloudRequestFinishBlock
+- (void) setFinishBlock:(void (^_Nullable )(QCloudUploadObjectResult* _Nullable result, NSError * __nullableerror))QCloudRequestFinishBlock
 {
     [super setFinishBlock:QCloudRequestFinishBlock];
 }

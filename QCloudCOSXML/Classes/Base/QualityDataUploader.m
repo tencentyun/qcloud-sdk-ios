@@ -6,9 +6,7 @@
 //
 
 #import "QualityDataUploader.h"
-#import <QCloudCore/QCloudLogger.h>
-#import <QCloudCore/NSError+QCloudNetworking.h>
-
+#import <QCloudCore/QCloudCore.h>
 #define AppKey @"I79GMXS2ZR8Y"
 
 static  NSString * kRequestSentKey = @"request_sent";

@@ -26,7 +26,7 @@
 
 
 #import <Foundation/Foundation.h>
-#import <QCloudCore/QCloudCore.h>
+#import <QCloudCore/QCloudBizHTTPRequest.h>
 NS_ASSUME_NONNULL_BEGIN
 /**
 舍弃一个分块上传且删除已上传的分片块的方法.

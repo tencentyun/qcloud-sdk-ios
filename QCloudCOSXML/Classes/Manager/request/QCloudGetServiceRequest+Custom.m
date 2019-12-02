@@ -32,12 +32,13 @@
     if (![super customBuildRequestData:error]) {
         return NO;
     }
-    self.requestData.serverURL = @"http://service.cos.myqcloud.com";
+    NSString *scheme = self.runOnService.configuration.endpoint.useHTTPS?@"https":@"http";
+    self.requestData.serverURL = [NSString stringWithFormat:@"%@://service.cos.myqcloud.com",scheme];
     if (![self.runOnService.configuration.endpoint.serviceName isEqualToString:@"myqcloud.com"]) {
         if (self.runOnService.configuration.endpoint.regionName) {
-            self.requestData.serverURL = [NSString stringWithFormat:@"http://service.cos.%@.%@",self.runOnService.configuration.endpoint.regionName,self.runOnService.configuration.endpoint.serviceName];
+            self.requestData.serverURL = [NSString stringWithFormat:@"%@://service.cos.%@.%@",scheme,self.runOnService.configuration.endpoint.regionName,self.runOnService.configuration.endpoint.serviceName];
         }else{
-             self.requestData.serverURL = [NSString stringWithFormat:@"http://service.cos.%@",self.runOnService.configuration.endpoint.serviceName];
+             self.requestData.serverURL = [NSString stringWithFormat:@"%@://service.cos.%@",scheme,self.runOnService.configuration.endpoint.serviceName];
         }
         
     }

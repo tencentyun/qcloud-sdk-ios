@@ -102,7 +102,7 @@ NS_ASSUME_NONNULL_BEGIN
     self.requestData.URIComponents = __pathComponents;
     return YES;
 }
-- (void) setFinishBlock:(void (^)(QCloudACLPolicy* result, NSError * error))QCloudRequestFinishBlock
+- (void) setFinishBlock:(void (^_Nullable)(QCloudACLPolicy* _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock
 {
     [super setFinishBlock:QCloudRequestFinishBlock];
 }
