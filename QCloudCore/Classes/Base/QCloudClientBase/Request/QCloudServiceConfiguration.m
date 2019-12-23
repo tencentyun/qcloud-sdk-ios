@@ -39,6 +39,7 @@ static NSString *const QCloudServiceConfigurationUnknown = @"Unknown";
     config.backgroundIdentifier = self.backgroundIdentifier;
     config.backgroundEnable = self.backgroundEnable;
     config.isCloseShareLog = self.isCloseShareLog;
+    config.timeoutInterval = self.timeoutInterval;
     return config;
 }
 @end

@@ -30,6 +30,10 @@
 @class QCloudBucketTagging;
 NS_ASSUME_NONNULL_BEGIN
 @interface QCloudPutBucketTaggingRequest : QCloudBizHTTPRequest
+
+/**
+ 标签集合
+ */
 @property (strong, nonatomic) QCloudBucketTagging *taggings;
 /**
 存储桶名

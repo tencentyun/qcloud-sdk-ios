@@ -37,6 +37,11 @@ NS_ASSUME_NONNULL_BEGIN
 说明日志记录配置的状态
 */
 @property (strong, nonatomic) QCloudInventoryConfiguration *inventoryConfiguration;
+
+/**
+ 清单任务的名称。缺省值：None；合法字符：a-z，A-Z，0-9，-，_，.
+ */
+
 @property (strong, nonatomic) NSString *inventoryID;
 /**
 存储桶名

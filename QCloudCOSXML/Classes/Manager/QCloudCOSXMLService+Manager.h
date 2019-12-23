@@ -774,6 +774,8 @@ NS_ASSUME_NONNULL_BEGIN
  @endcode
  */
 - (void)GetBucketLogging:(QCloudGetBucketLoggingRequest *)request;
+
+
 - (void)PutBucketLogging:(QCloudPutBucketLoggingRequest *)request;
 
 - (void)GetBucketTagging:(QCloudGetBucketTaggingRequest *)request;
@@ -834,24 +836,24 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) GetService:(QCloudGetServiceRequest*)request;
 
 
-//
-//- (void) PutBucketDomain:(QCloudPutBucketDomainRequest*)request;
-//
-//- (void) GetBucketDomain:(QCloudGetBucketDomainRequest*)request;
-//
-//- (void) PutBucketWebsite:(QCloudPutBucketWebsiteRequest*)request;
-//
-//- (void) GetBucketWebsite:(QCloudGetBucketWebsiteRequest*)request;
-//
-//- (void) DeleteBucketWebsite:(QCloudDeleteBucketWebsiteRequest*)request;
-//
-//    
-//-(void)PutBucketInventory:(QCloudPutBucketInventoryRequest *)request;
-//-(void)GetBucketInventory:(QCloudGetBucketInventoryRequest *)request;
-//    
-//-(void)DeleteBucketInventory:(QCloudDeleteBucketInventoryRequest *)request;
-//    
-//-(void)ListBucketInventory:(QCloudListBucketInventoryConfigurationsRequest *)request;
+
+- (void) PutBucketDomain:(QCloudPutBucketDomainRequest*)request;
+
+- (void) GetBucketDomain:(QCloudGetBucketDomainRequest*)request;
+
+- (void) PutBucketWebsite:(QCloudPutBucketWebsiteRequest*)request;
+
+- (void) GetBucketWebsite:(QCloudGetBucketWebsiteRequest*)request;
+
+- (void) DeleteBucketWebsite:(QCloudDeleteBucketWebsiteRequest*)request;
+
+    
+-(void)PutBucketInventory:(QCloudPutBucketInventoryRequest *)request;
+-(void)GetBucketInventory:(QCloudGetBucketInventoryRequest *)request;
+    
+-(void)DeleteBucketInventory:(QCloudDeleteBucketInventoryRequest *)request;
+    
+-(void)ListBucketInventory:(QCloudListBucketInventoryConfigurationsRequest *)request;
 
 - (void) PostObjectRestore:(QCloudPostObjectRestoreRequest*)request;
 - (void) ListObjectVersions:(QCloudListObjectVersionsRequest*)request;

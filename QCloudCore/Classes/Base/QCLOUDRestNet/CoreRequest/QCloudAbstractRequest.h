@@ -32,7 +32,7 @@ typedef void (^QCloudRequestDownProcessBlock)(int64_t bytesDownload, int64_t tot
 @property (nonatomic, assign) QCloudAbstractRequestPriority priority;
 @property (nonatomic, strong, readonly) QCloudHttpMetrics* _Nullable benchMarkMan;
 @property (atomic, assign, readonly) BOOL finished;
-
+@property (nonatomic,assign)NSTimeInterval timeoutInterval;
 /**
   协议执行结果向外通知的委托（delegate）主要包括成功和失败两种情况。与Block方式并存，当两者都设置的时候都会通知。
  */

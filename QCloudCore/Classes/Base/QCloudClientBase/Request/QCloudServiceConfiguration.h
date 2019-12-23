@@ -42,6 +42,8 @@
  */
 @property (nonatomic,assign) BOOL isCloseShareLog;
 
+@property (nonatomic,assign)NSTimeInterval timeoutInterval;
+
 @end
 
 

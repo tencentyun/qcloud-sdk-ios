@@ -29,9 +29,7 @@
 #import <QCloudCore/QCloudCore.h>
 @class QCloudDomainConfiguration;
 NS_ASSUME_NONNULL_BEGIN
-/**
-域名配置的规则
-*/
+
 @interface QCloudPutBucketDomainRequest : QCloudBizHTTPRequest
 /**
 域名配置的规则
