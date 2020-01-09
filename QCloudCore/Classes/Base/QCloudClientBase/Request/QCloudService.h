@@ -46,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param httpRequst http请求
  @return 请求的序列号
  */
-- (int) performRequest:(QCloudBizHTTPRequest*)httpRequst isHaveBody:(BOOL)body;
+- (int) performRequest:(QCloudBizHTTPRequest*)httpRequst;
 
 /**
  执行一个HTTP的请求，您必须在外部将该请求构建好之后，才能调用该接口去执行请求。该接口不接受nil。
@@ -56,7 +56,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param block 执行结果回调
  @return 请求的序列号
  */
-- (int) performRequest:(QCloudBizHTTPRequest *)httpRequst isHaveBody:(BOOL)body  withFinishBlock:(QCloudRequestFinishBlock)block;
+- (int) performRequest:(QCloudBizHTTPRequest *)httpRequst withFinishBlock:(QCloudRequestFinishBlock)block;
 #pragma mark ---权限相关函数
 - (void) loadCOSXMLAuthorizationForBiz:(QCloudBizHTTPRequest *)request urlRequest:(NSURLRequest *)urlrequest compelete:(QCloudHTTPAuthentationContinueBlock)cotinueBlock;
 - (void) loadCOSV4AuthorizationForBiz:(QCloudBizHTTPRequest *)request urlRequest:(NSURLRequest *)urlrequest compelete:(QCloudHTTPAuthentationContinueBlock)cotinueBlock;

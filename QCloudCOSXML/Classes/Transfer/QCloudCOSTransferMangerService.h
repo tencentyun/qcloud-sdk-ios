@@ -54,6 +54,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) UploadObject:(QCloudCOSXMLUploadObjectRequest*)upload;
 - (void) CopyObject:(QCloudCOSXMLCopyObjectRequest*)copy;
 - (void) DownloadObject: (QCloudCOSXMLDownloadObjectRequest*)get;
-+(void)interceptApplication:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)(void))completionHandler;
+
 @end
 NS_ASSUME_NONNULL_END

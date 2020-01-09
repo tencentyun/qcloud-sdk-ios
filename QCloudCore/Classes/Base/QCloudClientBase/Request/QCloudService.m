@@ -103,6 +103,7 @@
 - (BOOL) fillCommonParamtersForRequest:(QCloudBizHTTPRequest *)request error:(NSError * _Nullable __autoreleasing *)error
 {
     request.runOnService = self;
+    request.signatureProvider = self.configuration.signatureProvider;
     if (self.configuration.userAgent.length) {
         [request.requestData setValue:self.configuration.userAgent forHTTPHeaderField:HTTPHeaderUserAgent];
     }
@@ -115,13 +116,11 @@
         cotinueBlock(nil, nil);
     }
 }
-- (int) performRequest:(QCloudBizHTTPRequest*)httpRequst isHaveBody:(BOOL)body
+- (int) performRequest:(QCloudBizHTTPRequest*)httpRequst
 {
     QCloudLogDebug(@"performRequest begin httpRequst.runOnService :%@",httpRequst.runOnService);
-    _isHaveBody = body;
+ 
     httpRequst.timeoutInterval = self.configuration.timeoutInterval;
-     httpRequst.runOnService = self;
-    QCloudLogDebug(@"performRequest after set runOnService: %@  begin set sessionManager: %@",httpRequst.runOnService,httpRequst.runOnService.sessionManager);
      dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSError* error;
         [self fillCommonParamtersForRequest:httpRequst error:&error];
@@ -130,19 +129,15 @@
             return ;
         }
        
-        [self.sessionManager performRequest:httpRequst];
-        QCloudLogDebug(@"performRequest after set runOnService: %@  after set sessionManager: %@",httpRequst.runOnService,httpRequst.runOnService.sessionManager);
+        [[QCloudHTTPSessionManager shareClient] performRequest:httpRequst];
     });
     
     return (int)httpRequst.requestID;
 }
 
-- (int) performRequest:(QCloudBizHTTPRequest *)httpRequst isHaveBody:(BOOL)body  withFinishBlock:(QCloudRequestFinishBlock)block
+- (int) performRequest:(QCloudBizHTTPRequest *)httpRequst  withFinishBlock:(QCloudRequestFinishBlock)block
 {
-     _isHaveBody = body;
     httpRequst.timeoutInterval = self.configuration.timeoutInterval;
-    httpRequst.runOnService = self
-    ;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSError* error;
         [self fillCommonParamtersForRequest:httpRequst error:&error];
@@ -150,7 +145,7 @@
             [httpRequst onError:error];
             return ;
         }
-         [self.sessionManager performRequest:httpRequst];
+          [[QCloudHTTPSessionManager shareClient] performRequest:httpRequst withFinishBlock:block];
     });
     return (int)httpRequst.requestID;
 }

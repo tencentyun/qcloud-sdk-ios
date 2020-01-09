@@ -151,7 +151,7 @@
     // step 4 计算签名
     
     
-    NSString* signature = [NSString qcloudHMACHexsha1:stringToSign secret:signKey];
+    NSString* signatureStr = [NSString qcloudHMACHexsha1:stringToSign secret:signKey];
     
     // step 5 构造Authorization
     
@@ -178,9 +178,12 @@
     
     //key有效期
     NSString* keyTime = signTime;
-    NSString* authoration = [NSString stringWithFormat:@"q-sign-algorithm=sha1&q-ak=%@&q-sign-time=%@&q-key-time=%@&q-header-list=%@&q-url-param-list=%@&q-signature=%@", self.credential.secretID, signTime, keyTime, DumpAllKeys(headers), DumpAllKeys(urlParamters) ,signature];
+    NSString* authoration = [NSString stringWithFormat:@"q-sign-algorithm=sha1&q-ak=%@&q-sign-time=%@&q-key-time=%@&q-header-list=%@&q-url-param-list=%@&q-signature=%@", self.credential.secretID, signTime, keyTime, DumpAllKeys(headers), DumpAllKeys(urlParamters) ,signatureStr];
     QCloudLogDebug(@"authoration is %@", authoration);
-    return [QCloudSignature signatureWith1Day:authoration];
+    
+    QCloudSignature *signature = [QCloudSignature signatureWith1Day:authoration];
+    signature.token = self.credential.token;
+    return signature;
 }
 
 

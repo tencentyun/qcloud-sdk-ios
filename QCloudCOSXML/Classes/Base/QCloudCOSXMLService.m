@@ -53,24 +53,7 @@ static QCloudCOSXMLService* COSXMLService = nil;
         return COSXMLService;
     }
 }
-- (QCloudHTTPSessionManager*) sessionManager {
-    
-    @synchronized(self) {
-        if (self.isHaveBody) {
-            if (self.configuration.backgroundEnable) {
-                   QCloudLogDebug(@"get background sessionManager: %@ ",[QCloudHTTPSessionManager shareClient]);
-                return [QCloudHTTPSessionManager sessionManagerWithBackgroundIdentifier:self.configuration.backgroundIdentifier];
-            }else{
-                return [QCloudHTTPSessionManager shareClient];;
-            }
-        }else{
-            return [QCloudHTTPSessionManager shareClient];;
-        }
-        
-    }
-    QCloudLogDebug(@"get client sessionManager: %@ ",[QCloudHTTPSessionManager shareClient]);
-    return [QCloudHTTPSessionManager shareClient];
-}
+
 
 + (QCloudCOSXMLService*) registerDefaultCOSXMLWithConfiguration:(QCloudServiceConfiguration*)configuration
 {

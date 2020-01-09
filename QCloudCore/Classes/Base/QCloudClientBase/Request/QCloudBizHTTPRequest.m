@@ -119,17 +119,17 @@ QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilizerBlock = ^(NSHTT
     __block dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     __block NSError* localError;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        [self.runOnService loadAuthorizationForBiz:self urlRequest:urlRequest compelete:^(QCloudSignature * _Nonnull signature, NSError * _Nonnull error) {
+        [self.signatureProvider signatureWithFields:self.signatureFields request:self urlRequest:urlRequest compelete:^(QCloudSignature *signature, NSError *error) {
             if (error) {
-                localError = error;
-            } else {
-                if (signature.signature) {
-                    [urlRequest setValue:signature.signature forHTTPHeaderField:@"Authorization"];
-                } else {
-                    // null authorization
-                }
-            }
-            dispatch_semaphore_signal(semaphore);
+                         localError = error;
+                     } else {
+                         if (signature.signature) {
+                             [urlRequest setValue:signature.signature forHTTPHeaderField:@"Authorization"];
+                         } else {
+                             // null authorization
+                         }
+                     }
+                     dispatch_semaphore_signal(semaphore);
         }];
     });
     

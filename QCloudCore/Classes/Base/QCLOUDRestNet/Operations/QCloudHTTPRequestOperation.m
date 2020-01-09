@@ -65,7 +65,7 @@
         }];
         
         QCloudLogDebug(@"开始执行一个请求:%lld", self.httpRequest.requestID);
-        [self.sessionManager executeRestHTTPReqeust:self.httpRequest];
+       [[QCloudHTTPSessionManager shareClient] executeRestHTTPReqeust:self.httpRequest];
     }
 }
 @end
