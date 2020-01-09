@@ -43,181 +43,182 @@
 @implementation QCloudCOSXMLService (Manager)
 - (void) AppendObject:(QCloudAppendObjectRequest*)request
 {
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 - (void) GetObjectACL:(QCloudGetObjectACLRequest*)request
 {
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 
 - (void) PutObjectACL:(QCloudPutObjectACLRequest*)request
 {
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 - (void) DeleteObject:(QCloudDeleteObjectRequest*)request
 {
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 - (void) DeleteMultipleObject:(QCloudDeleteMultipleObjectRequest*)request
 {
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 
 - (void) OptionsObject:(QCloudOptionsObjectRequest*)request
 {
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 
 
 - (void) PutBucket:(QCloudPutBucketRequest*)request
 {
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 - (void) GetBucket:(QCloudGetBucketRequest*)request
 {
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 - (void) GetBucketACL:(QCloudGetBucketACLRequest*)request
 {
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 - (void) GetBucketCORS:(QCloudGetBucketCORSRequest*)request
 {
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 - (void) GetBucketLocation:(QCloudGetBucketLocationRequest*)request
 {
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 - (void) GetBucketLifecycle:(QCloudGetBucketLifecycleRequest*)request
 {
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 
 - (void) PutBucketACL:(QCloudPutBucketACLRequest*)request
 {
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 - (void) PutBucketCORS:(QCloudPutBucketCORSRequest*)request
 {
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 - (void) PutBucketLifecycle:(QCloudPutBucketLifecycleRequest*)request
 {
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 
 - (void) DeleteBucketCORS:(QCloudDeleteBucketCORSRequest*)request
 {
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 - (void) DeleteBucketLifeCycle:(QCloudDeleteBucketLifeCycleRequest*)request
 {
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 
 - (void) DeleteBucket:(QCloudDeleteBucketRequest*)request
 {
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 - (void) HeadBucket:(QCloudHeadBucketRequest*)request
 {
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 - (void) ListBucketMultipartUploads:(QCloudListBucketMultipartUploadsRequest*)request
 {
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 - (void) PutBucketVersioning:(QCloudPutBucketVersioningRequest*)request {
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 - (void) GetBucketVersioning:(QCloudGetBucketVersioningRequest*)request {
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 - (void) PutBucketRelication:(QCloudPutBucketReplicationRequest*)request {
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 - (void) GetBucketReplication:(QCloudGetBucketReplicationRequest*)request {
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 - (void) DeleteBucketReplication:(QCloudDeleteBucketReplicationRequest*)request {
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 - (void) GetService:(QCloudGetServiceRequest*)request {
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 - (void) PostObjectRestore:(QCloudPostObjectRestoreRequest*)request {
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 - (void) ListObjectVersions:(QCloudListObjectVersionsRequest *)request {
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 
 
 
 -(void)PutBucketDomain:(QCloudPutBucketDomainRequest *)request{
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 
 -(void)GetBucketDomain:(QCloudGetBucketDomainRequest *)request{
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 
 -(void)PutBucketWebsite:(QCloudPutBucketWebsiteRequest *)request{
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 
 -(void)GetBucketWebsite:(QCloudGetBucketWebsiteRequest *)request{
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 
 -(void)DeleteBucketWebsite:(QCloudDeleteBucketWebsiteRequest *)request{
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 
 
 -(void)GetBucketTagging:(QCloudGetBucketTaggingRequest *)request{
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 
 -(void)PutBucketTagging:(QCloudPutBucketTaggingRequest *)request{
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 
 -(void)DeleteBucketTagging:(QCloudDeleteBucketTaggingRequest *)request{
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 
 -(void)SelectObjectContent:(QCloudSelectObjectContentRequest *)request{
-     [super performRequest:request isHaveBody:NO];
+     [super performRequest:request ];
 }
 -(void)GetBucketLogging:(QCloudGetBucketLoggingRequest *)request{
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 
 -(void)PutBucketLogging:(QCloudPutBucketLoggingRequest *)request{
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
     
 -(void)PutBucketInventory:(QCloudPutBucketInventoryRequest *)request{
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
     
 -(void)GetBucketInventory:(QCloudGetBucketInventoryRequest *)request{
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
     
 -(void)DeleteBucketInventory:(QCloudDeleteBucketInventoryRequest *)request{
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
     
 -(void)ListBucketInventory:(QCloudListBucketInventoryConfigurationsRequest *)request{
-    [super performRequest:request isHaveBody:NO];
+    [super performRequest:request ];
 }
 
 - (void) getPresignedURL:(QCloudGetPresignedURLRequest*)request {
     
     request.runOnService = self;
+    request.signatureProvider = self.configuration.signatureProvider;
     NSError* error;
     NSURLRequest* urlRequest = [request buildURLRequest:&error];
     if (nil != error) {
@@ -225,20 +226,23 @@
         return ;
     }
     __block NSString* requestURLString = urlRequest.URL.absoluteString;
-    [self loadCOSXMLAuthorizationForBiz:request urlRequest:urlRequest compelete:^(QCloudSignature *signature, NSError *error) {
+    [request.signatureProvider signatureWithFields:request.signatureFields request:request urlRequest:urlRequest compelete:^(QCloudSignature *signature, NSError *error) {
         NSString* authorizatioinString = signature.signature;
-        if ([requestURLString hasSuffix:@"&"] || [requestURLString hasSuffix:@"?"]) {
-            requestURLString = [requestURLString stringByAppendingString:authorizatioinString];
-        } else {
-            requestURLString = [requestURLString stringByAppendingFormat:@"?%@",authorizatioinString];
+         if ([requestURLString hasSuffix:@"&"] || [requestURLString hasSuffix:@"?"]) {
+             requestURLString = [requestURLString stringByAppendingString:authorizatioinString];
+         } else {
+             requestURLString = [requestURLString stringByAppendingFormat:@"?%@",authorizatioinString];
+         }
+        if (signature.token) {
+             requestURLString = [requestURLString stringByAppendingFormat:@"&x-cos-security-token=%@",signature.token];
         }
-        QCloudGetPresignedURLResult* result = [[QCloudGetPresignedURLResult alloc] init];
-        result.presienedURL = requestURLString;
-        if (request.finishBlock) {
-            request.finishBlock(result, nil);
-        }
+         QCloudGetPresignedURLResult* result = [[QCloudGetPresignedURLResult alloc] init];
+         result.presienedURL = requestURLString;
+         if (request.finishBlock) {
+             request.finishBlock(result, nil);
+         }
     }];
-    
+  
 }
 
 

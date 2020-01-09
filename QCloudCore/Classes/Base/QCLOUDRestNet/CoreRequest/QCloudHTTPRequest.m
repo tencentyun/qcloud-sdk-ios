@@ -241,8 +241,7 @@
 - (void) cancel
 {
     [super cancel];
-     QCloudLogDebug(@"QCloudHTTPRequest:%@ runOnService.sessionManager:%@",self.runOnService ,self.runOnService.sessionManager);
-    [self.runOnService.sessionManager cancelRequestWithID:(int)self.requestID];
+     [[QCloudHTTPSessionManager shareClient] cancelRequestWithID:(int)self.requestID];
    
 }
 

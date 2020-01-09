@@ -117,6 +117,7 @@ static NSString *_defaultService;
 - (void)commonInit
 {
     _accessibility = QCloudUICKeyChainStoreAccessibilityAfterFirstUnlock;
+    _useAuthenticationUI = YES;
 }
 
 #pragma mark -
@@ -360,9 +361,9 @@ static NSString *_defaultService;
 {
     NSMutableDictionary *query = [self query];
     query[(__bridge __strong id)kSecAttrAccount] = key;
-    
+
     OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, NULL);
-    return status == errSecSuccess;
+    return status == errSecSuccess || status == errSecInteractionNotAllowed;
 }
 
 #pragma mark -
@@ -528,15 +529,7 @@ static NSString *_defaultService;
     query[(__bridge __strong id)kSecAttrAccount] = key;
 #if TARGET_OS_IOS
     if (floor(NSFoundationVersionNumber) > floor(1144.17)) { // iOS 9+
-        if (@available(iOS 9.0, *)) {
-            query[(__bridge __strong id)kSecUseAuthenticationUI] = (__bridge id)kSecUseAuthenticationUIFail;
-        } else {
-            // Fallback on earlier versions
-        }if (@available(iOS 9.0, *)) {
-            query[(__bridge __strong id)kSecUseAuthenticationUI] = (__bridge id)kSecUseAuthenticationUIFail;
-        } else {
-            // Fallback on earlier versions
-        }
+        query[(__bridge __strong id)kSecUseAuthenticationUI] = (__bridge id)kSecUseAuthenticationUIFail;
 #if  __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_9_0
     } else if (floor(NSFoundationVersionNumber) > floor(1047.25)) { // iOS 8+
         query[(__bridge __strong id)kSecUseNoAuthenticationUI] = (__bridge id)kCFBooleanTrue;
@@ -773,7 +766,7 @@ static NSString *_defaultService;
 
 #pragma mark -
 
-- (NSArray UIC_KEY_TYPE *)allKeys
+- (NSArray QCloudUIC_KEY_TYPE *)allKeys
 {
     NSArray *items = [self.class prettify:[self itemClassObject] items:[self items]];
     NSMutableArray *keys = [[NSMutableArray alloc] init];
@@ -786,7 +779,7 @@ static NSString *_defaultService;
     return keys.copy;
 }
 
-+ (NSArray UIC_KEY_TYPE *)allKeysWithItemClass:(QCloudUICKeyChainStoreItemClass)itemClass
++ (NSArray QCloudUIC_KEY_TYPE *)allKeysWithItemClass:(QCloudUICKeyChainStoreItemClass)itemClass
 {
     CFTypeRef itemClassObject = kSecClassGenericPassword;
     if (itemClass == QCloudUICKeyChainStoreItemClassGenericPassword) {
@@ -836,7 +829,7 @@ static NSString *_defaultService;
     query[(__bridge __strong id)kSecClass] = (__bridge id)itemClassObject;
     query[(__bridge __strong id)kSecMatchLimit] = (__bridge id)kSecMatchLimitAll;
     query[(__bridge __strong id)kSecReturnAttributes] = (__bridge id)kCFBooleanTrue;
-#if TARGET_OS_IOS
+#if TARGET_OS_IPHONE
     query[(__bridge __strong id)kSecReturnData] = (__bridge id)kCFBooleanTrue;
 #endif
     
@@ -864,7 +857,7 @@ static NSString *_defaultService;
     NSMutableDictionary *query = [self query];
     query[(__bridge __strong id)kSecMatchLimit] = (__bridge id)kSecMatchLimitAll;
     query[(__bridge __strong id)kSecReturnAttributes] = (__bridge id)kCFBooleanTrue;
-#if TARGET_OS_IOS
+#if TARGET_OS_IPHONE
     query[(__bridge __strong id)kSecReturnData] = (__bridge id)kCFBooleanTrue;
 #endif
     
@@ -951,7 +944,7 @@ static NSString *_defaultService;
     }
 }
 
-- (void)setAccessibility:(QCloudUICKeyChainStoreAccessibility)accessibility authenticationPolicy:(UICKeyChainStoreAuthenticationPolicy)authenticationPolicy
+- (void)setAccessibility:(QCloudUICKeyChainStoreAccessibility)accessibility authenticationPolicy:(QCloudUICKeyChainStoreAuthenticationPolicy)authenticationPolicy
 {
     _accessibility = accessibility;
     _authenticationPolicy = authenticationPolicy;
@@ -1036,12 +1029,12 @@ static NSString *_defaultService;
     [self setSharedPassword:nil forAccount:account completion:completion];
 }
 
-+ (void)requestSharedWebCredentialWithCompletion:(void (^)(NSArray UIC_CREDENTIAL_TYPE *credentials, NSError *error))completion
++ (void)requestSharedWebCredentialWithCompletion:(void (^)(NSArray QCloudUIC_CREDENTIAL_TYPE *credentials, NSError *error))completion
 {
     [self requestSharedWebCredentialForDomain:nil account:nil completion:completion];
 }
 
-+ (void)requestSharedWebCredentialForDomain:(NSString *)domain account:(NSString *)account completion:(void (^)(NSArray UIC_CREDENTIAL_TYPE *credentials, NSError *error))completion
++ (void)requestSharedWebCredentialForDomain:(NSString *)domain account:(NSString *)account completion:(void (^)(NSArray QCloudUIC_CREDENTIAL_TYPE *credentials, NSError *error))completion
 {
     SecRequestSharedWebCredential((__bridge CFStringRef)domain, (__bridge CFStringRef)account, ^(CFArrayRef credentials, CFErrorRef error) {
         if (error) {
@@ -1148,6 +1141,20 @@ static NSString *_defaultService;
         }
     }
 #endif
+
+    if (!_useAuthenticationUI) {
+#if TARGET_OS_IOS
+        if (floor(NSFoundationVersionNumber) > floor(1144.17)) { // iOS 9+
+            query[(__bridge __strong id)kSecUseAuthenticationUI] = (__bridge id)kSecUseAuthenticationUIFail;
+#if  __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_9_0
+        } else if (floor(NSFoundationVersionNumber) > floor(1047.25)) { // iOS 8+
+            query[(__bridge __strong id)kSecUseNoAuthenticationUI] = (__bridge id)kCFBooleanTrue;
+#endif
+        }
+#elif TARGET_OS_WATCH || TARGET_OS_TV
+        query[(__bridge __strong id)kSecUseAuthenticationUI] = (__bridge id)kSecUseAuthenticationUIFail;
+#endif
+    }
     
     return query;
 }
@@ -1349,7 +1356,7 @@ static NSString *_defaultService;
 
 + (NSError *)argumentError:(NSString *)message
 {
-    NSError *error = [NSError errorWithDomain:QCloudUICKeyChainStoreErrorDomain code:UICKeyChainStoreErrorInvalidArguments userInfo:@{NSLocalizedDescriptionKey: message}];
+    NSError *error = [NSError errorWithDomain:QCloudUICKeyChainStoreErrorDomain code:QCloudUICKeyChainStoreErrorInvalidArguments userInfo:@{NSLocalizedDescriptionKey: message}];
     NSLog(@"error: [%@] %@", @(error.code), error.localizedDescription);
     return error;
 }

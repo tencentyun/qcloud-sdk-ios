@@ -133,10 +133,18 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 - (void) onHandleAppBecomeActive :(NSNotification *)notification {
-    if ([self shouldShowLogs]) {
-        [UIPasteboard generalPasteboard].string = @"";
-        [self showLogs];
-    }
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        //
+        NSString *currentPasteBoardContent = [UIPasteboard generalPasteboard].string;
+           if ([currentPasteBoardContent isEqualToString:@"##qcloud-cos-log-ispct##"]) {
+               dispatch_async(dispatch_get_main_queue(), ^{
+                   [UIPasteboard generalPasteboard].string = @"";
+                    [self showLogs];
+               });
+           
+           }
+    });
 }
 
 

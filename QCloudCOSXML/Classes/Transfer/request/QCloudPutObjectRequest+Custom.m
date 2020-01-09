@@ -6,7 +6,7 @@
 //
 
 #import "QCloudPutObjectRequest+Custom.h"
-#import "QCLOUDRestNet.h"
+#import <QCloudCore/QCloudCore.h>
 #import <objc/runtime.h>
 @interface QCloudBizHTTPRequest()
 @end

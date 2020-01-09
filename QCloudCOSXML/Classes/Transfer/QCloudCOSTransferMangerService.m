@@ -129,15 +129,5 @@ static QCloudCOSTransferMangerService* COSTransferMangerService = nil;
  @param identifier        The identifier of the URL session requiring attention.
  @param completionHandler The completion handler to call when you finish processing the events.
  */
-+(void)interceptApplication:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)(void))completionHandler{
 
-        // For the SDK managed service clients
-        for (NSString *key in cloudBackGroundSessionManagersCache.allKeys) {
-            QCloudHTTPSessionManager *sessionManager = [cloudBackGroundSessionManagersCache objectForKey:key];
-            if ([identifier isEqualToString:sessionManager.configuration.identifier]) {
-                sessionManager.didFinishEventsForBackgroundURLSession  = completionHandler;
-            }
-        }
-    
-}
 @end

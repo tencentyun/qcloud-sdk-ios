@@ -82,19 +82,7 @@ QCloudThreadSafeMutableDictionary* QCloudBackgroundSessionManagerCache()
     return client;
 }
 
-+(QCloudHTTPSessionManager *)sessionManagerWithBackgroundIdentifier:(NSString *)backgroundIdentifier{
-    QCloudHTTPSessionManager *sessionManager = nil;
-    for (NSString *backgroundIdentifier in QCloudBackgroundSessionManagerCache().allKeys) {
-        QCloudLogInfo(@"已经存在的session %@",QCloudBackgroundSessionManagerCache().allKeys);
-        QCloudLogInfo(@"我是根据key找到的session：%@",[cloudBackGroundSessionManagersCache objectForKey:backgroundIdentifier]);
-        return [cloudBackGroundSessionManagersCache objectForKey:backgroundIdentifier];
-    }
-    
-    sessionManager = [[QCloudHTTPSessionManager alloc]initWithBackgroundSessionWithBackgroundIdentifier:backgroundIdentifier];
-    QCloudLogInfo(@"新创建的sessionManger %@",sessionManager);
-    [QCloudBackgroundSessionManagerCache() setObject:sessionManager forKey:backgroundIdentifier];
-    return sessionManager;
-}
+
 - (instancetype) initWithConfigruation:(NSURLSessionConfiguration*)configuration
 {
     self = [super init];
@@ -201,9 +189,7 @@ QCloudThreadSafeMutableDictionary* QCloudBackgroundSessionManagerCache()
     
     QCloudHTTPRequestOperation* operation = [[QCloudHTTPRequestOperation alloc] initWithRequest:request];
     operation.sessionManager = self;
-    QCloudLogDebug(@"QCloudHTTPSessionManager performRequest request: %@  operation:%@  sessionManager:%@",request,operation,self);
     [_operationQueue addOpreation:operation];
-    QCloudLogDebug(@"我是add的queue%@",self.operationQueue);
     return (int)request.requestID;
 }
 
@@ -418,7 +404,7 @@ API_AVAILABLE(ios(10.0)){
 {
     [httpRequest.benchMarkMan benginWithKey:kTaskTookTime];
     [httpRequest willStart];
-    QCloudLogDebug(@"executeRestHTTPReqeust sessionManager session %@ %@",httpRequest.runOnService.sessionManager,httpRequest.runOnService.sessionManager.session);
+
     NSError* error;
     NSMutableURLRequest* urlRequest = [[httpRequest buildURLRequest:&error] mutableCopy];
     if (httpRequest.timeoutInterval) {
@@ -531,13 +517,7 @@ API_AVAILABLE(ios(10.0)){
     
 }
 
-- (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session {
-    QCloudLogDebug(@"URLSessionDidFinishEventsForBackgroundURLSession %@",self.didFinishEventsForBackgroundURLSession);
-    if (self.didFinishEventsForBackgroundURLSession) {
-        self.didFinishEventsForBackgroundURLSession();
-    }
-    
-}
+
 -(void)dealloc{
     [cloudBackGroundSessionManagersCache removeObject:self];
 }

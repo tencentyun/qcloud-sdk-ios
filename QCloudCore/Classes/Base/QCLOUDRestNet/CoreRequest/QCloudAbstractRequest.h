@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "QCloudHTTPRequestDelegate.h"
 #import "QCloudHttpMetrics.h"
-
+#import "QCloudSignatureProvider.h"
 typedef double QCloudAbstractRequestPriority;
 
 #define QCloudAbstractRequestPriorityHigh   2.0
@@ -27,6 +27,10 @@ typedef void (^QCloudRequestDownProcessBlock)(int64_t bytesDownload, int64_t tot
     @protected
     int64_t _requestID;
 }
+/**
+ 签名信息的回调接口，该委托必须实现。签名是腾讯云进行服务时进行用户身份校验的关键手段，同时也保障了用户访问的安全性。该委托中通过函数回调来提供签名信息。
+ */
+@property (nonatomic, strong) id<QCloudSignatureProvider> signatureProvider;
 @property (atomic, assign, readonly) BOOL canceled;
 @property (nonatomic, assign, readonly) int64_t requestID;
 @property (nonatomic, assign) QCloudAbstractRequestPriority priority;

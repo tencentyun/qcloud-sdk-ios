@@ -645,9 +645,8 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
         }
     }
     QCloudLogDebug(@"cancelledRequestIDs :%@",cancelledRequestIDs);
-    QCloudLogDebug(@"begin cancelRequestsWithID transferManager: %@ sessionManager: %@ cosService: %@ ",self.transferManager,self.transferManager.cosService,self.transferManager.cosService.sessionManager);
     
-    [self.transferManager.cosService.sessionManager cancelRequestsWithID:cancelledRequestIDs];
+   [[QCloudHTTPSessionManager shareClient] cancelRequestsWithID:cancelledRequestIDs];
 }
 - (QCloudCOSXMLUploadObjectResumeData) cancelByProductingResumeData:(NSError *__autoreleasing *)error
 {
