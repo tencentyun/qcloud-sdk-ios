@@ -25,6 +25,10 @@ pod 'QCloudNewCOSV4'
 ```
 其他的具体的集成方式进入该SDK所在的文件夹中，查看README可以详见具体库的文档。
 
+## 接口说明
+
+SDK 包含的 COS 接口说明请查看官网的 [iOS 接口文档](https://cloud.tencent.com/document/product/436/11280)。
+
 ## 文档集成
 我们提供了docset格式的文档，在仓库的Documents目录中，或者可以从release中下载。您可以直接使用Dash来打开。也可以将文档集成到Xcode中去。
 ### 集成文档到Xcode
