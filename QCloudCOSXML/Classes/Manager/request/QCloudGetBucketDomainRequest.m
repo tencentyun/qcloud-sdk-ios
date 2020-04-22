@@ -1,6 +1,6 @@
 //
-//  GetBucketDomian.m
-//  GetBucketDomian
+//  GetBucketDomain.m
+//  GetBucketDomain
 //
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.

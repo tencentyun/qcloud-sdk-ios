@@ -241,7 +241,7 @@ QCloudEncodingType QCloudEncodingGetType(const char *typeEncoding) {
         if (!_getter) {
             _getter = NSSelectorFromString(_name);
         }
-        if (!_setter) {
+        if (!_setter &&_name.length) {
             _setter = NSSelectorFromString([NSString stringWithFormat:@"set%@%@:", [_name substringToIndex:1].uppercaseString, [_name substringFromIndex:1]]);
         }
     }

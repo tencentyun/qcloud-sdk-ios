@@ -140,20 +140,23 @@ static const NSInteger kWeakNetworkConcurrentCount = 1;
 }
 
 - (void)removeRequestInQueue:(int64_t) requestID {
-    void(^RemoveOperation)(NSMutableArray* array) = ^(NSMutableArray* array) {
-        for (QCloudRequestOperation* request in [array copy]) {
-            if (request.request.requestID == requestID) {
-                [array removeObject:request];
-                QCloudLogDebug(@"[%llu] request removed successes!");
-            }
-        }
-    };
-    RemoveOperation(_runningOperationArray);
-    RemoveOperation(_operationArray);
+    @autoreleasepool {
+        void(^RemoveOperation)(NSMutableArray* array) = ^(NSMutableArray* array) {
+               for (QCloudRequestOperation* request in [array copy]) {
+                   if (request.request.requestID == requestID) {
+                       [array removeObject:request];
+                       QCloudLogDebug(@"[%llu] request removed successes!",requestID);
+                   }
+               }
+           };
+           RemoveOperation(_runningOperationArray);
+           RemoveOperation(_operationArray);
+    }
+   
 }
 
 - (void) cancelByRequestIDs:(NSArray<NSNumber*>*)requestIDs {
-    QCloudLogDebug(@"cancelled by request ids ",requestIDs);
+    
     [_dataLock lock];
     for (NSNumber* requestID in requestIDs) {
         [self removeRequestInQueue:[requestID longLongValue]];

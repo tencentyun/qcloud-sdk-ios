@@ -1,6 +1,6 @@
 //
-//  GetBucketDomian.h
-//  GetBucketDomian
+//  GetBucketDomain.h
+//  GetBucketDomain
 //
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.
@@ -29,6 +29,7 @@
 #import <QCloudCore/QCloudCore.h>
 #import "QCloudDomainConfiguration.h"
 NS_ASSUME_NONNULL_BEGIN
+
 @interface QCloudGetBucketDomainRequest : QCloudBizHTTPRequest
 /**
 存储桶名

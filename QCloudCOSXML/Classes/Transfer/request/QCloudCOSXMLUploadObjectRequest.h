@@ -42,7 +42,10 @@ typedef void (^RequestsMetricArrayBlock)(NSMutableArray *_Nullable requstMetricA
  */
 @property (strong, nonatomic) BodyType body;
 
-
+/**
+RFC 2616 中定义用于指示资源的MIME类型，将作为 Object 元数据保存
+*/
+@property (strong, nonatomic) NSString *contentType;
 /**
  RFC 2616 中定义的缓存策略，将作为 Object 元数据保存
  */

@@ -204,7 +204,7 @@
     
     NSTimeInterval skewTime = [deviceTime timeIntervalSinceDate:serverTime];
    // If the time difference between the device and the server is large, fix device time
-    NSLog(@"skewTime: %f",skewTime);
+    QCloudLogDebug(@"skewTime: %f",skewTime);
     if (skewTime >= 1*60) {
         [NSDate qcloud_setTimeDeviation:skewTime];
     }

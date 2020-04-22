@@ -35,4 +35,13 @@ NS_ASSUME_NONNULL_BEGIN
 */
 @property (strong, nonatomic) NSString *key;
 @end
+
+@interface QCloudDeleteFailedResultRow : NSObject
+/**
+删除的对象的key
+*/
+@property (strong, nonatomic) NSString *key;
+@property (strong, nonatomic) NSString *code;
+@property (strong, nonatomic) NSString *message;
+@end
 NS_ASSUME_NONNULL_END

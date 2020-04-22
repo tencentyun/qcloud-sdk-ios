@@ -138,8 +138,8 @@
         //
         NSString *currentPasteBoardContent = [UIPasteboard generalPasteboard].string;
            if ([currentPasteBoardContent isEqualToString:@"##qcloud-cos-log-ispct##"]) {
-               dispatch_async(dispatch_get_main_queue(), ^{
-                   [UIPasteboard generalPasteboard].string = @"";
+              [UIPasteboard generalPasteboard].string = @"";
+              dispatch_async(dispatch_get_main_queue(), ^{
                     [self showLogs];
                });
            

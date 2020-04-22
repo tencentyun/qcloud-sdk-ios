@@ -148,5 +148,9 @@ NS_ASSUME_NONNULL_BEGIN
     dic[@"action"] = action;
     return dic;
 }
+
+- (void) configTaskResume{
+    self.forbidCancelled = YES;
+}
 @end
 NS_ASSUME_NONNULL_END

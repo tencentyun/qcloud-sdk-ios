@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
 删除跨域访问配置信息的方法.
 
-若是 Bucket 不需要支持跨域访问配置，可以调用此接口删除已配置的跨域访问信息. 跨域访问配置可以通过 putBucketCORS(PutBucketCORSRequest) 或者 putBucketCORSAsync(PutBucketCORSRequest, CosXmlResultListener) 方法来开启 Bucket 的跨域访问 支持.
+若是 Bucket 不需要支持跨域访问配置，可以调用此接口删除已配置的跨域访问信息. 跨域访问配置可以通过 putBucketCORS(PutBucketCORSRequest) 或者putBucketCORSAsync(PutBucketCORSRequest, CosXmlResultListener) 方法来开启 Bucket 的跨域访问 支持.
 
 关于删除跨域访问配置信息接口的具体描述，请查看https://cloud.tencent.com/document/product/436/8283.
 

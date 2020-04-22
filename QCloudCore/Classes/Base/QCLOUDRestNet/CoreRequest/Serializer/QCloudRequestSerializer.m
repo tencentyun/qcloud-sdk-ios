@@ -326,7 +326,7 @@ QCloudRequestSerializerBlock QCloudURLFuseURIMethodASURLParamters = ^(NSMutableU
     if (data.URIMethod) {
         methodParamters[data.URIMethod] = @"";
         urlStr = QCloudURLAppendParamters(urlStr, QCloudURLEncodeParamters(methodParamters, YES, data.stringEncoding));
-        if([urlStr hasSuffix:@"="]) {
+        if(urlStr.length && [urlStr hasSuffix:@"="]) {
             urlStr = [urlStr substringToIndex:urlStr.length -1];
         }
     }
@@ -391,7 +391,7 @@ QCloudRequestSerializerBlock QCloudURLSerilizerAppendURLParamters(NSDictionary* 
             urlStr = QCloudPathJoin(data.serverURL, data.URIMethod);
         }
         urlStr = QCloudURLAppendParamters(urlStr, QCloudURLEncodeParamters(keyValueMaps, YES, data.stringEncoding));
-        if ([urlStr hasSuffix:@"="]) {
+        if (urlStr.length && [urlStr hasSuffix:@"="]) {
             urlStr = [urlStr substringToIndex:urlStr.length-1];
         }
         NSURL* url = [NSURL URLWithString:urlStr];
@@ -481,7 +481,7 @@ static void *QCloudHTTPRequestSerializerObserverContext = &QCloudHTTPRequestSeri
     }
     //
     _HTTPMethod = HTTPMethodGET;
-    _allowCompressedResponse = YES;
+    _allowCompressedResponse = NO;
     _serializerBlocks = @[
                           QCloudURLFuseWithParamters
                           ];
@@ -557,7 +557,7 @@ static void *QCloudHTTPRequestSerializerObserverContext = &QCloudHTTPRequestSeri
     //
     //http headers
     if (self.allowCompressedResponse) {
-          [data setValue:@"Content-Encoding" forHTTPHeaderField:@"gzip"];
+          [data setValue:@"gzip" forHTTPHeaderField:@"Content-Encoding"];
     }
     //
     NSDictionary* headers = [data.httpHeaders copy];

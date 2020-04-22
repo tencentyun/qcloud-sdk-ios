@@ -10,7 +10,15 @@
 #import "QCloudLogger.h"
 #import "QCloudNetEnv.h"
 #import "NSError+QCloudNetworking.h"
+__attribute__ ((noinline)) void cosWarnBlockingOperationOnMainThread() {
+    NSLog(@"Warning: A long-running operation is being executed on the main thread. \n"
+          " Break on warnBlockingOperationOnMainThread() to debug.");
+}
+@interface QCloudAbstractRequest()
+@property (nonatomic, strong) NSObject *lock;
+@property (nonatomic, strong) NSCondition *condition;
 
+@end
 @implementation QCloudAbstractRequest
 @synthesize requestID = _requestID;
 
@@ -19,12 +27,15 @@
     if (!self) {
         return self;
     }
+    _lock = [[NSObject alloc] init];
+    _condition = [[NSCondition alloc] init];
     _benchMarkMan = [QCloudHttpMetrics new];
     _priority = QCloudAbstractRequestPriorityHigh;
     static int64_t requestID = 3333;
     _requestID = requestID + 1;
     requestID++;
     _finished = NO;
+   
     return self;
 }
 
@@ -66,7 +77,7 @@
 
 - (void) __notifySuccess:(id)object
 {
-    
+    [self.condition broadcast];
     if ([self.delegate respondsToSelector:@selector(QCloudHTTPRequestDidFinished:succeedWithObject:)]){
         [self.delegate QCloudHTTPRequestDidFinished:self succeedWithObject:object];
     }
@@ -142,5 +153,22 @@
 }
 
 
-
+-(void)waitForComplete{
+    if ([NSThread isMainThread]) {
+        cosWarnBlockingOperationOnMainThread();
+    }
+    @synchronized (self.lock) {
+        if (self.finished) {
+            return;
+        }
+        [self.condition lock];
+    }
+    while (!self.finished) {
+        [self.condition wait];
+    }
+    [self.condition unlock];
+}
+-(void)configTaskResume{
+    
+}
 @end

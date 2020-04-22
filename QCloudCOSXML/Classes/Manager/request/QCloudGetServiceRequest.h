@@ -39,9 +39,13 @@ NS_ASSUME_NONNULL_BEGIN
  关于获取所有存储空间列表接口的具体描述，请查看https://cloud.tencent.com/document/product/436/8291.
  
  cos iOS SDK 中获取所属账户的所有存储空间列表的方法具体步骤如下：
+ 
  1. 实例化 QCloudGetServiceRequest。
+ 
  2. 调用 QCloudCOSXMLService 对象中的 GetService 方法发出请求。
+ 
  3. 从回调的 finishBlock 中的 QCloudListAllMyBucketsResult 获取具体内容
+ 
  示例：
  @code
  QCloudGetServiceRequest* request = [[QCloudGetServiceRequest alloc] init];

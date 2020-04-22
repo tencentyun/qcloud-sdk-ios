@@ -37,7 +37,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (int) performRequest:(QCloudBizHTTPRequest *)httpRequst isHaveBody:(BOOL)body withFinishBlock:(QCloudRequestFinishBlock)block NS_UNAVAILABLE;
 
 #pragma Factory
+/**
+ 获取默认的cosxml服务
+ */
 + (QCloudCOSXMLService*) defaultCOSXML;
+
+/// 获取指定key的cosxml服务
+/// @param key 要获取的cosxml服务对应的key
 + (QCloudCOSXMLService*) cosxmlServiceForKey:(NSString*)key;
 #pragma hidden super selectors
 /**
@@ -48,8 +54,16 @@ NS_ASSUME_NONNULL_BEGIN
 
  */
 + (BOOL) hasServiceForKey:(NSString*)key;
+
+/// 注册默认的cosxml服务
+/// @param configuration cosxml服务对应的配置信息，一旦配置之后无法修改
 + (QCloudCOSXMLService*) registerDefaultCOSXMLWithConfiguration:(QCloudServiceConfiguration*)configuration;
+
+/// 注册特定key的cosxml服务
+/// @param configuration cosxml对应的配置信息
+/// @param key 该cosxml对应的key
 + (QCloudCOSXMLService*) registerCOSXMLWithConfiguration:(QCloudServiceConfiguration*)configuration withKey:(NSString*)key;
+
 + (void) removeCOSXMLWithKey:(NSString*)key;
 
 /**

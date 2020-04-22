@@ -76,6 +76,10 @@ RFC 2616 中定义的缓存策略，将作为 Object 元数据保存
 */
 @property (strong, nonatomic) NSString *cacheControl;
 /**
+RFC 2616 中定义用于指示资源的MIME类型，将作为 Object 元数据保存
+*/
+@property (strong, nonatomic) NSString *contentType;
+/**
 RFC 2616 中定义的文件名称，将作为 Object 元数据保存
 */
 @property (strong, nonatomic) NSString *contentDisposition;

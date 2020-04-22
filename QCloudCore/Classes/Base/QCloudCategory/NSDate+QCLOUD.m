@@ -28,4 +28,11 @@ static NSTimeInterval _timeDeviation = 0.0;
     dateFormatter.dateFormat=@"yyyy-MM-dd hh:mm:ss";//指定转date得日期格式化形式
      return [dateFormatter stringFromDate:date];//2015-11-20
 }
++ (NSDate *)localDate{
+    NSDate *date = [NSDate date];
+    NSTimeZone *zone = [NSTimeZone systemTimeZone];
+    NSInteger interval = [zone secondsFromGMTForDate: date];
+    NSDate *localeDate = [date  dateByAddingTimeInterval: interval];
+    return localeDate;
+}
 @end

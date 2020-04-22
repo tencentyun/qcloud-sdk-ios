@@ -36,6 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 {
    return @ {
       @"deletedObjects":[QCloudDeleteResultRow class],
+      @"deletedFailedObjects":[QCloudDeleteFailedResultRow class],
   };
 }
 
@@ -44,14 +45,13 @@ NS_ASSUME_NONNULL_BEGIN
 {
   return @{
       @"deletedObjects" :@"Deleted",
+      @"deletedFailedObjects" :@"Error",
   };
 }
 
 
 - (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic
 {
-
-
     return YES;
 }
 
@@ -63,6 +63,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSMutableDictionary* transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
     NSArray* transformArrayKeypaths = @[
     @"Deleted",
+    @"Error",
     ];
 
     for (NSString* keyPath in transformArrayKeypaths) {
