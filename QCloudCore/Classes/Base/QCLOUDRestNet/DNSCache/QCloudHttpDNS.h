@@ -68,4 +68,10 @@ extern NSString* const kQCloudHttpDNSHost;
 - (void)setIp:(NSString *)ip forDomain:(NSString *)domain;
 
 - (NSString*) queryIPForHost:(NSString*)host;
+
+-(void)retryRequestByIp:(NSString *)host;
+/**
+ 获取host对应的ip列表
+*/
+-(void)prepareFetchIPListForHost:(NSString *)host port:(NSString *)port;
 @end

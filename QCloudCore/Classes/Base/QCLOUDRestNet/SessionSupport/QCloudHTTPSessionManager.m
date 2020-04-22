@@ -28,6 +28,7 @@
 #import "UIDevice+QCloudFCUUID.h"
 #import "QCloudThreadSafeMutableDictionary.h"
 #import "QCloudWeakProxy.h"
+
 NSString* TaskDataKey(int64_t identifier){
     return [NSString stringWithFormat:@"data-%lld", identifier];
 }
@@ -90,6 +91,7 @@ QCloudThreadSafeMutableDictionary* QCloudBackgroundSessionManagerCache()
         return self;
     }
     
+   
     //for restful request-response using the default session configuration ,and the most import thing is that you must not set the timeout for session configuration
     _configuration = configuration;
     _sessionTaskQueue = [[NSOperationQueue alloc] init];
@@ -97,7 +99,6 @@ QCloudThreadSafeMutableDictionary* QCloudBackgroundSessionManagerCache()
     _buildDataQueue = dispatch_queue_create("com.tencent.qcloud.build.data", NULL);
     _taskQueue = [NSMutableDictionary new];
     _operationQueue = [QCloudOperationQueue new];
-    NSLog(@"我被调用了:%@",_operationQueue);
     return self;
 }
 
@@ -222,6 +223,7 @@ API_AVAILABLE(ios(10.0)){
 
 - (void) URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler
 {
+    
     QCloudLogDebug(@"didReceiveResponse: %@",response);
     QCloudURLSessionTaskData* taskData = [self taskDataForTask:dataTask];
     [taskData.httpRequest.benchMarkMan benginWithKey:kReadResponseHeaderTookTime];
@@ -253,7 +255,6 @@ API_AVAILABLE(ios(10.0)){
 - (void) URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data
 {
     QCloudURLSessionTaskData* taskData = [self taskDataForTask:dataTask];
-    QCloudLogDebug(@"totalRecivedLength:  %d",taskData.totalRecivedLength);
     if (taskData.totalRecivedLength == 0) {
         [taskData.httpRequest.benchMarkMan markFinishWithKey:kReadResponseHeaderTookTime];
         [taskData.httpRequest.benchMarkMan benginWithKey:kReadResponseBodyTookTime];
@@ -274,6 +275,7 @@ API_AVAILABLE(ios(10.0)){
             [taskData.httpRequest notifyDownloadProgressBytesDownload:(int64_t)data.length
                                                    totalBytesDownload:(int64_t)taskData.totalRecivedLength
                                          totalBytesExpectedToDownload:(int64_t)[dataTask.response expectedContentLength]];
+
         }
         [[QCloudNetProfile shareProfile] pointDownload:data.length];
     }
@@ -283,12 +285,15 @@ API_AVAILABLE(ios(10.0)){
 
 - (void) URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
 {
-    QCloudLogDebug(@"任务完成的回调 didCompleteWithError");
+
+    QCloudLogDebug(@"任务完成的回调 didCompleteWithError = %@",error);
     [[NSNotificationCenter defaultCenter] postNotificationName:kQCloudRestNetURLUsageNotification object:nil userInfo:@{
         @"url":task.originalRequest.URL? task.originalRequest.URL : [NSURL URLWithString:@"http://nullurl.error.com.tencent.qcloud.network"]
         
     }];
+    
     QCloudURLSessionTaskData* taskData = [self taskDataForTask:task];
+    NSURL *hostURL = [NSURL URLWithString:taskData.httpRequest.requestData.serverURL];
     [taskData.httpRequest.benchMarkMan markFinishWithKey:kReadResponseBodyTookTime];
     if (!taskData) {
         return;
@@ -307,6 +312,7 @@ API_AVAILABLE(ios(10.0)){
         } else {
             if ([taskData.retryHandler.delegate respondsToSelector:@selector(shouldRetry:error:)]) {
                 BOOL isRetry = [taskData.retryHandler.delegate shouldRetry:taskData error:error];
+
                 if (!isRetry) {
                     EndRetryFunc();
                     return;
@@ -314,6 +320,10 @@ API_AVAILABLE(ios(10.0)){
             }
             if (![taskData.retryHandler retryFunction:^{
                 QCloudLogDebug(@"[%i] 错误，开始重试",seq);
+                    if (error.code == -1003) {
+                        [[QCloudHttpDNS shareDNS] retryRequestByIp:hostURL.host];
+                    }
+                 
                 QCloudURLSessionTaskData* taskData = [weakSelf taskDataForTask:task];
                 if (taskData.httpRequest.sendProcessBlock) {
                     [taskData.httpRequest notifySendProgressBytesSend:-(task.countOfBytesSent) totalBytesSend:task.countOfBytesSent totalBytesExpectedToSend:task.countOfBytesExpectedToSend];
@@ -322,6 +332,10 @@ API_AVAILABLE(ios(10.0)){
                 [taskData restData];
                 [weakSelf removeTask:task];
                 [httpRequset.requestData clean];
+                if (QCloudFileExist(httpRequset.downloadingURL.path)) {
+                    httpRequset.localCacheDownloadOffset =  QCloudFileSize(httpRequset.downloadingURL.path);
+                    NSLog(@"localCacheDownloadOffset = %d",httpRequset.localCacheDownloadOffset);
+                }
                 [weakSelf executeRestHTTPReqeust:httpRequset];
             } whenError:error])
             {
@@ -330,6 +344,9 @@ API_AVAILABLE(ios(10.0)){
         }
         
     } else {
+        NSURL *requestURL = task.currentRequest.URL;
+        NSString *port = [task.currentRequest.URL.scheme isEqualToString:@"https"]?@"443":@"8080";
+        [[QCloudHttpDNS shareDNS]prepareFetchIPListForHost:hostURL.host port:port];
         [taskData.httpRequest onReciveRespone:task.response data:taskData.data];
         [self removeTask:task];
     }
@@ -380,7 +397,6 @@ API_AVAILABLE(ios(10.0)){
 }
 
 - (void) cancelRequestsWithID:(NSArray<NSNumber*>*)requestIDs {
-    QCloudLogDebug(@"我是cancle的queue%@",self.operationQueue);
     [self.operationQueue cancelByRequestIDs:requestIDs];
     for (NSNumber* requestID in requestIDs) {
         [self cancelRequestWithID:[requestID intValue]];
@@ -494,7 +510,7 @@ API_AVAILABLE(ios(10.0)){
     }
     [httpRequest.benchMarkMan markFinishWithKey:kSignRequestTookTime];
     if (nil == transformRequest) {
-        NSError* error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeContentError message:@"构建Request时候出错，出现空的Request"];
+        NSError* error = [NSError qcloud_errorWithCode:QCloudNetworkErrorUnsupportOperationError message:@"构建Request时候出错，出现空的Request"];
         [httpRequest onError:error];
         return;
     }
@@ -507,12 +523,16 @@ API_AVAILABLE(ios(10.0)){
     }else{
         task = [self.session dataTaskWithRequest:transformRequest];
     }
-    QCloudLogDebug(@"current session type:%@ task type:%@",self.session,task);
+
+    QCloudLogDebug(@"transferHttpHeadera %@",transformRequest.allHTTPHeaderFields);
     taskData.httpRequest = httpRequest;
     QCloudHTTPRetryHanlder* retryHandler =  httpRequest.retryPolicy;
     taskData.retryHandler = retryHandler;
+    
     [self cacheTask:task data:taskData forSEQ:(int)httpRequest.requestID];
+    [httpRequest configTaskResume];
     [task resume];
+  
     
     
 }

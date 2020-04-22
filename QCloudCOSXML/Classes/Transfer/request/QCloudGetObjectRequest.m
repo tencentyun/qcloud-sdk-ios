@@ -93,6 +93,9 @@ NS_ASSUME_NONNULL_BEGIN
     if (self.responseContentEncoding) {
         [self.requestData setValue:self.responseContentEncoding forHTTPHeaderField:@"response-content-encoding"];
     }
+    if (self.localCacheDownloadOffset) {
+        self.range = [NSString stringWithFormat:@"bytes=%lld-", self.localCacheDownloadOffset];
+    }
     if (self.range) {
         [self.requestData setValue:self.range forHTTPHeaderField:@"Range"];
     }

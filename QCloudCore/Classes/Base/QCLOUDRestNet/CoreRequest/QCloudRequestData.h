@@ -109,7 +109,7 @@ extern NSString* const HTTPHeaderUserAgent;
    @param field 对应的关键字
  */
 - (void) setValue:(nonnull id)value forHTTPHeaderField:(nonnull NSString *)field;
-
+-(NSString *)valueForHttpKey:(NSString *)key;
 /**
    通过URL Paramater字符串的方式来添加参数
       @param paramters 参数字符串，按照xx=xx&xx=xx的形式

@@ -35,5 +35,6 @@ NS_ASSUME_NONNULL_BEGIN
 存放被删除对象信息的数组
 */
 @property (strong, nonatomic) NSArray<QCloudDeleteResultRow*> *deletedObjects;
+@property (strong, nonatomic) NSArray<QCloudDeleteFailedResultRow*> *deletedFailedObjects;
 @end
 NS_ASSUME_NONNULL_END

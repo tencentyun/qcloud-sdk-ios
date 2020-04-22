@@ -271,6 +271,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     __weak typeof(request)weakRequest  = request;
     request.retryPolicy.delegate = self;
     request.timeoutInterval = self.timeoutInterval;
+    request.contentType = self.contentType;
     request.finishBlock = ^(id outputObject, NSError *error) {
         
         __strong typeof(weakSelf)strongSelf = weakSelf;
@@ -289,11 +290,13 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
             
             result.key = weakSelf.object;
             result.bucket = weakSelf.bucket;
+            result.eTag = ((NSDictionary *) outputObject)[@"Etag"];
             result.location = QCloudCOSXMLObjectLocation(weakSelf.transferManager.configuration.endpoint,
                                                          weakSelf.transferManager.configuration.appID,
                                                          weakSelf.bucket,
                                                          weakSelf.object,self.regionName);
             result.__originHTTPURLResponse__ = [outputObject __originHTTPURLResponse__];
+            result.__originHTTPResponseData__ = [outputObject __originHTTPResponseData__];
             [weakSelf onSuccess:result];
         }
     };
@@ -379,7 +382,9 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     int64_t offset = uploadedSize;
     for (int i = startPartNumber; ;i++ ) {
         int64_t slice = 0;
+        NSUInteger maxSlice = ceil(QCloudFileSize(url.relativePath)*1.0/(10000));
         NSUInteger uploadSliceLength = self.sliceSize>10?self.sliceSize:kQCloudCOSXMLUploadSliceLength;
+        uploadSliceLength = (QCloudFileSize(url.relativePath)*1.0/uploadSliceLength)>10000?maxSlice:uploadSliceLength;
         if (restContentLength >= uploadSliceLength) {
             slice = uploadSliceLength;
         } else {
@@ -411,6 +416,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
 
 - (void) uploadOffsetBodys:(NSArray<QCloudFileOffsetBody*>*)allParts
 {
+    
     //rest already upload size
     int64_t totalTempBytesSend = 0;
     for (QCloudFileOffsetBody* body in allParts) {
@@ -439,7 +445,11 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     dispatch_resume(_queueSource);
     for (int i = 0; i < allParts.count; i++) {
         __block QCloudFileOffsetBody* body = allParts[i];
-        
+        //如果自身被取消，终止c创建新的uploadPartRequest
+        if (self.canceled) {
+            QCloudLogDebug(@"请求被取消，终止创建新的uploadPartRequest");
+            break;
+        }
         QCloudUploadPartRequest* request = [QCloudUploadPartRequest new];
         request.bucket = self.bucket;
         request.timeoutInterval = self.timeoutInterval;
@@ -513,7 +523,6 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
         }];
         
         [self.requestCacheArray addPointer:(__bridge void * _Nullable)(request)];
-        QCloudLogDebug(@"分片上传 所在的uploadRequest %@: 运行的transferManager：%@ 运行的cosxmlservice：%@",self,self.transferManager,self.transferManager.cosService);
         [self.transferManager.cosService UploadPart:request];
         
     }
@@ -632,6 +641,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
 - (void) cancel
 {
     [super cancel];
+    [self.requestCacheArray addPointer:(__bridge void * _Nullable)([NSObject new])];
     [self.requestCacheArray compact];
     if (NULL != _queueSource) {
         dispatch_source_cancel(_queueSource);
@@ -641,20 +651,30 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     NSPointerArray *tmpRequestCacheArray = [self.requestCacheArray copy];
     for (QCloudHTTPRequest* request  in tmpRequestCacheArray) {
         if (request != nil) {
-            [cancelledRequestIDs addObject:[NSNumber numberWithLongLong:request.requestID]];
+                [cancelledRequestIDs addObject:[NSNumber numberWithLongLong:request.requestID]];
         }
     }
-    QCloudLogDebug(@"cancelledRequestIDs :%@",cancelledRequestIDs);
     
    [[QCloudHTTPSessionManager shareClient] cancelRequestsWithID:cancelledRequestIDs];
 }
+
 - (QCloudCOSXMLUploadObjectResumeData) cancelByProductingResumeData:(NSError *__autoreleasing *)error
 {
+    
     QCloudLogDebug(@"cancelByProductingResumeData begin");
-    //延迟取消 让函数先返回
+    [self.requestCacheArray addPointer:(__bridge void * _Nullable)([NSObject new])];
+    [self.requestCacheArray compact];
+     //先判断是不是有请求禁止取消
+    NSPointerArray *tmpRequestCacheArray = [self.requestCacheArray copy];
+//    QCloudLogDebug(@"cancel 开始遍历 :[%ld]",tmpRequestCacheArray);
+     for (QCloudHTTPRequest* request  in tmpRequestCacheArray.allObjects) {
+            if (request.forbidCancelled) {
+                *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorUnsupportOperationError message:@"UnsupportOperation:无法暂停当前的上传请求，因为complete请求已经发出"];
+                return nil;
+            }
+     }
+    //将自己的状态标记为cancel
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        
-        QCloudLogDebug(@"⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️ ：cancel");
         [self cancel];
     });
     return [self productingReqsumeData:error];
@@ -668,14 +688,14 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
 {
     if (_dataContentLength <= kQCloudCOSXMLUploadLengthLimit) {
         if (NULL != error) {
-            *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeContentError
+            *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorUnsupportOperationError
                                            message:@"UnsupportOperation:无法暂停当前的上传请求，因为使用的是单次上传"];
         }
         return nil;
     }
     if (![self.body isKindOfClass:[NSURL class]]) {
         if (NULL != error) {
-            *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeContentError
+            *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorUnsupportOperationError
                                            message:@"UnsupportOperation:无法暂停当前的上传请求，因为使用的是非持久化存储上传"];
         }
         return nil;
@@ -701,7 +721,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
 - (void) abort:(QCloudRequestFinishBlock _Nullable)finishBlock
 {
     if (self.finished) {
-        NSError* error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeContentError
+        NSError* error = [NSError qcloud_errorWithCode:QCloudNetworkErrorUnsupportOperationError
                                                message:@"取消失败，任务已经完成"];
         if (finishBlock) {
             finishBlock(nil, error);

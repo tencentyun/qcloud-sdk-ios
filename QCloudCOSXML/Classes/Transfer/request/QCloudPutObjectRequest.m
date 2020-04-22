@@ -35,7 +35,7 @@
 #import <QCloudCore/QCloudCore.h>
 #import <QCloudCore/QCloudServiceConfiguration_Private.h>
 #import "QCloudPutObjectRequest+Custom.h"
-
+#import <QCloudCore/QCloudFileUtils.h>
 NS_ASSUME_NONNULL_BEGIN
 @implementation QCloudPutObjectRequest
 - (void) dealloc
@@ -90,6 +90,16 @@ NS_ASSUME_NONNULL_BEGIN
     NSURL* __serverURL = [self.runOnService.configuration.endpoint serverURLWithBucket:self.bucket appID:self.runOnService.configuration.appID regionName:self.regionName];
     self.requestData.serverURL = __serverURL.absoluteString;
     [self.requestData setValue:__serverURL.host forHTTPHeaderField:@"Host"];
+    if(self.contentType){
+        [self.requestData setValue:self.contentType forHTTPHeaderField:@"Content-Type"];
+    }
+    if (![self.requestData valueForHttpKey:@"Content-Type"]) {
+        if ([self.body isKindOfClass:[NSURL class]]) {
+            NSString *miniType = detemineFileMemeType(self.body, self.object);
+            [self.requestData setValue:miniType forHTTPHeaderField:@"Content-Type"];
+        }
+        
+    }
     if (self.cacheControl) {
         [self.requestData setValue:self.cacheControl forHTTPHeaderField:@"Cache-Control"];
     }

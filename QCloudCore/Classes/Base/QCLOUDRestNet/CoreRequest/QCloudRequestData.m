@@ -13,6 +13,7 @@
 #import <UIKit/UIKit.h>
 #endif
 
+#define String_ENSURE_NOT_NIL_PARAMTER(p) if(p==nil) return nil;
 #define ENSURE_NOT_NIL_PARAMTER(p) if(p==nil) return;
 #define B_ENSURE_NOT_NIL_PARAMTER(p) if(p==nil) return NO;
 
@@ -144,6 +145,14 @@ NSString* const HTTPHeaderUserAgent = @"User-Agent";
     [_httpHeaders setValue:value forKey:field];
 }
 
+-(NSString *)valueForHttpKey:(NSString *)key{
+#ifdef DEBUG
+    NSParameterAssert(key);
+#else
+    String_ENSURE_NOT_NIL_PARAMTER(key);
+#endif
+    return [_httpHeaders valueForKey:key];
+}
 
 - (void) addCookieWithDomain:(NSString *)domain path:(NSString *)path name:(NSString *)name value:(id)value
 {

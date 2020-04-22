@@ -102,8 +102,6 @@
     request.HTTPMethod = @"PUT";
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [request setHTTPBody:[NSJSONSerialization dataWithJSONObject:paramaters options:NSJSONWritingPrettyPrinted error:nil]];
-    
-    NSLog(@"request Body:  %@",[[NSString alloc]initWithData:request.HTTPBody encoding:NSUTF8StringEncoding]);
     [[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         QCloudLogDebug(@"response data:%@",[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding]);
         if (data && !error) {

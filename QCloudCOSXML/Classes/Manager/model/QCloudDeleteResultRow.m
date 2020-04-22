@@ -61,4 +61,36 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
+@implementation QCloudDeleteFailedResultRow
+
+
+
++ (NSDictionary *)modelCustomPropertyMapper
+{
+  return @{
+      @"key" :@"Key",
+      @"code" :@"Code",
+      @"message" :@"Message"
+  };
+}
+
+
+- (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic
+{
+
+
+    return YES;
+}
+
+- (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dic
+{
+    if (!dic) {
+        return dic;
+    }
+    NSMutableDictionary* transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
+
+    return transfromDic;
+}
+
+@end
 NS_ASSUME_NONNULL_END

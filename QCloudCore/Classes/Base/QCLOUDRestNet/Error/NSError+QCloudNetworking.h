@@ -24,7 +24,7 @@ typedef NS_ENUM(int,QCloudNetworkErrorCode) {
     //InvalidCredentials 证书无效
     QCloudNetworkErrorCodeCredentialNotReady = 10001,
     //10004 UnsupportOperation: 无法支持的操作
-    QCloudNetworkErrorCodeContentError = 10004,
+    QCloudNetworkErrorUnsupportOperationError = 10004,
     //ServerError 服务器返回了不合法的数据
     QCloudNetworkErrorCodeResponseDataTypeInvalid = 20001,
     //数据完整性校验失败

@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface QCloudLogManager : NSObject
 + (instancetype) sharedInstance;
+
 - (NSArray *)currentLogs;
 - (NSString *) readLog:(NSString *)path;
 @end

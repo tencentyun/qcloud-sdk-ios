@@ -28,14 +28,6 @@ NSString* const kQCloudNetworkErrorObject = @"kQCloudNetworkErrorObject";
                                                 @(NSURLErrorCancelled),
                                                 @(NSURLErrorBadURL),
 
-                                                @(NSURLErrorSecureConnectionFailed),
-                                                @(NSURLErrorServerCertificateHasBadDate),
-                                                @(NSURLErrorServerCertificateUntrusted),
-                                                @(NSURLErrorServerCertificateHasUnknownRoot),
-                                                @(NSURLErrorServerCertificateNotYetValid),
-                                                @(NSURLErrorClientCertificateRejected),
-                                                @(NSURLErrorClientCertificateRequired),
-                                                @(NSURLErrorCannotLoadFromNetwork),
                                                 nil];
     });
     
@@ -71,7 +63,7 @@ NSString* const kQCloudNetworkErrorObject = @"kQCloudNetworkErrorObject";
 {
     NSNumber* code = [userInfo objectForKey:@"code"];
     if (!code) {
-        return [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeContentError message:@"内容错误，无法从返回的错误信息中解析内容"];
+        return [NSError qcloud_errorWithCode:QCloudNetworkErrorUnsupportOperationError message:@"内容错误，无法从返回的错误信息中解析内容"];
     }
     int errorCode = (int)[code intValue];
     NSMutableDictionary* info = [NSMutableDictionary new];

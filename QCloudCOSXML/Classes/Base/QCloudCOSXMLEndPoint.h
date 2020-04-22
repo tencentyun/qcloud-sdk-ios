@@ -20,6 +20,10 @@
  服务的基础名称, 默认值为: myqcloud.com
  */
 @property (nonatomic, copy) QCloudServiceName   serviceName;
+
+/**
+ 自定义域名：http://bucketname.suffix
+ */
 @property (nonatomic, copy) NSString *suffix;
 @end
 

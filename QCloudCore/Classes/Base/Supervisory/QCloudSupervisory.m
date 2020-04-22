@@ -13,7 +13,7 @@
 #import "QCloudHTTPRequest.h"
 #import "QCloudFileUtils.h"
 #import "QCloudBizHTTPRequest.h"
-
+#import "QCloudLogger.h"
 #import <CFNetwork/CFNetwork.h>
 #import <arpa/inet.h>
 #if TARGET_OS_IOS
@@ -230,7 +230,7 @@
         _hostIps[host] = dnsips;
         _activeSession.ips = [_hostIps copy];
     } else {
-        NSLog(@"Not resolved");
+        QCloudLogError(@"Not resolved");
     }
     CFRelease(hostRef);
 }

@@ -42,7 +42,7 @@ FOUNDATION_EXTERN  NSString* QCloudDocumentsTempFile(NSString* fileName, NSStrin
 FOUNDATION_EXTERN  uint64_t QCloudFileSize(NSString* path);
 FOUNDATION_EXTERN NSArray<QCloudSHAPart*>*  QCloudIncreaseFileSHAData(NSString *path, uint64_t sliceSize);
 
-
+FOUNDATION_EXTERN NSString *detemineFileMemeType(NSURL *filePathURL,NSString *fileName);
 #pragma clang diagnostic pop
 #endif
 
