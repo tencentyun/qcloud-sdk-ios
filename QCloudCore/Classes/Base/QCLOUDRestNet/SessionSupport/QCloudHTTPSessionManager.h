@@ -1,5 +1,5 @@
 //
-//  QCloudHTTPSessionManager.h
+//  QCloudHTTPSessionManager.ha
 //  QCloudTernimalLab_CommonLogic
 //
 //  Created by tencent on 16/3/30.
@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "QCloudNetworkingAPI.h"
+
+@class QCloudOperationQueue;
 @class QCloudThreadSafeMutableDictionary;
 typedef void (^QCloudURLSessionDidFinishEventsForBackgroundURLSessionBlock)(void);
 
@@ -19,5 +21,5 @@ typedef void (^QCloudURLSessionDidFinishEventsForBackgroundURLSessionBlock)(void
 FOUNDATION_EXTERN QCloudThreadSafeMutableDictionary* cloudBackGroundSessionManagersCache;
 + (QCloudHTTPSessionManager*)sessionManagerWithBackgroundIdentifier:(NSString *)backgroundIdentifier;
 + (QCloudHTTPSessionManager*) shareClient;
-
+@property (nonatomic, assign) int customConcurrentCount;
 @end

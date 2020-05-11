@@ -73,6 +73,7 @@ NSArray * filterUploadEventClass(){
 +(void)internalUploadEvent:(NSString *)eventKey withParamter:(NSDictionary *)paramter {
     Class cls = NSClassFromString(@"TACMTA");
     if (cls) {
+        QCloudLogInfo(@"MTA Event:[%@] paramer:%@",eventKey,paramter);
         [self invokeClassMethod:cls sel:NSSelectorFromString(@"trackCustomKeyValueEvent:props:appkey:isRealTime:")
             withObjects:@[eventKey, paramter, AppKey, @(NO)]];
     }

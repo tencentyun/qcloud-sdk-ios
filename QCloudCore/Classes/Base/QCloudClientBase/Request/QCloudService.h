@@ -30,7 +30,6 @@ NS_ASSUME_NONNULL_BEGIN
  当前服务所运行的HTTP Session Manager。一般情况下，所有服务都运行在统一的全局单例上面。
  */
 @property (nonatomic, strong,readonly) QCloudHTTPSessionManager* sessionManager;
-@property (nonatomic, assign,readonly)   BOOL isHaveBody;
 /**
  通过服务配置信息初始化服务
 
