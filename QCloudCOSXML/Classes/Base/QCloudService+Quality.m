@@ -20,23 +20,23 @@
 + (void) changeImplementation {
     Class class = [self class];
     
-    Method originMethod = class_getInstanceMethod(class, @selector(performRequest:isHaveBody:));
-    Method replacedMethod = class_getInstanceMethod(class,  @selector(__quality_performRequest:isHaveBody:));
+    Method originMethod = class_getInstanceMethod(class, @selector(performRequest:));
+    Method replacedMethod = class_getInstanceMethod(class,  @selector(__quality_performRequest:));
     method_exchangeImplementations(originMethod, replacedMethod);
     
-    originMethod = class_getInstanceMethod(class, @selector(performRequest:isHaveBody:withFinishBlock:));
-    replacedMethod = class_getInstanceMethod(class,  @selector(__quality_performRequest:isHaveBody:withFinishBlock:));
+    originMethod = class_getInstanceMethod(class, @selector(performRequest:withFinishBlock:));
+    replacedMethod = class_getInstanceMethod(class,  @selector(__quality_performRequest:withFinishBlock:));
     method_exchangeImplementations(originMethod, replacedMethod);
 }
 
-- (int) __quality_performRequest:(QCloudBizHTTPRequest*)httpRequst isHaveBody:(BOOL)body {
-    int result = [self __quality_performRequest:httpRequst isHaveBody:body];
+- (int) __quality_performRequest:(QCloudBizHTTPRequest*)httpRequst{
+    int result = [self __quality_performRequest:httpRequst];
     [QualityDataUploader trackRequestSentWithType:object_getClass(httpRequst)];
     return result;
 }
 
-- (int) __quality_performRequest:(QCloudBizHTTPRequest*)httpRequst isHaveBody:(BOOL)body withFinishBlock:(QCloudRequestFinishBlock)block {
-    int result = [self __quality_performRequest:httpRequst isHaveBody:body withFinishBlock:block];
+- (int) __quality_performRequest:(QCloudBizHTTPRequest*)httpRequst withFinishBlock:(QCloudRequestFinishBlock)block {
+    int result = [self __quality_performRequest:httpRequst withFinishBlock:block];
     [QualityDataUploader trackRequestSentWithType:object_getClass(httpRequst)];
     return result;
 }

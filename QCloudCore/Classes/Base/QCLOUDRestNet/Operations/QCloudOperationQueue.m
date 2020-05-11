@@ -67,13 +67,13 @@ static const NSInteger kWeakNetworkConcurrentCount = 1;
 - (void) tryStartAnyOperation
 {
     [_dataLock lock];
+    int concurrentCount = self.customConcurrentCount?self.customConcurrentCount:self.maxConcurrentCount;
     void(^ExeOperation)(QCloudRequestOperation* operation) = ^(QCloudRequestOperation* operation) {
         [self->_operationArray removeObject:operation];
         operation.delagte = self;
         QCloudLogVerbose(@"[%@][%lld]请求从队列中取出，开始执行", [operation.request class], [operation.request requestID]);
         [self->_runningOperationArray addObject:operation];
         [operation execute];
-
     };
     if (_operationArray.count !=0 ) {
         NSMutableArray* highPerfomanceRequest = [NSMutableArray new];
@@ -92,8 +92,8 @@ static const NSInteger kWeakNetworkConcurrentCount = 1;
         for (QCloudRequestOperation* op  in highPerfomanceRequest) {
             ExeOperation(op);
         }
-        QCloudLogDebug(@"Current max concurrent count is %i",self.maxConcurrentCount);
-        if (_runningOperationArray.count < self.maxConcurrentCount) {
+        QCloudLogDebug(@"Current max concurrent count is %i",concurrentCount);
+        if (_runningOperationArray.count < concurrentCount) {
             if (normalPerformanceRequest.count) {
                 if (normalPerformanceRequest.count) {
                     QCloudRequestOperation* operation = normalPerformanceRequest.firstObject;
@@ -186,6 +186,7 @@ static const NSInteger kWeakNetworkConcurrentCount = 1;
 
 
 - (void)onHandleNetworkUploadSpeedUpadte:(NSNotification*)notification {
+    int concurrentCount = self.customConcurrentCount?self.customConcurrentCount:self.maxConcurrentCount;
     NSArray* speedLevelsArray = [notification.object copy];
     int64_t uploadSpeedIn30S = 0;
     for (QCloudNetProfileLevel* level in speedLevelsArray) {
@@ -193,7 +194,7 @@ static const NSInteger kWeakNetworkConcurrentCount = 1;
             uploadSpeedIn30S = level.uploadSpped;
         }
     }
-    int64_t currentUploadSpeedPerOperation = uploadSpeedIn30S / self.maxConcurrentCount;
+    int64_t currentUploadSpeedPerOperation = uploadSpeedIn30S / concurrentCount;
     //若每个任务速度大于250KB/s
     static const int64_t increaseConcurrentCountThreashold = 250 * 1024;
 //    QCloudLogDebug(@"Current network speed per operation = %lu  KB/S， uploadSpeedIn30S = %llu KB/s, max concurrent count = %lu",currentUploadSpeedPerOperation/(1024),uploadSpeedIn30S/1024,self.maxConcurrentCount);

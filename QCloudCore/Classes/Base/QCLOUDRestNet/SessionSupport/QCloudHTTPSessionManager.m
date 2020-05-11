@@ -110,7 +110,10 @@ QCloudThreadSafeMutableDictionary* QCloudBackgroundSessionManagerCache()
     }
     return self;
 }
-
+-(void)setCustomConcurrentCount:(int)customConcurrentCount{
+    _customConcurrentCount = customConcurrentCount;
+    _operationQueue.customConcurrentCount = customConcurrentCount;
+}
 - (void) setMaxConcurrencyTask:(int32_t)maxConcurrencyTask
 {
     if (_maxConcurrencyTask != maxConcurrencyTask) {
@@ -312,7 +315,6 @@ API_AVAILABLE(ios(10.0)){
         } else {
             if ([taskData.retryHandler.delegate respondsToSelector:@selector(shouldRetry:error:)]) {
                 BOOL isRetry = [taskData.retryHandler.delegate shouldRetry:taskData error:error];
-
                 if (!isRetry) {
                     EndRetryFunc();
                     return;

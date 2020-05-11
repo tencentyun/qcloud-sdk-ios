@@ -27,7 +27,6 @@
     }
     _beginDate = [NSDate date];
     _recordArray = [NSMutableArray new];
-    _deviceUUID = [QCloudFCUUID uuidForDevice];
     _traceIdentifier = [[NSUUID UUID] UUIDString];
     return self;
 }

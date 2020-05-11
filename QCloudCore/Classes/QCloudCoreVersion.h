@@ -5,7 +5,7 @@
 
 #ifndef QCloudCoreModuleVersion_h
 #define QCloudCoreModuleVersion_h
-#define QCloudCoreModuleVersionNumber 507002
+#define QCloudCoreModuleVersionNumber 507003
 
 //dependency
 
