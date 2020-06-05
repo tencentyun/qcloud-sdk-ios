@@ -65,8 +65,11 @@ static const int64_t   kCopySliceLength    = 5242880;
     
     headObjectRequest.customHeaders = [customHeaders mutableCopy];
     headObjectRequest.bucket = self.sourceBucket;
+
     headObjectRequest.regionName = self.sourceRegion;
     headObjectRequest.priority = self.priority;
+    headObjectRequest.enableQuic = self.enableQuic;
+
     headObjectRequest.object = self.sourceObject;
     headObjectRequest.ifModifiedSince = self.objectCopyIfModifiedSince;
     __weak typeof(headObjectRequest)weakRequest  = headObjectRequest;
@@ -102,6 +105,7 @@ static const int64_t   kCopySliceLength    = 5242880;
 - (void)simpleCopy {
     QCloudPutObjectCopyRequest* request = [[QCloudPutObjectCopyRequest alloc] init];
     request.priority = self.priority;
+    request.enableQuic = self.enableQuic;
     request.customHeaders =[self.customHeaders mutableCopy];
     request.regionName = self.regionName;
     request.bucket = self.bucket;
@@ -141,6 +145,7 @@ static const int64_t   kCopySliceLength    = 5242880;
     QCloudInitiateMultipartUploadRequest* initMultipartUploadRequest = [[QCloudInitiateMultipartUploadRequest alloc] init];
     initMultipartUploadRequest.bucket = self.bucket;
     initMultipartUploadRequest.priority = self.priority;
+    initMultipartUploadRequest.enableQuic = self.enableQuic;;
     initMultipartUploadRequest.regionName = self.regionName;
     initMultipartUploadRequest.object = self.object;
     initMultipartUploadRequest.customHeaders = [self.customHeaders mutableCopy];
@@ -189,6 +194,7 @@ static const int64_t   kCopySliceLength    = 5242880;
     for (int64_t i = 0; i*kCopySliceLength < self.fileSize; i++ ) {
         @autoreleasepool {
             QCloudUploadPartCopyRequest* request = [[QCloudUploadPartCopyRequest alloc] init];
+            request.enableQuic = self.enableQuic;
             request.bucket = self.bucket;
             request.customHeaders = [self.customHeaders mutableCopy];
             request.object = self.object;
@@ -242,6 +248,7 @@ static const int64_t   kCopySliceLength    = 5242880;
     request.regionName = self.regionName;
     request.uploadId = self.uploadID;
     request.priority = self.priority;
+    request.enableQuic = self.enableQuic;
     QCloudCompleteMultipartUploadInfo* info = [[QCloudCompleteMultipartUploadInfo alloc ] init];
     [self.uploadParts sortUsingComparator:^NSComparisonResult(QCloudMultipartInfo* obj1, QCloudMultipartInfo* obj2) {\
         if (obj1.partNumber.longLongValue > obj2.partNumber.longLongValue) {

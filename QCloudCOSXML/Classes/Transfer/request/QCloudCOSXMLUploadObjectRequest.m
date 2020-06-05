@@ -215,6 +215,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     QCloudListMultipartRequest* request = [QCloudListMultipartRequest new];
     request.priority = self.priority;
     request.timeoutInterval = self.timeoutInterval;
+    request.enableQuic = self.enableQuic;
     request.object = self.object;
     request.regionName = self.regionName;
     request.bucket = self.bucket;
@@ -266,6 +267,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
 - (void) startSimpleUpload
 {
     QCloudPutObjectRequest* request = [QCloudPutObjectRequest new];
+    request.enableQuic = self.enableQuic;
     request.regionName = self.regionName;
     __weak typeof(self) weakSelf = self;
     __weak typeof(request)weakRequest  = request;
@@ -326,6 +328,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     _uploadParts = [NSMutableArray new];
     QCloudInitiateMultipartUploadRequest* uploadRequet = [QCloudInitiateMultipartUploadRequest new];
     uploadRequet.timeoutInterval = self.timeoutInterval;
+    uploadRequet.enableQuic = self.enableQuic;
     uploadRequet.bucket = self.bucket;
     uploadRequet.regionName = self.regionName;
     uploadRequet.object = self.object;
@@ -451,6 +454,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
             break;
         }
         QCloudUploadPartRequest* request = [QCloudUploadPartRequest new];
+        request.enableQuic = self.enableQuic;
         request.bucket = self.bucket;
         request.timeoutInterval = self.timeoutInterval;
         request.regionName = self.regionName;
@@ -569,6 +573,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
 - (void) finishUpload:(NSString*)uploadId
 {
     QCloudCompleteMultipartUploadRequest* complete = [QCloudCompleteMultipartUploadRequest new];
+    complete.enableQuic = self.enableQuic;
     complete.object = self.object;
     complete.bucket = self.bucket;
     complete.uploadId = self.uploadId;
@@ -729,6 +734,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     } else {
         if (self.uploadId) {
             QCloudAbortMultipfartUploadRequest* abortRequest = [QCloudAbortMultipfartUploadRequest new];
+            abortRequest.enableQuic = self.enableQuic;
             abortRequest.customHeaders = [self.customHeaders mutableCopy];
             abortRequest.object = self.object;
             abortRequest.regionName = self.regionName;

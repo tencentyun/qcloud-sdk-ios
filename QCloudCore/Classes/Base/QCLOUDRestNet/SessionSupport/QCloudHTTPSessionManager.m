@@ -62,11 +62,12 @@ QCloudThreadSafeMutableDictionary* QCloudBackgroundSessionManagerCache()
 @interface QCloudHTTPSessionManager() <NSURLSessionDelegate,NSURLSessionTaskDelegate, NSURLSessionDataDelegate>
 {
     NSMutableDictionary* _taskQueue;
-}   
+}
 @property (nonatomic, strong) NSOperationQueue* sessionTaskQueue;;
 @property (nonatomic, strong) NSURLSession* session;
 @property (nonatomic, strong) dispatch_queue_t buildDataQueue;
 @property (nonatomic, strong) QCloudOperationQueue* operationQueue;
+@property (nonatomic,strong)id quicSession;
 @end
 
 @implementation QCloudHTTPSessionManager
@@ -96,6 +97,14 @@ QCloudThreadSafeMutableDictionary* QCloudBackgroundSessionManagerCache()
     _configuration = configuration;
     _sessionTaskQueue = [[NSOperationQueue alloc] init];
     _session = [NSURLSession sessionWithConfiguration:_configuration delegate:self delegateQueue:_sessionTaskQueue];
+    Class cls = NSClassFromString(@"QCloudQuicSession");
+    if (cls) {
+        _quicSession = [cls performSelector:NSSelectorFromString(@"quicSessionDelegate:") withObject:self];
+    }else{
+        QCloudLogDebug(@"quicSession is nil");
+    }
+       //    _quicSession = [QCloudQuicSession quicSessionDelegate:self];
+       
     _buildDataQueue = dispatch_queue_create("com.tencent.qcloud.build.data", NULL);
     _taskQueue = [NSMutableDictionary new];
     _operationQueue = [QCloudOperationQueue new];
@@ -238,7 +247,9 @@ API_AVAILABLE(ios(10.0)){
             taskData.forbidenWirteToFile = YES;
         }
     }
-    completionHandler(disp);
+    if (completionHandler) {
+        completionHandler(disp);
+    }
 }
 - (void) URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend
 {
@@ -323,7 +334,7 @@ API_AVAILABLE(ios(10.0)){
             if (![taskData.retryHandler retryFunction:^{
                 QCloudLogDebug(@"[%i] 错误，开始重试",seq);
                     if (error.code == -1003) {
-                        [[QCloudHttpDNS shareDNS] retryRequestByIp:hostURL.host];
+                        [[QCloudHttpDNS shareDNS] findHealthyIpFor:hostURL.host];
                     }
                  
                 QCloudURLSessionTaskData* taskData = [weakSelf taskDataForTask:task];
@@ -518,12 +529,52 @@ API_AVAILABLE(ios(10.0)){
     }
     
     NSURLSessionDataTask* task = nil;
-    //如果是文件上传
-    if (uploadFileURL) {
-        task = [self.session uploadTaskWithRequest:transformRequest fromFile:uploadFileURL];
+    id quicTask = nil;
+    
+    if (!httpRequest.enableQuic) {
+        //如果是文件上传
+        if (uploadFileURL) {
+            task = [self.session uploadTaskWithRequest:transformRequest fromFile:uploadFileURL];
+        }else{
+            task = [self.session dataTaskWithRequest:transformRequest];
+        }
+    } else {
+        Class cls = NSClassFromString(@"QCloudQuicDataTask");
+        if (!cls) {
+            @throw [NSException exceptionWithName:NSArgumentDomain reason:@"No Quic framework is found." userInfo:nil];
+        }
         
-    }else{
-        task = [self.session dataTaskWithRequest:transformRequest];
+        NSString* host = transformRequest.URL.host;
+        NSString* ipAddr;
+        if ([[QCloudHttpDNS shareDNS] isTrustIP:host]) {
+            ipAddr = host;
+            host = transformRequest.allHTTPHeaderFields[@"Host"];
+        } else {
+            ipAddr = [[QCloudHttpDNS shareDNS] queryIPForHost:host];
+        }
+        if (!ipAddr) {
+            // 查询 可用的 ip 地址
+            [[QCloudHttpDNS shareDNS] prepareFetchIPListForHost:host port:@"443"];
+            ipAddr = [[QCloudHttpDNS shareDNS] findHealthyIpFor:host];
+        }
+        if (!ipAddr) {
+            @throw [NSException exceptionWithName:NSURLErrorDomain reason:@"No Available IP Address for QUIC." userInfo:nil];
+        }
+        
+        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+        
+        dic[@"quicHost"] = host;
+        dic[@"quicIP"] = ipAddr;
+        if (uploadFileURL) {
+            dic[@"body"] = uploadFileURL;
+        } else if (httpRequest.requestData.directBody) {
+            dic[@"body"] = httpRequest.requestData.directBody;
+        } else {
+            dic[@"body"] = [NSNull null];
+        }
+        
+        quicTask = [_quicSession performSelector:NSSelectorFromString(@"quicDataTaskWithRequst:infos:") withObject:transformRequest withObject:dic];
+
     }
 
     QCloudLogDebug(@"transferHttpHeadera %@",transformRequest.allHTTPHeaderFields);
@@ -531,10 +582,18 @@ API_AVAILABLE(ios(10.0)){
     QCloudHTTPRetryHanlder* retryHandler =  httpRequest.retryPolicy;
     taskData.retryHandler = retryHandler;
     
-    [self cacheTask:task data:taskData forSEQ:(int)httpRequest.requestID];
+    if (task) {
+        [self cacheTask:task data:taskData forSEQ:(int)httpRequest.requestID];
+    }else{
+        [self cacheTask:quicTask data:taskData forSEQ:(int)httpRequest.requestID];
+    }
     [httpRequest configTaskResume];
-    [task resume];
-  
+    //先创建task，在启动
+    if (quicTask) {
+        [quicTask performSelector:NSSelectorFromString(@"start")];
+    }else{
+        [task resume];
+    }
     
     
 }

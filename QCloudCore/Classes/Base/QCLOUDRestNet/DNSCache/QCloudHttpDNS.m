@@ -147,14 +147,19 @@ BOOL QCloudCheckIPVaild(NSString* ip) {
 
 
 
--(void)retryRequestByIp:(NSString *)host{
+-(NSString *)findHealthyIpFor:(NSString *)host{
     NSArray *ipList = [_ipHostMap objectForKey:host];
     if (ipList.count) {
-        [self pingIp:ipList.lastObject host:host];
+        dispatch_semaphore_t sema = dispatch_semaphore_create(0);
+        [self pingIp:ipList.lastObject host:host fulfil:sema];
+        dispatch_wait(sema, DISPATCH_TIME_FOREVER);
+        return [self queryIPForHost:host];
     }
+    return nil;
 }
 
--(void)pingIp:(NSString *)ip host:(NSString *)host{
+-(void)pingIp:(NSString *)ip host:(NSString *)host fulfil: (dispatch_semaphore_t) sema{
+     nil;
     dispatch_async(dispatch_get_main_queue(), ^{
         NSString *ipAdd;
         if ([ip hasSuffix:IP_ADDR_IPv4]) {
@@ -163,7 +168,7 @@ BOOL QCloudCheckIPVaild(NSString* ip) {
              ipAdd = [ip stringByReplacingOccurrencesOfString:IP_ADDR_IPv4 withString:@""];
             return ;
         }
-        QCloudPingTester *pingTester = [[QCloudPingTester alloc] initWithIp:ipAdd host:host];
+        QCloudPingTester *pingTester = [[QCloudPingTester alloc] initWithIp:ipAdd host:host fulfil:sema];
         pingTester.delegate = self;
         [self->_pingTesters addObject:pingTester];
         [pingTester startPing];
@@ -178,7 +183,7 @@ BOOL QCloudCheckIPVaild(NSString* ip) {
         QCloudLogInfo(@"ping的延迟是--->%f", time);
          [pingTester stopPing];
         [self setIp:pingTester.ip forDomain:pingTester.host];
-        
+        dispatch_semaphore_signal(pingTester.sema);
     }else{
         QCloudLogDebug(@"网络不通过ip[%@]",pingTester.ip);
          [pingTester stopPing];
@@ -188,7 +193,9 @@ BOOL QCloudCheckIPVaild(NSString* ip) {
         }
         [_ipHostMap setObject:ipList forKey:pingTester.host];
         if (ipList.count) {
-          [self pingIp:ipList.lastObject host:pingTester.host];
+            [self pingIp:ipList.lastObject host:pingTester.host fulfil:pingTester.sema];
+        } else {
+            dispatch_semaphore_signal(pingTester.sema);
         }
      }
     [_pingTesters removeObject:pingTester];

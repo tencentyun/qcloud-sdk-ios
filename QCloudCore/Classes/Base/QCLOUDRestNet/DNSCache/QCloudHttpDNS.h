@@ -69,7 +69,10 @@ extern NSString* const kQCloudHttpDNSHost;
 
 - (NSString*) queryIPForHost:(NSString*)host;
 
--(void)retryRequestByIp:(NSString *)host;
+/**
+    Ping IP列表尝试拿到一个可用的IP
+ */
+-(NSString *)findHealthyIpFor:(NSString *)host;
 /**
  获取host对应的ip列表
 */

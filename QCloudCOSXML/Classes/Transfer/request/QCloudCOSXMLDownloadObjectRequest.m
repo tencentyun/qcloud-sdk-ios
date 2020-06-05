@@ -48,6 +48,7 @@
     request.ifNoneMatch = self.ifNoneMatch;
     request.object = self.object;
     request.bucket = self.bucket;
+    request.enableQuic = self.enableQuic;
     [self.transferManager.cosService GetObject:request];
 }
 -(void)setCOSServerSideEncyption{

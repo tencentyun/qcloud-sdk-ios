@@ -20,8 +20,9 @@
 @property (nonatomic, weak, readwrite) id<WHPingDelegate> delegate;
 @property (nonatomic,readonly)NSString *ip;
 @property (nonatomic,readonly)NSString *host;
+@property (nonatomic)dispatch_semaphore_t sema;
 - (instancetype) init NS_UNAVAILABLE;
-- (instancetype) initWithIp:(NSString *)ip host:(NSString *)host NS_DESIGNATED_INITIALIZER;
+- (instancetype) initWithIp:(NSString *)ip host:(NSString *)host fulfil:(dispatch_semaphore_t) sema NS_DESIGNATED_INITIALIZER;
 
 - (void) startPing;
 - (void) stopPing;

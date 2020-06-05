@@ -23,12 +23,13 @@
 
 @implementation QCloudPingTester
 
-- (instancetype) initWithIp:(NSString *)ip host:(NSString *)host
+- (instancetype) initWithIp:(NSString *)ip host:(NSString *)host fulfil:(dispatch_semaphore_t) sema
 {
     if(self = [super init])
     {
         self.ip = ip;
         self.host = host;
+        self.sema = sema;
         self.simplePing = [[SimplePing alloc] initWithHostName:ip];
         self.simplePing.delegate = self;
         self.simplePing.addressStyle = SimplePingAddressStyleAny;

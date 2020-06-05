@@ -31,6 +31,7 @@ typedef void (^QCloudRequestDownProcessBlock)(int64_t bytesDownload, int64_t tot
  签名信息的回调接口，该委托必须实现。签名是腾讯云进行服务时进行用户身份校验的关键手段，同时也保障了用户访问的安全性。该委托中通过函数回调来提供签名信息。
  */
 @property (nonatomic, strong) id<QCloudSignatureProvider> signatureProvider;
+@property (nonatomic,assign)BOOL enableQuic;
 @property (atomic, assign) BOOL forbidCancelled;
 @property (atomic, assign, readonly) BOOL canceled;
 @property (nonatomic, assign, readonly) int64_t requestID;
