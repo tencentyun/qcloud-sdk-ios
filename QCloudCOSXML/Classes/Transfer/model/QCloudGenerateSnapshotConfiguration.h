@@ -32,7 +32,6 @@
 #import "QCloudGenerateSnapshotModeEnum.h"
 #import "QCloudGenerateSnapshotRotateTypeEnum.h"
 #import "QCloudGenerateSnapshotFormatEnum.h"
-#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

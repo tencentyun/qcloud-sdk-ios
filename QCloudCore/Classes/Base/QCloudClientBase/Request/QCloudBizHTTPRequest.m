@@ -32,8 +32,6 @@ QCloudResponseSerializerBlock QCloudResponseObjectSerilizerBlock(Class modelClas
     };
 }
 
-
-
 QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilizerBlock = ^(NSHTTPURLResponse* response,  id inputData, NSError* __autoreleasing* error) {
     NSError* localError;
     QCloudNetResponse* transformData = QCloudResponseObjectSerilizerBlock([QCloudNetResponse class])(response, inputData, &localError);
