@@ -6,7 +6,6 @@
 //
 
 #import "QCloudCOSXMLService+Manager.h"
-#import "QCloudAppendObjectRequest.h"
 #import "QCloudGetObjectACLRequest.h"
 #import "QCloudPutObjectRequest.h"
 #import "QCloudPutObjectACLRequest.h"
@@ -41,10 +40,6 @@
 #import "QCloudGetPresignedURLRequest.h"
 
 @implementation QCloudCOSXMLService (Manager)
-- (void) AppendObject:(QCloudAppendObjectRequest*)request
-{
-    [super performRequest:request ];
-}
 - (void) GetObjectACL:(QCloudGetObjectACLRequest*)request
 {
     [super performRequest:request ];

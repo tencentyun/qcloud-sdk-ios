@@ -32,6 +32,9 @@
 #import "QCloudCOSDomainReplaceTypeEnum.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 自定义规则描述
+ */
 @interface QCloudDomainRule : NSObject
 /**
 用户的自定义域名，有效值:字母、数字、点

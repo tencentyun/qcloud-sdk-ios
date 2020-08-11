@@ -30,6 +30,9 @@
 #import "CASJobParameters.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+恢复数据的配置信息
+*/
 @interface QCloudRestoreRequest : NSObject
 /**
 设置临时副本的过期时间

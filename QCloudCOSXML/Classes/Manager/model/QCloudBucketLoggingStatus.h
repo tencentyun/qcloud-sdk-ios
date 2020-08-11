@@ -30,6 +30,9 @@
 #import "QCloudLoggingEnabled.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+说明日志记录配置的状态
+*/
 @interface QCloudBucketLoggingStatus : NSObject
 /**
 存储桶 logging 设置的具体信息，主要是目标存储桶

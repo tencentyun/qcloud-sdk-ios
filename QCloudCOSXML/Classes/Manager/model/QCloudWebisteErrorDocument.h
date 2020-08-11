@@ -28,6 +28,9 @@
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+错误文档
+*/
 @interface QCloudWebisteErrorDocument : NSObject
 /**
 指定通用错误返回

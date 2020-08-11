@@ -30,6 +30,9 @@
 
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+桶所有者信息
+*/
 @interface QCloudBucketOwner : NSObject
 /**
  Bucket 的 APPID

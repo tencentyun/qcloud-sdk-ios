@@ -30,6 +30,9 @@
 #import "QCloudCOSStorageClassEnum.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+指明非当前版本对象何时过期
+*/
 @interface QCloudNoncurrentVersionTransition : NSObject
 /**
 指明非当前版本对象何时转换被转换为 Standard_IA 等

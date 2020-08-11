@@ -30,6 +30,9 @@
 #import "QCloudBucketTagSet.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+桶tag的集合
+*/
 @interface QCloudBucketTagging : NSObject
 /**
 tag的集合

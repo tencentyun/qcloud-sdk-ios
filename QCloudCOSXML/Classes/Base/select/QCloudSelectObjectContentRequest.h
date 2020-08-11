@@ -31,8 +31,13 @@
 @class QCloudSelectObjectContentConfig;
 NS_ASSUME_NONNULL_BEGIN
 /**
-    对象名
-    */
+ COS Select 接口可以使用结构化查询语句（Structured Query Language，SQL）从指定对象
+ （CSV 格式或者 JSON 格式）中检索内容。在检索过程中，您需要指定对象内容的分隔符，并使用合适的
+ SQL 函数进行检索，COS Select 将返回相匹配的检索结果，您可以指定检索结果的保存格式。
+ 详情：https://cloud.tencent.com/document/product/436/37641
+ 
+ 
+ */
 @interface QCloudSelectObjectContentRequest : QCloudBizHTTPRequest
 /**
     对象名

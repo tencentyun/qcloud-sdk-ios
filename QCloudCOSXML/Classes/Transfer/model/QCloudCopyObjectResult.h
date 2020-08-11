@@ -29,6 +29,10 @@
 #import <QCloudCore/QCloudCore.h>
 
 NS_ASSUME_NONNULL_BEGIN
+
+/**
+ 文件复制完成返回结果
+ */
 @interface QCloudCopyObjectResult : NSObject
 /*
 文件的 SHA-1 算法校验值。ETag 的值可以用于检查 Object 的内容是否发生变化。

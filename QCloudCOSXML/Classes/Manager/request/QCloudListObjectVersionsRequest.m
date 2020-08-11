@@ -90,7 +90,8 @@ NS_ASSUME_NONNULL_BEGIN
     [self.requestData setParameter:self.prefix withKey:@"prefix"];
     [self.requestData setParameter:self.delimiter withKey:@"delimiter"];
     [self.requestData setParameter:self.encodingType withKey:@"encoding-type"];
-    [self.requestData setParameter:self.marker withKey:@"marker"];
+    [self.requestData setParameter:self.keyMarker withKey:@"key-marker"];
+    [self.requestData setParameter:self.versionIdMarker withKey:@"version-id-marker"];
     [self.requestData setNumberParamter:@(self.maxKeys) withKey:@"max-keys"];
     self.requestData.URIMethod = @"versions";
     return YES;

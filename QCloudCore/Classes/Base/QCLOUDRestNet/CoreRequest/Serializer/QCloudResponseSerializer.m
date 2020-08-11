@@ -16,6 +16,7 @@ typedef id (^QCloudResponseSerializerBlock)(NSHTTPURLResponse* response,  id inp
 
 QCloudResponseSerializerBlock QCloudResponseXMLSerializerBlock = ^(NSHTTPURLResponse* response,  id inputData, NSError* __autoreleasing* error)
 {
+    
     QCloudLogDebug(@"response  %@",response);
     if(![inputData isKindOfClass:[NSData class]]) {
         if (NULL != error) {
@@ -51,6 +52,21 @@ QCloudResponseSerializerBlock QCloudResponseAppendHeadersSerializerBlock = ^(NSH
     NSMutableDictionary* allDatas = [NSMutableDictionary new];
     if ([inputData isKindOfClass:[NSDictionary class]]) {
         [allDatas addEntriesFromDictionary:(NSDictionary*)inputData];
+    }
+    [allDatas addEntriesFromDictionary:response.allHeaderFields];
+
+    return (id)allDatas;
+};
+
+QCloudResponseSerializerBlock QCloudResponseDataAppendHeadersSerializerBlock = ^(NSHTTPURLResponse* response,  id inputData, NSError* __autoreleasing* error)
+{
+    NSMutableDictionary* allDatas = [NSMutableDictionary new];
+    if ([inputData isKindOfClass:[NSDictionary class]]) {
+        [allDatas addEntriesFromDictionary:(NSDictionary*)inputData];
+    }else{
+        if(inputData != nil){
+            [allDatas setObject:inputData forKey:@"data"];
+        }
     }
     [allDatas addEntriesFromDictionary:response.allHeaderFields];
 

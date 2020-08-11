@@ -32,25 +32,31 @@ NS_ASSUME_NONNULL_BEGIN
 /**
 获取存储桶（Bucket）版本控制信息的方法.
 
+### 功能说明
+ 
 通过查询版本控制信息，可以得知该 Bucket 的版本控制功能是处于禁用状态还是启用状态（Enabled 或者 Suspended）, 开启版本控制功能，可参考putBucketVersioning(PutBucketVersioningRequest).
 
-cos iOS SDK 中获取 Bucket 版本控制信息的方法具体步骤如下：
-
-1. 实例化 QCloudGetBucketVersioningRequest，填入需要的参数。
-
-2. 调用 QCloudCOSXMLService 对象中的 GetBucketVersioning 方法发出请求。
-
-3. 从回调的 finishBlock 中的 QCloudBucketVersioningConfiguration 获取具体内容。
-
-示例：
-@code
-QCloudGetBucketVersioningRequest* request = [[QCloudGetBucketVersioningRequest alloc] init];
-request.bucket = @"bucketName";  //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
-[request setFinishBlock:^(QCloudBucketVersioningConfiguration* result, NSError* error) {
-//设置完成回调
-}];
-[[QCloudCOSXMLService defaultCOSXML] GetBucketVersioning:request];
-@endcode
+关于获取存储桶（Bucket）版本控制信息接口的具体描述，请查看 https://cloud.tencent.com/document/product/436/19888.
+ 
+### 示例
+   
+  @code
+  
+    QCloudGetBucketVersioningRequest* request =
+                                [[QCloudGetBucketVersioningRequest alloc] init];
+    
+    // 存储桶名称，格式为 BucketName-APPID
+    request.bucket = @"examplebucket-1250000000";
+    
+    [request setFinishBlock:^(QCloudBucketVersioningConfiguration* result,
+                              NSError* error) {
+        
+        // result 包含多版本的状态
+        result.status;
+    }];
+    
+    [[QCloudCOSXMLService defaultCOSXML] GetBucketVersioning:request];
+  
 */
 @interface QCloudGetBucketVersioningRequest : QCloudBizHTTPRequest
 /**

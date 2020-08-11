@@ -15,6 +15,11 @@ typedef void(^QCloudHTTPAuthentationContinueBlock)(QCloudSignature* signature, N
 @class QCloudPath;
 @class QCloudBizHTTPRequest;
 @class QCloudSignatureFields;
+
+/**
+生成签名
+SDK 中的请求需要用到签名，以确认访问的用户的身份，也保障了访问的安全性。当签名不正确时，大部分 COS 的服务将无法访问并且返回403错误。在 SDK 中可以生成签名，每个请求会向 QCloudServiceConfiguration 对象中的signatureProvider 对象来请求生成签名。我们可以将负责生成签名的对象在一开始赋值给 signatureProvider，该生成签名的对象需要遵循 QCloudSignatureProvider 协议，并实现生成签名的方法：
+*/
 @protocol QCloudSignatureProvider <NSObject>
 
 

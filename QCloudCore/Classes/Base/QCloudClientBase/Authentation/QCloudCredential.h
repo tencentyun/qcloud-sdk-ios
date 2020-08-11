@@ -9,8 +9,16 @@
 #import <Foundation/Foundation.h>
 
 /**
- 密钥
- */
+将secretKey secretID 封装然后用于生成签名
+### 示例
+   
+  @code
+
+   QCloudCredential* credential = [QCloudCredential new];
+   credential.secretID = kSecretIDCSP;
+   credential.secretKey = kSecretKeyCSP;
+
+*/
 @interface QCloudCredential : NSObject
 
 /**

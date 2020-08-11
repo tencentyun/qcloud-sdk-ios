@@ -29,6 +29,9 @@
 #import <QCloudCore/QCloudCore.h>
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+规则过期属性
+*/
 @interface QCloudLifecycleExpiration : NSObject
 /**
 删除过期对象删除标记，NSString类型，枚举值 true，false，例如expiredObjectDeleteMarker = @"true"

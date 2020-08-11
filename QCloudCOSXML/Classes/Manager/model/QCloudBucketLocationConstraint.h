@@ -29,9 +29,14 @@
 #import <QCloudCore/QCloudCore.h>
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ Bucket 所在的地域信息
+ */
 @interface QCloudBucketLocationConstraint : NSObject
 /**
-说明 Bucket 所在区域，枚举值：cn-north，cn-east，sg，cn-southwest，cn-south
+ 说明 Bucket 所在地域，枚举值参见 地域和访问域名 文档，如：ap-beijing、ap-hongkong、
+ eu-frankfurt 等
+ 详情请查看 ：https://cloud.tencent.com/document/product/436/6224
 */
 @property (strong, nonatomic) NSString *locationConstraint;
 @end

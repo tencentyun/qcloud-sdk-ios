@@ -39,6 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
       @"name" :@"Name",
       @"location" :@"Location",
       @"createDate" :@"CreationDate",
+      @"type" :@"Type",
   };
 }
 

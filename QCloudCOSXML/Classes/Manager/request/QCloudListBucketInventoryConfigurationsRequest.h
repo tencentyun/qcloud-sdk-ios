@@ -29,6 +29,16 @@
 #import <QCloudCore/QCloudCore.h>
 #import "QCloudListInventoryConfigurationResult.h"
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 列出一个存储桶中的所有清单任务。
+ 
+ ### 功能描述
+ 
+ List Bucket Inventory Configurations 用于请求返回一个存储桶中的所有清单任务。每一个存储桶中最多配置1000条清单任务
+ 
+ 关于列出一个存储桶中的所有清单任务接口的具体描述，请查看https://cloud.tencent.com/document/product/436/33706.
+
+ */
 @interface QCloudListBucketInventoryConfigurationsRequest : QCloudBizHTTPRequest
 /**
 存储桶名

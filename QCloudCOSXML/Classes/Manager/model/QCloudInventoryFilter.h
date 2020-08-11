@@ -29,7 +29,13 @@
 #import <QCloudCore/QCloudCore.h>
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 筛选待分析对象。清单功能将分析符合 Filter 中设置的前缀的对象
+ */
 @interface QCloudInventoryFilter : NSObject
+/**
+ 需要分析的对象的前缀
+ */
 @property (strong, nonatomic) NSString *prefix;
 @end
 NS_ASSUME_NONNULL_END

@@ -28,6 +28,9 @@
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+索引文档
+*/
 @interface QCloudWebsiteIndexDocument : NSObject
 /**
 指定索引文档

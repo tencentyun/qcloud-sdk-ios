@@ -29,7 +29,13 @@
 #import <QCloudCore/QCloudCore.h>
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 为清单结果提供服务端加密的选项
+ */
 @interface QCloudInventoryEncryption : NSObject
+/**
+ COS 托管密钥的加密方式，无需填充
+ */
 @property (strong, nonatomic) NSString *ssecos;
 @end
 NS_ASSUME_NONNULL_END

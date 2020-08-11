@@ -17,6 +17,8 @@
 #import "QCloudLogger.h"
 #import "QCloudURLHelper.h"
 #import "NSDate+QCLOUD.h"
+#import "QCloudError.h"
+#define DEFAULT_TOKEN_HEADER_NAME @"x-cos-security-token"
 
 @implementation NSDictionary(HeaderFilter)
 - (NSDictionary*)filteHeaders; {
@@ -88,8 +90,15 @@
 
 - (QCloudSignature*) signatureForData:(NSMutableURLRequest *)urlrequest
 {
+    if (!self.credential.secretID) {
+        @throw [NSException exceptionWithName:QCloudErrorDomain reason:@"请检查 secretID 是否为空" userInfo:nil];
+    }
+    if (!self.credential.secretKey) {
+        @throw [NSException exceptionWithName:QCloudErrorDomain reason:@"请检查 secretKey 是否为空" userInfo:nil];
+    }
     if (self.credential.token) {
-        [urlrequest setValue:self.credential.token forHTTPHeaderField:@"x-cos-security-token"];
+        NSString *tokenHeaderName = self.tokenHeaderName != nil ? self.tokenHeaderName :DEFAULT_TOKEN_HEADER_NAME;
+        [urlrequest setValue:self.credential.token forHTTPHeaderField:tokenHeaderName];
     }
     int64_t nowInterval = 0;
     if (self.credential.startDate) {

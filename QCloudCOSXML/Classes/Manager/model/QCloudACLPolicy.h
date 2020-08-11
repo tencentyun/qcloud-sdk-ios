@@ -30,6 +30,9 @@
 #import "QCloudAccessControlList.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ ACL 的具体信息。
+ */
 @interface QCloudACLPolicy : NSObject
 /**
 持有者的信息

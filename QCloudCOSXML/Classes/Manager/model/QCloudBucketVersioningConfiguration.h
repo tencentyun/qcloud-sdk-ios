@@ -30,6 +30,9 @@
 #import "QCloudCOSBucketVersioningStatusEnum.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 桶多版本状态配置信息
+*/
 @interface QCloudBucketVersioningConfiguration : NSObject
 /**
     说明版本是否开启，枚举值：Suspended\Enabled

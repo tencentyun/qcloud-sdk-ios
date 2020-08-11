@@ -31,6 +31,39 @@
 #import <QCloudCore/QCloudCore.h>
 
 NS_ASSUME_NONNULL_BEGIN
+
+/**
+ QCloudCOSXMLService 是对所有接口请求发起的封装；通过QCloudCOSXMLService实例来发起网络请求
+ 
+ 详情请查看：https://cloud.tencent.com/document/product/436/11280
+ 
+
+ 配置QCloudCOSXMLService
+ 1：实例化 QCloudServiceConfiguration 对象：
+ 
+    QCloudServiceConfiguration* configuration = [QCloudServiceConfiguration new];
+    configuration.appID = @"APPID"  //腾讯云账号的 APPID;
+ 
+ 2:实例化 QCloudCOSXMLService 对象：
+ 
+    + (QCloudCOSXMLService*) registerDefaultCOSXMLWithConfiguration
+    :(QCloudServiceConfiguration*)configuration;
+ 
+ 3：实例化 QCloudCOSTransferManagerService 对象：
+ 
+    + (QCloudCOSTransferMangerService*) registerDefaultCOSTransferMangerWithConfiguration
+    :(QCloudServiceConfiguration*)configuration;
+ 
+ 使用步骤：
+ 
+ 1：实例并初始化好要使用的request；
+ 
+ 2：使用[QCloudCOSXMLService defaultCOSXML] 获取到 QCloudCOSXMLService实例；
+ 
+ 3：调用对应发起请求的方法：如get****,post****,put****,delete****,
+ 
+ */
+
 @interface QCloudCOSXMLService : QCloudService
 #pragma hidden super selectors
 - (int) performRequest:(QCloudBizHTTPRequest *)httpRequst NS_UNAVAILABLE;
@@ -67,10 +100,12 @@ NS_ASSUME_NONNULL_BEGIN
 + (void) removeCOSXMLWithKey:(NSString*)key;
 
 /**
-根据Bukcet, Object来生成可以直接访问的URL。如果您的Bucket是私有读的话，那么访问的时候需要带上签名，反之则不需要。
+根据Bukcet, Object来生成可以直接访问的URL。如果您的Bucket是私有读的话，那么访问的时候需要带上签名，
+ 反之则不需要。
  
  
-需要注意的是，如果通过该接口来生成带签名的URL的话，因为签名可能是在服务器生成的，该方法是同步方法，可能因为网络请求阻塞，建议不要在主线程里调用。
+需要注意的是，如果通过该接口来生成带签名的URL的话，因为签名可能是在服务器生成的，该方法是同步方法，
+ 可能因为网络请求阻塞，建议不要在主线程里调用。
 
 此外, 传入的Object需要是URLEncode后的结果。
  

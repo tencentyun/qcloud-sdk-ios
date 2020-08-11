@@ -30,11 +30,33 @@
 #import "QCloudInventoryEncryption.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 清单结果导出后存放的存储桶信息
+ */
 @interface QCloudInventoryBucketDestination : NSObject
+/**
+ 清单分析结果的文件形式，可选项为 CSV 格式
+ */
 @property (strong, nonatomic) NSString *cs;
+
+/**
+ 存储桶的所有者 ID，例如100000000001
+ */
 @property (strong, nonatomic) NSString *account;
+
+/**
+ 清单分析结果的存储桶名
+ */
 @property (strong, nonatomic) NSString *bucket;
+
+/**
+ 清单分析结果的前缀
+ */
 @property (strong, nonatomic) NSString *prefix;
+
+/**
+ 为清单结果提供服务端加密的选项
+ */
 @property (strong, nonatomic) QCloudInventoryEncryption *encryption;
 @end
 NS_ASSUME_NONNULL_END

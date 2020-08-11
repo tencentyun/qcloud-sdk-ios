@@ -25,11 +25,13 @@
 
 #import <Foundation/Foundation.h>
 NS_ASSUME_NONNULL_BEGIN
-
+/**
+ 存储桶多版本状态
+*/
 typedef NS_ENUM(NSInteger, QCloudCOSBucketVersioningStatus) {
 
-  QCloudCOSBucketVersioningStatusEnabled = 0,
-  QCloudCOSBucketVersioningStatusSuspended = 1,
+  QCloudCOSBucketVersioningStatusEnabled = 1,
+  QCloudCOSBucketVersioningStatusSuspended = 2,
 };
 
 FOUNDATION_EXTERN QCloudCOSBucketVersioningStatus QCloudCOSBucketVersioningStatusDumpFromString(NSString* key);

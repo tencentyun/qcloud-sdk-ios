@@ -30,9 +30,12 @@
 #import "QCloudBucketReplicationRule.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+说明所有跨区域配置信息
+*/
 @interface QCloudBucketReplicationConfiguation : NSObject
 /**
-    发起者身份标示，格式为：qcs::cam::uin/<OwnerUin>:uin/<SubUin>
+    发起者身份标示，格式为：qcs::cam::uin/\<OwnerUin>:uin/\<SubUin>
     */
 @property (strong, nonatomic) NSString *role;
 /**

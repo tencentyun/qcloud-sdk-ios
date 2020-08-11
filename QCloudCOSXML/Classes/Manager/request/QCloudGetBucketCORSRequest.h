@@ -31,32 +31,27 @@
 NS_ASSUME_NONNULL_BEGIN
 /**
 查询存储桶（Bucket) 跨域访问配置信息的方法.
+ 
+### 功能说明
 
-COS 支持查询当前 Bucket 跨域访问配置信息，以确定是否配置跨域信息.当跨域访问配置不存在时，请求 返回403 Forbidden. 跨域访问配置可以通过 putBucketCORS(PutBucketCORSRequest) 或者 putBucketCORSAsync(PutBucketCORSRequest, CosXmlResultListener) 方法来开启 Bucket 的跨域访问 支持.
+COS 支持查询当前 Bucket 跨域访问配置信息，以确定是否配置跨域信息.当跨域访问配置不存在时，请求 返回403
+ 
+关于查询存储桶（Bucket) 跨域访问配置信息接口的具体描述,请参考：https://cloud.tencent.com/document/product/436/8274
+ 
+### 示例
+   
+  @code
+  
+    QCloudGetBucketCORSRequest* corsReqeust = [QCloudGetBucketCORSRequest new];
+    corsReqeust.bucket = @"testBucket-123456789";
 
-关于查询 Bucket 跨域访问配置信息接口的具体描述， 请查看 https://cloud.tencent.com/document/product/436/8274.
+    [corsReqeust setFinishBlock:^(QCloudCORSConfiguration * _Nonnull result,
+                                            NSError * _Nonnull error) {
+    //CORS设置封装在result中。
+    }];
 
-cos iOS SDK 中查询 Bucket 跨域访问配置信息的方法具体步骤如下：
-
-1. 实例化 QCloudGetBucketCORSRequest，填入需要获取 CORS 的存储桶。
-
-2. 调用 QCloudCOSXMLService 对象中的 GetBucketCORS 方法发出请求。
-
-3. 从回调的 finishBlock 中获取结果。结果封装在了 QCloudCORSConfiguration 对象中，该对象的 rules 属性是一个数组，数组里存放着一组 QCloudCORSRule，具体的 CORS 设置就封装在 QCloudCORSRule 对象里。
-
-
-示例：
-
-@code
-QCloudGetBucketCORSRequest* corsReqeust = [QCloudGetBucketCORSRequest new];
-corsReqeust.bucket = @"testBucket-123456789";
-
-[corsReqeust setFinishBlock:^(QCloudCORSConfiguration * _Nonnull result, NSError * _Nonnull error) {
-//CORS设置封装在result中。
-}];
-
-[[QCloudCOSXMLService defaultCOSXML] GetBucketCORS:corsReqeust];
-@endcode
+    [[QCloudCOSXMLService defaultCOSXML] GetBucketCORS:corsReqeust];
+  
 */
 @interface QCloudGetBucketCORSRequest : QCloudBizHTTPRequest
 /**

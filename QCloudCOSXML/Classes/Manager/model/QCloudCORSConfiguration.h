@@ -30,7 +30,13 @@
 #import "QCloudCORSRule.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 查询存储桶（Bucket) 跨域访问配置信息的方法返回结果
+ */
 @interface QCloudCORSConfiguration : NSObject
+/**
+ 存储桶跨域访问配置信息数组
+ */
 @property (strong, nonatomic) NSArray<QCloudCORSRule*> *rules;
 @end
 NS_ASSUME_NONNULL_END

@@ -30,6 +30,50 @@
 @class QCloudDomainConfiguration;
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+设置自定义域名
+
+### 功能说明
+ 
+PUT Bucket domain 用于为存储桶配置自定义域名。
+
+### 示例
+   
+  @code
+ 
+    QCloudPutBucketDomainRequest *req = [QCloudPutBucketDomainRequest new];
+
+    // 存储桶名称，格式为 BucketName-APPID
+    req.bucket = @"examplebucket-1250000000";
+
+    QCloudDomainConfiguration *config = [QCloudDomainConfiguration new];
+    QCloudDomainRule *rule = [QCloudDomainRule new];
+
+    // 源站状态
+    rule.status = QCloudDomainStatueEnabled;
+    // 域名信息
+    rule.name = @"www.baidu.com";
+
+    // 替换已存在的配置、有效值CNAME/TXT 填写则强制校验域名所有权之后，再下发配置
+    rule.replace = QCloudCOSDomainReplaceTypeTxt;
+    rule.type = QCloudCOSDomainTypeRest;
+
+    // 规则描述集合的数组
+    config.rules = @[rule];
+
+    // 域名配置的规则
+    req.domain  = config;
+
+    [req setFinishBlock:^(id outputObject, NSError *error) {
+        // outputObject 包含所有的响应 http 头部
+        NSDictionary* info = (NSDictionary *) outputObject;
+
+    }];
+    [[QCloudCOSXMLService defaultCOSXML]PutBucketDomain:req];
+ 
+*/
+
+
 @interface QCloudPutBucketDomainRequest : QCloudBizHTTPRequest
 /**
 域名配置的规则

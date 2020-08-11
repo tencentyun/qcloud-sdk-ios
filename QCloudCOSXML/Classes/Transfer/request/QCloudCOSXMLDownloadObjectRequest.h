@@ -6,9 +6,26 @@
 //
 
 #import <QCloudCore/QCloudCore.h>
+
 @class QCloudCOSTransferMangerService;
 
-
+/**
+ ### 示例
+   
+  @code
+ 
+    QCloudCOSXMLDownloadObjectRequest * request = [QCloudCOSXMLDownloadObjectRequest new];
+    request.bucket = @"bucket";
+    request.object = @"object";
+    request.enableQuic = YES;
+    request.localCacheDownloadOffset = 本地已下载的文件大小
+    [request setFinishBlock:^(id  _Nullable outputObject, NSError * _Nullable error) {
+         
+         
+    }];
+    [[QCloudCOSTransferMangerService costransfermangerServiceForKey:ServiceKey]
+                                                    DownloadObject:request];
+ */
 @interface QCloudCOSXMLDownloadObjectRequest : QCloudAbstractRequest
 
 /**
@@ -65,8 +82,15 @@
  */
 @property (strong, nonatomic) NSString *bucket;
 
+/**
+ 桶所在地域
+*/
 @property (strong,nonatomic)NSString *regionName;
 
+/**
+该选项设置为YES后，在下载完成后会比对COS上储存的文件MD5和下载到本地的文件MD5，如果MD5有差异的话会返回-340013错误码。
+目前默认关闭。
+*/
 @property (assign,nonatomic)BOOL enableMD5Verification;
 
 

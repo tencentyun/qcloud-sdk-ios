@@ -31,7 +31,8 @@
 @interface QCloudGetObjectRequest (Custom)
 
 /**
- 该选项设置为YES后，在下载完成后会比对COS上储存的文件MD5和下载到本地的文件MD5，如果MD5有差异的话会返回-340013错误码。
+ 该选项设置为YES后，在下载完成后会比对COS上储存的文件MD5和下载到本地的文件MD5，
+ 如果MD5有差异的话会返回-340013错误码。
  目前默认关闭。
  */
 @property (nonatomic ,assign) BOOL enableMD5Verification;

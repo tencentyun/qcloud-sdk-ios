@@ -30,9 +30,12 @@
 #import "QCloudLifecycleRule.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 设置bucket生命周期的配置信息
+*/
 @interface QCloudLifecycleConfiguration : NSObject
 /**
-规则描述集合的数组
+ 规则描述集合的数组
 */
 @property (strong, nonatomic) NSArray<QCloudLifecycleRule*> *rules;
 @end

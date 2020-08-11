@@ -30,46 +30,63 @@
 #import "QCloudCopyObjectResult.h"
 NS_ASSUME_NONNULL_BEGIN
 /**
-分块复制的方法.
+ 分块复制的方法.
 
-COS 中复制对象可以完成如下功能:
+ ### 功能描述
+ 
+ COS 中复制对象可以完成如下功能:
 
-创建一个新的对象副本.
+ 创建一个新的对象副本.
 
-复制对象并更名，删除原始对象，实现重命名
+ 复制对象并更名，删除原始对象，实现重命名
 
-修改对象的存储类型，在复制时选择相同的源和目标对象键，修改存储类型.
+ 修改对象的存储类型，在复制时选择相同的源和目标对象键，修改存储类型.
 
-在不同的腾讯云 COS 地域复制对象.
+ 在不同的腾讯云 COS 地域复制对象.
 
-修改对象的元数据，在复制时选择相同的源和目标对象键，并修改其中的元数据,复制对象时，默认将继承原对象的元数据，但创建日期将会按新对象的时间计算.
+ 修改对象的元数据，在复制时选择相同的源和目标对象键，并修改其中的元数据,复制对象时，默认将继承原对象的元数据，
+ 但创建日期将会按新对象的时间计算.
 
-当复制的对象小于等于 5 GB ，可以使用简单复制（https://cloud.tencent.com/document/product/436/14117).
+ 当复制的对象小于等于 5 GB ，可以使用简单复制（https://cloud.tencent.com/document/product/436/14117).
 
-当复制对象超过 5 GB 时，必须使用分块复制（https://cloud.tencent.com/document/product/436/14118 ） 来实现复制.
+ 当复制对象超过 5 GB 时，必须使用分块复制（https://cloud.tencent.com/document/product/436/14118 ） 来实现复制.
 
-关于分块复制接口的具体描述，请查看https://cloud.tencent.com/document/product/436/8287.
+ 关于分块复制接口的具体描述，请查看https://cloud.tencent.com/document/product/436/8287.
 
-cos iOS SDK 中分块复制的方法具体步骤如下：
-
-1. 实例化 QCloudUploadPartCopyRequest，填入需要的参数。
-
-2. 调用 QCloudCOSXMLService 对象中的 UploadPartCopy 方法发出请求。
-
-3. 从回调的 finishBlock 中的 QCloudCopyObjectResult 获取具体内容。
-
-示例：
-@code
-QCloudUploadPartCopyRequest* request = [[QCloudUploadPartCopyRequest alloc] init];
-request.bucket = @"bucketName";
-request.object = @"objectName";
-request.source = @"objectCopySource"; //  源文件 URL 路径，可以通过 versionid 子资源指定历史版本
-request.uploadID = @"uploadID"; // 在初始化分块上传的响应中，会返回一个唯一的描述符（upload ID）
-request.partNumber = 1; // 标志当前分块的序号
-[request setFinishBlock:^(QCloudCopyObjectResult* result, NSError* error) {
-}];
-[[QCloudCOSXMLService defaultCOSXML]UploadPartCopy:request];
-@endcode
+### 示例
+   
+  @code
+  
+    QCloudUploadPartCopyRequest* request = [[QCloudUploadPartCopyRequest alloc] init];
+    
+    // 存储桶名称，格式为 BucketName-APPID
+    request.bucket = @"examplebucket-1250000000";
+    
+    // 对象键，是对象在 COS 上的完整路径，如果带目录的话，格式为 "dir1/object1"
+    request.object = @"exampleobject";
+    
+    // 源文件 URL 路径，可以通过 versionid 子资源指定历史版本
+    request.source = @"sourcebucket-1250000000.cos.ap-guangzhou.myqcloud.com/sourceObject";
+    
+    // 在初始化分块上传的响应中，会返回一个唯一的描述符（upload ID）
+    request.uploadID = uploadId;
+    
+    // 标志当前分块的序号
+    request.partNumber = 1;
+    
+    [request setFinishBlock:^(QCloudCopyObjectResult* result, NSError* error) {
+        QCloudMultipartInfo *part = [QCloudMultipartInfo new];
+        
+        // 获取所复制分块的 etag
+        part.eTag = result.eTag;
+        part.partNumber = @"1";
+        // 保存起来用于最后完成上传时使用
+        self.parts=@[part];
+        
+    }];
+    
+    [[QCloudCOSXMLService defaultCOSXML]UploadPartCopy:request];
+  
 */
 @interface QCloudUploadPartCopyRequest : QCloudBizHTTPRequest
 /**

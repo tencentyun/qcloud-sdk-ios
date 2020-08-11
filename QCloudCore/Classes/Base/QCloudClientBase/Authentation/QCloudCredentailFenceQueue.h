@@ -14,6 +14,14 @@
 
 typedef void(^QCloudCredentailFenceQueueContinue)(QCloudAuthentationCreator* creator, NSError* error);
 
+/**
+1:QCloudCredentailFenceQueue 提供了栅栏机制，也就是说您使用 QCloudCredentailFenceQueue 获取签名的话，所有需要获取签名的请求会等待签名完成后再执行，免去了自己管理异步过程。
+使用 QCloudCredentailFenceQueue，我们需要先生成一个实例。
+
+2:然后调用 QCloudCredentailFenceQueue 的类需要遵循 QCloudCredentailFenceQueueDelegate 并实现协议内定义的方法：
+
+3:当通过 QCloudCredentailFenceQueue 去获取签名时，所有需要签名的 SDK 里的请求都会等待该协议定义的方法内拿到了签名所需的参数并生成有效的签名后执行。
+*/
 @protocol QCloudCredentailFenceQueueDelegate <NSObject>
 
 /**
@@ -29,6 +37,22 @@ typedef void(^QCloudCredentailFenceQueueContinue)(QCloudAuthentationCreator* cre
 
 /**
  使用类似栅栏的机制，更新秘钥。可以是临时密钥，也可以是永久密钥。在没有合法密钥的时候，所有的请求会阻塞在队列里面。直到获取到一个合法密钥，或者获取出错。
+ 
+ ### 示例
+   
+  @code
+ 
+     - (void) fenceQueue:(QCloudCredentailFenceQueue *)queue requestCreatorWithContinue:(QCloudCredentailFenceQueueContinue)continueBlock
+     {
+        QCloudCredential* credential = [QCloudCredential new];
+        credential.secretID = @"secretID";
+        credential.secretKey = @"secretKey";
+         //签名过期时间
+        credential.experationDate = [NSDate dateWithTimeIntervalSince1970:1504183628];
+        credential.token = @"token";
+        QCloudAuthentationV5Creator* creator = [[QCloudAuthentationV5Creator alloc] initWithCredential:credential];
+        continueBlock(creator, nil);
+     }
  */
 @interface QCloudCredentailFenceQueue : NSObject
 

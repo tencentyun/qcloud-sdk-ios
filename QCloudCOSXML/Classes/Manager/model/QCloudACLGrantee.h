@@ -30,13 +30,17 @@
 #import "QCloudCOSAccountTypeEnum.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 说明被授权者的信息。type 类型可以为 RootAccount， Subaccount；当 type 类型为 RootAccount 时
+ ，ID 中指定的是根帐号;当 type 类型为 Subaccount 时，ID 中指定的是子帐号
+*/
 @interface QCloudACLGrantee : NSObject
 /**
 子账号
 */
 @property (strong, nonatomic) NSString *subAccount;
 /**
- ID，格式：qcs::cam::uin/<OwnerUin>:uin/<SubUin> 如果是根帐号，<OwnerUin> 和 <SubUin> 是同一个值
+ ID，格式：qcs::cam::uin/\<OwnerUin>:uin/\<SubUin> 如果是根帐号，\<OwnerUin> 和 \<SubUin> 是同一个值
 */
 @property (strong, nonatomic) NSString *identifier;
 /**

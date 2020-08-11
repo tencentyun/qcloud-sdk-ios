@@ -31,6 +31,9 @@
 #import "QCloudBucket.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 获取所有通请求返回结果
+ */
 @interface QCloudListAllMyBucketsResult : NSObject
 /**
 bucket owner的信息

@@ -32,26 +32,38 @@ NS_ASSUME_NONNULL_BEGIN
 /**
 用于获取与存储桶关联的静态网站配置信息
 
+### 功能说明
+ 
 GET Bucket website 请求用于获取与存储桶关联的静态网站配置信息。
 
 关于为存储桶配置静态网站接口的具体描述，请查看https://cloud.tencent.com/document/product/436/31930.
-
-cos iOS SDK 中为存储桶配置静态网站的方法具体步骤如下：
-
-1. 实例化 QCloudGetBucketWebsiteRequest，填入需要的参数。
-
-2. 调用 QCloudCOSXMLService 对象中的 GetBucketWebsite 方法发出请求。
-
-3. 从回调的 finishBlock 中的获取具体内容。
-示例：
-@code
-QCloudGetBucketWebsiteRequest *getReq = [QCloudGetBucketWebsiteRequest new];
-getReq.bucket = ="exampleBucket-appid";
-[getReq setFinishBlock:^(QCloudWebsiteConfiguration * _Nonnull result, NSError * _Nonnull error) {
-        //回调处理，从返回的result中获取信息
-}];
-[[QCloudCOSXMLService defaultCOSXML] GetBucketWebsite:getReq];
-@endcode
+ 
+### 示例
+   
+  @code
+  
+    QCloudGetBucketWebsiteRequest *getReq = [QCloudGetBucketWebsiteRequest new];
+    
+    // 存储桶名称，格式为 BucketName-APPID
+    getReq.bucket = @"examplebucket-1250000000";
+    [getReq setFinishBlock:^(QCloudWebsiteConfiguration *  result,
+                             NSError * error) {
+        
+        // 设置重定向规则，最多设置100条RoutingRule
+        QCloudWebsiteRoutingRules *rules =result.rules;
+        
+        // 索引文档
+        QCloudWebsiteIndexDocument *indexDocument = result.indexDocument;
+        
+        // 错误文档
+        QCloudWebisteErrorDocument *errorDocument = result.errorDocument;
+       
+        // 重定向所有请求
+        QCloudWebsiteRedirectAllRequestsTo *redirectAllRequestsTo = result.redirectAllRequestsTo;
+        
+    }];
+    [[QCloudCOSXMLService defaultCOSXML] GetBucketWebsite:getReq];
+  
 */
 @interface QCloudGetBucketWebsiteRequest : QCloudBizHTTPRequest
 /**

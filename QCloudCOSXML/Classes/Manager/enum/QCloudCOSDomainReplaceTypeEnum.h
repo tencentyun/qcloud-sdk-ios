@@ -25,7 +25,9 @@
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
-
+/**
+ 替换已存在的配置、有效值CNAME/TXT
+ */
 typedef NS_ENUM(NSInteger, QCloudCOSDomainReplaceType) {
 
   QCloudCOSDomainReplaceTypeCname = 0,

@@ -30,7 +30,14 @@
 #import "QCloudInventoryBucketDestination.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+描述存放清单结果的信息
+*/
 @interface QCloudInventoryDestination : NSObject
+
+/**
+ 清单结果导出后存放的存储桶信息
+ */
 @property (strong, nonatomic) QCloudInventoryBucketDestination *bucketDestination;
 @end
 NS_ASSUME_NONNULL_END

@@ -135,7 +135,11 @@ static const int64_t   kCopySliceLength    = 5242880;
     NSMutableString* objectCopySource = [NSMutableString string];
     NSString* serviceURL =[service.configuration.endpoint serverURLWithBucket:self.sourceBucket appID:self.sourceAPPID regionName:self.sourceRegion].absoluteString;
     [objectCopySource appendString:[serviceURL componentsSeparatedByString:@"://"][1]];
-    [objectCopySource appendFormat:@"/%@",QCloudPercentEscapedStringFromString(self.sourceObject)];
+    if (self.sourceObjectVersionID.length) {
+         [objectCopySource appendFormat:@"/%@/%@",QCloudPercentEscapedStringFromString(self.sourceObject),self.sourceObjectVersionID];
+    }else{
+         [objectCopySource appendFormat:@"/%@",QCloudPercentEscapedStringFromString(self.sourceObject)];
+    }
     request.objectCopySource = objectCopySource;
     QCloudLogDebug(@"Object copy source url %@", objectCopySource);
     [self.transferManager.cosService PutObjectCopy:request];
@@ -202,7 +206,11 @@ static const int64_t   kCopySliceLength    = 5242880;
             NSMutableString* objectCopySource = [NSMutableString string];
             NSString* serviceURL =[service.configuration.endpoint serverURLWithBucket:self.sourceBucket appID:self.sourceAPPID regionName:self.sourceRegion].absoluteString;
             [objectCopySource appendString:[serviceURL componentsSeparatedByString:@"://"][1]];
-            [objectCopySource appendFormat:@"/%@",QCloudPercentEscapedStringFromString(self.sourceObject)];
+            if (self.sourceObjectVersionID.length) {
+                 [objectCopySource appendFormat:@"/%@/%@",QCloudPercentEscapedStringFromString(self.sourceObject),self.sourceObjectVersionID];
+            }else{
+                 [objectCopySource appendFormat:@"/%@",QCloudPercentEscapedStringFromString(self.sourceObject)];
+            }
             request.source = objectCopySource;
             request.uploadID = self.uploadID;
             request.partNumber = i+1;

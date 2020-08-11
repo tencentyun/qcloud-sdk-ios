@@ -30,6 +30,30 @@
 #import "QCloudDomainConfiguration.h"
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+查询自定义域名
+
+### 功能说明
+ 
+GET Bucket domain 用于查询存储桶的自定义域名信息。
+ 
+### 示例
+   
+  @code
+ 
+    QCloudGetBucketDomainRequest *getReq =  [QCloudGetBucketDomainRequest new];
+
+    // 存储桶名称，格式为 BucketName-APPID
+    getReq.bucket = @"examplebucket-1250000000";
+
+    [getReq setFinishBlock:^(QCloudDomainConfiguration * _Nonnull result,
+                             NSError * _Nonnull error) {
+        // 规则描述集合的数组
+        NSArray *rules = result.rules;
+    }];
+    [[QCloudCOSXMLService defaultCOSXML]GetBucketDomain:getReq];
+
+*/
 @interface QCloudGetBucketDomainRequest : QCloudBizHTTPRequest
 /**
 存储桶名

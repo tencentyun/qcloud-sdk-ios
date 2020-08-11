@@ -32,33 +32,30 @@ NS_ASSUME_NONNULL_BEGIN
 /**
 获取存储桶（Bucket) 所在的地域信息的方法.
 
+### 功能说明
+ 
 在创建 Bucket 时，需要指定所属该 Bucket 所属地域信息.
 
 COS 支持的地域信息，可查看https://cloud.tencent.com/document/product/436/6224.
 
 关于获取 Bucket 所在的地域信息接口的具体描述，请查看https://cloud.tencent.com/document/product/436/8275.
 
-cos iOS SDK 中获取 Bucket 所在的地域信息的方法具体步骤如下：
-
-1. 实例化 QCloudGetBucketLocationRequest，填入需要的参数。
-
-2. 调用 QCloudCOSXMLService 对象中的 GetBucketLocation 方法发出请求。
-
-3. 从回调的 finishBlock 中的 QCloudBucketLocationConstraint 获取具体内容。
-
-示例：
-@code
-QCloudGetBucketLocationRequest* locationReq = [QCloudGetBucketLocationRequest new];
-locationReq.bucket = @"bucketName";//存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
-__block QCloudBucketLocationConstraint* location;
-[locationReq setFinishBlock:^(QCloudBucketLocationConstraint * _Nonnull result, NSError * _Nonnull error) {
-location = result;
-}];
-[[QCloudCOSXMLService defaultCOSXML] GetBucketLocation:locationReq];
-@endcode
+### 示例
+   
+  @code
+  
+    QCloudGetBucketLocationRequest* locationReq = [QCloudGetBucketLocationRequest new];
+    locationReq.bucket = @"bucketName";//存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
+    __block QCloudBucketLocationConstraint* location;
+    [locationReq setFinishBlock:^(QCloudBucketLocationConstraint * _Nonnull result,
+                                                            NSError * _Nonnull error) {
+    location = result;
+    }];
+    [[QCloudCOSXMLService defaultCOSXML] GetBucketLocation:locationReq];
+  
 */
 @interface QCloudGetBucketLocationRequest : QCloudBizHTTPRequest
-/**p
+/**
 存储桶名
 */
 @property (strong, nonatomic) NSString *bucket;

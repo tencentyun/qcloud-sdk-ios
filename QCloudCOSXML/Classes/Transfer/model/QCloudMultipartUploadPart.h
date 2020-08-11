@@ -29,6 +29,9 @@
 #import <QCloudCore/QCloudCore.h>
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 查询特定上传分块中已上传的分块返回结果的元数据信息
+ */
 @interface QCloudMultipartUploadPart : NSObject
 /**
 块的编号

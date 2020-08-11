@@ -29,6 +29,9 @@
 
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 存储桶数据模型
+ */
 @interface QCloudBucket : NSObject
 /**
 Bucket 的名称
@@ -42,5 +45,9 @@ Bucket 所在地域。枚举值参见 可用地域 文档，如：ap-beijing, ap
  Bucket 创建时间。ISO8601 格式，例如 2016-11-09T08:46:32.000Z 
 */
 @property (strong, nonatomic) NSString *createDate;
+/**
+ 存储桶类型
+ */
+@property (strong, nonatomic) NSString *type;
 @end
 NS_ASSUME_NONNULL_END

@@ -30,6 +30,9 @@
 #import "QCloudListMultipartUploadContent.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 正在进行中的分块上传任务
+ */
 @interface QCloudListMultipartUploadsResult : NSObject
 /**
 分块上传的目标存储桶名
@@ -52,7 +55,8 @@ NS_ASSUME_NONNULL_BEGIN
 */
 @property (strong, nonatomic) NSString *prefix;
 /**
-定界符为一个符号，对 Object 名字包含指定前缀且第一次出现 delimiter 字符之间的 Object 作为一组元素：common prefix。如果没有 prefix，则从路径起点开始
+定界符为一个符号，对 Object 名字包含指定前缀且第一次出现 delimiter 字符之间的 Object
+ 作为一组元素：common prefix。如果没有 prefix，则从路径起点开始
 */
 @property (strong, nonatomic) NSString *delimiter;
 /*

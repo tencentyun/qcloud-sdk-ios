@@ -29,32 +29,50 @@
 #import <QCloudCore/QCloudCore.h>
 NS_ASSUME_NONNULL_BEGIN
 /**
-下载 COS 对象的方法.
+ 
+ 下载 COS 对象的方法.
+ 
+ ### 功能描述
+ 
+ 可以直接发起 GET 请求获取 COS 中完整的对象数据, 或者在 GET 请求 中传入 Range 请求头部获取对象的部分内容.
+ 
+ 获取COS 对象的同时，对象的元数据将会作为 HTTP 响应头部随对象内容一同返回，COS 支持GET
+ 请求时 使用 URL 参数的方式覆盖响应的部分元数据值，例如覆盖 Content-iDisposition 的响应值.
 
-可以直接发起 GET 请求获取 COS 中完整的对象数据, 或者在 GET 请求 中传入 Range 请求头部获取对象的部分内容. 获取COS 对象的同时，对象的元数据将会作为 HTTP 响应头部随对象内容一同返回，COS 支持GET 请求时 使用 URL 参数的方式覆盖响应的部分元数据值，例如覆盖 Content-iDisposition 的响应值.
+ 关于获取 COS 对象的接口描述，请查看 https://cloud.tencent.com/document/product/436/7753.
 
-关于获取 COS 对象的具体描述，请查看 https://cloud.tencent.com/document/product/436/14115.
+### 示例
+   
+  @code
+  
+    QCloudGetObjectRequest* request = [QCloudGetObjectRequest new];
+    
+    // 设置下载的路径 URL，如果设置了，文件将会被下载到指定路径中
+    // 如果未设置该参数，那么文件将会被下载至内存里，存放在在 finishBlock 的 outputObject 里
+    request.downloadingURL = [NSURL URLWithString:QCloudTempFilePathWithExtension(@"downding")];
+    
+    // 对象键，是对象在 COS 上的完整路径，如果带目录的话，格式为 "dir1/object1"
+    request.object = @"exampleobject";
+    
+    // 存储桶名称，格式为 BucketName-APPID
+    request.bucket = @"examplebucket-1250000000";
+    
+    [request setFinishBlock:^(id outputObject, NSError *error) {
+        // 可以从 outputObject 中获取 response 中 etag 或者自定义头部等信息
+        NSDictionary* info = (NSDictionary *) outputObject;
+    }];
+    [request setDownProcessBlock:^(int64_t bytesDownload, int64_t totalBytesDownload,
+        int64_t totalBytesExpectedToDownload) {
+        
+        // 下载过程中的进度
+        // bytesDownload       一次下载的字节数，
+        // totalBytesDownload  总过接受的字节数
+        // totalBytesExpectedToDownload 文件一共多少字节
 
-关于获取 COS 对象的接口描述，请查看 https://cloud.tencent.com/document/product/436/7753.
-
-cos iOS SDK 中获取 COS 对象请求的方法具体步骤如下：
-
-1. 实例化 QCloudGetObjectRequest，填入需要的参数。
-
-2. 调用 QCloudCOSXMLService 对象中的 GetObject 方法发出请求。
-
-3. 从回调的 finishBlock 中的 outputObject 获取具体内容。
-
-示例：
-@code
-QCloudGetObjectRequest* request = [[QCloudGetObjectRequest alloc] init];
-request.bucket = @"bucketName"; //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
-request.object = @"objectName";;
-[request setFinishBlock:^(id outputObject, NSError *error) {
-//additional actions after finishing
-}];
-[[QCloudCOSXMLService defaultCOSXML] GetObject:request];
-@endcode
+    }];
+    
+    [[QCloudCOSXMLService defaultCOSXML] GetObject:request];
+  
 */
 @interface QCloudGetObjectRequest : QCloudBizHTTPRequest
 /**

@@ -32,6 +32,9 @@
 #import "QCloudMultipartUploadInitiator.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 分块上传的每一个分块的信息。
+ */
 @interface QCloudListMultipartUploadContent : NSObject
 /**
 object的名称

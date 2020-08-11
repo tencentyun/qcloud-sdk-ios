@@ -29,7 +29,13 @@
 #import <QCloudCore/QCloudCore.h>
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 配置清单任务周期
+ */
 @interface QCloudInventorySchedule : NSObject
+/**
+ 清单任务周期，可选项为按日或者按周，枚举值：Daily、Weekly
+ */
 @property (strong, nonatomic) NSString *frequency;
 @end
 NS_ASSUME_NONNULL_END

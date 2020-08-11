@@ -30,11 +30,29 @@
 #import "QCloudVersionOwner.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 多版本文件中已删除的文件
+ */
 @interface QCloudDeleteMarker : NSObject
+/**
+ 对象键
+ */
 @property (strong, nonatomic) NSString *object;
+/**
+ 对象的删除标记的版本 ID
+ */
 @property (strong, nonatomic) NSString *versionID;
-@property (strong, nonatomic) NSString *isLatest;
+/**
+ 当前删除标记是否为该对象的最新版本
+ */
+@property (nonatomic) BOOL isLatest;
+/**
+ 当前删除标记的删除时间，为 ISO8601 格式，例如2019-05-24T10:56:40Z
+ */
 @property (strong, nonatomic) NSString *lastModified;
+/**
+ 对象持有者信息
+ */
 @property (strong, nonatomic) QCloudVersionOwner *owner;
 @end
 NS_ASSUME_NONNULL_END

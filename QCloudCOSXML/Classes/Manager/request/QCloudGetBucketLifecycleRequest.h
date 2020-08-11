@@ -32,27 +32,30 @@ NS_ASSUME_NONNULL_BEGIN
 /**
 查询存储桶（Bucket) 的生命周期配置的方法.
 
-COS 支持以生命周期配置的方式来管理 Bucket 中对象的生命周期，生命周期配置包含一个或多个将 应用于一组对象规则的规则集 (其中每个规则为 COS 定义一个操作)，请参阅 putBucketLifecycle(PutBucketLifecycleRequest).
-
+### 功能说明
+ 
+COS 支持以生命周期配置的方式来管理 Bucket 中对象的生命周期。
+ 
+生命周期配置包含一个或多个将
+ 应用于一组对象规则的规则集 (其中每个规则为 COS 定义一个操作)。
+ 
 关于查询 Bucket 的生命周期配置接口的具体描述，请查看https://cloud.tencent.com/document/product/436/8278.
 
-cos iOS SDK 中查询 Bucket 的生命周期配置的方法具体步骤如下：
-
-1. 实例化 QCloudGetBucketLifecycleRequest，填入需要的参数。
-
-2. 调用 QCloudCOSXMLService 对象中的 GetBucketLifecycle 方法发出请求。
-
-3. 从回调的 finishBlock 中的 QCloudLifecycleConfiguration 获取具体内容。
-
-示例：
-@code
-QCloudGetBucketLifecycleRequest* request = [QCloudGetBucketLifecycleRequest new];
-request.bucket = bucketName; //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
-[request setFinishBlock:^(QCloudLifecycleConfiguration* result,NSError* error) {
-//设置完成回调
-}];
-[[QCloudCOSXMLService defaultCOSXML] GetBucketLifecycle:request];
-@endcode
+### 示例
+   
+  @code
+  
+    QCloudGetBucketLifecycleRequest* request = [QCloudGetBucketLifecycleRequest new];
+    
+    // 存储桶名称，格式为 BucketName-APPID
+    request.bucket = @"examplebucket-1250000000";
+    [request setFinishBlock:^(QCloudLifecycleConfiguration* result,NSError* error) {
+        // 可以从 result 中获取返回信息
+        // result.rules 规则描述集合的数组
+     
+    }];
+    [[QCloudCOSXMLService defaultCOSXML] GetBucketLifecycle:request];
+  
 */
 @interface QCloudGetBucketLifecycleRequest : QCloudBizHTTPRequest
 /**

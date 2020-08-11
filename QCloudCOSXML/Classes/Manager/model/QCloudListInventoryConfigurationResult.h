@@ -30,10 +30,29 @@
 #import "QCloudInventoryConfiguration.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 存储桶中用户的清单任务信息
+ */
 @interface QCloudListInventoryConfigurationResult : NSObject
+/**
+ 包含清单任务的详细信息
+ */
 @property (strong, nonatomic) NSArray<QCloudInventoryConfiguration*> *inventoryConfiguration;
+
+/**
+ 是否已列出所有清单任务信息的标识。如果已经展示完则为 false，否则为 true
+ */
 @property (assign, nonatomic) BOOL isTruncated;
+
+/**
+ 当页清单列表的标识，可理解为页数。该标识与请求中的 continuation-token 参数对应
+ */
 @property (strong, nonatomic) NSString *continuationToken;
+
+/**
+ 下一页清单列表的标识。如果该参数中有值，则可将该值作为 continuation-token
+ 参数并发起 GET 请求以获取下一页清单任务信息
+ */
 @property (strong, nonatomic) NSString *nextContinuationToken;
 @end
 NS_ASSUME_NONNULL_END

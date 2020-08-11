@@ -29,6 +29,9 @@
 #import "QCloudWebsiteRoutingRule.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 重定向规则配置，最多设置100条 RoutingRule
+ */
 @interface QCloudWebsiteRoutingRules : NSObject
 /**
 设置单条重定向规则，包括前缀匹配重定向和错误码重定向

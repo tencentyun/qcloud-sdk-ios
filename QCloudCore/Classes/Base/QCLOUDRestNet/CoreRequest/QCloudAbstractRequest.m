@@ -41,6 +41,7 @@ __attribute__ ((noinline)) void cosWarnBlockingOperationOnMainThread() {
 
 - (void) __notifyError:(NSError*)error
 {
+    [self.condition broadcast];
 //    [self.benchMarkMan benginWithKey:kRNBenchmarkLogicOnly];
     if ([self.delegate respondsToSelector:@selector(QCloudHTTPRequestDidFinished:failed:)]) {
         [self.delegate QCloudHTTPRequestDidFinished:self failed:error];

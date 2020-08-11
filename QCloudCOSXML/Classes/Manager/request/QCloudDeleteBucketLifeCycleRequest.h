@@ -30,29 +30,31 @@
 NS_ASSUME_NONNULL_BEGIN
 /**
 删除存储桶（Bucket） 的生命周期配置的方法.
-
-COS 支持删除已配置的 Bucket 的生命周期列表. COS 支持以生命周期配置的方式来管理 Bucket 中 对象的生命周期，生命周期配置包含一个或多个将 应用于一组对象规则的规则集 (其中每个规则为 COS 定义一个操作)，请参阅 putBucketLifecycle(PutBucketLifecycleRequest).
+ 
+### 功能说明
+ 
+COS 支持删除已配置的 Bucket 的生命周期列表. COS 支持以生命周期配置的方式来管理 Bucket 中
+ 对象的生命周期，生命周期配置包含一个或多个将 应用于一组对象规则的规则集 (其中每个规则为 COS 定义一个操作)，
+ 请参阅 putBucketLifecycle(PutBucketLifecycleRequest).
 
 关于删除 Bucket 的生命周期配置接口的具体描述，请查看https://cloud.tencent.com/document/product/436/8284.
 
-cos iOS SDK 中删除 Bucket 的生命周期配置的方法具体步骤如下：
-
-实例化 QCloudDeleteBucketLifeCycleRequest，填入需要的参数。
-
-调用 QCloudCOSXMLService 对象中的 DeleteBucketLifeCycle 方法发出请求。
-
-从回调的 finishBlock 中的 QCloudLifecycleConfiguration 获取具体内容。
-
-示例：
-@code
-QCloudDeleteBucketLifeCycleRequest* request = [[QCloudDeleteBucketLifeCycleRequest alloc ] init];
-request.bucket = bucketName; // //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
-[request setFinishBlock:^(QCloudLifecycleConfiguration* deleteResult, NSError* deleteError) {
-// additional actions after finishing
-}];
-[[QCloudCOSXMLService defaultCOSXML] DeleteBucketLifeCycle:request];
-}
-@endcode
+### 示例
+   
+  @code
+  
+    QCloudDeleteBucketLifeCycleRequest* request = [[QCloudDeleteBucketLifeCycleRequest alloc ] init];
+    
+    // 存储桶名称，格式为 BucketName-APPID
+    request.bucket = @"examplebucket-1250000000";
+    
+    [request setFinishBlock:^(QCloudLifecycleConfiguration* deleteResult, NSError* error) {
+        // 返回删除结果
+    }];
+    [[QCloudCOSXMLService defaultCOSXML] DeleteBucketLifeCycle:request];
+ 
+    }
+  
 */
 @interface QCloudDeleteBucketLifeCycleRequest : QCloudBizHTTPRequest
 /**

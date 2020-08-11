@@ -51,6 +51,19 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic
 {
 
+    void (^TransformBoolean)(NSString* originKey, NSString* trueStr , NSString* falseStr) = ^(NSString* originKey,NSString* trueStr , NSString* falseStr) {
+        id value = [dic objectForKey:originKey];
+        if (!value) {
+            return ;
+        }
+        if ([value boolValue]) {
+            [dic setObject:trueStr forKey:originKey];
+        } else {
+          [dic setObject:falseStr forKey:originKey];
+        }
+    };
+
+    TransformBoolean(@"isLatest", @"True", @"False");
 
     return YES;
 }
@@ -62,6 +75,23 @@ NS_ASSUME_NONNULL_BEGIN
     }
     NSMutableDictionary* transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
 
+    
+    void(^TransformBoolean)(NSString* originKey, NSString* trueStr , NSString* falseStr) = ^(NSString* originKey, NSString* trueStr , NSString* falseStr) {
+        id value = [dic objectForKey:originKey];
+        if (!value) {
+            return ;
+        }
+        if ([value isKindOfClass:[NSString class]]) {
+            NSString* boolean = (NSString*)value;
+            if ([value isEqualToString:trueStr]) {
+                [transfromDic setValue:@(YES) forKey:originKey];
+            } else if ([boolean isEqualToString:falseStr]) {
+                [transfromDic setValue:@(NO) forKey:originKey];
+            }
+        }
+    };
+    TransformBoolean(@"isLatest", @"True", @"False");
+    
     return transfromDic;
 }
 

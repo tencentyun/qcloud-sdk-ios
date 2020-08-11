@@ -31,6 +31,9 @@
 #import "QCloudBucketReplicationDestination.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 扩区域复制规则
+*/
 @interface QCloudBucketReplicationRule : NSObject
 /**
     标志Rule是否生效

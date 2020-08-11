@@ -31,6 +31,10 @@
 #import "QCloudCOSStorageClassEnum.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
+/**
+ 桶内文件模型
+ */
 @interface QCloudBucketContents : NSObject
 /**
 对象的key

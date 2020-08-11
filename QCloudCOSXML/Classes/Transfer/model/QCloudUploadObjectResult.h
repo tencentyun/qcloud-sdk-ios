@@ -29,6 +29,9 @@
 #import <QCloudCore/QCloudCore.h>
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 完成分块上传返回结果信息
+ */
 @interface QCloudUploadObjectResult : NSObject
 /**
 创建对象的外网访问域名

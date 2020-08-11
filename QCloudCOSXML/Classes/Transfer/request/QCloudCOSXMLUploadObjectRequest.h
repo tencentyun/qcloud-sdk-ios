@@ -19,9 +19,29 @@ typedef NSData* QCloudCOSXMLUploadObjectResumeData;
 typedef void(^InitMultipleUploadFinishBlock)(QCloudInitiateMultipartUploadResult* _Nullable multipleUploadInitResult, QCloudCOSXMLUploadObjectResumeData _Nullable resumeData);
 typedef void (^RequestsMetricArrayBlock)(NSMutableArray *_Nullable requstMetricArray);
 /**
- COSXML上传对象接口。在上传小于1MB的文件时，通过该request来上传的话，会生成一个简单上传putObjectRequset，将整个对象直接上传。
+ COSXML上传对象接口。在上传小于1MB的文件时，通过该request来上传的话，会生成一个简单上传putObjectRequset，
+ 将整个对象直接上传。
  
- 如果上传的对象大小大于1MB时，我们会在内部进行分片上传的处理，将文件切分成数个1MB大小的块，然后通过并行分快上传的方式进行上传。
+ 如果上传的对象大小大于1MB时，我们会在内部进行分片上传的处理，将文件切分成数个1MB大小的块，
+ 然后通过并行分快上传的方式进行上传。
+ 
+ ### 示例
+   
+  @code
+ 
+    QCloudCOSXMLUploadObjectRequest* put = [QCloudCOSXMLUploadObjectRequest new];
+    NSURL* url = @"文件的URL";
+    put.object = @"文件名.jpg";
+    put.bucket = @"bucket名";
+    put.body =  url;
+    [put setSendProcessBlock:^(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"upload %lld totalSend %lld aim %lld", bytesSent, totalBytesSent, totalBytesExpectedToSend);
+    }];
+    [put setFinishBlock:^(id outputObject, NSError *error) {
+
+    }];
+    [[QCloudCOSTransferMangerService defaultCOSTRANSFERMANGER] UploadObject:put];
+ 
  */
 @interface QCloudCOSXMLUploadObjectRequest<BodyType> : QCloudAbstractRequest
 @property (nonatomic,assign)NSUInteger sliceSize;
@@ -82,24 +102,16 @@ RFC 2616 中定义用于指示资源的MIME类型，将作为 Object 元数据�
 
 /**
  赋予被授权者读的权限。格式：id=" ",id=" "；
- 当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
- 当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
+ 当需要给子账户授权时，id="qcs::cam::uin/\<OwnerUin>:uin/\<SubUin>"，
+ 当需要给根账户授权时，id="qcs::cam::uin/\<OwnerUin>:uin/\<OwnerUin>"
  */
 @property (strong, nonatomic) NSString *grantRead;
 
 
 /**
- 赋予被授权者写的权限。格式：id=" ",id=" "；
- 当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
- 当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
- */
-@property (strong, nonatomic) NSString *grantWrite;
-
-
-/**
  赋予被授权者读写权限。格式: id=" ",id=" " ；
- 当需要给子账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<SubUin>"，
- 当需要给根账户授权时，id="qcs::cam::uin/<OwnerUin>:uin/<OwnerUin>"
+ 当需要给子账户授权时，id="qcs::cam::uin/\<OwnerUin>:uin/\<SubUin>"，
+ 当需要给根账户授权时，id="qcs::cam::uin/\<OwnerUin>:uin/\<OwnerUin>"
  */
 @property (strong, nonatomic) NSString *grantFullControl;
 
@@ -109,13 +121,15 @@ RFC 2616 中定义用于指示资源的MIME类型，将作为 Object 元数据�
 @property (assign, atomic, readonly) BOOL aborted;
 
 /**
- 如果该request产生了分片上传的请求，那么在分片上传初始化完成后，会通过这个block来回调，可以在该回调block中获取分片完成后的bucket, key, uploadID,以及用于后续上传失败后恢复上传的ResumeData。
+ 如果该request产生了分片上传的请求，那么在分片上传初始化完成后，会通过这个block来回调，
+ 可以在该回调block中获取分片完成后的bucket, key, uploadID,以及用于后续上传失败后恢复上传的ResumeData。
  */
 @property (nonatomic, copy) InitMultipleUploadFinishBlock initMultipleUploadFinishBlock;
 @property (nonatomic,copy) RequestsMetricArrayBlock requstsMetricArrayBlock;
 
 /**
- 是否在上传完成以后，将 COS 返回的文件MD5与本地文件算出来的md5进行校验。默认开启，如果校验出错，文件仍然会被上传到 COS, 不过我们会在本地抛出校验失败的error。
+ 是否在上传完成以后，将 COS 返回的文件MD5与本地文件算出来的md5进行校验。默认开启，如果校验出错，
+ 文件仍然会被上传到 COS, 不过我们会在本地抛出校验失败的error。
  */
 @property (nonatomic, assign) BOOL enableMD5Verification;
 

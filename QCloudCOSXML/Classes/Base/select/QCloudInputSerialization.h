@@ -32,6 +32,9 @@
 #import "QCloudSerializationJSON.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 描述待检索对象的格式
+ */
 @interface QCloudInputSerialization : NSObject
 /**
 描述待检索对象的压缩格式：

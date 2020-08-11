@@ -31,32 +31,34 @@ NS_ASSUME_NONNULL_BEGIN
 /**
 COS 对象的跨域访问配置预请求的方法.
 
-跨域访问配置的预请求是指在发送跨域请求之前会发送一个 OPTIONS 请求并带上特定的来源域，HTTP 方法 和 header 信息等给 COS，以决定是否可以发送真正的跨域请求. 当跨域访问配置不存在时，请求返回403 Forbidden. 跨域访问配置可以通过 putBucketCORS(PutBucketCORSRequest) 或者 putBucketCORSAsync(PutBucketCORSRequest, CosXmlResultListener) 方法来开启 Bucket 的跨域访问 支持.
+ ### 功能说明
+ 
+跨域访问配置的预请求是指在发送跨域请求之前会发送一个 OPTIONS 请求并带上特定的来源域，HTTP 方法
+ 和 header 信息等给 COS，以决定是否可以发送真正的跨域请求.
 
 关于COS 对象的跨域访问配置预请求接口的具体描述，请查看https://cloud.tencent.com/document/product/436/8288.
 
-cos iOS SDK 中发起COS 对象的跨域访问配置预请求的方法具体步骤如下：
+### 示例
+   
+  @code
+  
+    QCloudOptionsObjectRequest* request = [[QCloudOptionsObjectRequest alloc] init];
+ 
+    request.bucket =@"存储桶名";
+ 
+    request.origin = @"*";
+ 
+    request.accessControlRequestMethod = @"get";
+ 
+    request.accessControlRequestHeaders = @"host";
+ 
+    request.object = @"对象名";
 
-1. 实例化 QCloudOptionsObjectRequest，填入需要设置的对象名、存储桶名、模拟跨域访问请求的 http 方法和模拟跨域访问允许的访问来源。
-
-2. 调用 QCloudCOSXMLService 对象中的方法发出请求。
-
-3. 从回调的 finishBlock 中的获取具体内容。
-
-示例：
-@code
-QCloudOptionsObjectRequest* request = [[QCloudOptionsObjectRequest alloc] init];
-request.bucket =@"存储桶名";
-request.origin = @"*";
-request.accessControlRequestMethod = @"get";
-request.accessControlRequestHeaders = @"host";
-request.object = @"对象名";
-__block id resultError;
-[request setFinishBlock:^(id outputObject, NSError* error) {
-resultError = error;
-}];
-[[QCloudCOSXMLService defaultCOSXML] OptionsObject:request];
-@endcode
+    [request setFinishBlock:^(id outputObject, NSError* error) {
+   
+    }];
+    [[QCloudCOSXMLService defaultCOSXML] OptionsObject:request];
+  
 */
 @interface QCloudOptionsObjectRequest : QCloudBizHTTPRequest
 /**

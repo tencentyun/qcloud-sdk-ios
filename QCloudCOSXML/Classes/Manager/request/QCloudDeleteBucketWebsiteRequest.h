@@ -29,30 +29,31 @@
 #import <QCloudCore/QCloudCore.h>
 NS_ASSUME_NONNULL_BEGIN
 /**
+
 用于删除存储桶中的静态网站配置
+
+### 功能说明
 
 DELETE Bucket website 请求用于删除存储桶中的静态网站配置
 
-关于为存储桶配置静态网站接口的具体描述，请查看https://cloud.tencent.com/document/product/436/31930.
-
-cos iOS SDK 中为存储桶配置静态网站的方法具体步骤如下：
-
-1. 实例化 QCloudDeleteBucketWebsiteRequest，填入需要的参数。
-
-2. 调用 QCloudCOSXMLService 对象中的 DeleteBucketWebsite 方法发出请求。
-
-3. 从回调的 finishBlock 中的获取具体内容。
-示例：
-@code
-QCloudDeleteBucketWebsiteRequest *delReq = [QCloudDeleteBucketWebsiteRequest new];
-delReq.bucket = "exampleBucket-appid";;
-[delReq setFinishBlock:^(id outputObject, NSError *error) {
-  if(!error){
-		//删除成功
-	}
-}];
-[[QCloudCOSXMLService defaultCOSXML] DeleteBucketWebsite:delReq];
-@endcode
+关于为存储桶配置静态网站接口的具体描述，请查看https://cloud.tencent.com/document/product/436/31928.
+ 
+### 示例
+   
+  @code
+  
+    QCloudDeleteBucketWebsiteRequest *delReq = [QCloudDeleteBucketWebsiteRequest new];
+    
+    // 存储桶名称，格式为 BucketName-APPID
+    delReq.bucket = @"examplebucket-1250000000";
+    
+    [delReq setFinishBlock:^(id outputObject, NSError *error) {
+        
+        // outputObject 包含所有的响应 http 头部
+        NSDictionary* info = (NSDictionary *) outputObject;
+    }];
+    [[QCloudCOSXMLService defaultCOSXML] DeleteBucketWebsite:delReq];
+  
 */
 @interface QCloudDeleteBucketWebsiteRequest : QCloudBizHTTPRequest
 /**

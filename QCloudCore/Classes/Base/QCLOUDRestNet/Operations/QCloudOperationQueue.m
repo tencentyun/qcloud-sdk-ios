@@ -18,9 +18,12 @@ static const NSInteger kWeakNetworkConcurrentCount = 1;
 
 @interface QCloudOperationQueue () <QCloudRequestOperationDelegate>
 {
-    NSMutableArray* _operationArray;
     NSRecursiveLock* _dataLock;
     NSMutableArray* _runningOperationArray;
+    NSMutableArray * _highPerfomanceRequest;
+    NSMutableArray * _lowPerformanceRequest;
+    NSMutableArray * _normalPerformanceRequest;
+    NSMutableArray * _backgroundPerformanceRequest;
 }
 @property (nonatomic, assign) NSInteger uploadSpeedReachThresholdTimes;
 @end
@@ -34,8 +37,11 @@ static const NSInteger kWeakNetworkConcurrentCount = 1;
         return self;
     }
     _dataLock = [NSRecursiveLock new];
-    _operationArray  = [NSMutableArray new];
     _runningOperationArray = [NSMutableArray new];
+    _highPerfomanceRequest = [NSMutableArray array];
+    _normalPerformanceRequest = [NSMutableArray array];
+    _lowPerformanceRequest = [NSMutableArray array];
+    _backgroundPerformanceRequest = [NSMutableArray array];
     _maxConcurrentCount = kWeakNetworkConcurrentCount;
     _uploadSpeedReachThresholdTimes = 0;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onHandleNetworkSituationChange:) name:kNetworkSituationChangeKey object:nil];
@@ -52,63 +58,60 @@ static const NSInteger kWeakNetworkConcurrentCount = 1;
 
 - (void) addOpreation:(QCloudRequestOperation *)operation
 {
+    __block NSUInteger count = 0 ;
     [_dataLock lock];
-    [_operationArray addObject:operation];
-    [_operationArray sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
-        return [obj1 compare:obj2];
-    }];
+    if (operation.request.priority > QCloudAbstractRequestPriorityNormal) {
+        [_highPerfomanceRequest addObject:operation];
+    } else if (operation.request.priority > QCloudAbstractRequestPriorityLow){
+        [_normalPerformanceRequest addObject:operation];
+    } else if (operation.request.priority > QCloudAbstractRequestPriorityBackground){
+        [_lowPerformanceRequest addObject:operation];
+    }else{
+        [_backgroundPerformanceRequest addObject:operation];
+    }
     [_dataLock unlock];
     QCloudLogVerbose(@"[%@][%lld]请求已经缓存到队列中", [operation.request class], [operation.request requestID]);
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         [self tryStartAnyOperation];
-    });
+//    });
 }
 
 - (void) tryStartAnyOperation
 {
     [_dataLock lock];
     int concurrentCount = self.customConcurrentCount?self.customConcurrentCount:self.maxConcurrentCount;
+
     void(^ExeOperation)(QCloudRequestOperation* operation) = ^(QCloudRequestOperation* operation) {
-        [self->_operationArray removeObject:operation];
         operation.delagte = self;
         QCloudLogVerbose(@"[%@][%lld]请求从队列中取出，开始执行", [operation.request class], [operation.request requestID]);
         [self->_runningOperationArray addObject:operation];
         [operation execute];
     };
-    if (_operationArray.count !=0 ) {
-        NSMutableArray* highPerfomanceRequest = [NSMutableArray new];
-        NSMutableArray* lowPerformanceRequest = [NSMutableArray new];
-        NSMutableArray* normalPerformanceRequest = [NSMutableArray new];
-        for (QCloudRequestOperation* operation  in [_operationArray copy]) {
-            if (operation.request.priority > QCloudAbstractRequestPriorityNormal) {
-                [highPerfomanceRequest addObject:operation];
-            } else if (operation.request.priority < QCloudAbstractRequestPriorityNormal){
-                [lowPerformanceRequest addObject:operation];
-            } else {
-                 [normalPerformanceRequest addObject:operation];
-               
-            }
-        }
-        for (QCloudRequestOperation* op  in highPerfomanceRequest) {
+
+    if (_highPerfomanceRequest.count || _normalPerformanceRequest.count || _lowPerformanceRequest.count || _backgroundPerformanceRequest.count) {
+        for (QCloudRequestOperation* op  in [_highPerfomanceRequest copy]) {
             ExeOperation(op);
+            [_highPerfomanceRequest removeObject:op];
         }
         QCloudLogDebug(@"Current max concurrent count is %i",concurrentCount);
         if (_runningOperationArray.count < concurrentCount) {
-            if (normalPerformanceRequest.count) {
-                if (normalPerformanceRequest.count) {
-                    QCloudRequestOperation* operation = normalPerformanceRequest.firstObject;
-                    ExeOperation(operation);
-                }
-            } else {
-                if (lowPerformanceRequest.count) {
-                    QCloudRequestOperation* operation = lowPerformanceRequest.firstObject;
-                    ExeOperation(operation);
-                }
+            if (_normalPerformanceRequest.count) {
+                QCloudRequestOperation* operation = _normalPerformanceRequest.firstObject;
+                ExeOperation(operation);
+                [_normalPerformanceRequest removeObject:operation];
+            }else if (_lowPerformanceRequest.count)  {
+                QCloudRequestOperation* operation = _lowPerformanceRequest.firstObject;
+                ExeOperation(operation);
+                [_lowPerformanceRequest removeObject:operation];
+            }else{
+                QCloudRequestOperation* operation = _backgroundPerformanceRequest.firstObject;
+                ExeOperation(operation);
+                [_backgroundPerformanceRequest removeObject:operation];
             }
         }
     }
     [_dataLock unlock];
-}
+} 
 
 - (void) requestOperationFinish:(QCloudRequestOperation *)operation
 {
@@ -125,7 +128,15 @@ static const NSInteger kWeakNetworkConcurrentCount = 1;
     QCloudLogDebug(@"[%llu] cancelled by operation",operation.request.requestID);
     [_dataLock lock];
     [_runningOperationArray removeObject:operation];
-    [_operationArray removeObject:operation];
+    if (operation.request.priority == QCloudAbstractRequestPriorityHigh) {
+        [_highPerfomanceRequest removeObject:operation];
+    }else if (operation.request.priority == QCloudAbstractRequestPriorityNormal){
+        [_normalPerformanceRequest removeObject:operation];
+    }else if (operation.request.priority == QCloudAbstractRequestPriorityLow){
+        [_lowPerformanceRequest removeObject:operation];
+    }else {
+        [_backgroundPerformanceRequest removeObject:operation];
+    }
     [_dataLock unlock];
     [self tryStartAnyOperation];
 }
@@ -149,8 +160,11 @@ static const NSInteger kWeakNetworkConcurrentCount = 1;
                    }
                }
            };
-           RemoveOperation(_runningOperationArray);
-           RemoveOperation(_operationArray);
+        RemoveOperation(_runningOperationArray);
+        RemoveOperation(_highPerfomanceRequest);
+        RemoveOperation(_lowPerformanceRequest);
+        RemoveOperation(_normalPerformanceRequest);
+        RemoveOperation(_backgroundPerformanceRequest);
     }
    
 }

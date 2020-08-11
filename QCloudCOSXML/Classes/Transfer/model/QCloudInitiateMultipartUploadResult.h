@@ -29,6 +29,9 @@
 #import <QCloudCore/QCloudCore.h>
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 初始化分块上传结果信息
+ */
 @interface QCloudInitiateMultipartUploadResult : NSObject
 /**
 存储桶名

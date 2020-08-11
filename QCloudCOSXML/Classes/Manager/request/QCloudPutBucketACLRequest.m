@@ -54,6 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
 
     NSArray* customRequestSerilizers = @[
                                         QCloudURLFuseURIMethodASURLParamters,
+                                        QCloudURLFuseWithXMLParamters
                                         ];
 
     NSArray* responseSerializers = @[
@@ -62,7 +63,9 @@ NS_ASSUME_NONNULL_BEGIN
                                     ];
     [requestSerializer setSerializerBlocks:customRequestSerilizers];
     [responseSerializer setSerializerBlocks:responseSerializers];
-
+    if (self.accessControlPolicy) {
+        [self.requestData setParameter:[self.accessControlPolicy qcloud_modelToJSONObject] withKey:@"AccessControlPolicy"];
+    }
     requestSerializer.HTTPMethod = @"put";
 }
 
@@ -81,6 +84,12 @@ NS_ASSUME_NONNULL_BEGIN
     }
     if (self.grantWrite) {
         [self.requestData setValue:self.grantWrite forHTTPHeaderField:@"x-cos-grant-write"];
+    }
+    if (self.grantReadACP) {
+        [self.requestData setValue:self.grantReadACP forHTTPHeaderField:@"x-cos-grant-read-acp"];
+    }
+    if (self.grantWriteACP) {
+         [self.requestData setValue:self.grantWriteACP forHTTPHeaderField:@"x-cos-grant-write-acp"];
     }
     if (self.grantFullControl) {
         [self.requestData setValue:self.grantFullControl forHTTPHeaderField:@"x-cos-grant-full-control"];

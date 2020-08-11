@@ -29,6 +29,30 @@
 #import <QCloudCore/QCloudCore.h>
 #import "QCloudBucketLoggingStatus.h"
 NS_ASSUME_NONNULL_BEGIN
+/**
+GET Bucket logging 用于获取源存储桶的日志配置信息
+ 
+### 功能说明
+ 
+只有源存储桶拥有者才可进行该请求操作
+ 
+关于获取源存储桶的日志配置信息接口的具体描述，请查看https://cloud.tencent.com/document/product/436/17053.
+ 
+### 示例
+   
+  @code
+ 
+    QCloudGetBucketLoggingRequest *getReq = [QCloudGetBucketLoggingRequest new];
+    
+    // 存储桶名称，格式为 BucketName-APPID
+    getReq.bucket = @"examplebucket-1250000000";
+    
+    [getReq setFinishBlock:^(QCloudBucketLoggingStatus * _Nonnull result,
+                             NSError * _Nonnull error) {
+        // result 中包含日志状态
+    }];
+    [[QCloudCOSXMLService defaultCOSXML]GetBucketLogging:getReq];
+ */
 @interface QCloudGetBucketLoggingRequest : QCloudBizHTTPRequest
 /**
 存储桶名

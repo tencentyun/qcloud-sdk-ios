@@ -28,6 +28,9 @@
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+满足重定向conditon时重定向的具体替换规则
+*/
 @interface QCloudWebsiteRedirect : NSObject
 /**
 指定重定向时的协议，只能设置为https

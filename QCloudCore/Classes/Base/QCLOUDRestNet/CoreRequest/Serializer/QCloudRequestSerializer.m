@@ -131,6 +131,9 @@ NSDictionary* QCloudURLReadQuery(NSURL* url)
     NSMutableDictionary* queryDic = [NSMutableDictionary new];
     NSArray* keyvalues = [query componentsSeparatedByString:@"&"];
     for (NSString* kv in keyvalues) {
+        if (!kv.length) {
+            continue;
+        }
         NSArray* vs = [kv componentsSeparatedByString:@"="];
         if (vs.count == 2) {
             queryDic[QCloudStringURLDecode(vs[0], NSUTF8StringEncoding)] = QCloudStringURLDecode(vs[1], NSUTF8StringEncoding);

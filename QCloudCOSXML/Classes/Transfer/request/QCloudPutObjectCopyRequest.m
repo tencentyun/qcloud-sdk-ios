@@ -112,7 +112,9 @@ NS_ASSUME_NONNULL_BEGIN
     if (self.objectCopyIfNoneMatch) {
         [self.requestData setValue:self.objectCopyIfNoneMatch forHTTPHeaderField:@"x-cos-copy-source-If-None-Match"];
     }
-    [self.requestData setValue:QCloudCOSStorageClassTransferToString(self.storageClass) forHTTPHeaderField:@"x-cos-storage-class"];
+   if (self.storageClass) {
+        [self.requestData setValue:QCloudCOSStorageClassTransferToString(self.storageClass) forHTTPHeaderField:@"x-cos-storage-class"];
+    }
     if (self.accessControlList) {
         [self.requestData setValue:self.accessControlList forHTTPHeaderField:@"x-cos-acl"];
     }

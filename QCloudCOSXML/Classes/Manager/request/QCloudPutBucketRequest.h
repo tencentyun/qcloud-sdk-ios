@@ -27,35 +27,36 @@
 
 #import <Foundation/Foundation.h>
 #import <QCloudCore/QCloudCore.h>
+@class QCloudCreateBucketConfiguration;
 NS_ASSUME_NONNULL_BEGIN
 /**
 创建存储桶（Bucket）的方法.
 
-在开始使用 COS 时，需要在指定的账号下先创建一个 Bucket 以便于对象的使用和管理. 并指定 Bucket 所属的地域.创建 Bucket 的用户默认成为 Bucket 的持有者.若创建 Bucket 时没有指定访问权限，则默认 为私有读写（private）权限.
+ ### 功能描述
+ 
+ 在开始使用 COS 时，需要在指定的账号下先创建一个 Bucket 以便于对象的使用和管理.
+ 并指定 Bucket 所属的地域.创建 Bucket 的用户默认成为 Bucket 的持有者.
+ 若创建 Bucket 时没有指定访问权限，则默认 为私有读写（private）权限.
 
-可用地域，可以查看https://cloud.tencent.com/document/product/436/6224.
+ 可用地域，可以查看https://cloud.tencent.com/document/product/436/6224.
 
-关于创建 Bucket 描述，请查看 https://cloud.tencent.com/document/product/436/14106.
+ 关于创建 Bucket 描述，请查看 https://cloud.tencent.com/document/product/436/14106.
 
-关于创建存储桶（Bucket）接口的具体 描述，请查看 https://cloud.tencent.com/document/product/436/7738.
-
-cos iOS SDK 中创建 Bucket的方法具体步骤如下：
-
-1. 实例化 QCloudPutBucketRequest，填入需要的参数。
-
-2. 调用 QCloudCOSXMLService 对象中的 PutBucket 方法发出请求。
-
-3. 从回调的 finishBlock 中的 outputObject 获取具体内容。
-
-示例：
-@code
-QCloudPutBucketRequest* request = [QCloudPutBucketRequest new];
-request.bucket = bucketName; //additional actions after finishing
-[request setFinishBlock:^(id outputObject, NSError* error) {
-
-}];
-[[QCloudCOSXMLService defaultCOSXML] PutBucket:request];
-@endcode
+### 示例
+   
+  @code
+  
+    QCloudPutBucketRequest* request = [QCloudPutBucketRequest new];
+    
+    // 存储桶名称，格式为 BucketName-APPID
+    request.bucket = @"examplebucket-1250000000";
+    
+    [request setFinishBlock:^(id outputObject, NSError* error) {
+        // 可以从 outputObject 中获取服务器返回的 header 信息
+        NSDictionary* info = (NSDictionary *) outputObject;
+    }];
+    [[QCloudCOSXMLService defaultCOSXML] PutBucket:request];;
+  
 */
 @interface QCloudPutBucketRequest : QCloudBizHTTPRequest
 /**
@@ -75,10 +76,13 @@ request.bucket = bucketName; //additional actions after finishing
 */
 @property (strong, nonatomic) NSString *grantFullControl;
 /**
-要创建的存储桶名称，命名规范请参阅 [存储桶命名规范](https://cloud.tencent.com/document/product/436/13312#.E5.91.BD.E5.90.8D.E8.A7.84.E8.8C.83)
+要创建的存储桶名称，命名规范请参阅 [存储桶命名规范]
+ (https://cloud.tencent.com/document/product/436/13312#.E5.91.BD.E5.90.8D.E8.A7.84.E8.8C.83)
 注意存储桶名只能由数字和小写字母组成，并且长度不能超过40个字符，否则会创建失败
 */
 @property (strong, nonatomic) NSString *bucket;
+
+@property (strong, nonatomic) QCloudCreateBucketConfiguration *createBucketConfiguration;
 
 
 @end

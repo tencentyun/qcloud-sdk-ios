@@ -31,36 +31,64 @@
 @class QCloudCompleteMultipartUploadInfo;
 NS_ASSUME_NONNULL_BEGIN
 /**
-完成整个分块上传的方法.
+ 
+ 完成整个分块上传的方法.
 
-当使用分块上传（uploadPart(UploadPartRequest)）完对象的所有块以后，必须调用该 completeMultiUpload(CompleteMultiUploadRequest) 或者 completeMultiUploadAsync(CompleteMultiUploadRequest, CosXmlResultListener) 来完成整个文件的分块上传.且在该请求的 Body 中需要给出每一个块的 PartNumber 和 ETag，用来校验块的准 确性.
+ ### 功能描述
+ 
+ 当使用分块上传（uploadPart(UploadPartRequest)）完对象的所有块以后，
+ 必须调用该 completeMultiUpload(CompleteMultiUploadRequest)
+ 或者 completeMultiUploadAsync(CompleteMultiUploadRequest, CosXmlResultListener)
+ 来完成整个文件的分块上传.且在该请求的 Body 中需要给出每一个块的 PartNumber 和 ETag，
+ 用来校验块的准确性.
 
-分块上传适合于在弱网络或高带宽环境下上传较大的对象.SDK 支持自行切分对象并分别调用uploadPart(UploadPartRequest)上传各 个分块.
+ 分块上传适合于在弱网络或高带宽环境下上传较大的对象.SDK 支持自行切分对象并分别调用
+ uploadPart(UploadPartRequest)上传各 个分块.
 
-关于分块上传的描述，请查看 https://cloud.tencent.com/document/product/436/14112.
+ 关于完成整个分片上传接口的描述，请查看 https://cloud.tencent.com/document/product/436/7742.
 
-关于完成整个分片上传接口的描述，请查看 https://cloud.tencent.com/document/product/436/7742.
 
-cos iOS SDK 中完成整个分块上传请求的方法具体步骤如下：
-
-1. 实例化 QCloudCompleteMultipartUploadRequest，填入需要的参数。
-
-2. 调用 QCloudCOSXMLService 对象中的 CompleteMultipartUpload 方法发出请求。
-
-3. 从回调的 finishBlock 中的 QCloudUploadObjectResult 获取具体内容。
-
-示例：
-示例：
-@code
-QCloudCompleteMultipartUploadRequest *completeRequst = [QCloudCompleteMultipartUploadRequest new];
-completeRequst.bucket = @"bucketName";
-completeRequst.object = @"objectName";
-completeRequst.uploadId = @"uploadId"; //本次分片上传的UploadID
-[completeRequst setFinishBlock:^(QCloudUploadObjectResult * _Nonnull result, NSError * _Nonnull error) {
-
-}];
-[[QCloudCOSXMLService defaultCOSXML] CompleteMultipartUpload:completeRequst];
-@endcode
+### 示例
+   
+  @code
+  
+    QCloudCompleteMultipartUploadRequest *completeRequst = [QCloudCompleteMultipartUploadRequest new];
+    
+    // 对象键，是对象在 COS 上的完整路径，如果带目录的话，格式为 "dir1/object1"
+    completeRequst.object = @"exampleobject";
+    
+    // 存储桶名称，格式为 BucketName-APPID
+    completeRequst.bucket = @"examplebucket-1250000000";
+    
+    // 本次要查询的分块上传的 uploadId，可从初始化分块上传的请求结果 QCloudInitiateMultipartUploadResult 中得到
+    completeRequst.uploadId = uploadId;
+    
+    // 已上传分块的信息
+    QCloudCompleteMultipartUploadInfo *partInfo = [QCloudCompleteMultipartUploadInfo new];
+    NSMutableArray * parts = [self.parts mutableCopy];
+    
+    // 对已上传的块进行排序
+    [parts sortUsingComparator:^NSComparisonResult(QCloudMultipartInfo*  _Nonnull obj1,
+                                                   QCloudMultipartInfo*  _Nonnull obj2) {
+        int a = obj1.partNumber.intValue;
+        int b = obj2.partNumber.intValue;
+        
+        if (a < b) {
+            return NSOrderedAscending;
+        } else {
+            return NSOrderedDescending;
+        }
+    }];
+    partInfo.parts = [parts copy];
+    completeRequst.parts = partInfo;
+    
+    [completeRequst setFinishBlock:^(QCloudUploadObjectResult * _Nonnull result,
+                                     NSError * _Nonnull error) {
+        // 从 result 中获取上传结果
+    }];
+    
+    [[QCloudCOSXMLService defaultCOSXML] CompleteMultipartUpload:completeRequst];
+  
 */
 @interface QCloudCompleteMultipartUploadRequest : QCloudBizHTTPRequest
 /**

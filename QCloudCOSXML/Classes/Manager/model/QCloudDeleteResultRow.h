@@ -29,13 +29,18 @@
 #import <QCloudCore/QCloudCore.h>
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 要删除的文件
+ */
 @interface QCloudDeleteResultRow : NSObject
 /**
 删除的对象的key
 */
 @property (strong, nonatomic) NSString *key;
 @end
-
+/**
+ 删除文件的结果
+ */
 @interface QCloudDeleteFailedResultRow : NSObject
 /**
 删除的对象的key

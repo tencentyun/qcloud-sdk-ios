@@ -14,13 +14,24 @@
 
 /**
  签名创建器。通过一个密钥将创建一个网络请求的签名。
+ 
+ ### 示例
+   
+  @code
+ 
+     QCloudCredential* credential = [QCloudCredential new];
+     credential.secretID  = @"secretID";
+     credential.secretKey = @"secretKey";
+     QCloudAuthentationV5Creator* creator = [[QCloudAuthentationV5Creator alloc] initWithCredential:credential];
+     QCloudSignature* signature =  [creator signatureForData:urlRequst];
+ 
  */
 @interface QCloudAuthentationCreator : NSObject
 
 /**
  密钥
  */
-@property (nonatomic ,strong, readonly) QCloudCredential* credential;
+@property (nonatomic ,strong, readonly,nonnull) QCloudCredential* credential;
 
 /**
  初始化签名创建器。

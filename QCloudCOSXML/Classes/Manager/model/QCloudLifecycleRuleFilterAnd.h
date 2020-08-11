@@ -30,6 +30,9 @@
 #import "QCloudLifecycleTag.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+组合 Prefix 与 Tag
+*/
 @interface QCloudLifecycleRuleFilterAnd : NSObject
 /**
 指定规则所适用的前缀。匹配前缀的对象受该规则影响。

@@ -29,10 +29,17 @@
 #import <QCloudCore/QCloudCore.h>
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 多版本中被删除的对象信息
+ */
 @interface QCloudDeleteObjectInfo : NSObject
 /**
 需要删除对象的key
 */
 @property (strong, nonatomic) NSString *key;
+/**
+如果需要删除指定版本的Object,请在该参数中指定versionID（在开启了多版本的情况才有）
+*/
+@property (strong, nonatomic) NSString *versionID;
 @end
 NS_ASSUME_NONNULL_END

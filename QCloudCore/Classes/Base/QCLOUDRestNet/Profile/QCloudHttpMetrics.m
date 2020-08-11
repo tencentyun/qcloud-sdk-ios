@@ -20,6 +20,10 @@ NSString* const kReadResponseHeaderTookTime    = @"kReadResponseHeaderTookTime";
 NSString* const kReadResponseBodyTookTime    = @"kReadResponseBodyTookTime";
 
 
+NSString* const kLocalAddress    = @"kLocalAddress";
+NSString* const kLocalPort    = @"kLocalPort";
+NSString* const kRemoteAddress    = @"kRemoteAddress";
+NSString* const kRemotePort    = @"kRemotePort";
 
 
 
@@ -76,6 +80,14 @@ NSString* const kReadResponseBodyTookTime    = @"kReadResponseBodyTookTime";
         _benchMarkCache[key] = @(cost);
     }
 
+}
+- (void)directSetValue:(NSString *)value forKey:(NSString *)key {
+    if (!key) {
+        return;
+    }
+    @synchronized (self) {
+        _benchMarkCache[key] = value;
+    }
 }
 -(NSDictionary *)tastMetrics{
     return _benchMarkCache;

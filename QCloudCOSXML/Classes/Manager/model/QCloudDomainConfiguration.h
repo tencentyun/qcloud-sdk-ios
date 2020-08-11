@@ -30,6 +30,9 @@
 #import "QCloudDomainRule.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+域名配置的规则
+*/
 @interface QCloudDomainConfiguration : NSObject
 /**
 规则描述集合的数组

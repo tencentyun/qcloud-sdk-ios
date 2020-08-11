@@ -29,6 +29,9 @@
 #import <QCloudCore/QCloudCore.h>
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 分块上传中每一个数据块信息
+ */
 @interface QCloudMultipartInfo : NSObject
 /**
 块编号

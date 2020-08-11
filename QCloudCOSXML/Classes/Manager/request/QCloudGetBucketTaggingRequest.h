@@ -29,6 +29,34 @@
 #import <QCloudCore/QCloudCore.h>
 #import "QCloudBucketTagging.h"
 NS_ASSUME_NONNULL_BEGIN
+
+/**
+查询指定存储桶下已有的存储桶标签.
+
+### 功能说明
+
+COS 支持为已存在的存储桶查询标签（Tag）。GET Bucket tagging 接口用于查询指定存储桶下已有的存储桶标签.
+
+关于查询指定存储桶下已有的存储桶标签接口的具体描述，请查看https://cloud.tencent.com/document/product/436/34837.
+
+### 示例
+   
+  @code
+  
+    QCloudGetBucketTaggingRequest *getReq = [QCloudGetBucketTaggingRequest new];
+    
+    // 存储桶名称，格式为 BucketName-APPID
+    getReq.bucket = @"examplebucket-1250000000";
+    
+    [getReq setFinishBlock:^(QCloudBucketTagging * result, NSError * error) {
+        
+        // tag的集合
+        QCloudBucketTagSet * tagSet = result.tagSet;
+    }];
+    [[QCloudCOSXMLService defaultCOSXML] GetBucketTagging:getReq];
+  
+*/
+
 @interface QCloudGetBucketTaggingRequest : QCloudBizHTTPRequest
 /**
 存储桶名

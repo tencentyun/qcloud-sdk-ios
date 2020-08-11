@@ -10,8 +10,43 @@
 #import "QCloudGetPresignedURLResult.h"
 
 NS_ASSUME_NONNULL_BEGIN
-@interface QCloudGetPresignedURLRequest :QCloudBizHTTPRequest
 
+/**
+
+生成对象预签名链接
+
+### 功能说明
+ 
+关于生成对象预签名链接接口的更多示例，请参见：https://cloud.tencent.com/document/product/436/34109
+
+### 示例
+   
+  @code
+ 
+    QCloudGetPresignedURLRequest* getPresignedURLRequest = [[QCloudGetPresignedURLRequest alloc] init];
+    
+    // 存储桶名称，格式为 BucketName-APPID
+    getPresignedURLRequest.bucket = @"examplebucket-1250000000";
+    
+    // 使用预签名 URL 的请求的 HTTP 方法。有效值（大小写敏感）为：@"GET"、@"PUT"、@"POST"、@"DELETE"
+    getPresignedURLRequest.HTTPMethod = @"GET";
+    
+    // 对象键，是对象在 COS 上的完整路径，如果带目录的话，格式为 "dir1/object1"
+    getPresignedURLRequest.object = @"exampleobject";
+    
+    [getPresignedURLRequest setFinishBlock:^(QCloudGetPresignedURLResult * _Nonnull result,
+                                             NSError * _Nonnull error) {
+        // 预签名 URL
+        NSString* presignedURL = result.presienedURL;
+       
+    }];
+    
+    [[QCloudCOSXMLService defaultCOSXML] getPresignedURL:getPresignedURLRequest];
+ 
+*/
+
+@interface QCloudGetPresignedURLRequest :QCloudBizHTTPRequest
+@property (nonatomic,copy)NSDate *expires;
 /**
  填入使用预签名请求的Bucket
  */

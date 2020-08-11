@@ -36,6 +36,9 @@
 #import "QCloudNoncurrentVersionExpiration.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 规则描述
+*/
 @interface QCloudLifecycleRule : NSObject
 /**
 用于唯一地标识规则，长度不能超过 255 个字符

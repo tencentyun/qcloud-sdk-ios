@@ -30,6 +30,9 @@
 #import "QCloudCOSStorageClassEnum.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+目标存储桶信息
+*/
 @interface QCloudBucketReplicationDestination : NSObject
 /**
     资源标识符,注意与存储桶不同，格式为：qcs:id/0:cos:[region]:appid/[AppId]:[bucketname]

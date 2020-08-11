@@ -25,7 +25,9 @@
 
 #import <Foundation/Foundation.h>
 NS_ASSUME_NONNULL_BEGIN
-
+/**
+标志Rule是否生效
+*/
 typedef NS_ENUM(NSInteger, QCloudCOSXMLStatus) {
 
   QCloudCOSXMLStatusEnabled = 1,

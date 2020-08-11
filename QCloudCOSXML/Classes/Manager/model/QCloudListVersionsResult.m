@@ -38,6 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
    return @ {
       @"deleteMarker":[QCloudDeleteMarker class],
       @"versionContent":[QCloudVersionContent class],
+       @"commonPrefixes":[QCloudCommonPrefixes class]
   };
 }
 
@@ -47,11 +48,16 @@ NS_ASSUME_NONNULL_BEGIN
   return @{
       @"name" :@"Name",
       @"prefix" :@"Prefix",
+      @"keyMarker" :@"KeyMarker",
       @"versionIDMarkder" :@"VersionIdMarker",
-      @"maxKeys" :@"MaxKeys",
+      @"nextKeyMarker" :@"NextKeyMarker",
+      @"nextVersionIDMarkder" :@"NextVersionIdMarker",
+      @"commonPrefixes" :@"CommonPrefixes",
       @"isTruncated" :@"IsTruncated",
       @"deleteMarker" :@"DeleteMarker",
       @"versionContent" :@"Version",
+      @"commonPrefixes" :@"CommonPrefixes"
+      
   };
 }
 
@@ -59,6 +65,19 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic
 {
 
+    void (^TransformBoolean)(NSString* originKey, NSString* trueStr , NSString* falseStr) = ^(NSString* originKey,NSString* trueStr , NSString* falseStr) {
+        id value = [dic objectForKey:originKey];
+        if (!value) {
+            return ;
+        }
+        if ([value boolValue]) {
+            [dic setObject:trueStr forKey:originKey];
+        } else {
+          [dic setObject:falseStr forKey:originKey];
+        }
+    };
+
+     TransformBoolean(@"IsTruncated", @"True", @"False");
 
     return YES;
 }
@@ -72,6 +91,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSArray* transformArrayKeypaths = @[
     @"DeleteMarker",
     @"Version",
+    @"CommonPrefixes"
     ];
 
     for (NSString* keyPath in transformArrayKeypaths) {
@@ -87,6 +107,21 @@ NS_ASSUME_NONNULL_BEGIN
         }
     }
 
+    void(^TransformBoolean)(NSString* originKey, NSString* trueStr , NSString* falseStr) = ^(NSString* originKey, NSString* trueStr , NSString* falseStr) {
+        id value = [dic objectForKey:originKey];
+        if (!value) {
+            return ;
+        }
+        if ([value isKindOfClass:[NSString class]]) {
+            NSString* boolean = (NSString*)value;
+            if ([value isEqualToString:trueStr]) {
+                [transfromDic setValue:@(YES) forKey:originKey];
+            } else if ([boolean isEqualToString:falseStr]) {
+                [transfromDic setValue:@(NO) forKey:originKey];
+            }
+        }
+    };
+    TransformBoolean(@"IsTruncated", @"True", @"False");
     return transfromDic;
 }
 

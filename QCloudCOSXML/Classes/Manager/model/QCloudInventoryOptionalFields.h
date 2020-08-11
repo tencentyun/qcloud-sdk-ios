@@ -29,7 +29,14 @@
 #import <QCloudCore/QCloudCore.h>
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 设置清单结果中应包含的分析项目
+ */
 @interface QCloudInventoryOptionalFields : NSObject
+/**
+清单结果中可选包含的分析项目名称，可选字段包括：Size，LastModifiedDate，StorageClass，
+ ETag，IsMultipartUploaded，ReplicationStatus
+*/
 @property (strong, nonatomic) NSArray<NSString*> *field;
 @end
 NS_ASSUME_NONNULL_END

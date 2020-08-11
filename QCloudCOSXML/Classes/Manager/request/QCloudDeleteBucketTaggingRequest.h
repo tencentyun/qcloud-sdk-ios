@@ -31,32 +31,32 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
-删除存储桶 (Bucket)的方法.
+删除存储桶 标签的方法.
+ 
+### 功能说明
 
 COS 支持为已存在的 Bucket 设置标签（Tag）。DELETE Bucket tagging 接口用于删除指定存储桶下已有的存储桶标签。
 
 如您使用子账号调用此项接口，请确保您已经在主账号处获取了DELETE Bucket tagging这个接口的权限
 
-关于删除 Bucket 的描述,请查看 https://cloud.tencent.com/document/product/436/34836.
+关于删除 Bucket  Tagging 接口的具体描述，请查看https://cloud.tencent.com/document/product/436/34836.
 
-关于删除 Bucket  Tagging 接口的具体描述，请查看https://cloud.tencent.com/document/product/436/7732.
-
-cos iOS SDK 中删除 Bucket Tagging 的方法具体步骤如下：
-
-1. 实例化 QCloudDeleteBucketTaggingRequest，填入需要的参数。
-
-2. 调用 QCloudCOSXMLService 对象中的 DeleteBucketTagging 方法发出请求。
-
-3. 从回调的 finishBlock 中的 outputObject 获取具体内容。
-
-示例：
-@code
-[QCloudDeleteBucketTaggingRequest new];
-delReq.bucket =  @"1504078136-1253653367";
-[delReq setFinishBlock:^(id outputObject, NSError *error) {
-}];
-[[QCloudCOSXMLService defaultCOSXML] DeleteBucketTagging:delReq];
-@endcode
+### 示例
+   
+  @code
+  
+    QCloudDeleteBucketTaggingRequest *delReq = [QCloudDeleteBucketTaggingRequest new];
+    
+    // 存储桶名称，格式为 BucketName-APPID
+    delReq.bucket =  @"examplebucket-1250000000";
+    
+    [delReq setFinishBlock:^(id outputObject, NSError *error) {
+        
+        // outputObject 包含所有的响应 http 头部
+        NSDictionary* info = (NSDictionary *) outputObject;
+    }];
+    [[QCloudCOSXMLService defaultCOSXML] DeleteBucketTagging:delReq];
+  
 */
 
 @interface QCloudDeleteBucketTaggingRequest : QCloudBizHTTPRequest

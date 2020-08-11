@@ -32,37 +32,43 @@ NS_ASSUME_NONNULL_BEGIN
 /**
 查询存储桶（Bucket）中正在进行中的分块上传对象的方法.
 
+### 功能描述
+ 
 COS 支持查询 Bucket 中有哪些正在进行中的分块上传对象，单次请求操作最多列出 1000 个正在进行中的 分块上传对象.
 
 关于查询 Bucket 中正在进行中的分块上传对象接口的具体描述，请查看 https://cloud.tencent.com/document/product/436/7736.
+ 
+### 示例
+   
+  @code
 
-cos iOS SDK 中查询 Bucket 中正在进行中的分块上传对象的方法具体步骤如下：
-
-1. 实例化 QCloudListBucketMultipartUploadsRequest，填入需要的参数，如返回结果的前缀、编码方式等。
-
-2. 调用 QCloudCOSXMLService 对象中的 ListBucketMultipartUploads 方法发出请求。
-
-3. 从回调的 finishBlock 中的获取具体内容。
-示例：
-
-QCloudListBucketMultipartUploadsRequest* uploads = [QCloudListBucketMultipartUploadsRequest new];
-uploads.bucket = @"testBucket-123456789";
-uploads.maxUploads = 100;
-__block NSError* resulError;
-__block QCloudListMultipartUploadsResult* multiPartUploadsResult;
-[uploads setFinishBlock:^(QCloudListMultipartUploadsResult* result, NSError *error) {
-multiPartUploadsResult = result;
-localError = error;
-}];
-[[QCloudCOSXMLService defaultCOSXML] ListBucketMultipartUploads:uploads];
+    QCloudListBucketMultipartUploadsRequest* uploads = [QCloudListBucketMultipartUploadsRequest new];
+    
+    // 存储桶名称，格式为 BucketName-APPID
+    uploads.bucket = @"examplebucket-1250000000";
+    
+    // 设置最大返回的 multipart 数量，合法取值从 1 到 1000
+    uploads.maxUploads = 100;
+    
+    [uploads setFinishBlock:^(QCloudListMultipartUploadsResult* result,
+                              NSError *error) {
+        // 可以从 result 中返回分块信息
+        // 进行中的分块上传对象
+        NSArray<QCloudListMultipartUploadContent*> *uploads = result.uploads;
+    }];
+    
+    [[QCloudCOSXMLService defaultCOSXML] ListBucketMultipartUploads:uploads];
+ 
 */
+
 @interface QCloudListBucketMultipartUploadsRequest : QCloudBizHTTPRequest
 /**
 存储桶名
 */
 @property (strong, nonatomic) NSString *bucket;
 /**
-定界符为一个符号，对 Object 名字包含指定前缀且第一次出现 delimiter 字符之间的 Object 作为一组元素：common prefix。如果没有 prefix，则从路径起点开始
+定界符为一个符号，对 Object 名字包含指定前缀且第一次出现 delimiter 字符之间的 Object
+ 作为一组元素：common prefix。如果没有 prefix，则从路径起点开始
 */
 @property (strong, nonatomic) NSString *delimiter;
 /**

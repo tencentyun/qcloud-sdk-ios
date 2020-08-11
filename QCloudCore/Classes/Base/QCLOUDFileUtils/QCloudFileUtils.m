@@ -66,6 +66,11 @@ NSString * QCloudApplicationTempPath()
 {
     return NSTemporaryDirectory();
 }
+NSString* QCloudCacheDir(){
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    NSString *cachePath = [paths objectAtIndex:0];
+    return cachePath;
+}
 
 NSString* QCloudDocumentsPath()
 {
@@ -178,7 +183,7 @@ BOOL QCloudMoveFile(NSString* originPath, NSString* aimPath, NSError* __autorele
    return  [[NSFileManager defaultManager] moveItemAtPath:originPath toPath:aimPath error:error];
 }
 
-int64_t QCloudDirectorySize(NSString * path, NSFileManager * fileManager) {
+uint64_t QCloudDirectorySize(NSString * path, NSFileManager * fileManager) {
 
     BOOL  isDirectory = NO;
     BOOL  exist =[fileManager fileExistsAtPath:path isDirectory:&isDirectory];
@@ -190,7 +195,7 @@ int64_t QCloudDirectorySize(NSString * path, NSFileManager * fileManager) {
         return 0;
     }
 
-    int64_t  totalSize = 0;
+    uint64_t  totalSize = 0;
 
     NSDirectoryEnumerator * itor = [fileManager enumeratorAtPath:path];
     NSString * file ;
@@ -1039,3 +1044,6 @@ NSString * detemineFileMemeType(NSURL *filePathURL,NSString *fileName){
     NSString *mineType = mimeMap[pathExtension.lowercaseString];
     return mineType?mineType:@"application/octet-stream";
 }
+
+
+

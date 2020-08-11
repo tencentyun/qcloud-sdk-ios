@@ -25,7 +25,9 @@
 
 #import <Foundation/Foundation.h>
 NS_ASSUME_NONNULL_BEGIN
-
+/**
+域名上线/下线状态，有效值 ENABLED/DISABLED
+*/
 typedef NS_ENUM(NSInteger, QCloudDomainStatue) {
 
   QCloudDomainStatueEnabled = 0,

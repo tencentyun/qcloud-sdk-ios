@@ -30,6 +30,9 @@
 #import "QCloudDeleteObjectInfo.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+删除对象的信息
+*/
 @interface QCloudDeleteInfo : NSObject
 /**
  布尔值，这个值决定了是否启动 Quiet 模式。

@@ -107,7 +107,10 @@ NS_ASSUME_NONNULL_BEGIN
     if (self.contentSHA1) {
         [self.requestData setValue:self.contentSHA1 forHTTPHeaderField:@"x-cos-content-sha1"];
     }
-    [self.requestData setValue:QCloudCOSStorageClassTransferToString(self.storageClass) forHTTPHeaderField:@"x-cos-storage-class"];
+    if (self.storageClass) {
+        [self.requestData setValue:QCloudCOSStorageClassTransferToString(self.storageClass) forHTTPHeaderField:@"x-cos-storage-class"];
+    }
+    
     if (self.accessControlList) {
         [self.requestData setValue:self.accessControlList forHTTPHeaderField:@"x-cos-acl"];
     }

@@ -7,7 +7,6 @@
 
 #import <QCloudCOSXML/QCloudCOSXML.h>
 #import "QCloudCOSStorageClassEnum.h"
-@class QCloudAppendObjectRequest;
 @class QCloudGetObjectACLRequest;
 @class QCloudPutObjectACLRequest;
 @class QCloudDeleteObjectRequest;
@@ -66,10 +65,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface QCloudCOSXMLService (Manager)
 
 /**
- Android没有
- */
-- (void) AppendObject:(QCloudAppendObjectRequest*)request;
-/**
  获取 COS 对象的访问权限信息（Access Control List, ACL）的方法.
  
  Bucket 的持有者可获取该 Bucket 下的某个对象的 ACL 信息，如被授权者以及被授权的信息. ACL 权限包括读、写、读写权限.
@@ -84,16 +79,18 @@ NS_ASSUME_NONNULL_BEGIN
  
  3. 从回调的 finishBlock 中的获取的 QCloudACLPolicy 对象中获取封装好的 ACL 的具体信息。
  
- 示例：
- @code
- QCloudGetObjectACLRequest* request = [QCloudGetObjectACLRequest new];
- request.bucket = @“bucketName"; //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
- request.object = @"objectName";
- [request setFinishBlock:^(QCloudACLPolicy * _Nonnull policy, NSError * _Nonnull error) {
- //从 QCloudACLPolicy 对象中获取封装好的 ACL 的具体信息
- }];
- [[QCloudCOSXMLService defaultCOSXML] GetObjectACL:request];
- @endcode
+ ### 示例
+   
+  @code
+   
+     QCloudGetObjectACLRequest* request = [QCloudGetObjectACLRequest new];
+     request.bucket = @“bucketName"; //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
+     request.object = @"objectName";
+     [request setFinishBlock:^(QCloudACLPolicy * _Nonnull policy, NSError * _Nonnull error) {
+     //从 QCloudACLPolicy 对象中获取封装好的 ACL 的具体信息
+     }];
+     [[QCloudCOSXMLService defaultCOSXML] GetObjectACL:request];
+   
  */
 - (void) GetObjectACL:(QCloudGetObjectACLRequest*)request;
 /**
@@ -111,20 +108,22 @@ NS_ASSUME_NONNULL_BEGIN
  
  3. 从回调的 finishBlock 中获取设置的完成情况，若 error 为空，则设置成功。
  
- 示例：
- @code
- QCloudPutObjectACLRequest* request = [QCloudPutObjectACLRequest new];
- request.object = @"需要设置 ACL 的对象名";
- request.bucket = @"testBucket-123456789";
- NSString *ownerIdentifier = [NSString stringWithFormat:@"qcs::cam::uin/%@:uin/%@",self.appID, self.appID];
- NSString *grantString = [NSString stringWithFormat:@"id=\"%@\"",ownerIdentifier];
- request.grantFullControl = grantString;
- __block NSError* localError;
- [request setFinishBlock:^(id outputObject, NSError *error) {
- localError = error;
- }];
- [[QCloudCOSXMLService defaultCOSXML] PutObjectACL:request];
- @endcode
+ ### 示例
+   
+  @code
+   
+     QCloudPutObjectACLRequest* request = [QCloudPutObjectACLRequest new];
+     request.object = @"需要设置 ACL 的对象名";
+     request.bucket = @"testBucket-123456789";
+     NSString *ownerIdentifier = [NSString stringWithFormat:@"qcs::cam::uin/%@:uin/%@",self.appID, self.appID];
+     NSString *grantString = [NSString stringWithFormat:@"id=\"%@\"",ownerIdentifier];
+     request.grantFullControl = grantString;
+     __block NSError* localError;
+     [request setFinishBlock:^(id outputObject, NSError *error) {
+     localError = error;
+     }];
+     [[QCloudCOSXMLService defaultCOSXML] PutObjectACL:request];
+   
  */
 - (void) PutObjectACL:(QCloudPutObjectACLRequest*)request;
 /**
@@ -143,16 +142,19 @@ NS_ASSUME_NONNULL_BEGIN
  2. 调用 QCloudCOSXMLService 对象中的 DeleteObject 方法发出请求。
  
  3. 从回调的 finishBlock 中的 outputObject 获取具体内容。
- 示例：
- @code
- QCloudDeleteObjectRequest* deleteObjectRequest = [QCloudDeleteObjectRequest new];
- deleteObjectRequest.bucket = self.bucket;
- deleteObjectRequest.object = @"objectName";
- [deleteObjectRequest setFinishBlock:^(id outputObject, NSError *error) {
- //additional actions after finishing
- }];
- [[QCloudCOSXMLService defaultCOSXML] DeleteObject:deleteObjectRequest];
- @endcode
+ 
+ ### 示例
+   
+  @code
+   
+     QCloudDeleteObjectRequest* deleteObjectRequest = [QCloudDeleteObjectRequest new];
+     deleteObjectRequest.bucket = self.bucket;
+     deleteObjectRequest.object = @"objectName";
+     [deleteObjectRequest setFinishBlock:^(id outputObject, NSError *error) {
+     //additional actions after finishing
+     }];
+     [[QCloudCOSXMLService defaultCOSXML] DeleteObject:deleteObjectRequest];
+   
  */
 - (void) DeleteObject:(QCloudDeleteObjectRequest*)request;
 /**
@@ -170,26 +172,28 @@ NS_ASSUME_NONNULL_BEGIN
  
  3. 从回调的 finishBlock 中的获取具体内容。
  
- 示例：
- @code
- QCloudDeleteMultipleObjectRequest* delteRequest = [QCloudDeleteMultipleObjectRequest new];
- delteRequest.bucket = @"testBucket-123456789";
- QCloudDeleteObjectInfo* deletedObject0 = [QCloudDeleteObjectInfo new];
- deletedObject0.key = @"第一个对象名";
- QCloudDeleteObjectInfo* deleteObject1 = [QCloudDeleteObjectInfo new];
- deleteObject1.key = @"第二个对象名";
- QCloudDeleteInfo* deleteInfo = [QCloudDeleteInfo new];
- deleteInfo.quiet = NO;
- deleteInfo.objects = @[ deletedObject0,deleteObject2];
- delteRequest.deleteObjects = deleteInfo;
- __block NSError* resultError;
- [delteRequest setFinishBlock:^(QCloudDeleteResult* outputObject, NSError *error) {
- localError = error;
- deleteResult = outputObject;
- }];
- 
- [[QCloudCOSXMLService defaultCOSXML] DeleteMultipleObject:delteRequest];
- @endcode
+ ### 示例
+   
+  @code
+   
+     QCloudDeleteMultipleObjectRequest* delteRequest = [QCloudDeleteMultipleObjectRequest new];
+     delteRequest.bucket = @"testBucket-123456789";
+     QCloudDeleteObjectInfo* deletedObject0 = [QCloudDeleteObjectInfo new];
+     deletedObject0.key = @"第一个对象名";
+     QCloudDeleteObjectInfo* deleteObject1 = [QCloudDeleteObjectInfo new];
+     deleteObject1.key = @"第二个对象名";
+     QCloudDeleteInfo* deleteInfo = [QCloudDeleteInfo new];
+     deleteInfo.quiet = NO;
+     deleteInfo.objects = @[ deletedObject0,deleteObject2];
+     delteRequest.deleteObjects = deleteInfo;
+     __block NSError* resultError;
+     [delteRequest setFinishBlock:^(QCloudDeleteResult* outputObject, NSError *error) {
+     localError = error;
+     deleteResult = outputObject;
+     }];
+     
+     [[QCloudCOSXMLService defaultCOSXML] DeleteMultipleObject:delteRequest];
+   
  */
 - (void) DeleteMultipleObject:(QCloudDeleteMultipleObjectRequest*)request;
 /**
@@ -207,20 +211,22 @@ NS_ASSUME_NONNULL_BEGIN
  
  3. 从回调的 finishBlock 中的获取具体内容。
  
- 示例：
- @code
- QCloudOptionsObjectRequest* request = [[QCloudOptionsObjectRequest alloc] init];
- request.bucket =@"存储桶名";
- request.origin = @"*";
- request.accessControlRequestMethod = @"get";
- request.accessControlRequestHeaders = @"host";
- request.object = @"对象名";
- __block id resultError;
- [request setFinishBlock:^(id outputObject, NSError* error) {
- resultError = error;
- }];
- [[QCloudCOSXMLService defaultCOSXML] OptionsObject:request];
- @endcode
+ ### 示例
+   
+  @code
+   
+     QCloudOptionsObjectRequest* request = [[QCloudOptionsObjectRequest alloc] init];
+     request.bucket =@"存储桶名";
+     request.origin = @"*";
+     request.accessControlRequestMethod = @"get";
+     request.accessControlRequestHeaders = @"host";
+     request.object = @"对象名";
+     __block id resultError;
+     [request setFinishBlock:^(id outputObject, NSError* error) {
+     resultError = error;
+     }];
+     [[QCloudCOSXMLService defaultCOSXML] OptionsObject:request];
+   
  */
 - (void) OptionsObject:(QCloudOptionsObjectRequest*)request;
 
@@ -243,15 +249,17 @@ NS_ASSUME_NONNULL_BEGIN
  
  3. 从回调的 finishBlock 中的 outputObject 获取具体内容。
  
- 示例：
- @code
- QCloudPutBucketRequest* request = [QCloudPutBucketRequest new];
- request.bucket = bucketName; //additional actions after finishing
- [request setFinishBlock:^(id outputObject, NSError* error) {
- 
- }];
- [[QCloudCOSXMLService defaultCOSXML] PutBucket:request];
- @endcode
+ ### 示例
+   
+  @code
+   
+     QCloudPutBucketRequest* request = [QCloudPutBucketRequest new];
+     request.bucket = bucketName; //additional actions after finishing
+     [request setFinishBlock:^(id outputObject, NSError* error) {
+     
+     }];
+     [[QCloudCOSXMLService defaultCOSXML] PutBucket:request];
+   
  */
 - (void) PutBucket:(QCloudPutBucketRequest*)request;
 /**
@@ -279,16 +287,18 @@ NS_ASSUME_NONNULL_BEGIN
  
  3. 从回调的 finishBlock 中的 QCloudListBucketResult 获取具体内容。
  
- 示例：
- @code
- QCloudGetBucketRequest* request = [QCloudGetBucketRequest new];
- request.bucket = @“testBucket-123456789”; //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
- request.maxKeys = 1000;
- [request setFinishBlock:^(QCloudListBucketResult * result, NSError*   error) {
- //additional actions after finishing
- }];
- [[QCloudCOSXMLService defaultCOSXML] GetBucket:request];
- @endcode
+ ### 示例
+   
+  @code
+   
+     QCloudGetBucketRequest* request = [QCloudGetBucketRequest new];
+     request.bucket = @“testBucket-123456789”; //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
+     request.maxKeys = 1000;
+     [request setFinishBlock:^(QCloudListBucketResult * result, NSError*   error) {
+     //additional actions after finishing
+     }];
+     [[QCloudCOSXMLService defaultCOSXML] GetBucket:request];
+   
  */
 - (void) GetBucket:(QCloudGetBucketRequest*)request;
 /**
@@ -306,16 +316,18 @@ NS_ASSUME_NONNULL_BEGIN
  
  3. 从回调的 finishBlock 中的 QCloudACLPolicy 获取具体内容。
  
- 示例：
- @code
- QCloudGetBucketACLRequest* getBucketACl   = [QCloudGetBucketACLRequest new];
- getBucketACl.bucket = @"testbucket-123456789";
- [getBucketACl setFinishBlock:^(QCloudACLPolicy * _Nonnull result, NSError * _Nonnull error) {
- //QCloudACLPolicy中包含了 Bucket 的 ACL 信息。
- }];
- 
- [[QCloudCOSXMLService defaultCOSXML] GetBucketACL:getBucketACl];
- @endcode
+ ### 示例
+   
+  @code
+   
+     QCloudGetBucketACLRequest* getBucketACl   = [QCloudGetBucketACLRequest new];
+     getBucketACl.bucket = @"testbucket-123456789";
+     [getBucketACl setFinishBlock:^(QCloudACLPolicy * _Nonnull result, NSError * _Nonnull error) {
+     //QCloudACLPolicy中包含了 Bucket 的 ACL 信息。
+     }];
+     
+     [[QCloudCOSXMLService defaultCOSXML] GetBucketACL:getBucketACl];
+   
  */
 - (void) GetBucketACL:(QCloudGetBucketACLRequest*)request;
 /**
@@ -332,20 +344,20 @@ NS_ASSUME_NONNULL_BEGIN
  2. 调用 QCloudCOSXMLService 对象中的 GetBucketCORS 方法发出请求。
  
  3. 从回调的 finishBlock 中获取结果。结果封装在了 QCloudCORSConfiguration 对象中，该对象的 rules 属性是一个数组，数组里存放着一组 QCloudCORSRule，具体的 CORS 设置就封装在 QCloudCORSRule 对象里。
- 
- 
- 示例：
- 
- @code
- QCloudGetBucketCORSRequest* corsReqeust = [QCloudGetBucketCORSRequest new];
- corsReqeust.bucket = @"testBucket-123456789";
- 
- [corsReqeust setFinishBlock:^(QCloudCORSConfiguration * _Nonnull result, NSError * _Nonnull error) {
- //CORS设置封装在result中。
- }];
- 
- [[QCloudCOSXMLService defaultCOSXML] GetBucketCORS:corsReqeust];
- @endcode
+
+ ### 示例
+   
+  @code
+
+     QCloudGetBucketCORSRequest* corsReqeust = [QCloudGetBucketCORSRequest new];
+     corsReqeust.bucket = @"testBucket-123456789";
+     
+     [corsReqeust setFinishBlock:^(QCloudCORSConfiguration * _Nonnull result, NSError * _Nonnull error) {
+     //CORS设置封装在result中。
+     }];
+     
+     [[QCloudCOSXMLService defaultCOSXML] GetBucketCORS:corsReqeust];
+   
  */
 - (void) GetBucketCORS:(QCloudGetBucketCORSRequest*)request;
 /**
@@ -365,16 +377,18 @@ NS_ASSUME_NONNULL_BEGIN
  
  3. 从回调的 finishBlock 中的 QCloudBucketLocationConstraint 获取具体内容。
  
- 示例：
- @code
- QCloudGetBucketLocationRequest* locationReq = [QCloudGetBucketLocationRequest new];
- locationReq.bucket = @"bucketName";//存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
- __block QCloudBucketLocationConstraint* location;
- [locationReq setFinishBlock:^(QCloudBucketLocationConstraint * _Nonnull result, NSError * _Nonnull error) {
- location = result;
- }];
- [[QCloudCOSXMLService defaultCOSXML] GetBucketLocation:locationReq];
- @endcode
+ ### 示例
+   
+  @code
+   
+     QCloudGetBucketLocationRequest* locationReq = [QCloudGetBucketLocationRequest new];
+     locationReq.bucket = @"bucketName";//存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
+     __block QCloudBucketLocationConstraint* location;
+     [locationReq setFinishBlock:^(QCloudBucketLocationConstraint * _Nonnull result, NSError * _Nonnull error) {
+     location = result;
+     }];
+     [[QCloudCOSXMLService defaultCOSXML] GetBucketLocation:locationReq];
+   
  */
 - (void) GetBucketLocation:(QCloudGetBucketLocationRequest*)request;
 /**
@@ -392,15 +406,17 @@ NS_ASSUME_NONNULL_BEGIN
  
  3. 从回调的 finishBlock 中的 QCloudLifecycleConfiguration 获取具体内容。
  
- 示例：
- @code
- QCloudGetBucketLifecycleRequest* request = [QCloudGetBucketLifecycleRequest new];
- request.bucket = bucketName; //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
- [request setFinishBlock:^(QCloudLifecycleConfiguration* result,NSError* error) {
- //设置完成回调
- }];
- [[QCloudCOSXMLService defaultCOSXML] GetBucketLifecycle:request];
- @endcode
+ ### 示例
+   
+  @code
+   
+     QCloudGetBucketLifecycleRequest* request = [QCloudGetBucketLifecycleRequest new];
+     request.bucket = bucketName; //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
+     [request setFinishBlock:^(QCloudLifecycleConfiguration* result,NSError* error) {
+     //设置完成回调
+     }];
+     [[QCloudCOSXMLService defaultCOSXML] GetBucketLifecycle:request];
+   
  */
 - (void) GetBucketLifecycle:(QCloudGetBucketLifecycleRequest*)request;
 
@@ -419,20 +435,22 @@ NS_ASSUME_NONNULL_BEGIN
  
  3. 从回调的 finishBlock 中的获取设置是否成功，并做设置成功后的一些额外动作。
  
- 示例：
- @code
- QCloudPutBucketACLRequest* putACL = [QCloudPutBucketACLRequest new];
- NSString* appID = kAppID;
- NSString *ownerIdentifier = [NSString stringWithFormat:@"qcs::cam::uin/%@:uin/%@", appID, appID];
- NSString *grantString = [NSString stringWithFormat:@"id=\"%@\"",ownerIdentifier];
- putACL.accessControlList = @"private";
- putACL.grantFullControl = grantString;
- putACL.bucket = bucketName; //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
- [putACL setFinishBlock:^(id outputObject, NSError *error) {
- //additional actions after finishing
- }];
- [[QCloudCOSXMLService defaultCOSXML] PutBucketACL:putACL];
- @endcode
+ ### 示例
+   
+  @code
+   
+     QCloudPutBucketACLRequest* putACL = [QCloudPutBucketACLRequest new];
+     NSString* appID = kAppID;
+     NSString *ownerIdentifier = [NSString stringWithFormat:@"qcs::cam::uin/%@:uin/%@", appID, appID];
+     NSString *grantString = [NSString stringWithFormat:@"id=\"%@\"",ownerIdentifier];
+     putACL.accessControlList = @"private";
+     putACL.grantFullControl = grantString;
+     putACL.bucket = bucketName; //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
+     [putACL setFinishBlock:^(id outputObject, NSError *error) {
+     //additional actions after finishing
+     }];
+     [[QCloudCOSXMLService defaultCOSXML] PutBucketACL:putACL];
+   
  */
 - (void) PutBucketACL:(QCloudPutBucketACLRequest*)request;
 /**
@@ -452,30 +470,32 @@ NS_ASSUME_NONNULL_BEGIN
  
  3. 从回调的 finishBlock 中获取结果。结果封装在了 QCloudCORSConfiguration 对象中，该对象的 rules 属性是一个数组，数组里存放着一组 QCloudCORSRule，具体的 CORS 设置就封装在 QCloudCORSRule 对象里。
  
- 示例：
- @code
- QCloudPutBucketCORSRequest* putCORS = [QCloudPutBucketCORSRequest new];
- QCloudCORSConfiguration* cors = [QCloudCORSConfiguration new];
- 
- QCloudCORSRule* rule = [QCloudCORSRule new];
- rule.identifier = @"sdk";
- rule.allowedHeader = @[@"origin",@"host",@"accept",@"content-type",@"authorization"];
- rule.exposeHeader = @"ETag";
- rule.allowedMethod = @[@"GET",@"PUT",@"POST", @"DELETE", @"HEAD"];
- rule.maxAgeSeconds = 3600;
- rule.allowedOrigin = @"*";
- 
- cors.rules = @[rule];
- 
- putCORS.corsConfiguration = cors;
- putCORS.bucket = @"testBucket-123456789";
- [putCORS setFinishBlock:^(id outputObject, NSError *error) {
- if (!error) {
- //success
- }
- }];
- [[QCloudCOSXMLService defaultCOSXML] PutBucketCORS:putCORS];
- @endcode
+ ### 示例
+   
+  @code
+   
+     QCloudPutBucketCORSRequest* putCORS = [QCloudPutBucketCORSRequest new];
+     QCloudCORSConfiguration* cors = [QCloudCORSConfiguration new];
+     
+     QCloudCORSRule* rule = [QCloudCORSRule new];
+     rule.identifier = @"sdk";
+     rule.allowedHeader = @[@"origin",@"host",@"accept",@"content-type",@"authorization"];
+     rule.exposeHeader = @"ETag";
+     rule.allowedMethod = @[@"GET",@"PUT",@"POST", @"DELETE", @"HEAD"];
+     rule.maxAgeSeconds = 3600;
+     rule.allowedOrigin = @"*";
+     
+     cors.rules = @[rule];
+     
+     putCORS.corsConfiguration = cors;
+     putCORS.bucket = @"testBucket-123456789";
+     [putCORS setFinishBlock:^(id outputObject, NSError *error) {
+     if (!error) {
+     //success
+     }
+     }];
+     [[QCloudCOSXMLService defaultCOSXML] PutBucketCORS:putCORS];
+   
  */
 - (void) PutBucketCORS:(QCloudPutBucketCORSRequest*)request;
 /**
@@ -497,28 +517,30 @@ NS_ASSUME_NONNULL_BEGIN
  
  3. 从回调的 finishBlock 中的 outputObject 获取具体内容。
  
- 示例：
- @code
- QCloudPutBucketLifecycleRequest* request = [QCloudPutBucketLifecycleRequest new];
- request.bucket = bukcetName;
- __block QCloudLifecycleConfiguration* configuration = [[QCloudLifecycleConfiguration alloc] init];
- QCloudLifecycleRule* rule = [[QCloudLifecycleRule alloc] init];
- rule.identifier = @"identifier";
- rule.status = QCloudLifecycleStatueEnabled;
- QCloudLifecycleRuleFilter* filter = [[QCloudLifecycleRuleFilter alloc] init];
- filter.prefix = @"0";
- rule.filter = filter;
- QCloudLifecycleTransition* transition = [[QCloudLifecycleTransition alloc] init];
- transition.days = 100;
- transition.storageClass = QCloudCOSStorageNearline;
- rule.transition = transition;
- request.lifeCycle = configuration;
- request.lifeCycle.rules = @[rule];
- [request setFinishBlock:^(id outputObject, NSError* error) {
- //设置完成回调
- }];
- [[QCloudCOSXMLService defaultCOSXML] PutBucketLifecycle:request];
- @endcode
+ ### 示例
+   
+  @code
+   
+     QCloudPutBucketLifecycleRequest* request = [QCloudPutBucketLifecycleRequest new];
+     request.bucket = bukcetName;
+     __block QCloudLifecycleConfiguration* configuration = [[QCloudLifecycleConfiguration alloc] init];
+     QCloudLifecycleRule* rule = [[QCloudLifecycleRule alloc] init];
+     rule.identifier = @"identifier";
+     rule.status = QCloudLifecycleStatueEnabled;
+     QCloudLifecycleRuleFilter* filter = [[QCloudLifecycleRuleFilter alloc] init];
+     filter.prefix = @"0";
+     rule.filter = filter;
+     QCloudLifecycleTransition* transition = [[QCloudLifecycleTransition alloc] init];
+     transition.days = 100;
+     transition.storageClass = QCloudCOSStorageNearline;
+     rule.transition = transition;
+     request.lifeCycle = configuration;
+     request.lifeCycle.rules = @[rule];
+     [request setFinishBlock:^(id outputObject, NSError* error) {
+     //设置完成回调
+     }];
+     [[QCloudCOSXMLService defaultCOSXML] PutBucketLifecycle:request];
+   
  */
 - (void) PutBucketLifecycle:(QCloudPutBucketLifecycleRequest*)request;
 
@@ -537,17 +559,19 @@ NS_ASSUME_NONNULL_BEGIN
  
  3. 从回调的 finishBlock 中的 outputObject 获取具体内容。
  
- 示例：
- @code
- QCloudDeleteBucketCORSRequest* deleteCORS = [QCloudDeleteBucketCORSRequest new];
- deleteCORS.bucket = bucketName; //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
- __block NSError* localError;
- XCTestExpectation* exp = [self expectationWithDescription:@"putacl"];
- [deleteCORS setFinishBlock:^(id outputObject, NSError *error) {
- //additional actions after finishing
- }];
- [[QCloudCOSXMLService defaultCOSXML] DeleteBucketCORS:deleteCORS];
- @endcode
+ ### 示例
+   
+  @code
+   
+     QCloudDeleteBucketCORSRequest* deleteCORS = [QCloudDeleteBucketCORSRequest new];
+     deleteCORS.bucket = bucketName; //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
+     __block NSError* localError;
+     XCTestExpectation* exp = [self expectationWithDescription:@"putacl"];
+     [deleteCORS setFinishBlock:^(id outputObject, NSError *error) {
+     //additional actions after finishing
+     }];
+     [[QCloudCOSXMLService defaultCOSXML] DeleteBucketCORS:deleteCORS];
+   
  */
 - (void) DeleteBucketCORS:(QCloudDeleteBucketCORSRequest*)request;
 /**
@@ -565,16 +589,18 @@ NS_ASSUME_NONNULL_BEGIN
  
  从回调的 finishBlock 中的 QCloudLifecycleConfiguration 获取具体内容。
  
- 示例：
- @code
- QCloudDeleteBucketLifeCycleRequest* request = [[QCloudDeleteBucketLifeCycleRequest alloc ] init];
- request.bucket = bucketName; // //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
- [request setFinishBlock:^(QCloudLifecycleConfiguration* deleteResult, NSError* deleteError) {
- // additional actions after finishing
- }];
- [[QCloudCOSXMLService defaultCOSXML] DeleteBucketLifeCycle:request];
- }
- @endcode
+ ### 示例
+   
+  @code
+   
+     QCloudDeleteBucketLifeCycleRequest* request = [[QCloudDeleteBucketLifeCycleRequest alloc ] init];
+     request.bucket = bucketName; // //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
+     [request setFinishBlock:^(QCloudLifecycleConfiguration* deleteResult, NSError* deleteError) {
+     // additional actions after finishing
+     }];
+     [[QCloudCOSXMLService defaultCOSXML] DeleteBucketLifeCycle:request];
+     }
+   
  */
 - (void) DeleteBucketLifeCycle:(QCloudDeleteBucketLifeCycleRequest*)request;
 /**
@@ -594,15 +620,17 @@ NS_ASSUME_NONNULL_BEGIN
  
  3. 从回调的 finishBlock 中的 outputObject 获取具体内容。
  
- 示例：
- @code
- QCloudDeleteBucketRequest* request = [[QCloudDeleteBucketRequest alloc ] init];
- request.bucket = bucketName;  //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
- [request setFinishBlock:^(id outputObject,NSError*error) {
- //additional actions after finishing
- }];
- [[QCloudCOSXMLService defaultCOSXML] DeleteBucket:request];
- @endcode
+ ### 示例
+   
+  @code
+   
+     QCloudDeleteBucketRequest* request = [[QCloudDeleteBucketRequest alloc ] init];
+     request.bucket = bucketName;  //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
+     [request setFinishBlock:^(id outputObject,NSError*error) {
+     //additional actions after finishing
+     }];
+     [[QCloudCOSXMLService defaultCOSXML] DeleteBucket:request];
+   
  */
 - (void) DeleteBucket:(QCloudDeleteBucketRequest*)request;
 /**
@@ -620,15 +648,17 @@ NS_ASSUME_NONNULL_BEGIN
  
  3. 从回调的 finishBlock 中的 outputObject 获取具体内容。
  
- 示例：
- @code
- QCloudHeadBucketRequest* request = [QCloudHeadBucketRequest new];
- request.bucket = bucketName; //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
- [request setFinishBlock:^(id outputObject, NSError* error) {
- //设置完成回调。如果没有error，则可以正常访问bucket。如果有error，可以从error code和messasge中获取具体的失败原因。
- }];
- [[QCloudCOSXMLService defaultCOSXML] HeadBucket:request];
- @endcode
+ ### 示例
+   
+  @code
+   
+     QCloudHeadBucketRequest* request = [QCloudHeadBucketRequest new];
+     request.bucket = bucketName; //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
+     [request setFinishBlock:^(id outputObject, NSError* error) {
+     //设置完成回调。如果没有error，则可以正常访问bucket。如果有error，可以从error code和messasge中获取具体的失败原因。
+     }];
+     [[QCloudCOSXMLService defaultCOSXML] HeadBucket:request];
+   
  */
 - (void) HeadBucket:(QCloudHeadBucketRequest*)request;
 /**
@@ -645,18 +675,21 @@ NS_ASSUME_NONNULL_BEGIN
  2. 调用 QCloudCOSXMLService 对象中的 ListBucketMultipartUploads 方法发出请求。
  
  3. 从回调的 finishBlock 中的获取具体内容。
- 示例：
  
- QCloudListBucketMultipartUploadsRequest* uploads = [QCloudListBucketMultipartUploadsRequest new];
- uploads.bucket = @"testBucket-123456789";
- uploads.maxUploads = 100;
- __block NSError* resulError;
- __block QCloudListMultipartUploadsResult* multiPartUploadsResult;
- [uploads setFinishBlock:^(QCloudListMultipartUploadsResult* result, NSError *error) {
- multiPartUploadsResult = result;
- localError = error;
- }];
- [[QCloudCOSXMLService defaultCOSXML] ListBucketMultipartUploads:uploads];
+ ### 示例
+   
+  @code
+ 
+     QCloudListBucketMultipartUploadsRequest* uploads = [QCloudListBucketMultipartUploadsRequest new];
+     uploads.bucket = @"testBucket-123456789";
+     uploads.maxUploads = 100;
+     __block NSError* resulError;
+     __block QCloudListMultipartUploadsResult* multiPartUploadsResult;
+     [uploads setFinishBlock:^(QCloudListMultipartUploadsResult* result, NSError *error) {
+     multiPartUploadsResult = result;
+     localError = error;
+     }];
+     [[QCloudCOSXMLService defaultCOSXML] ListBucketMultipartUploads:uploads];
  */
 - (void) ListBucketMultipartUploads:(QCloudListBucketMultipartUploadsRequest*)request;
 /**
@@ -672,18 +705,20 @@ NS_ASSUME_NONNULL_BEGIN
  
  3. 从回调的 finishBlock 中的 outputObject 获取具体内容。
  
- 示例：
- @code
- QCloudPutBucketVersioningRequest* request = [[QCloudPutBucketVersioningRequest alloc] init];
- request.bucket = bucketName;//存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
- QCloudBucketVersioningConfiguration* configuration = [[QCloudBucketVersioningConfiguration alloc] init];
- request.configuration = configuration;
- configuration.status = QCloudCOSBucketVersioningStatusEnabled;
- [request setFinishBlock:^(id outputObject, NSError* error) {
- //设置完成回调
- }];
- [[QCloudCOSXMLService defaultCOSXML] PutBucketVersioning:request];
- @endcode
+ ### 示例
+   
+  @code
+   
+     QCloudPutBucketVersioningRequest* request = [[QCloudPutBucketVersioningRequest alloc] init];
+     request.bucket = bucketName;//存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
+     QCloudBucketVersioningConfiguration* configuration = [[QCloudBucketVersioningConfiguration alloc] init];
+     request.configuration = configuration;
+     configuration.status = QCloudCOSBucketVersioningStatusEnabled;
+     [request setFinishBlock:^(id outputObject, NSError* error) {
+     //设置完成回调
+     }];
+     [[QCloudCOSXMLService defaultCOSXML] PutBucketVersioning:request];
+   
  */
 - (void) PutBucketVersioning:(QCloudPutBucketVersioningRequest*)request;
 /**
@@ -699,15 +734,17 @@ NS_ASSUME_NONNULL_BEGIN
  
  3. 从回调的 finishBlock 中的 QCloudBucketVersioningConfiguration 获取具体内容。
  
- 示例：
- @code
- QCloudGetBucketVersioningRequest* request = [[QCloudGetBucketVersioningRequest alloc] init];
- request.bucket = @"bucketName";  //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
- [request setFinishBlock:^(QCloudBucketVersioningConfiguration* result, NSError* error) {
- //设置完成回调
- }];
- [[QCloudCOSXMLService defaultCOSXML] GetBucketVersioning:request];
- @endcode
+ ### 示例
+   
+  @code
+   
+     QCloudGetBucketVersioningRequest* request = [[QCloudGetBucketVersioningRequest alloc] init];
+     request.bucket = @"bucketName";  //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
+     [request setFinishBlock:^(QCloudBucketVersioningConfiguration* result, NSError* error) {
+     //设置完成回调
+     }];
+     [[QCloudCOSXMLService defaultCOSXML] GetBucketVersioning:request];
+   
  */
 - (void) GetBucketVersioning:(QCloudGetBucketVersioningRequest*)request;
 /**
@@ -723,30 +760,32 @@ NS_ASSUME_NONNULL_BEGIN
  
  3. 从回调的 finishBlock 中的 outputObject 获取具体内容。
  
- 示例：
+ ### 示例
+   
+  @code
  
- @code
- QCloudPutBucketReplicationRequest* request = [[QCloudPutBucketReplicationRequest alloc] init];
- request.bucket = bucketName; //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
- QCloudBucketReplicationConfiguation* configuration = [[QCloudBucketReplicationConfiguation alloc] init];
- configuration.role = [NSString identifierStringWithID:@"uin" :@"uin"];
- QCloudBucketReplicationRule* rule = [[QCloudBucketReplicationRule alloc] init];
- 
- rule.identifier = @"identifier";
- rule.status = QCloudQCloudCOSXMLStatusEnabled;
- 
- QCloudBucketReplicationDestination* destination = [[QCloudBucketReplicationDestination alloc] init];
- NSString* destinationBucket = @"destinationBucket";
- NSString* region = @"destinationRegion"
- destination.bucket = [NSString stringWithFormat:@"qcs:id/0:cos:%@:appid/%@:%@",@"region",@"appid",@"destinationBucket"];
- rule.destination = destination;
- configuration.rule = @[rule];
- request.configuation = configuration;
- [request setFinishBlock:^(id outputObject, NSError* error) {
- //设置完成回调
- }];
- [[QCloudCOSXMLService defaultCOSXML] PutBucketRelication:request];
- @endcode
+   
+     QCloudPutBucketReplicationRequest* request = [[QCloudPutBucketReplicationRequest alloc] init];
+     request.bucket = bucketName; //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
+     QCloudBucketReplicationConfiguation* configuration = [[QCloudBucketReplicationConfiguation alloc] init];
+     configuration.role = [NSString identifierStringWithID:@"uin" :@"uin"];
+     QCloudBucketReplicationRule* rule = [[QCloudBucketReplicationRule alloc] init];
+     
+     rule.identifier = @"identifier";
+     rule.status = QCloudQCloudCOSXMLStatusEnabled;
+     
+     QCloudBucketReplicationDestination* destination = [[QCloudBucketReplicationDestination alloc] init];
+     NSString* destinationBucket = @"destinationBucket";
+     NSString* region = @"destinationRegion"
+     destination.bucket = [NSString stringWithFormat:@"qcs:id/0:cos:%@:appid/%@:%@",@"region",@"appid",@"destinationBucket"];
+     rule.destination = destination;
+     configuration.rule = @[rule];
+     request.configuation = configuration;
+     [request setFinishBlock:^(id outputObject, NSError* error) {
+     //设置完成回调
+     }];
+     [[QCloudCOSXMLService defaultCOSXML] PutBucketRelication:request];
+   
  
  */
 - (void) PutBucketRelication:(QCloudPutBucketReplicationRequest*)request;
@@ -763,15 +802,17 @@ NS_ASSUME_NONNULL_BEGIN
  
  3. 从回调的 finishBlock 中的 QCloudBucketReplicationConfiguation 获取具体内容。
  
- 示例：
- @code
- QCloudGetBucketReplicationRequest* request = [[QCloudGetBucketReplicationRequest alloc] init];
- request.bucket = bucketBame; // //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
- [request setFinishBlock:^(QCloudBucketReplicationConfiguation* result, NSError* error) {
- //设置完成回调
- }];
- [[QCloudCOSXMLService defaultCOSXML] GetBucketReplication:request];
- @endcode
+ ### 示例
+   
+  @code
+   
+     QCloudGetBucketReplicationRequest* request = [[QCloudGetBucketReplicationRequest alloc] init];
+     request.bucket = bucketBame; // //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
+     [request setFinishBlock:^(QCloudBucketReplicationConfiguation* result, NSError* error) {
+     //设置完成回调
+     }];
+     [[QCloudCOSXMLService defaultCOSXML] GetBucketReplication:request];
+   
  */
 - (void)GetBucketLogging:(QCloudGetBucketLoggingRequest *)request;
 
@@ -797,16 +838,18 @@ NS_ASSUME_NONNULL_BEGIN
  
  3. 从回调的 finishBlock 中的 outputObject 获取具体内容。
  
- 示例：
- @code
- //delete bucket replication
- QCloudDeleteBucketReplicationRequest* request = [[QCloudDeleteBucketReplicationRequest alloc] init];
- request.bucket = @"bucketName";  //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
- [request setFinishBlock:^(id outputObject, NSError* error) {
- 
- }];
- [[QCloudCOSXMLService defaultCOSXML] DeleteBucketReplication:request];
- @endcode
+ ### 示例
+   
+  @code
+   
+     //delete bucket replication
+     QCloudDeleteBucketReplicationRequest* request = [[QCloudDeleteBucketReplicationRequest alloc] init];
+     request.bucket = @"bucketName";  //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
+     [request setFinishBlock:^(id outputObject, NSError* error) {
+     
+     }];
+     [[QCloudCOSXMLService defaultCOSXML] DeleteBucketReplication:request];
+   
  */
 - (void) DeleteBucketReplication:(QCloudDeleteBucketReplicationRequest*)request;
 /**
@@ -824,14 +867,16 @@ NS_ASSUME_NONNULL_BEGIN
  
  3. 从回调的 finishBlock 中的 QCloudListAllMyBucketsResult 获取具体内容
  
- 示例：
- @code
- QCloudGetServiceRequest* request = [[QCloudGetServiceRequest alloc] init];
- [request setFinishBlock:^(QCloudListAllMyBucketsResult* result, NSError* error) {
- //additional actions after finishing
- }];
- [[QCloudCOSXMLService defaultCOSXML] GetService:request];
- @endcode
+ ### 示例
+   
+  @code
+   
+     QCloudGetServiceRequest* request = [[QCloudGetServiceRequest alloc] init];
+     [request setFinishBlock:^(QCloudListAllMyBucketsResult* result, NSError* error) {
+     //additional actions after finishing
+     }];
+     [[QCloudCOSXMLService defaultCOSXML] GetService:request];
+   
  */
 - (void) GetService:(QCloudGetServiceRequest*)request;
 

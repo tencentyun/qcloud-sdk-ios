@@ -12,10 +12,10 @@
 #import "QCloudSignatureProvider.h"
 typedef double QCloudAbstractRequestPriority;
 
-#define QCloudAbstractRequestPriorityHigh   2.0
-#define QCloudAbstractRequestPriorityNormal 1.0
-#define QCloudAbstractRequestPriorityLow    0.0
-
+#define QCloudAbstractRequestPriorityHigh   3.0
+#define QCloudAbstractRequestPriorityNormal 2.0
+#define QCloudAbstractRequestPriorityLow    1.0
+#define QCloudAbstractRequestPriorityBackground    0.0
 typedef void (^QCloudRequestSendProcessBlock)(int64_t bytesSent , int64_t totalBytesSent , int64_t totalBytesExpectedToSend);
 typedef void (^QCloudRequestDownProcessBlock)(int64_t bytesDownload, int64_t totalBytesDownload, int64_t totalBytesExpectedToDownload);
 

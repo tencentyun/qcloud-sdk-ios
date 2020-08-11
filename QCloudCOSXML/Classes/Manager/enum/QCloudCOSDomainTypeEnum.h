@@ -25,7 +25,9 @@
 
 #import <Foundation/Foundation.h>
 NS_ASSUME_NONNULL_BEGIN
-
+/**
+绑定的源站类型、有效值REST/WEBSITE
+*/
 typedef NS_ENUM(NSInteger, QCloudCOSDomainType) {
 
   QCloudCOSDomainTypeRest = 0,

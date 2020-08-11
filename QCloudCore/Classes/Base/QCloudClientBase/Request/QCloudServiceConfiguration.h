@@ -11,7 +11,20 @@
 #import "QCloudEndPoint.h"
 
 /**
- QCloud中服务类的配置信息
+ QCloud中服务类的配置信息，用于实例化 QCloudCOSXMLService 以及 QCloudCOSTransferManagerService
+ 具体使用：https://cloud.tencent.com/document/product/436/11280
+ 
+ ### 示例
+   
+  @code
+     
+     QCloudServiceConfiguration* configuration = [[QCloudCOSXMLService defaultCOSXML].configuration copy];
+ 
+     configuration.endpoint.regionName = @"regionName";
+     [QCloudCOSTransferMangerService registerCOSTransferMangerWithConfiguration:configuration withKey:@"regionName"];
+     
+     [QCloudCOSXMLService registerCOSXMLWithConfiguration:configuration withKey:@"regionName"];
+ 
  */
 @interface QCloudServiceConfiguration : NSObject <NSCopying>
 

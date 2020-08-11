@@ -13,6 +13,9 @@ typedef NSString* QCloudServiceName;
 
 /**
  QCloud 云服务的服务器地址，如果您继承该类，并且添加了自定义的参数，请一定要实现NSCopying协议
+ QCloudServiceConfiguration 类种毕传参数 endpoint；
+ 表示您的服务所在的区域
+ 
  */
 @interface QCloudEndPoint : NSObject <NSCopying>
 {

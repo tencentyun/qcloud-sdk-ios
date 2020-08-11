@@ -29,6 +29,9 @@
 #import <QCloudCore/QCloudCore.h>
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+查询存储桶（Bucket) 跨域访问配置信息的方法返回结果数组中每一个item详细信息
+*/
 @interface QCloudCORSRule : NSObject
 /**
 配置规则的ID，可选填

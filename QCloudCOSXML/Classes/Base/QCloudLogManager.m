@@ -125,35 +125,33 @@
 - (instancetype) init {
     self = [super init];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onHandleAppBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onHandleDidFinishLaunching:) name:UIApplicationDidFinishLaunchingNotification object:nil];
     return self;
 }
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
-- (void) onHandleAppBecomeActive :(NSNotification *)notification {
-    
+- (void) onHandleDidFinishLaunching :(NSNotification *)notification {
+    if (!self.shouldShowLog) {
+        return;
+    }
+    //    如果剪贴板没有数据则不进行读取，减少ios14 剪贴板弹框次数
+    if (@available(iOS 10.0, *)) {
+        if (![[UIPasteboard generalPasteboard] hasStrings]) {
+            return;
+        }
+    }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        //
         NSString *currentPasteBoardContent = [UIPasteboard generalPasteboard].string;
            if ([currentPasteBoardContent isEqualToString:@"##qcloud-cos-log-ispct##"]) {
               [UIPasteboard generalPasteboard].string = @"";
               dispatch_async(dispatch_get_main_queue(), ^{
                     [self showLogs];
                });
-           
+
            }
     });
-}
-
-
-- (BOOL) shouldShowLogs {
-    NSString *currentPasteBoardContent = [UIPasteboard generalPasteboard].string;
-    if ([currentPasteBoardContent isEqualToString:@"##qcloud-cos-log-ispct##"]) {
-        return YES;
-    }
-    return NO;
 }
 
 

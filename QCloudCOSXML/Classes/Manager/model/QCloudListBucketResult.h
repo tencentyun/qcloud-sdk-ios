@@ -31,6 +31,9 @@
 #import "QCloudCommonPrefixes.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 桶详情请求结果
+ */
 @interface QCloudListBucketResult : NSObject
 /**
 存储桶名信息

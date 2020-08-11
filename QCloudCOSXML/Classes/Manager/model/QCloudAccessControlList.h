@@ -29,6 +29,9 @@
 #import "QCloudACLGrant.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+被授权者与权限的信息
+*/
 @interface QCloudAccessControlList : NSObject
 /**
 存放被授权者信息的数组

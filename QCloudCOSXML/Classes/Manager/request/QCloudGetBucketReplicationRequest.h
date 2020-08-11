@@ -32,25 +32,29 @@ NS_ASSUME_NONNULL_BEGIN
 /**
 获取跨区域复制配置信息的方法.
 
+### 功能说明
+ 
 跨区域复制是支持不同区域 Bucket 自动复制对象, 请查阅putBucketReplication(PutBucketReplicationRequest).
 
-cos iOS SDK 中获取跨区域复制配置信息的方法具体步骤如下：
-
-1. 实例化 QCloudGetBucketReplicationRequest，填入需要的参数。
-
-2. 调用 QCloudCOSXMLService 对象中的 GetBucketReplication 方法发出请求。
-
-3. 从回调的 finishBlock 中的 QCloudBucketReplicationConfiguation 获取具体内容。
-
-示例：
-@code
-QCloudGetBucketReplicationRequest* request = [[QCloudGetBucketReplicationRequest alloc] init];
-request.bucket = bucketBame; // //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
-[request setFinishBlock:^(QCloudBucketReplicationConfiguation* result, NSError* error) {
-//设置完成回调
-}];
-[[QCloudCOSXMLService defaultCOSXML] GetBucketReplication:request];
-@endcode
+关于获取跨区域复制配置信息的方法接口的具体描述，请查看https://cloud.tencent.com/document/product/436/19222.
+ 
+### 示例
+   
+  @code
+  
+    QCloudGetBucketReplicationRequest* request = [[QCloudGetBucketReplicationRequest alloc] init];
+    
+    // 存储桶名称，格式为 BucketName-APPID
+    request.bucket = @"examplebucket-1250000000";
+    
+    [request setFinishBlock:^(QCloudBucketReplicationConfiguation* result,
+                              NSError* error) {
+        
+        // 具体配置信息，最多支持 1000 个，所有策略只能指向一个目标存储桶
+        NSArray *rules = result.rule;
+    }];
+    [[QCloudCOSXMLService defaultCOSXML] GetBucketReplication:request];
+  
 */
 @interface QCloudGetBucketReplicationRequest : QCloudBizHTTPRequest
 /**

@@ -29,7 +29,13 @@
 
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 对象持有者信息
+ */
 @interface QCloudVersionOwner : NSObject
+/**
+ 对象持有者信息uid
+ */
 @property (strong, nonatomic) NSString *UID;
 @end
 NS_ASSUME_NONNULL_END

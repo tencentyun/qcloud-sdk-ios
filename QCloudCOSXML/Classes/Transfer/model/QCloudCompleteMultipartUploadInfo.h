@@ -30,6 +30,9 @@
 #import "QCloudMultipartInfo.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+完成分片上传的信息
+*/
 @interface QCloudCompleteMultipartUploadInfo : NSObject
 /**
 用来说明本次分块上传中每个块的信息

@@ -29,6 +29,9 @@
 
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+指定重定向发生的条件，前缀匹配重定向和错误码重定向只能指定一个
+*/
 @interface QCloudWebsiteCondition : NSObject
 /**
 指定重定向错误码，只支持配置4XX返回码，优先级高于ErrorDocument

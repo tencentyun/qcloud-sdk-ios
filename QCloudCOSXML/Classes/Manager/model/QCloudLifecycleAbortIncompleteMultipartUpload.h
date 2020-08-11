@@ -29,6 +29,9 @@
 #import <QCloudCore/QCloudCore.h>
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 设置允许分片上传保持运行的最长时间
+ */
 @interface QCloudLifecycleAbortIncompleteMultipartUpload : NSObject
 /**
 指明分片上传开始后多少天内必须完成上传

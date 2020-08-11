@@ -30,6 +30,9 @@
 #import "QCloudInputJSONFileTypeEnum.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+描述在JSON对象格式下所需的文件参数。
+*/
 @interface QCloudSerializationJSON : NSObject
 /**
     SON 文件的类型：
@@ -39,7 +42,8 @@ NS_ASSUME_NONNULL_BEGIN
     */
 @property (assign, nonatomic) QCloudInputJSONFileType type;
 /**
-    将输出结果中的记录分隔为不同行的字符，默认通过\n进行分隔。您可以指定任意8进制字符，如逗号、分号、Tab 等。该参数最多支持2个字节，即您可以输入\r\n这类格式的分隔符。默认值为\n
+    将输出结果中的记录分隔为不同行的字符，默认通过\n进行分隔。您可以指定任意8进制字符，
+ 如逗号、分号、Tab 等。该参数最多支持2个字节，即您可以输入\r\n这类格式的分隔符。默认值为\n
     */
 @property (strong, nonatomic) NSString *outputRecordDelimiter;
 @end

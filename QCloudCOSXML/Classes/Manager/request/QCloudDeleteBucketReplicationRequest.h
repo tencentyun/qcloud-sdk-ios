@@ -30,27 +30,32 @@
 NS_ASSUME_NONNULL_BEGIN
 /**
 删除跨区域复制配置的方法.
+ 
+### 功能说明
+ 
+DELETE Bucket replication 用来删除存储桶中的跨地域复制配置。用户发起该请求时需获得请求签名，表明该请求已获得许可
+ 
+当不需要进行跨区域复制时，可以删除 Bucket 的跨区域复制配置. 跨区域复制，可以查阅https://cloud.tencent.com/document/product/436/19221
 
-当不需要进行跨区域复制时，可以删除 Bucket 的跨区域复制配置. 跨区域复制，可以查阅putBucketReplication(PutBucketReplicationRequest)
-
-cos iOS SDK 中删除跨区域复制配置的方法具体步骤如下：
-
-1. 实例化 QCloudDeleteBucketReplicationRequest，填入需要的参数。
-
-2. 调用 QCloudCOSXMLService 对象中的 DeleteBucketReplication 方法发出请求。
-
-3. 从回调的 finishBlock 中的 outputObject 获取具体内容。
-
-示例：
-@code
-//delete bucket replication
-QCloudDeleteBucketReplicationRequest* request = [[QCloudDeleteBucketReplicationRequest alloc] init];
-request.bucket = @"bucketName";  //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
-[request setFinishBlock:^(id outputObject, NSError* error) {
-
-}];
-[[QCloudCOSXMLService defaultCOSXML] DeleteBucketReplication:request];
-@endcode
+### 示例
+   
+  @code
+  
+    QCloudDeleteBucketReplicationRequest* request =
+                            [[QCloudDeleteBucketReplicationRequest alloc] init];
+    
+    // 存储桶名称，格式为 BucketName-APPID
+    request.bucket = @"examplebucket-1250000000";
+    
+    [request setFinishBlock:^(id outputObject, NSError* error) {
+        
+        // outputObject 包含所有的响应 http 头部
+        NSDictionary* info = (NSDictionary *) outputObject;
+        
+    }];
+ 
+    [[QCloudCOSXMLService defaultCOSXML] DeleteBucketReplication:request];
+  
 */
 @interface QCloudDeleteBucketReplicationRequest : QCloudBizHTTPRequest
 /**

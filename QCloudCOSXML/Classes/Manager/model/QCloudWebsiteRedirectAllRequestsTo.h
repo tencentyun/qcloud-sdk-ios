@@ -28,6 +28,9 @@
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+重定向所有请求
+*/
 @interface QCloudWebsiteRedirectAllRequestsTo : NSObject
 /**
 指定全站重定向的协议，只能设置为https

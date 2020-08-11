@@ -29,6 +29,9 @@
 #import <QCloudCore/QCloudCore.h>
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 该条ACL持有者的信息
+*/
 @interface QCloudACLOwner : NSObject
 /**
 Bucket 持有者的名称
@@ -36,8 +39,8 @@ Bucket 持有者的名称
 @property (strong, nonatomic) NSString *displayName;
 /**
 Bucket 持有者 ID，
-格式：qcs::cam::uin/<OwnerUin>:uin/<SubUin>
-如果是根帐号，<OwnerUin> 和 <SubUin> 是同一个值
+格式：qcs::cam::uin/\<OwnerUin>:uin/\<SubUin>
+如果是根帐号，\<OwnerUin> 和 \<SubUin> 是同一个值
 */
 @property (strong, nonatomic) NSString *identifier;
 @end

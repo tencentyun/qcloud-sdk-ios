@@ -29,6 +29,9 @@
 #import <QCloudCore/QCloudCore.h>
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 桶tag集合的每一个item
+*/
 @interface QCloudBucketTag : NSObject
 /**
 tag的key

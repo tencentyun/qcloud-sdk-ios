@@ -25,7 +25,9 @@
 
 #import <Foundation/Foundation.h>
 NS_ASSUME_NONNULL_BEGIN
-
+/**
+ 用户类型枚举
+*/
 typedef NS_ENUM(NSInteger, QCloudCOSAccountType) {
 
   QCloudCOSAccountTypeRoot = 0,

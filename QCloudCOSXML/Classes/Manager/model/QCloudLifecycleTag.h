@@ -29,6 +29,9 @@
 #import <QCloudCore/QCloudCore.h>
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+标签，Tag 可以有零个或者多个
+*/
 @interface QCloudLifecycleTag : NSObject
 /**
 标签tag的key

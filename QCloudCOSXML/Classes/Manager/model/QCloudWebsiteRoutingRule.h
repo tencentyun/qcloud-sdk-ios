@@ -31,6 +31,9 @@
 #import "QCloudWebsiteRedirect.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 单条重定向规则配置
+ */
 @interface QCloudWebsiteRoutingRule : NSObject
 /**
 指定重定向发生的条件，前缀匹配重定向和错误码重定向只能指定一个

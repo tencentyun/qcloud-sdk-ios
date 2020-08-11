@@ -25,7 +25,9 @@
 
 #import <Foundation/Foundation.h>
 NS_ASSUME_NONNULL_BEGIN
-
+/**
+指明规则是否启用，枚举值：Enabled，Disabled
+*/
 typedef NS_ENUM(NSInteger, QCloudLifecycleStatue) {
 
   QCloudLifecycleStatueEnabled = 0,

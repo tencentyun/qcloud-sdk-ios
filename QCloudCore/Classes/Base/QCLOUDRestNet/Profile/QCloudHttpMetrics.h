@@ -19,14 +19,17 @@ extern NSString* const kWriteRequestBodyTookTime;//从发送第一个字节到�
 extern NSString* const kReadResponseHeaderTookTime;//kRNBenchmarkServerTime;
 extern NSString* const kReadResponseBodyTookTime;//kRNBenchmarkDownploadTime;
 
-
-
+extern NSString* const kLocalAddress;
+extern NSString* const kLocalPort;
+extern NSString* const kRemoteAddress;
+extern NSString* const kRemotePort;
 
 
 @interface QCloudHttpMetrics : NSObject
 - (void) benginWithKey:(NSString*)key;
 - (void) markFinishWithKey:(NSString*)key;
 - (void) directSetCost:(double)cost forKey:(NSString*)key;
+- (void) directSetValue:(id)value forKey:(NSString *) key;
 
 - (double) costTimeForKey:(NSString*)key;
 -(NSDictionary *)tastMetrics;

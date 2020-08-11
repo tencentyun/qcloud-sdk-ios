@@ -34,6 +34,11 @@
 #import "QCloudInventoryOptionalFields.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ QCloudPutBucketInventoryRequest 请求参数
+ 用户在请求体中使用 XML 语言设置清单任务的具体配置信息。配置信息包括清单任务分析的对象，分析的频次，
+ 分析的维度，分析结果的格式及存储的位置等信息。
+ */
 @interface QCloudInventoryConfiguration : NSObject
 /**
 清单的名称，与请求参数中的 id 对应
@@ -62,7 +67,8 @@ NS_ASSUME_NONNULL_BEGIN
 */
 @property (strong, nonatomic) QCloudInventoryFilter *filter;
 /**
-清单结果中可选包含的分析项目名称，可选字段包括：Size，LastModifiedDate，StorageClass，ETag，IsMultipartUploaded，ReplicationStatus
+清单结果中可选包含的分析项目名称，可选字段包括：Size，LastModifiedDate，StorageClass，
+ ETag，IsMultipartUploaded，ReplicationStatus
 */
 @property (strong, nonatomic) QCloudInventoryOptionalFields *optionalFields;
 @end

@@ -29,7 +29,13 @@
 #import <QCloudCore/QCloudCore.h>
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 将 Prefix 到 delimiter 之间的相同路径归为一类，定义为 Common Prefix
+ */
 @interface QCloudCommonPrefixes : NSObject
+/**
+ 单条 Common Prefix 的前缀
+ */
 @property (strong, nonatomic) NSString *prefix;
 @end
 NS_ASSUME_NONNULL_END

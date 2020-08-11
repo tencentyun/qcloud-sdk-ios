@@ -29,6 +29,9 @@
 #import <QCloudCore/QCloudCore.h>
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+存储桶 logging 设置的具体信息，主要是目标存储桶
+*/
 @interface QCloudLoggingEnabled : NSObject
 /**
 存放日志的目标存储桶

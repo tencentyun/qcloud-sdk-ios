@@ -31,7 +31,6 @@
 #import "QCloudDeleteInfo.h"
 #import "QCloudLogManager.h"
 #import "QCloudHeadObjectRequest.h"
-#import "QCloudAppendObjectRequest.h"
 #import "QCloudGetObjectRequest.h"
 #import "QCloudGetObjectRequest+Custom.h"
 #import "QCloudPutObjectRequest+Custom.h"
@@ -42,11 +41,14 @@
 #import "QCloudGetBucketTaggingRequest.h"
 #import "QCloudDeleteBucketTaggingRequest.h"
 
+
 #import "QCloudPutBucketInventoryRequest.h"
 #import "QCloudGetBucketInventoryRequest.h"
 #import "QCloudDeleteBucketInventoryRequest.h"
 #import "QCloudListBucketInventoryConfigurationsRequest.h"
 #import "QCloudSelectObjectContentRequest.h"
+#import "QCloudCreateBucketConfiguration.h"
+#import "QCloudGetGenerateSnapshotRequest.h"
 /**
  简单复制对象的方法.
  
@@ -76,17 +78,19 @@
  
  3. 从回调的 finishBlock 中的 QCloudCopyObjectResult 获取具体内容。
  
- 示例：
- @code
- QCloudPutObjectCopyRequest* request = [[QCloudPutObjectCopyRequest alloc] init];
- request.bucket = self.bucket; //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
- request.object = [NSUUID UUID].UUIDString; //对象名
- request.objectCopySource = objectCopySource; //源文件 URL 路径，可以通过 versionid 子资源指定历史版本
- [request setFinishBlock:^(QCloudCopyObjectResult* result, NSError* error) {
- //additional actions after finishing
- }];
- [[QCloudCOSXMLService defaultCOSXML] PutObjectCopy:request];
- @endcode
+ ### 示例
+   
+  @code
+ 
+     QCloudPutObjectCopyRequest* request = [[QCloudPutObjectCopyRequest alloc] init];
+     request.bucket = self.bucket; //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
+     request.object = [NSUUID UUID].UUIDString; //对象名
+     request.objectCopySource = objectCopySource; //源文件 URL 路径，可以通过 versionid 子资源指定历史版本
+     [request setFinishBlock:^(QCloudCopyObjectResult* result, NSError* error) {
+     //additional actions after finishing
+     }];
+     [[QCloudCOSXMLService defaultCOSXML] PutObjectCopy:request];
+ 
  
  */
 #import "QCloudCopyObjectResult.h"
@@ -119,17 +123,19 @@
  
  3. 从回调的 finishBlock 中的 QCloudCopyObjectResult 获取具体内容。
  
- 示例：
- @code
- QCloudPutObjectCopyRequest* request = [[QCloudPutObjectCopyRequest alloc] init];
- request.bucket = self.bucket; //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
- request.object = [NSUUID UUID].UUIDString; //对象名
- request.objectCopySource = objectCopySource; //源文件 URL 路径，可以通过 versionid 子资源指定历史版本
- [request setFinishBlock:^(QCloudCopyObjectResult* result, NSError* error) {
- //additional actions after finishing
- }];
- [[QCloudCOSXMLService defaultCOSXML] PutObjectCopy:request];
- @endcode
+ ### 示例
+   
+  @code
+
+     QCloudPutObjectCopyRequest* request = [[QCloudPutObjectCopyRequest alloc] init];
+     request.bucket = self.bucket; //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
+     request.object = [NSUUID UUID].UUIDString; //对象名
+     request.objectCopySource = objectCopySource; //源文件 URL 路径，可以通过 versionid 子资源指定历史版本
+     [request setFinishBlock:^(QCloudCopyObjectResult* result, NSError* error) {
+     //additional actions after finishing
+     }];
+     [[QCloudCOSXMLService defaultCOSXML] PutObjectCopy:request];
+
  
  */
 #import "QCloudPutObjectCopyRequest.h"
@@ -158,16 +164,18 @@
  
  3. 从回调的 finishBlock 中的 QCloudListBucketResult 获取具体内容。
  
- 示例：
- @code
- QCloudGetBucketRequest* request = [QCloudGetBucketRequest new];
- request.bucket = @“testBucket-123456789”; //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
- request.maxKeys = 1000;
- [request setFinishBlock:^(QCloudListBucketResult * result, NSError*   error) {
- //additional actions after finishing
- }];
- [[QCloudCOSXMLService defaultCOSXML] GetBucket:request];
- @endcode
+ ### 示例
+   
+  @code
+ 
+     QCloudGetBucketRequest* request = [QCloudGetBucketRequest new];
+     request.bucket = @“testBucket-123456789”; //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
+     request.maxKeys = 1000;
+     [request setFinishBlock:^(QCloudListBucketResult * result, NSError*   error) {
+     //additional actions after finishing
+     }];
+     [[QCloudCOSXMLService defaultCOSXML] GetBucket:request];
+ 
  */
 #import "QCloudGetBucketRequest.h"
 #import "QCloudGetBucketACLRequest.h"
@@ -228,5 +236,18 @@
 #import "QCloudPutBucketWebsiteRequest.h"
 #import "QCloudGetBucketWebsiteRequest.h"
 #import "QCloudDeleteBucketWebsiteRequest.h"
+
+#import "QCloudPutObjectWatermarkRequest.h"
+
+#import "QCloudGetRecognitionObjectRequest.h"
+#import "QCloudCOSXMLService+ImageHelper.h"
+
+#import "QCloudPutObjectWatermarkResult.h"
+
+#import "QCloudGetRecognitionObjectResult.h"
+
+//获取文档预览
+#import "QCloudGetFilePreviewRequest.h"
+
 #endif /* QCloudCOSXML_h */
 

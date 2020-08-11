@@ -228,6 +228,12 @@ API_AVAILABLE(ios(10.0)){
             }
             [taskData.httpRequest.benchMarkMan directSetCost:[networkMetrics.domainLookupEndDate timeIntervalSinceDate:networkMetrics.domainLookupStartDate] forKey:kDnsLookupTookTime];
         }
+        if (@available(ios 13.0, *)){
+            [taskData.httpRequest.benchMarkMan directSetValue:networkMetrics.localAddress forKey:kLocalAddress];
+            [taskData.httpRequest.benchMarkMan directSetValue:networkMetrics.localPort forKey:kLocalPort];
+            [taskData.httpRequest.benchMarkMan directSetValue:networkMetrics.remoteAddress forKey:kRemoteAddress];
+            [taskData.httpRequest.benchMarkMan directSetValue:networkMetrics.remotePort forKey:kRemotePort];
+        }
         //            [taskData.httpRequest.benchMarkMan directSetCost:[networkMetrics.requestEndDate timeIntervalSinceDate:networkMetrics.requestStartDate] forKey:@"upload"];
         //            [taskData.httpRequest.benchMarkMan directSetCost:[networkMetrics.responseEndDate timeIntervalSinceDate:networkMetrics.responseStartDate] forKey:@"download"];
     }

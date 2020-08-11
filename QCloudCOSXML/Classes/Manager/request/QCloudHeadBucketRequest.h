@@ -31,27 +31,33 @@ NS_ASSUME_NONNULL_BEGIN
 /**
 存储桶（Bucket） 是否存在的方法.
 
+### 功能描述
+
 在开始使用 COS 时，需要确认该 Bucket 是否存在，是否有权限访问.若不存在，则可以调用putBucket(PutBucketRequest) 创建.
 
 关于确认该 Bucket 是否存在，是否有权限访问接口的具体描述，请查看https://cloud.tencent.com/document/product/436/7735.
 
-cos iOS SDK 中Bucket 是否存在的方法具体步骤如下：
-
-1. 实例化 QCloudHeadBucketRequest，填入需要的参数。
-
-2. 调用 QCloudCOSXMLService 对象中的 HeadBucket 方法发出请求。
-
-3. 从回调的 finishBlock 中的 outputObject 获取具体内容。
-
-示例：
-@code
-QCloudHeadBucketRequest* request = [QCloudHeadBucketRequest new];
-request.bucket = bucketName; //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
-[request setFinishBlock:^(id outputObject, NSError* error) {
-//设置完成回调。如果没有error，则可以正常访问bucket。如果有error，可以从error code和messasge中获取具体的失败原因。
-}];
-[[QCloudCOSXMLService defaultCOSXML] HeadBucket:request];
-@endcode
+### 示例
+   
+  @code
+  
+    QCloudHeadBucketRequest* request = [QCloudHeadBucketRequest new];
+    
+    // 存储桶名称，格式为 BucketName-APPID
+    request.bucket = @"examplebucket-1250000000";
+    
+    [request setFinishBlock:^(id outputObject, NSError* error) {
+        // 可以从 outputObject 中获取服务器返回的 header 信息
+        NSDictionary * result = (NSDictionary *)outputObject;
+        // x-cos-bucket-az-type 存储桶 AZ 类型，当存储桶为多 AZ 存储桶时返回此头部，
+        // 值固定为 MAZ。
+        
+        // x-cos-bucket-region 存储桶所在地域。枚举值请参见 地域和访问域名 文档，
+        // 例如 ap-beijing，ap-hongkong，eu-frankfurt 等
+    
+    }];
+    [[QCloudCOSXMLService defaultCOSXML] HeadBucket:request];
+  
 */
 @interface QCloudHeadBucketRequest : QCloudBizHTTPRequest
 /**

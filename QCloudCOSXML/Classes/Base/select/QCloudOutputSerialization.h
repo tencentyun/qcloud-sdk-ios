@@ -31,6 +31,9 @@
 #import "QCloudSerializationJSON.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+描述检索结果的输出格式
+*/
 @interface QCloudOutputSerialization : NSObject
 /**
      描述在CSV对象格式下所需的文件参数。

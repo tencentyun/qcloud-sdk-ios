@@ -30,6 +30,9 @@
 #import "QCloudLifecycleRuleFilterAnd.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ Filter 用于描述规则影响的 Object 集合
+ */
 @interface QCloudLifecycleRuleFilter : NSObject
 /**
 指定规则所适用的前缀。匹配前缀的对象受该规则影响。

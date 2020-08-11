@@ -30,6 +30,9 @@
 #import "QCloudCASTierEnum.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+复原的过程类型配置信息
+*/
 @interface CASJobParameters : NSObject
 /**
 复原的过程类型配置信息

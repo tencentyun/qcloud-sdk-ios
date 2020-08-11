@@ -30,13 +30,19 @@
 #import "QCloudVersionOwner.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 文件多版本对象
+ */
 @interface QCloudVersionContent : NSObject
 @property (strong, nonatomic) NSString *object;
 @property (strong, nonatomic) NSString *versionID;
-@property (strong, nonatomic) NSString *isLatest;
+@property (assign, nonatomic) BOOL isLatest;
 @property (strong, nonatomic) NSString *lastModified;
 @property (strong, nonatomic) NSString *ETag;
 @property (assign, nonatomic) int64_t size;
+/**
+ bucket owner的信息
+ */
 @property (strong, nonatomic) QCloudVersionOwner *owner;
 @end
 NS_ASSUME_NONNULL_END

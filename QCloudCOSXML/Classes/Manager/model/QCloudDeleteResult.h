@@ -30,6 +30,9 @@
 #import "QCloudDeleteResultRow.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 删除对象请求结果
+ */
 @interface QCloudDeleteResult : NSObject
 /**
 存放被删除对象信息的数组

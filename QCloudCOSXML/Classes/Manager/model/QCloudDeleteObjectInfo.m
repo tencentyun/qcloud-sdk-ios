@@ -37,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 {
   return @{
       @"key" :@"Key",
+      @"versionID":@"VersionId"
   };
 }
 

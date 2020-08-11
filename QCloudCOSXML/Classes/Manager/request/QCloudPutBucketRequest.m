@@ -34,7 +34,7 @@
 #import <QCloudCore/QCloudSignatureFields.h>
 #import <QCloudCore/QCloudCore.h>
 #import <QCloudCore/QCloudServiceConfiguration_Private.h>
-
+#import "QCloudCreateBucketConfiguration.h"
 
 NS_ASSUME_NONNULL_BEGIN
 @implementation QCloudPutBucketRequest
@@ -54,7 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
 
     NSArray* customRequestSerilizers = @[
                                         QCloudURLFuseSimple,
-                                        QCloudURLFuseWithURLEncodeParamters,
+                                        QCloudURLFuseWithXMLParamters
                                         ];
 
     NSArray* responseSerializers = @[
@@ -96,6 +96,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSURL* __serverURL = [self.runOnService.configuration.endpoint serverURLWithBucket:self.bucket appID:self.runOnService.configuration.appID regionName:self.regionName];
     self.requestData.serverURL = __serverURL.absoluteString;
     [self.requestData setValue:__serverURL.host forHTTPHeaderField:@"Host"];
+    [self.requestData setParameter:[self.createBucketConfiguration qcloud_modelToJSONObject] withKey:@"CreateBucketConfiguration"];
     return YES;
 }
 

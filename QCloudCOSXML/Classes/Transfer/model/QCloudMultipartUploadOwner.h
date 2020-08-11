@@ -29,8 +29,19 @@
 #import <QCloudCore/QCloudCore.h>
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 用来表示这些分块所有者的信息。
+ */
 @interface QCloudMultipartUploadOwner : NSObject
+
+/**
+ 创建者的一个唯一标识
+ */
 @property (strong, nonatomic) NSString *identifier;
+
+/**
+ 创建者的用户名描述。
+ */
 @property (strong, nonatomic) NSString *displayName;
 @end
 NS_ASSUME_NONNULL_END

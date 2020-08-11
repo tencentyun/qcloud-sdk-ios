@@ -25,7 +25,9 @@
 
 #import <Foundation/Foundation.h>
 NS_ASSUME_NONNULL_BEGIN
-
+/**
+复原的过程类型配置信息
+*/
 typedef NS_ENUM(NSInteger, QCloudCASTier) {
 
   QCloudCASTierExpedited = 0,

@@ -33,6 +33,9 @@
 #import "QCloudWebsiteRedirectAllRequestsTo.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ Website的配置信息
+*/
 @interface QCloudWebsiteConfiguration : NSObject
 /**
 设置重定向规则，最多设置100条RoutingRule

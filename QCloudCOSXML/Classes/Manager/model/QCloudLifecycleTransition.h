@@ -30,6 +30,9 @@
 #import "QCloudCOSStorageClassEnum.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+规则转换属性，对象何时转换被转换为 Standard_IA 等
+*/
 @interface QCloudLifecycleTransition : NSObject
 /**
 指明规则对应的动作在对象最后的修改日期过后多少天操作，在Transition里，该字段有效值是非负整数

@@ -33,6 +33,9 @@
 #import "QCloudMultipartUploadPart.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 分块上传中已经上传的数据块
+ */
 @interface QCloudListPartsResult : NSObject
 /**
 存储桶名

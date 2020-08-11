@@ -25,7 +25,11 @@
 
 
 NS_ASSUME_NONNULL_BEGIN
-
+/**
+是否在清单中包含对象版本：
+如果设置为 All，清单中将会包含所有对象版本，并在清单中增加 VersionId，IsLatest，DeleteMarker 这几个字段
+如果设置为 Current，则清单中不包含对象版本信息
+*/
 typedef NS_ENUM(NSInteger, QCloudCOSIncludedObjectVersions) {
 
   QCloudCOSIncludedObjectVersionsAll = 0,

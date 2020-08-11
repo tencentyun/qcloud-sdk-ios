@@ -25,7 +25,10 @@
 
 #import <Foundation/Foundation.h>
 NS_ASSUME_NONNULL_BEGIN
-
+/**
+ 指明授予被授权者的权限信息，枚举值：QCloudCOSPermissionRead，QCloudCOSPermissionWrite，
+ QCloudCOSPermissionFullControl
+*/
 typedef NS_ENUM(NSInteger, QCloudCOSPermission) {
 
   QCloudCOSPermissionRead = 0,

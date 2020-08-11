@@ -30,7 +30,14 @@
 #import "QCloudBucketTag.h"
 
 NS_ASSUME_NONNULL_BEGIN
+/**
+ 桶的所有tag
+*/
 @interface QCloudBucketTagSet : NSObject
+
+/**
+ 所有tag
+ */
 @property (strong, nonatomic) NSArray<QCloudBucketTag*> *tag;
 @end
 NS_ASSUME_NONNULL_END
