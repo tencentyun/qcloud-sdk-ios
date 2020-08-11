@@ -5,9 +5,7 @@
 //  Created by garenwang on 2020/6/8.
 //
 
-#import <QCloudCOSXML/QCloudCOSXML.h>
 #import "QCloudCOSXMLService.h"
-
 @class QCloudPutObjectWatermarkRequest;
 @class QCloudGetRecognitionObjectRequest;
 @class QCloudGetFilePreviewRequest;
