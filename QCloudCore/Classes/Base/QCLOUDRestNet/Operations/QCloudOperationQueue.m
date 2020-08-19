@@ -59,6 +59,7 @@ static const NSInteger kWeakNetworkConcurrentCount = 1;
 - (void) addOpreation:(QCloudRequestOperation *)operation
 {
     __block NSUInteger count = 0 ;
+
     [_dataLock lock];
     if (operation.request.priority > QCloudAbstractRequestPriorityNormal) {
         [_highPerfomanceRequest addObject:operation];
@@ -103,7 +104,7 @@ static const NSInteger kWeakNetworkConcurrentCount = 1;
                 QCloudRequestOperation* operation = _lowPerformanceRequest.firstObject;
                 ExeOperation(operation);
                 [_lowPerformanceRequest removeObject:operation];
-            }else{
+            }else if (_backgroundPerformanceRequest.count)  {
                 QCloudRequestOperation* operation = _backgroundPerformanceRequest.firstObject;
                 ExeOperation(operation);
                 [_backgroundPerformanceRequest removeObject:operation];

@@ -5,7 +5,7 @@
 //  Created by erichmzhang(张恒铭) on 07/12/2017.
 //
 
-#import <QCloudCOSXML/QCloudCOSXML.h>
+#import "QCloudCOSXML.h"
 #import "QCloudCOSStorageClassEnum.h"
 @class QCloudGetObjectACLRequest;
 @class QCloudPutObjectACLRequest;

@@ -96,6 +96,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     _enableMD5Verification = YES;
     _retryHandler = [QCloudHTTPRetryHanlder defaultRetryHandler];
     startPartNumber = -1;
+    self.priority = QCloudAbstractRequestPriorityHigh;
     return self;
 }
 - (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dictionary {
@@ -213,7 +214,6 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
 - (void) resumeUpload
 {
     QCloudListMultipartRequest* request = [QCloudListMultipartRequest new];
-    request.priority = self.priority;
     request.timeoutInterval = self.timeoutInterval;
     request.enableQuic = self.enableQuic;
     request.object = self.object;
@@ -267,6 +267,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
 - (void) startSimpleUpload
 {
     QCloudPutObjectRequest* request = [QCloudPutObjectRequest new];
+    request.priority = self.uploadPriority;
     request.enableQuic = self.enableQuic;
     request.regionName = self.regionName;
     __weak typeof(self) weakSelf = self;
@@ -304,7 +305,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     };
     request.bucket = self.bucket;
     request.object = self.object;
-    request.priority = self.priority;
+    request.priority = self.uploadPriority;
     request.body = self.body;
     request.cacheControl = self.cacheControl;
     request.contentDisposition = self.contentDisposition;
@@ -342,7 +343,6 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     uploadRequet.grantFullControl = self.grantFullControl;
     uploadRequet.customHeaders = [self.customHeaders mutableCopy];
     uploadRequet.retryPolicy.delegate = self;
-    uploadRequet.priority = self.priority;
     __weak typeof(uploadRequet)weakRequest  = uploadRequet;
     __weak typeof(self) weakSelf = self;
     
@@ -457,7 +457,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
         request.timeoutInterval = self.timeoutInterval;
         request.regionName = self.regionName;
         request.object = self.object;
-        request.priority = self.priority;
+        request.priority = self.uploadPriority;
         request.partNumber = (int)body.index + 1;
         request.uploadId = self.uploadId;
         request.customHeaders = [self.customHeaders mutableCopy];
@@ -739,7 +739,6 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
             abortRequest.bucket = self.bucket;
             abortRequest.uploadId = self.uploadId;
             abortRequest.finishBlock = finishBlock;
-            abortRequest.priority = self.priority;
             abortRequest.timeoutInterval = self.timeoutInterval;
             self.uploadId = nil;
             [self.transferManager.cosService AbortMultipfartUpload:abortRequest];
