@@ -1,3 +1,6 @@
+# 5.7.6    
+- fix上传crash
+    
 # 5.7.5    
 - 5.7.5:增加crc检验
 - 新增background优先级
