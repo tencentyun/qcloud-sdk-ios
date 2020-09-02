@@ -132,9 +132,14 @@ RFC 2616 中定义用于指示资源的MIME类型，将作为 Object 元数据�
  是否在上传完成以后，将 COS 返回的文件MD5与本地文件算出来的md5进行校验。默认开启，如果校验出错，
  文件仍然会被上传到 COS, 不过我们会在本地抛出校验失败的error。
  */
-@property (nonatomic, assign) BOOL enableMD5Verification;
+@property (nonatomic, assign) BOOL enableMD5Verification __attribute__((deprecated("该属性已过期，请用enableVerification替换")));
+/**
+ 是否在上传完成以后，将 COS 返回的文件MD5与本地文件算出来的md5进行校验。默认开启，如果校验出错，
+ 文件仍然会被上传到 COS, 不过我们会在本地抛出校验失败的error。
+ */
+@property (nonatomic, assign) BOOL enableVerification;
 
-/*
+/**
  在进行HTTP请求的时候，可以通过设置该参数来设置自定义的一些头部信息。
  通常情况下，携带特定的额外HTTP头部可以使用某项功能，如果是这类需求，可以通过设置该属性来实现。
  */

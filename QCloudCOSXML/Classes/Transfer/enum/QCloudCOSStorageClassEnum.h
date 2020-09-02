@@ -32,7 +32,9 @@ typedef NS_ENUM(NSInteger, QCloudCOSStorageClass) {
 
   QCloudCOSStorageStandard = 0,
   QCloudCOSStorageStandardIA = 1,
-  QCloudCOSStorageARCHIVE = 2
+  QCloudCOSStorageARCHIVE = 2,
+  QCloudCOSStorageMAZ_Standard = 3,
+  QCloudCOSStorageMAZ_StandardIA = 4
 };
 
 FOUNDATION_EXTERN QCloudCOSStorageClass QCloudCOSStorageClassDumpFromString(NSString* key);

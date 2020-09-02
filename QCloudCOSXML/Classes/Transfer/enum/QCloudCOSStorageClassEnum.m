@@ -18,7 +18,12 @@ QCloudCOSStorageClass QCloudCOSStorageClassDumpFromString(NSString* key) {
           return QCloudCOSStorageStandardIA;
       }else if([key isEqualToString:@"ARCHIVE"]){
           return QCloudCOSStorageARCHIVE;
+      }else if([key isEqualToString:@"MAZ_STANDARD"]){
+          return QCloudCOSStorageMAZ_Standard;
+      }else if([key isEqualToString:@"MAZ_STANDARD_IA"]){
+          return QCloudCOSStorageMAZ_StandardIA;
       }
+    
       return 0;
 }
 NSString* QCloudCOSStorageClassTransferToString(QCloudCOSStorageClass type) {
@@ -34,6 +39,14 @@ NSString* QCloudCOSStorageClassTransferToString(QCloudCOSStorageClass type) {
         case QCloudCOSStorageARCHIVE:
         {
             return @"ARCHIVE";
+        }
+        case QCloudCOSStorageMAZ_Standard:
+        {
+            return @"MAZ_STANDARD";
+        }
+        case QCloudCOSStorageMAZ_StandardIA:
+        {
+            return @"MAZ_STANDARD_IA";
         }
         default:
             return nil;

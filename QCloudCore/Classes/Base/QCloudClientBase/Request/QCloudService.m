@@ -128,7 +128,7 @@
             [httpRequst onError:error];
             return ;
         }
-       
+        
         [[QCloudHTTPSessionManager shareClient] performRequest:httpRequst];
     });
     
