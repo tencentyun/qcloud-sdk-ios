@@ -1,6 +1,6 @@
 //
-//  GetBucketTagging.h
-//  GetBucketTagging
+//  GetBucketIntelligentTiering.h
+//  GetBucketIntelligentTiering
 //
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.
@@ -27,42 +27,14 @@
 
 #import <Foundation/Foundation.h>
 #import <QCloudCore/QCloudCore.h>
-#import "QCloudTagging.h"
+#import "QCloudIntelligentTieringConfiguration.h"
 NS_ASSUME_NONNULL_BEGIN
-
-/**
-查询指定存储桶下已有的存储桶标签.
-
-### 功能说明
-
-COS 支持为已存在的存储桶查询标签（Tag）。GET Bucket tagging 接口用于查询指定存储桶下已有的存储桶标签.
-
-关于查询指定存储桶下已有的存储桶标签接口的具体描述，请查看https://cloud.tencent.com/document/product/436/34837.
-
-### 示例
-   
-  @code
-  
-    QCloudGetBucketTaggingRequest *getReq = [QCloudGetBucketTaggingRequest new];
-    
-    // 存储桶名称，格式为 BucketName-APPID
-    getReq.bucket = @"examplebucket-1250000000";
-    
-    [getReq setFinishBlock:^(QCloudTagging * result, NSError * error) {
-        
-        // tag的集合
-        QCloudTagSet * tagSet = result.tagSet;
-    }];
-    [[QCloudCOSXMLService defaultCOSXML] GetBucketTagging:getReq];
-  
-*/
-
-@interface QCloudGetBucketTaggingRequest : QCloudBizHTTPRequest
+@interface QCloudGetBucketIntelligentTieringRequest : QCloudBizHTTPRequest
 /**
 存储桶名
 */
 @property (strong, nonatomic) NSString *bucket;
 
-- (void) setFinishBlock:(void (^_Nullable)(QCloudTagging* _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock;
+- (void) setFinishBlock:(void (^)(QCloudIntelligentTieringConfiguration* result, NSError * error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

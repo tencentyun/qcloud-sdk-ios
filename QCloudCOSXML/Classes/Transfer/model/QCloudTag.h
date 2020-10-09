@@ -1,6 +1,6 @@
 //
-//  GetBucketTagging.h
-//  GetBucketTagging
+//  QCloudTag.h
+//  QCloudTag
 //
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.
@@ -27,42 +27,19 @@
 
 #import <Foundation/Foundation.h>
 #import <QCloudCore/QCloudCore.h>
-#import "QCloudTagging.h"
+
 NS_ASSUME_NONNULL_BEGIN
-
 /**
-查询指定存储桶下已有的存储桶标签.
-
-### 功能说明
-
-COS 支持为已存在的存储桶查询标签（Tag）。GET Bucket tagging 接口用于查询指定存储桶下已有的存储桶标签.
-
-关于查询指定存储桶下已有的存储桶标签接口的具体描述，请查看https://cloud.tencent.com/document/product/436/34837.
-
-### 示例
-   
-  @code
-  
-    QCloudGetBucketTaggingRequest *getReq = [QCloudGetBucketTaggingRequest new];
-    
-    // 存储桶名称，格式为 BucketName-APPID
-    getReq.bucket = @"examplebucket-1250000000";
-    
-    [getReq setFinishBlock:^(QCloudTagging * result, NSError * error) {
-        
-        // tag的集合
-        QCloudTagSet * tagSet = result.tagSet;
-    }];
-    [[QCloudCOSXMLService defaultCOSXML] GetBucketTagging:getReq];
-  
+ 桶tag集合的每一个item
 */
-
-@interface QCloudGetBucketTaggingRequest : QCloudBizHTTPRequest
+@interface QCloudTag : NSObject
 /**
-存储桶名
+tag的key
 */
-@property (strong, nonatomic) NSString *bucket;
-
-- (void) setFinishBlock:(void (^_Nullable)(QCloudTagging* _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock;
+@property (strong, nonatomic) NSString *key;
+/**
+tag的值
+*/
+@property (strong, nonatomic) NSString *value;
 @end
 NS_ASSUME_NONNULL_END

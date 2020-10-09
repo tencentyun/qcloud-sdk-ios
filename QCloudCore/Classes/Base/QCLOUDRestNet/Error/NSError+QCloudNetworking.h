@@ -28,7 +28,7 @@ typedef NS_ENUM(int,QCloudNetworkErrorCode) {
     //ServerError 服务器返回了不合法的数据
     QCloudNetworkErrorCodeResponseDataTypeInvalid = 20001,
     //数据完整性校验失败
-    QCloudNetworkErrorCodeMD5NotMatch = 20004,
+    QCloudNetworkErrorCodeNotMatch = 20004,
     //UserCancelled 用户取消
     QCloudNetworkErrorCodeCanceled  = 30000,
     //AlreadyFinished 任务已完成

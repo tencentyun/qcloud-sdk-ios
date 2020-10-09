@@ -28,5 +28,6 @@
 @class QCloudHTTPRequest;
 @interface QCloudAuthentationV5Creator : QCloudAuthentationCreator
 @property (nonatomic, strong) NSString * tokenHeaderName;
+@property (nonatomic, strong) NSArray *shouldSignedList;
 - (QCloudSignature*) signatureForData:(NSMutableURLRequest*)signData;
 @end
