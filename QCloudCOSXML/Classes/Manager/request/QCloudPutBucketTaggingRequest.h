@@ -27,7 +27,7 @@
 
 #import <Foundation/Foundation.h>
 #import <QCloudCore/QCloudCore.h>
-@class QCloudTagging;
+@class QCloudBucketTagging;
 NS_ASSUME_NONNULL_BEGIN
 /**
  设置存储桶标签的方法
@@ -48,9 +48,9 @@ NS_ASSUME_NONNULL_BEGIN
      putReq.bucket = @"examplebucket-1250000000";
      
      // 标签集合
-     QCloudTagging *taggings = [QCloudTagging new];
+     QCloudBucketTagging *taggings = [QCloudBucketTagging new];
      
-     QCloudTag *tag1 = [QCloudTag new];
+     QCloudBucketTag *tag1 = [QCloudBucketTag new];
      
      // 标签的 Key，长度不超过128字节, 支持英文字母、数字、空格、加号、减号、下划线、等号、点号、
      // 冒号、斜线
@@ -59,12 +59,12 @@ NS_ASSUME_NONNULL_BEGIN
      // 标签的 Value，长度不超过256字节, 支持英文字母、数字、空格、加号、减号、下划线、等号、点号
      // 、冒号、斜线
      tag1.value = @"20";
-     QCloudTag *tag2 = [QCloudTag new];
+     QCloudBucketTag *tag2 = [QCloudBucketTag new];
      tag2.key = @"name";
      tag2.value = @"karis";
      
      // 标签集合，最多支持10个标签
-     QCloudTagSet *tagSet = [QCloudTagSet new];
+     QCloudBucketTagSet *tagSet = [QCloudBucketTagSet new];
      tagSet.tag = @[tag1,tag2];
      taggings.tagSet = tagSet;
      
@@ -84,7 +84,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  标签集合
  */
-@property (strong, nonatomic) QCloudTagging *taggings;
+@property (strong, nonatomic) QCloudBucketTagging *taggings;
 /**
 存储桶名
 */

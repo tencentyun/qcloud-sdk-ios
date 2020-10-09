@@ -1,6 +1,6 @@
 //
-//  GetObjectTagging.m
-//  GetObjectTagging
+//  QCloudBucketTagSet.h
+//  QCloudBucketTagSet
 //
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.
@@ -25,90 +25,19 @@
 
 
 
-
-
-
-
-
-#import "QCloudGetObjectTaggingRequest.h"
-#import <QCloudCore/QCloudSignatureFields.h>
+#import <Foundation/Foundation.h>
 #import <QCloudCore/QCloudCore.h>
-#import <QCloudCore/QCloudServiceConfiguration_Private.h>
-#import "QCloudTagging.h"
-
+#import "QCloudBucketTag.h"
 
 NS_ASSUME_NONNULL_BEGIN
-@implementation QCloudGetObjectTaggingRequest
-- (void) dealloc
-{
-}
--  (instancetype) init
-{
-    self = [super init];
-    if (!self) {
-        return nil;
-    }
-    return self;
-}
-- (void) configureReuqestSerializer:(QCloudRequestSerializer *)requestSerializer  responseSerializer:(QCloudResponseSerializer *)responseSerializer
-{
+/**
+ 桶的所有tag
+*/
+@interface QCloudBucketTagSet : NSObject
 
-    NSArray* customRequestSerilizers = @[
-                                        QCloudURLFuseURIMethodASURLParamters,
-                                        ];
-
-    NSArray* responseSerializers = @[
-                                    QCloudAcceptRespnseCodeBlock([NSSet setWithObjects:@(200), @(201), @(202), @(203), @(204), @(205), @(206), @(207), @(208), @(226), nil], nil),
-                                    QCloudResponseXMLSerializerBlock,
-                                    
-
-                                    QCloudResponseObjectSerilizerBlock([QCloudTagging class])
-                                    ];
-    [requestSerializer setSerializerBlocks:customRequestSerilizers];
-    [responseSerializer setSerializerBlocks:responseSerializers];
-
-    requestSerializer.HTTPMethod = @"get";
-}
-
-
-
-- (BOOL) buildRequestData:(NSError *__autoreleasing *)error
-{
-    if (![super buildRequestData:error]) {
-        return NO;
-    }
-    if (!self.bucket || ([self.bucket isKindOfClass:NSString.class] && ((NSString*)self.bucket).length == 0)) {
-        if (error != NULL) {
-            *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid message:[NSString stringWithFormat:@"InvalidArgument:paramter[bucket] is invalid (nil), it must have some value. please check it"]];
-            return NO;
-        }
-    }
-    if (!self.object || ([self.object isKindOfClass:NSString.class] && ((NSString*)self.object).length == 0)) {
-        if (error != NULL) {
-            *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid message:[NSString stringWithFormat:@"InvalidArgument:paramter[object] is invalid (nil), it must have some value. please check it"]];
-            return NO;
-        }
-    }
-    NSURL* __serverURL = [self.runOnService.configuration.endpoint serverURLWithBucket:self.bucket appID:self.runOnService.configuration.appID regionName:self.regionName];
-    self.requestData.serverURL = __serverURL.absoluteString;
-    [self.requestData setValue:__serverURL.host forHTTPHeaderField:@"Host"];
-    self.requestData.URIMethod = @"tagging";
-    NSMutableArray* __pathComponents = [NSMutableArray arrayWithArray:self.requestData.URIComponents];
-    if(self.object) [__pathComponents addObject:self.object];
-    self.requestData.URIComponents = __pathComponents;
-    return YES;
-}
-- (void) setFinishBlock:(void (^_Nullable )(QCloudTagging* _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock
-{
-    [super setFinishBlock:QCloudRequestFinishBlock];
-}
-
-- (QCloudSignatureFields*) signatureFields
-{
-    QCloudSignatureFields* fileds = [QCloudSignatureFields new];
-
-    return fileds;
-}
-
+/**
+ 所有tag
+ */
+@property (strong, nonatomic) NSArray<QCloudBucketTag*> *tag;
 @end
 NS_ASSUME_NONNULL_END

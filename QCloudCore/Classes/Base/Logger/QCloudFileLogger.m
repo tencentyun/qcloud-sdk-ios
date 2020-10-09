@@ -9,7 +9,6 @@
 #import "QCloudFileLogger.h"
 #import "QCloudLogModel.h"
 #import "QCloudFileUtils.h"
-#import "QCloudLogger.h"
 #import <zlib.h>
 #if TARGET_OS_IOS
 #import <UIKit/UIKit.h>
@@ -82,20 +81,6 @@
 
 - (void) writeCliceDataToFile
 {
-    NSError *error = nil;
-    NSString *path = QCloudApplicationDirectory();
-    NSDictionary *dic = [[NSFileManager defaultManager]attributesOfFileSystemForPath:path error:&error];
-    if (error) {
-        QCloudLogError(@"write log error :%@",error);
-        return;
-    }
-    if (dic) {
-        NSNumber *free = [dic objectForKey:NSFileSystemFreeSize];
-        if ([free unsignedLongValue] < 1024*1024) {
-            QCloudLogError(@"磁盘空间不可用：剩余空间 = %d",[free unsignedLongValue]);
-            return;
-        }
-    }
     if (_sliceData.length) {
         [_fileHandler writeData:_sliceData];
         _sliceData = [NSMutableData dataWithCapacity:(NSUInteger)_sliceSize];

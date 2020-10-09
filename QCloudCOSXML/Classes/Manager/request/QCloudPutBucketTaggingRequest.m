@@ -34,7 +34,7 @@
 #import <QCloudCore/QCloudSignatureFields.h>
 #import <QCloudCore/QCloudCore.h>
 #import <QCloudCore/QCloudServiceConfiguration_Private.h>
-#import "QCloudTagging.h"
+#import "QCloudBucketTagging.h"
 
 
 NS_ASSUME_NONNULL_BEGIN

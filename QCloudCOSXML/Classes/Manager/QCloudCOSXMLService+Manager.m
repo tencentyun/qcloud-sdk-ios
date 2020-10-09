@@ -34,175 +34,131 @@
 #import "QCloudPutBucketLifecycleRequest.h"
 #import "QCloudDeleteBucketLifeCycleRequest.h"
 #import "QCloudPostObjectRestoreRequest.h"
+
 #import "QCloudDeleteObjectRequest.h"
 #import "QCloudListObjectVersionsRequest.h"
 #import "QCloudGetPresignedURLRequest.h"
-#import "QCloudPutBucketAccelerateRequest.h"
-#import "QCloudGetBucketAccelerateRequest.h"
-#import "QCloudGetObjectTaggingRequest.h"
-#import "QCloudPutObjectTaggingRequest.h"
-#import "QCloudPutBucketIntelligentTieringRequest.h"
-#import "QCloudGetBucketIntelligentTieringRequest.h"
+
 @implementation QCloudCOSXMLService (Manager)
-
--(void)PutBucketIntelligentTiering:(QCloudPutBucketIntelligentTieringRequest *)request{
-    [super performRequest:request];
-}
-
--(void)GetBucketIntelligentTiering:(QCloudGetBucketIntelligentTieringRequest *)request{
-    [super performRequest:request];
-}
-- (void)GetObjectTagging:(QCloudGetObjectTaggingRequest*)request
+- (void) GetObjectACL:(QCloudGetObjectACLRequest*)request
 {
     [super performRequest:request ];
 }
 
-- (void)PuObjectTagging:(QCloudPutBucketTaggingRequest*)request
+- (void) PutObjectACL:(QCloudPutObjectACLRequest*)request
+{
+    [super performRequest:request ];
+}
+- (void) DeleteObject:(QCloudDeleteObjectRequest*)request
+{
+    [super performRequest:request ];
+}
+- (void) DeleteMultipleObject:(QCloudDeleteMultipleObjectRequest*)request
 {
     [super performRequest:request ];
 }
 
-- (void)GetObjectACL:(QCloudGetObjectACLRequest*)request
+- (void) OptionsObject:(QCloudOptionsObjectRequest*)request
 {
     [super performRequest:request ];
 }
 
-- (void)PutObjectACL:(QCloudPutObjectACLRequest*)request
+
+- (void) PutBucket:(QCloudPutBucketRequest*)request
+{
+    [super performRequest:request ];
+}
+- (void) GetBucket:(QCloudGetBucketRequest*)request
+{
+    [super performRequest:request ];
+}
+- (void) GetBucketACL:(QCloudGetBucketACLRequest*)request
+{
+    [super performRequest:request ];
+}
+- (void) GetBucketCORS:(QCloudGetBucketCORSRequest*)request
+{
+    [super performRequest:request ];
+}
+- (void) GetBucketLocation:(QCloudGetBucketLocationRequest*)request
+{
+    [super performRequest:request ];
+}
+- (void) GetBucketLifecycle:(QCloudGetBucketLifecycleRequest*)request
 {
     [super performRequest:request ];
 }
 
-- (void)DeleteObject:(QCloudDeleteObjectRequest*)request
+- (void) PutBucketACL:(QCloudPutBucketACLRequest*)request
+{
+    [super performRequest:request ];
+}
+- (void) PutBucketCORS:(QCloudPutBucketCORSRequest*)request
+{
+    [super performRequest:request ];
+}
+- (void) PutBucketLifecycle:(QCloudPutBucketLifecycleRequest*)request
 {
     [super performRequest:request ];
 }
 
-- (void)DeleteMultipleObject:(QCloudDeleteMultipleObjectRequest*)request
+- (void) DeleteBucketCORS:(QCloudDeleteBucketCORSRequest*)request
+{
+    [super performRequest:request ];
+}
+- (void) DeleteBucketLifeCycle:(QCloudDeleteBucketLifeCycleRequest*)request
 {
     [super performRequest:request ];
 }
 
-- (void)OptionsObject:(QCloudOptionsObjectRequest*)request
+- (void) DeleteBucket:(QCloudDeleteBucketRequest*)request
 {
     [super performRequest:request ];
 }
-
-- (void)GetService:(QCloudGetServiceRequest*)request {
-    [super performRequest:request ];
-}
-
-- (void)PutBucket:(QCloudPutBucketRequest*)request
+- (void) HeadBucket:(QCloudHeadBucketRequest*)request
 {
     [super performRequest:request ];
 }
-- (void)GetBucket:(QCloudGetBucketRequest*)request
-{
-    [super performRequest:request ];
-}
-
-- (void)HeadBucket:(QCloudHeadBucketRequest*)request
-{
-    [super performRequest:request ];
-}
-
-- (void)DeleteBucket:(QCloudDeleteBucketRequest*)request
-{
-    [super performRequest:request ];
-}
-
-- (void)GetBucketLocation:(QCloudGetBucketLocationRequest*)request
-{
-    [super performRequest:request ];
-}
-
 - (void) ListBucketMultipartUploads:(QCloudListBucketMultipartUploadsRequest*)request
 {
     [super performRequest:request ];
 }
-
-- (void)PutBucketACL:(QCloudPutBucketACLRequest*)request
-{
+- (void) PutBucketVersioning:(QCloudPutBucketVersioningRequest*)request {
     [super performRequest:request ];
 }
-
-- (void)GetBucketACL:(QCloudGetBucketACLRequest*)request
-{
+- (void) GetBucketVersioning:(QCloudGetBucketVersioningRequest*)request {
     [super performRequest:request ];
 }
-
-- (void)GetBucketCORS:(QCloudGetBucketCORSRequest*)request
-{
+- (void) PutBucketRelication:(QCloudPutBucketReplicationRequest*)request {
     [super performRequest:request ];
 }
-
-- (void)PutBucketLifecycle:(QCloudPutBucketLifecycleRequest*)request
-{
+- (void) GetBucketReplication:(QCloudGetBucketReplicationRequest*)request {
     [super performRequest:request ];
 }
-
-- (void)GetBucketLifecycle:(QCloudGetBucketLifecycleRequest*)request
-{
-    [super performRequest:request ];
-}
-
-- (void)DeleteBucketLifeCycle:(QCloudDeleteBucketLifeCycleRequest*)request
-{
-    [super performRequest:request ];
-}
-
-- (void)PutBucketCORS:(QCloudPutBucketCORSRequest*)request
-{
-    [super performRequest:request ];
-}
-
-- (void)DeleteBucketCORS:(QCloudDeleteBucketCORSRequest*)request
-{
-    [super performRequest:request ];
-}
-
-- (void)PutBucketVersioning:(QCloudPutBucketVersioningRequest*)request {
-    [super performRequest:request ];
-}
-
-- (void)GetBucketVersioning:(QCloudGetBucketVersioningRequest*)request {
-    [super performRequest:request ];
-}
-
-- (void)PutBucketAccelerate:(QCloudPutBucketAccelerateRequest*)request {
-    [super performRequest:request ];
-}
-- (void)GetBucketAccelerate:(QCloudGetBucketAccelerateRequest*)request {
-    [super performRequest:request ];
-}
-
-- (void)PutBucketRelication:(QCloudPutBucketReplicationRequest*)request {
-    [super performRequest:request ];
-}
-
-- (void)GetBucketReplication:(QCloudGetBucketReplicationRequest*)request {
-    [super performRequest:request ];
-}
-
 - (void) DeleteBucketReplication:(QCloudDeleteBucketReplicationRequest*)request {
     [super performRequest:request ];
 }
-
-- (void)PostObjectRestore:(QCloudPostObjectRestoreRequest*)request {
+- (void) GetService:(QCloudGetServiceRequest*)request {
     [super performRequest:request ];
 }
-- (void)ListObjectVersions:(QCloudListObjectVersionsRequest *)request {
+- (void) PostObjectRestore:(QCloudPostObjectRestoreRequest*)request {
     [super performRequest:request ];
 }
-
-- (void)PutBucketDomain:(QCloudPutBucketDomainRequest *)request{
-    [super performRequest:request ];
-}
-
-- (void)GetBucketDomain:(QCloudGetBucketDomainRequest *)request{
+- (void) ListObjectVersions:(QCloudListObjectVersionsRequest *)request {
     [super performRequest:request ];
 }
 
-- (void)PutBucketWebsite:(QCloudPutBucketWebsiteRequest *)request{
+
+
+-(void)PutBucketDomain:(QCloudPutBucketDomainRequest *)request{
+    [super performRequest:request ];
+}
+
+-(void)GetBucketDomain:(QCloudGetBucketDomainRequest *)request{
+    [super performRequest:request ];
+}
+
+-(void)PutBucketWebsite:(QCloudPutBucketWebsiteRequest *)request{
     [super performRequest:request ];
 }
 
@@ -213,6 +169,7 @@
 -(void)DeleteBucketWebsite:(QCloudDeleteBucketWebsiteRequest *)request{
     [super performRequest:request ];
 }
+
 
 -(void)GetBucketTagging:(QCloudGetBucketTaggingRequest *)request{
     [super performRequest:request ];
@@ -227,34 +184,33 @@
 }
 
 -(void)SelectObjectContent:(QCloudSelectObjectContentRequest *)request{
+     [super performRequest:request ];
+}
+-(void)GetBucketLogging:(QCloudGetBucketLoggingRequest *)request{
     [super performRequest:request ];
 }
 
 -(void)PutBucketLogging:(QCloudPutBucketLoggingRequest *)request{
     [super performRequest:request ];
 }
-
--(void)GetBucketLogging:(QCloudGetBucketLoggingRequest *)request{
-    [super performRequest:request ];
-}
-
+    
 -(void)PutBucketInventory:(QCloudPutBucketInventoryRequest *)request{
     [super performRequest:request ];
 }
-
+    
 -(void)GetBucketInventory:(QCloudGetBucketInventoryRequest *)request{
     [super performRequest:request ];
 }
-
+    
 -(void)DeleteBucketInventory:(QCloudDeleteBucketInventoryRequest *)request{
     [super performRequest:request ];
 }
-
+    
 -(void)ListBucketInventory:(QCloudListBucketInventoryConfigurationsRequest *)request{
     [super performRequest:request ];
 }
 
-- (void)getPresignedURL:(QCloudGetPresignedURLRequest*)request {
+- (void) getPresignedURL:(QCloudGetPresignedURLRequest*)request {
     
     request.runOnService = self;
     request.signatureProvider = self.configuration.signatureProvider;
@@ -267,22 +223,23 @@
     __block NSString* requestURLString = urlRequest.URL.absoluteString;
     [request.signatureProvider signatureWithFields:request.signatureFields request:request urlRequest:urlRequest compelete:^(QCloudSignature *signature, NSError *error) {
         NSString* authorizatioinString = signature.signature;
-        if ([requestURLString hasSuffix:@"&"] || [requestURLString hasSuffix:@"?"]) {
-            requestURLString = [requestURLString stringByAppendingString:authorizatioinString];
-        } else {
-            requestURLString = [requestURLString stringByAppendingFormat:@"?%@",authorizatioinString];
-        }
+         if ([requestURLString hasSuffix:@"&"] || [requestURLString hasSuffix:@"?"]) {
+             requestURLString = [requestURLString stringByAppendingString:authorizatioinString];
+         } else {
+             requestURLString = [requestURLString stringByAppendingFormat:@"?%@",authorizatioinString];
+         }
         if (signature.token) {
-            requestURLString = [requestURLString stringByAppendingFormat:@"&x-cos-security-token=%@",signature.token];
+             requestURLString = [requestURLString stringByAppendingFormat:@"&x-cos-security-token=%@",signature.token];
         }
-        QCloudGetPresignedURLResult* result = [[QCloudGetPresignedURLResult alloc] init];
-        result.presienedURL = requestURLString;
-        if (request.finishBlock) {
-            request.finishBlock(result, nil);
-        }
+         QCloudGetPresignedURLResult* result = [[QCloudGetPresignedURLResult alloc] init];
+         result.presienedURL = requestURLString;
+         if (request.finishBlock) {
+             request.finishBlock(result, nil);
+         }
     }];
-    
+  
 }
+
 
 - (BOOL)doesBucketExist:(NSString *)bucketName {
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
@@ -302,6 +259,7 @@
     return result;
 }
 
+
 - (BOOL)doesObjectExistWithBucket:(NSString *)bucket object:(NSString *)objectName {
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     __block BOOL result = NO;
@@ -320,6 +278,7 @@
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
     return result;
 }
+
 
 - (void)deleteObjectWithBucket:(NSString *)bucket object:(NSString *)objectName {
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);

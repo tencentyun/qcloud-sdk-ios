@@ -1,6 +1,6 @@
 //
-//  QCloudTagSet.m
-//  QCloudTagSet
+//  QCloudBucketTagging.h
+//  QCloudBucketTagging
 //
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.
@@ -24,64 +24,19 @@
 //
 
 
-#import "QCloudTagSet.h"
 
-#import "QCloudTag.h"
-
+#import <Foundation/Foundation.h>
+#import <QCloudCore/QCloudCore.h>
+#import "QCloudBucketTagSet.h"
 
 NS_ASSUME_NONNULL_BEGIN
-@implementation QCloudTagSet
-
-+ (NSDictionary *)modelContainerPropertyGenericClass
-{
-   return @ {
-      @"tag":[QCloudTag class],
-  };
-}
-
-
-+ (NSDictionary *)modelCustomPropertyMapper
-{
-  return @{
-      @"tag" :@"Tag",
-  };
-}
-
-
-- (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic
-{
-
-
-    return YES;
-}
-
-- (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dic
-{
-    if (!dic) {
-        return dic;
-    }
-    NSMutableDictionary* transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
-    NSArray* transformArrayKeypaths = @[
-    @"Tag",
-    ];
-
-    for (NSString* keyPath in transformArrayKeypaths) {
-        id object = [dic valueForKeyPath:keyPath];
-        if (!object) {
-            continue;
-        }
-        if ([object isKindOfClass:[NSNull class]]) {
-            continue;
-        }
-        if (![object isKindOfClass:[NSArray class]]) {
-            [transfromDic setValue:@[object] forKeyPath:keyPath];
-        }
-    }
-
-    return transfromDic;
-}
-
+/**
+桶tag的集合
+*/
+@interface QCloudBucketTagging : NSObject
+/**
+tag的集合
+*/
+@property (strong, nonatomic) QCloudBucketTagSet *tagSet;
 @end
-
-
 NS_ASSUME_NONNULL_END

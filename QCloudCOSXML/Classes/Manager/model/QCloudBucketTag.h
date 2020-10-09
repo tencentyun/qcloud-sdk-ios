@@ -1,6 +1,6 @@
 //
-//  QCloudTagging.h
-//  QCloudTagging
+//  QCloudBucketTag.h
+//  QCloudBucketTag
 //
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.
@@ -27,16 +27,19 @@
 
 #import <Foundation/Foundation.h>
 #import <QCloudCore/QCloudCore.h>
-#import "QCloudTagSet.h"
 
 NS_ASSUME_NONNULL_BEGIN
 /**
-桶tag的集合
+ 桶tag集合的每一个item
 */
-@interface QCloudTagging : NSObject
+@interface QCloudBucketTag : NSObject
 /**
-tag的集合
+tag的key
 */
-@property (strong, nonatomic) QCloudTagSet *tagSet;
+@property (strong, nonatomic) NSString *key;
+/**
+tag的值
+*/
+@property (strong, nonatomic) NSString *value;
 @end
 NS_ASSUME_NONNULL_END

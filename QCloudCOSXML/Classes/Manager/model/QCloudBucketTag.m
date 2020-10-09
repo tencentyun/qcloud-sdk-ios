@@ -1,6 +1,6 @@
 //
-//  PutBucketAccelerate.m
-//  PutBucketAccelerate
+//  QCloudBucketTag.m
+//  QCloudBucketTag
 //
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.
@@ -24,92 +24,42 @@
 //
 
 
+#import "QCloudBucketTag.h"
 
-
-
-
-
-
-#import "QCloudPutBucketAccelerateRequest.h"
-#import <QCloudCore/QCloudSignatureFields.h>
-#import <QCloudCore/QCloudCore.h>
-#import <QCloudCore/QCloudServiceConfiguration_Private.h>
-#import "QCloudBucketAccelerateConfiguration.h"
 
 
 NS_ASSUME_NONNULL_BEGIN
-@implementation QCloudPutBucketAccelerateRequest
-- (void) dealloc
+@implementation QCloudBucketTag
+
+
+
++ (NSDictionary *)modelCustomPropertyMapper
 {
-}
--  (instancetype) init
-{
-    self = [super init];
-    if (!self) {
-        return nil;
-    }
-    return self;
-}
-- (void) configureReuqestSerializer:(QCloudRequestSerializer *)requestSerializer  responseSerializer:(QCloudResponseSerializer *)responseSerializer
-{
-
-    NSArray* customRequestSerilizers = @[
-                                        QCloudURLFuseURIMethodASURLParamters,
-                                        QCloudURLFuseWithXMLParamters,
-                                        ];
-
-    NSArray* responseSerializers = @[
-                                    QCloudAcceptRespnseCodeBlock([NSSet setWithObjects:@(200), @(201), @(202), @(203), @(204), @(205), @(206), @(207), @(208), @(226), nil], nil),
-                                    QCloudResponseXMLSerializerBlock,
-
-                                    ];
-    [requestSerializer setSerializerBlocks:customRequestSerilizers];
-    [responseSerializer setSerializerBlocks:responseSerializers];
-
-    requestSerializer.HTTPMethod = @"PUT";
+  return @{
+      @"key" :@"Key",
+      @"value" :@"Value",
+  };
 }
 
 
-
-- (BOOL) buildRequestData:(NSError *__autoreleasing *)error
+- (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic
 {
-    if (![super buildRequestData:error]) {
-        return NO;
-    }
-    if (!self.bucket || ([self.bucket isKindOfClass:NSString.class] && ((NSString*)self.bucket).length == 0)) {
-        if (error != NULL) {
-            *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid message:[NSString stringWithFormat:@"InvalidArgument:paramter[bucket] is invalid (nil), it must have some value. please check it"]];
-            return NO;
-        }
-    }
-    NSURL* __serverURL = [self.runOnService.configuration.endpoint serverURLWithBucket:self.bucket appID:self.runOnService.configuration.appID regionName:self.regionName];
-    self.requestData.serverURL = __serverURL.absoluteString;
-    [self.requestData setValue:__serverURL.host forHTTPHeaderField:@"Host"];
-    [self.requestData setParameter:[self.configuration qcloud_modelToJSONObject] withKey:@"AccelerateConfiguration"];
-    self.requestData.URIMethod = @"accelerate";
+
+
     return YES;
 }
 
-- (QCloudSignatureFields*) signatureFields
+- (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dic
 {
-    QCloudSignatureFields* fileds = [QCloudSignatureFields new];
+    if (!dic) {
+        return dic;
+    }
+    NSMutableDictionary* transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
 
-    return fileds;
+    return transfromDic;
 }
 
--(NSArray<NSMutableDictionary *> *)scopesArray{
-    
-    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    NSArray *separatetmpArray = [self.requestData.serverURL componentsSeparatedByString:@"://"];
-    NSString *str = separatetmpArray[1];
-    NSArray *separateArray = [str  componentsSeparatedByString:@"."];
-    dic[@"bucket"] = separateArray[0];
-    dic[@"region"] = self.runOnService.configuration.endpoint.regionName;
-    dic[@"prefix"] = @"";
-    dic[@"action"] = @"name/cos:PutBucketAccelerate";
-    NSMutableArray *array = [NSMutableArray array];
-    [array addObject:dic];
-    return [array copy];
-}
 @end
+
+
 NS_ASSUME_NONNULL_END

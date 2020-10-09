@@ -113,37 +113,21 @@ QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilizerBlock = ^(NSHTT
 - (BOOL) prepareInvokeURLRequest:(NSMutableURLRequest *)urlRequest error:(NSError* __autoreleasing*)error
 {
     
-    //    NSAssert(self.runOnService, @"RUN ON SERVICE is nil%@", self.runOnService);
+//    NSAssert(self.runOnService, @"RUN ON SERVICE is nil%@", self.runOnService);
     __block dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     __block NSError* localError;
-    __block BOOL isSigned;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         [self.signatureProvider signatureWithFields:self.signatureFields request:self urlRequest:urlRequest compelete:^(QCloudSignature *signature, NSError *error) {
             if (error) {
-                localError = error;
-            } else {
-                if (signature.signature) {
-                    if (!self.isSignedInURL) {
-                        [urlRequest setValue:signature.signature forHTTPHeaderField:@"Authorization"];
-                    }else{
-                        NSString *urlStr;
-                        NSRange rangeOfQ = [urlStr rangeOfString:@"?"];
-                        if (rangeOfQ.location == NSNotFound) {
-                            urlStr = [NSString stringWithFormat:@"%@?%@",urlRequest.URL.absoluteString,signature.signature];
-                        }else{
-                            urlStr =[NSString stringWithFormat:@"%@&%@",urlRequest.URL.absoluteString,signature.signature];
-                        }
-                        if (signature.token) {
-                            urlStr = [NSString stringWithFormat:@"%@&x-cos-security-token=%@",urlStr,signature.token];
-                        }
-                        urlRequest.URL = [[NSURL URLWithString:urlStr] copy];
-                    }
-                    isSigned = YES;
-                } else {
-                    // null authorization
-                }
-            }
-            dispatch_semaphore_signal(semaphore);
+                         localError = error;
+                     } else {
+                         if (signature.signature) {
+                             [urlRequest setValue:signature.signature forHTTPHeaderField:@"Authorization"];
+                         } else {
+                             // null authorization
+                         }
+                     }
+                     dispatch_semaphore_signal(semaphore);
         }];
     });
     
@@ -153,7 +137,7 @@ QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilizerBlock = ^(NSHTT
             *error = localError;
         }
         return NO;
-    } else  if (!isSigned){
+    } else  if (![urlRequest.allHTTPHeaderFields.allKeys containsObject:@"Authorization"]){
         *error = [NSError errorWithDomain:@"com.tencent.qcloud.request" code:QCloudNetworkErrorCodeCredentialNotReady userInfo:@{@"Description":@"InvalidCredentials：获取签名超时，请检查是否实现签名回调，签名回调是否有调用,并且在最后是否有调用 ContinueBlock 传入签名"}];
         return NO;
     } else {
@@ -175,7 +159,7 @@ NSString* EncrytNSDataMD5Base64(NSData* data)
     return [md5data base64EncodedStringWithOptions:0];
 }
 -(void)setCOSServerSideEncyption{
-    self.customHeaders[@"x-cos-server-side-encryption"] = @"AES256";
+     self.customHeaders[@"x-cos-server-side-encryption"] = @"AES256";
 }
 
 -(void)setCOSServerSideEncyptionWithCustomerKey:(NSString *)customerKey{

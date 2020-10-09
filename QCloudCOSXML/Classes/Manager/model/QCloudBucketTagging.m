@@ -1,6 +1,6 @@
 //
-//  QCloudIntelligentTieringConfiguration.h
-//  QCloudIntelligentTieringConfiguration
+//  QCloudBucketTagging.m
+//  QCloudBucketTagging
 //
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.
@@ -24,21 +24,42 @@
 //
 
 
+#import "QCloudBucketTagging.h"
 
-#import <Foundation/Foundation.h>
-#import <QCloudCore/QCloudCore.h>
-#import "QCloudIntelligentTieringStatusEnum.h"
-#import "QCloudIntelligentTieringTransition.h"
+#import "QCloudBucketTagSet.h"
+
 
 NS_ASSUME_NONNULL_BEGIN
-@interface QCloudIntelligentTieringConfiguration : NSObject
-/**
-    智能分层存储配置是否开启，枚举值：Suspended\Enabled
-    */
-@property (assign, nonatomic) QCloudIntelligentTieringStatus status;
-/**
-    指定智能分层存储配置中有关数据转换的配置信息
-    */
-@property (strong, nonatomic) QCloudIntelligentTieringTransition *transition;
+@implementation QCloudBucketTagging
+
+
+
++ (NSDictionary *)modelCustomPropertyMapper
+{
+  return @{
+      @"tagSet" :@"TagSet",
+  };
+}
+
+
+- (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic
+{
+
+
+    return YES;
+}
+
+- (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dic
+{
+    if (!dic) {
+        return dic;
+    }
+    NSMutableDictionary* transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
+
+    return transfromDic;
+}
+
 @end
+
+
 NS_ASSUME_NONNULL_END

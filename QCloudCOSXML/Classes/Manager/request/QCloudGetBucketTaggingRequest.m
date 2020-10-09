@@ -34,7 +34,7 @@
 #import <QCloudCore/QCloudSignatureFields.h>
 #import <QCloudCore/QCloudCore.h>
 #import <QCloudCore/QCloudServiceConfiguration_Private.h>
-#import "QCloudTagging.h"
+#import "QCloudBucketTagging.h"
 
 
 NS_ASSUME_NONNULL_BEGIN
@@ -62,7 +62,7 @@ NS_ASSUME_NONNULL_BEGIN
                                     QCloudResponseXMLSerializerBlock,
                                     
 
-                                    QCloudResponseObjectSerilizerBlock([QCloudTagging class])
+                                    QCloudResponseObjectSerilizerBlock([QCloudBucketTagging class])
                                     ];
     [requestSerializer setSerializerBlocks:customRequestSerilizers];
     [responseSerializer setSerializerBlocks:responseSerializers];
@@ -89,7 +89,7 @@ NS_ASSUME_NONNULL_BEGIN
     self.requestData.URIMethod = @"tagging";
     return YES;
 }
-- (void) setFinishBlock:(void (^_Nullable )(QCloudTagging* _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock
+- (void) setFinishBlock:(void (^_Nullable )(QCloudBucketTagging* _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock
 {
     [super setFinishBlock:QCloudRequestFinishBlock];
 }
