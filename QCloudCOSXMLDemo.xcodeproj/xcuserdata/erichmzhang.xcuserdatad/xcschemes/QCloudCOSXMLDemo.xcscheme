@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scheme
+   LastUpgradeVersion = "0910"
+   version = "1.3">
+   <BuildAction
+      parallelizeBuildables = "YES"
+      buildImplicitDependencies = "YES">
+      <BuildActionEntries>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "1AB143EB1E601E0500830F93"
+               BuildableName = "QCloudCOSXMLDemo.app"
+               BlueprintName = "QCloudCOSXMLDemo"
+               ReferencedContainer = "container:QCloudCOSXMLDemo.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+      </BuildActionEntries>
+   </BuildAction>
+   <TestAction
+      buildConfiguration = "Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      shouldUseLaunchSchemeArgsEnv = "YES">
+      <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A801AD362019904E004D1B9A"
+               BuildableName = "QCloudCOSXMLDemoTests5.2.0.xctest"
+               BlueprintName = "QCloudCOSXMLDemoTests5.2.0"
+               ReferencedContainer = "container:QCloudCOSXMLDemo.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A801AD502019C688004D1B9A"
+               BuildableName = "QCloudCOSXMLDemoTests5.1.3.xctest"
+               BlueprintName = "QCloudCOSXMLDemoTests5.1.3"
+               ReferencedContainer = "container:QCloudCOSXMLDemo.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A801AD69201A006D004D1B9A"
+               BuildableName = "QCloudCOSXMLDemoTests5.1.2.xctest"
+               BlueprintName = "QCloudCOSXMLDemoTests5.1.2"
+               ReferencedContainer = "container:QCloudCOSXMLDemo.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A801AD77201A0079004D1B9A"
+               BuildableName = "QCloudCOSXMLDemoTests5.1.1.xctest"
+               BlueprintName = "QCloudCOSXMLDemoTests5.1.1"
+               ReferencedContainer = "container:QCloudCOSXMLDemo.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A801AD85201A0184004D1B9A"
+               BuildableName = "QCloudCOSXMLDemoTests5.1.0.xctest"
+               BlueprintName = "QCloudCOSXMLDemoTests5.1.0"
+               ReferencedContainer = "container:QCloudCOSXMLDemo.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A801AD93201A035B004D1B9A"
+               BuildableName = "QCloudCOSXMLDemoTests5.0.3.xctest"
+               BlueprintName = "QCloudCOSXMLDemoTests5.0.3"
+               ReferencedContainer = "container:QCloudCOSXMLDemo.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A801ADA1201A0366004D1B9A"
+               BuildableName = "QCloudCOSXMLDemoTests5.0.2.xctest"
+               BlueprintName = "QCloudCOSXMLDemoTests5.0.2"
+               ReferencedContainer = "container:QCloudCOSXMLDemo.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A801ADAF201A0371004D1B9A"
+               BuildableName = "QCloudCOSXMLDemoTests5.0.1.xctest"
+               BlueprintName = "QCloudCOSXMLDemoTests5.0.1"
+               ReferencedContainer = "container:QCloudCOSXMLDemo.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A801ADBD201A0379004D1B9A"
+               BuildableName = "QCloudCOSXMLDemoTests5.0.0.xctest"
+               BlueprintName = "QCloudCOSXMLDemoTests5.0.0"
+               ReferencedContainer = "container:QCloudCOSXMLDemo.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+      </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "1AB143EB1E601E0500830F93"
+            BuildableName = "QCloudCOSXMLDemo.app"
+            BlueprintName = "QCloudCOSXMLDemo"
+            ReferencedContainer = "container:QCloudCOSXMLDemo.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
+      <AdditionalOptions>
+      </AdditionalOptions>
+   </TestAction>
+   <LaunchAction
+      buildConfiguration = "Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      launchStyle = "0"
+      useCustomWorkingDirectory = "NO"
+      ignoresPersistentStateOnLaunch = "NO"
+      debugDocumentVersioning = "YES"
+      debugServiceExtension = "internal"
+      allowLocationSimulation = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "1AB143EB1E601E0500830F93"
+            BuildableName = "QCloudCOSXMLDemo.app"
+            BlueprintName = "QCloudCOSXMLDemo"
+            ReferencedContainer = "container:QCloudCOSXMLDemo.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "QCloudLogLevel"
+            value = "6"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
+      <AdditionalOptions>
+      </AdditionalOptions>
+   </LaunchAction>
+   <ProfileAction
+      buildConfiguration = "Release"
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      savedToolIdentifier = ""
+      useCustomWorkingDirectory = "NO"
+      debugDocumentVersioning = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "1AB143EB1E601E0500830F93"
+            BuildableName = "QCloudCOSXMLDemo.app"
+            BlueprintName = "QCloudCOSXMLDemo"
+            ReferencedContainer = "container:QCloudCOSXMLDemo.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
+   </ProfileAction>
+   <AnalyzeAction
+      buildConfiguration = "Debug">
+   </AnalyzeAction>
+   <ArchiveAction
+      buildConfiguration = "Release"
+      revealArchiveInOrganizer = "YES">
+   </ArchiveAction>
+</Scheme>
