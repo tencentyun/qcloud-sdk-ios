@@ -28,9 +28,6 @@ extern _Nonnull QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilize
 @class QCloudServiceConfiguration;
 @interface QCloudBizHTTPRequest : QCloudHTTPRequest
 
-
-
-
 /*
  在进行HTTP请求的时候，可以通过设置该参数来设置自定义的一些头部信息。
  通常情况下，携带特定的额外HTTP头部可以使用某项功能，如果是这类需求，可以通过设置该属性来实现。
@@ -38,6 +35,10 @@ extern _Nonnull QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilize
 @property (strong, nonatomic) NSMutableDictionary* customHeaders;
 @property (strong,nonatomic) NSString *regionName;
 @property (copy,nonatomic) NSArray <NSMutableDictionary *>*scopesArray;
+/**
+ 通过指定该属性可以设置签名串是放在请求头部还是url中，默认为NO，签名串放在请求头部。
+ */
+@property (nonatomic,assign)BOOL isSignedInURL;
 /**
  请求序列化的过程
 

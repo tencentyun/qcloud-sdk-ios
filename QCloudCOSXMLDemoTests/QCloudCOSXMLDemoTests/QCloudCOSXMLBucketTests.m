@@ -1047,59 +1047,59 @@
 //    
 //}
 //
-//-(void)testPUT_GETBucketAccelerate{
-//    XCTestExpectation* expectation = [self expectationWithDescription:@"Put Object Copy"];
-//    QCloudPutBucketAccelerateRequest *req = [QCloudPutBucketAccelerateRequest new];
-//    req.bucket = self.bucket;
-//    QCloudBucketAccelerateConfiguration *config = [QCloudBucketAccelerateConfiguration new];
-//    config.status = QCloudCOSBucketAccelerateStatusEnabled;
-//    req.configuration = config;
-//    [req setFinishBlock:^(id  _Nullable outputObject, NSError * _Nullable error) {
-//        if (!error) {
-//            QCloudGetBucketAccelerateRequest *get = [QCloudGetBucketAccelerateRequest new];
-//                   get.bucket = self.bucket;
-//                   [get setFinishBlock:^(QCloudBucketAccelerateConfiguration * _Nullable result, NSError * _Nullable error) {
-//                       XCTAssertNil(error);
-//                       [expectation fulfill];
-//                   }];
-//                   [[QCloudCOSXMLService defaultCOSXML] GetBucketAccelerate:get];
-//        }else{
-//            XCTAssertNil(error);
-//            [expectation fulfill];
-//        }
-//       
-//    }];
-//    [[QCloudCOSXMLService defaultCOSXML] PutBucketAccelerate:req];
-//      [self waitForExpectationsWithTimeout:100 handler:nil];
-//}
-//
-//- (void)testPUT_GETBucketIntelligentTiering{
-//    XCTestExpectation *exp = [self expectationWithDescription:@"IntelligentTiering"];
-//    QCloudPutBucketIntelligentTieringRequest *put = [QCloudPutBucketIntelligentTieringRequest new];
-//    put.bucket = self.bucket;
-//    QCloudIntelligentTieringConfiguration *config = [QCloudIntelligentTieringConfiguration new];
-//    config.status = QCloudintelligentTieringStatusEnabled;
-//    QCloudIntelligentTieringTransition *transition = [QCloudIntelligentTieringTransition new];
-//    transition.days = 30;
-//    config.transition = transition;
-//    put.intelligentTieringConfiguration = config;
-//    [put setFinishBlock:^(id  _Nullable outputObject, NSError * _Nullable error) {
-//        XCTAssertNil(error);
-//        if (!error) {
-//            QCloudGetBucketIntelligentTieringRequest *get = [QCloudGetBucketIntelligentTieringRequest new];
-//            get.bucket = self.bucket;
-//            [get setFinishBlock:^(QCloudIntelligentTieringConfiguration * _Nonnull result, NSError * _Nonnull error) {
-//                XCTAssertNil(error);
-//                XCTAssertEqual(result.status, QCloudintelligentTieringStatusEnabled);
-//                [exp fulfill];
-//            }];
-//            [[QCloudCOSXMLService defaultCOSXML] GetBucketIntelligentTiering:get];
-//        }else{
-//            [exp fulfill];
-//        }
-//    }];
-//    [[QCloudCOSXMLService defaultCOSXML]PutBucketIntelligentTiering:put];
-//    [self waitForExpectationsWithTimeout:100 handler:nil];
-//}
+-(void)testPUT_GETBucketAccelerate{
+    XCTestExpectation* expectation = [self expectationWithDescription:@"Put Object Copy"];
+    QCloudPutBucketAccelerateRequest *req = [QCloudPutBucketAccelerateRequest new];
+    req.bucket = self.bucket;
+    QCloudBucketAccelerateConfiguration *config = [QCloudBucketAccelerateConfiguration new];
+    config.status = QCloudCOSBucketAccelerateStatusEnabled;
+    req.configuration = config;
+    [req setFinishBlock:^(id  _Nullable outputObject, NSError * _Nullable error) {
+        if (!error) {
+            QCloudGetBucketAccelerateRequest *get = [QCloudGetBucketAccelerateRequest new];
+                   get.bucket = self.bucket;
+                   [get setFinishBlock:^(QCloudBucketAccelerateConfiguration * _Nullable result, NSError * _Nullable error) {
+                       XCTAssertNil(error);
+                       [expectation fulfill];
+                   }];
+                   [[QCloudCOSXMLService defaultCOSXML] GetBucketAccelerate:get];
+        }else{
+            XCTAssertNil(error);
+            [expectation fulfill];
+        }
+       
+    }];
+    [[QCloudCOSXMLService defaultCOSXML] PutBucketAccelerate:req];
+      [self waitForExpectationsWithTimeout:100 handler:nil];
+}
+
+- (void)testPUT_GETBucketIntelligentTiering{
+    XCTestExpectation *exp = [self expectationWithDescription:@"IntelligentTiering"];
+    QCloudPutBucketIntelligentTieringRequest *put = [QCloudPutBucketIntelligentTieringRequest new];
+    put.bucket = self.bucket;
+    QCloudIntelligentTieringConfiguration *config = [QCloudIntelligentTieringConfiguration new];
+    config.status = QCloudintelligentTieringStatusEnabled;
+    QCloudIntelligentTieringTransition *transition = [QCloudIntelligentTieringTransition new];
+    transition.days = 30;
+    config.transition = transition;
+    put.intelligentTieringConfiguration = config;
+    [put setFinishBlock:^(id  _Nullable outputObject, NSError * _Nullable error) {
+        XCTAssertNil(error);
+        if (!error) {
+            QCloudGetBucketIntelligentTieringRequest *get = [QCloudGetBucketIntelligentTieringRequest new];
+            get.bucket = self.bucket;
+            [get setFinishBlock:^(QCloudIntelligentTieringConfiguration * _Nonnull result, NSError * _Nonnull error) {
+                XCTAssertNil(error);
+                XCTAssertEqual(result.status, QCloudintelligentTieringStatusEnabled);
+                [exp fulfill];
+            }];
+            [[QCloudCOSXMLService defaultCOSXML] GetBucketIntelligentTiering:get];
+        }else{
+            [exp fulfill];
+        }
+    }];
+    [[QCloudCOSXMLService defaultCOSXML]PutBucketIntelligentTiering:put];
+    [self waitForExpectationsWithTimeout:100 handler:nil];
+}
 @end
 

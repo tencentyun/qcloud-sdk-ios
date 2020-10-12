@@ -29,8 +29,8 @@
                    compelete:(QCloudHTTPAuthentationContinueBlock)continueBlock
 {
     QCloudCredential* credential = [QCloudCredential new];
-    credential.secretID = @"";
-    credential.secretKey = @"";
+    credential.secretID = @"AKIDPiqmW3qcgXVSKN8jngPzRhvxzYyDL5qP";
+    credential.secretKey = @"EH8oHoLgpmJmBQUM1Uoywjmv7EFzd5OJ";
     QCloudAuthentationV5Creator* creator = [[QCloudAuthentationV5Creator alloc] initWithCredential:credential];
     QCloudSignature* signature =  [creator signatureForData:urlRequst];
     continueBlock(signature, nil);

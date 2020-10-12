@@ -1,6 +1,6 @@
 //
-//  GetBucketTagging.h
-//  GetBucketTagging
+//  GetBucketAccelerate.m
+//  GetBucketAccelerate
 //
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.
@@ -25,44 +25,95 @@
 
 
 
-#import <Foundation/Foundation.h>
+
+
+
+
+
+#import "QCloudGetBucketAccelerateRequest.h"
+#import <QCloudCore/QCloudSignatureFields.h>
 #import <QCloudCore/QCloudCore.h>
-#import "QCloudTagging.h"
+#import <QCloudCore/QCloudServiceConfiguration_Private.h>
+#import "QCloudBucketAccelerateConfiguration.h"
+
+
 NS_ASSUME_NONNULL_BEGIN
+@implementation QCloudGetBucketAccelerateRequest
+- (void) dealloc
+{
+}
+-  (instancetype) init
+{
+    self = [super init];
+    if (!self) {
+        return nil;
+    }
+    return self;
+}
+- (void) configureReuqestSerializer:(QCloudRequestSerializer *)requestSerializer  responseSerializer:(QCloudResponseSerializer *)responseSerializer
+{
 
-/**
-查询指定存储桶下已有的存储桶标签.
+    NSArray* customRequestSerilizers = @[
+                                        QCloudURLFuseURIMethodASURLParamters,
+                                        ];
 
-### 功能说明
+    NSArray* responseSerializers = @[
+                                    QCloudAcceptRespnseCodeBlock([NSSet setWithObjects:@(200), @(201), @(202), @(203), @(204), @(205), @(206), @(207), @(208), @(226), nil], nil),
+                                    QCloudResponseXMLSerializerBlock,
 
-COS 支持为已存在的存储桶查询标签（Tag）。GET Bucket tagging 接口用于查询指定存储桶下已有的存储桶标签.
 
-关于查询指定存储桶下已有的存储桶标签接口的具体描述，请查看https://cloud.tencent.com/document/product/436/34837.
+                                    QCloudResponseObjectSerilizerBlock([QCloudBucketAccelerateConfiguration class])
+                                    ];
+    [requestSerializer setSerializerBlocks:customRequestSerilizers];
+    [responseSerializer setSerializerBlocks:responseSerializers];
 
-### 示例
-   
-  @code
-  
-    QCloudGetBucketTaggingRequest *getReq = [QCloudGetBucketTaggingRequest new];
+    requestSerializer.HTTPMethod = @"GET";
+}
+
+
+
+- (BOOL) buildRequestData:(NSError *__autoreleasing *)error
+{
+    if (![super buildRequestData:error]) {
+        return NO;
+    }
+    if (!self.bucket || ([self.bucket isKindOfClass:NSString.class] && ((NSString*)self.bucket).length == 0)) {
+        if (error != NULL) {
+            *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid message:[NSString stringWithFormat:@"InvalidArgument:paramter[bucket] is invalid (nil), it must have some value. please check it"]];
+            return NO;
+        }
+    }
+    NSURL* __serverURL = [self.runOnService.configuration.endpoint serverURLWithBucket:self.bucket appID:self.runOnService.configuration.appID regionName:self.regionName];
+    self.requestData.serverURL = __serverURL.absoluteString;
+    [self.requestData setValue:__serverURL.host forHTTPHeaderField:@"Host"];
+    self.requestData.URIMethod = @"accelerate";
+    return YES;
+}
+
+-(void)setFinishBlock:(void (^_Nullable)(QCloudBucketAccelerateConfiguration * _Nullable, NSError * _Nullable))QCloudRequestFinishBlock{
+    [super setFinishBlock:QCloudRequestFinishBlock];
+}
+
+- (QCloudSignatureFields*) signatureFields
+{
+    QCloudSignatureFields* fileds = [QCloudSignatureFields new];
+
+    return fileds;
+}
+-(NSArray<NSMutableDictionary *> *)scopesArray{
     
-    // 存储桶名称，格式为 BucketName-APPID
-    getReq.bucket = @"examplebucket-1250000000";
-    
-    [getReq setFinishBlock:^(QCloudTagging * result, NSError * error) {
-        
-        // tag的集合
-        QCloudTagSet * tagSet = result.tagSet;
-    }];
-    [[QCloudCOSXMLService defaultCOSXML] GetBucketTagging:getReq];
-  
-*/
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    NSArray *separatetmpArray = [self.requestData.serverURL componentsSeparatedByString:@"://"];
+    NSString *str = separatetmpArray[1];
+    NSArray *separateArray = [str  componentsSeparatedByString:@"."];
+    dic[@"bucket"] = separateArray[0];
+    dic[@"region"] = self.runOnService.configuration.endpoint.regionName;
+    dic[@"prefix"] = @"";
+    dic[@"action"] = @"name/cos:GetBucketAccelerate";
+    NSMutableArray *array = [NSMutableArray array];
+    [array addObject:dic];
+    return [array copy];
+}
 
-@interface QCloudGetBucketTaggingRequest : QCloudBizHTTPRequest
-/**
-存储桶名
-*/
-@property (strong, nonatomic) NSString *bucket;
-
-- (void) setFinishBlock:(void (^_Nullable)(QCloudTagging* _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

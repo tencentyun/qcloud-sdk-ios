@@ -250,6 +250,12 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
         [self startSimpleUpload];
     } else if ([self.body isKindOfClass:[NSURL class]]) {
         NSURL* url = (NSURL*)self.body;
+        if (!QCloudFileExist(url.relativePath)) {
+            NSError *error =[NSError qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid message:@"指定的上传路径不存在"];
+            [self onError:error];
+            [self cancel];
+            return;
+        }
         self.dataContentLength = QCloudFileSize(url.path);
         if (self.dataContentLength > kQCloudCOSXMLUploadLengthLimit) {
             //开始分片上传的时候，上传的起始位置是0
@@ -447,6 +453,14 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     dispatch_resume(_queueSource);
     for (int i = 0; i < allParts.count; i++) {
         __block QCloudFileOffsetBody* body = allParts[i];
+        NSURL* url = (NSURL*)self.body;
+        NSInteger fileSize = QCloudFileSize(url.relativePath);
+        if (fileSize != self.dataContentLength) {
+            NSError* error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeNotMatch message:@"DataIntegrityError分片:文件大小与原始文件大小不一致，请检查文件在上传的过程中是否发生改变"];
+            [self onError:error];
+            [self cancel];
+            return ;
+        }
         //如果自身被取消，终止c创建新的uploadPartRequest
         if (self.canceled) {
             QCloudLogDebug(@"请求被取消，终止创建新的uploadPartRequest");
@@ -509,7 +523,7 @@ NSString* const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
                                 NSString* requestID = [[outputObject __originHTTPURLResponse__].allHeaderFields valueForKey:@"x-cos-request-id"];
                                 [errorMessageString appendFormat:@", Request id:%@",requestID];
                             }
-                            NSError* error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeMD5NotMatch message:errorMessageString];
+                            NSError* error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeNotMatch message:errorMessageString];
                             [weakSelf onError:error];
                             [weakSelf cancel];
                             return ;

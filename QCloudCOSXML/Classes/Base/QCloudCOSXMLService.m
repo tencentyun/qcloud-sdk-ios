@@ -58,6 +58,9 @@ static QCloudCOSXMLService* COSXMLService = nil;
 + (QCloudCOSXMLService*) registerDefaultCOSXMLWithConfiguration:(QCloudServiceConfiguration*)configuration
 {
     @synchronized (self) {
+        if (COSXMLService) {
+            @throw [NSException exceptionWithName:QCloudErrorDomain reason:[NSString stringWithFormat:@"默认的COSXMLService已存在，如有新的配置，请通过 registerCOSXMLWithConfiguration:withKey:重新注册"] userInfo:nil];
+        }
         COSXMLService = [[QCloudCOSXMLService alloc] initWithConfiguration:configuration];
         if (!configuration.isCloseShareLog) {
 #if TARGET_OS_IOS
@@ -84,6 +87,9 @@ static QCloudCOSXMLService* COSXMLService = nil;
 
 + (QCloudCOSXMLService*) registerCOSXMLWithConfiguration:(QCloudServiceConfiguration*)configuration withKey:(NSString*)key;
 {
+    if ([self hasServiceForKey:key]) {
+        @throw [NSException exceptionWithName:QCloudErrorDomain reason:[NSString stringWithFormat:@"key: %@ COSXMLService已存在，如有新的配置，请通过 registerCOSXMLWithConfiguration:withKey:重新注册",key] userInfo:nil];
+    }
     QCloudCOSXMLService* cosxmlService =[[QCloudCOSXMLService alloc] initWithConfiguration:configuration];
     [QCloudCOSXMLServiceCache() setObject:cosxmlService  forKey:key];
     return cosxmlService;

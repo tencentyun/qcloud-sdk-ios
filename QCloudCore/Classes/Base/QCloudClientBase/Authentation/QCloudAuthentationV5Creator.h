@@ -28,5 +28,9 @@
 @class QCloudHTTPRequest;
 @interface QCloudAuthentationV5Creator : QCloudAuthentationCreator
 @property (nonatomic, strong) NSString * tokenHeaderName;
+/**
+ 自定义需要签名的属性列表：如果不传使用sdk默认的签名规则,设置为@[]表示不签任何头部和参数
+ */
+@property (nonatomic, strong) NSArray *shouldSignedList;
 - (QCloudSignature*) signatureForData:(NSMutableURLRequest*)signData;
 @end

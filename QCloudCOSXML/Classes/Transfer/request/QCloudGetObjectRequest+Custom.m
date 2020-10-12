@@ -69,7 +69,7 @@
             NSString* requestID = [((NSObject*)object).__originHTTPURLResponse__ allHeaderFields][@"x-cos-request-id"];
             [errorMessageString appendFormat:@", Request id:%@",requestID];
         }
-        resultError = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeMD5NotMatch message:errorMessageString];
+        resultError = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeNotMatch message:errorMessageString];
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         self.finishBlock(object, resultError);

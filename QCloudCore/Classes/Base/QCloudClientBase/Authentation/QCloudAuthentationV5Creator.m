@@ -112,9 +112,22 @@
         experationInterVal = [self.credential.experationDate timeIntervalSince1970];
     }
     NSString * signTime = [NSString stringWithFormat:@"%lld;%lld",(int64_t)nowInterval, (int64_t)experationInterVal];
-    //
     NSDictionary* headers = [[urlrequest allHTTPHeaderFields] filteHeaders];
     NSDictionary* urlParamters = QCloudURLReadQuery(urlrequest.URL);
+    if (self.shouldSignedList) {
+        NSMutableDictionary *shouldSignedHeaderDic = [NSMutableDictionary dictionary];
+        NSMutableDictionary *shouldSignedParamsDic = [NSMutableDictionary dictionary];
+        for (NSString *key in self.shouldSignedList) {
+            if ([headers objectForKey:key]) {
+                shouldSignedHeaderDic[key] = [headers objectForKey:key];
+            }else if ([urlParamters objectForKey:key]){
+                shouldSignedParamsDic[key] = [urlParamters objectForKey:key];
+            }
+            
+        }
+        headers = [shouldSignedHeaderDic  copy];
+        urlParamters =[shouldSignedParamsDic copy];
+    }
     NSDictionary* (^LowcaseDictionary)(NSDictionary* origin) = ^(NSDictionary* origin) {
         NSMutableDictionary* aim = [NSMutableDictionary new];
         NSArray* allKeys = origin.allKeys;
