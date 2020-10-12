@@ -1,0 +1,19 @@
+//
+//  PrefixHeader.pch
+//  QCloudCOSXMLDemo
+//
+//  Created by garenwang on 2020/5/15.
+//  Copyright © 2020 Tencent. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+#import "QCloudCOSXMLContants.h"
+#import "QCloudCOSXMLConfiguration.h"
+#import "UIViewController+Loading.h"
+#import "QCloudBucketContents+Addition.h"
+#import "SecretStorage.h"
+
+
+#endif /* PrefixHeader_pch */
