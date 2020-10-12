@@ -47,7 +47,7 @@ NSString* const kQCloudNetworkErrorObject = @"kQCloudNetworkErrorObject";
             }
         }
         
-        if (error.code == QCloudNetworkErrorCodeMD5NotMatch) {
+        if (error.code == QCloudNetworkErrorCodeNotMatch) {
             return YES;
         }
     }

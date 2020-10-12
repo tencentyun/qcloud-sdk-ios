@@ -1,6 +1,6 @@
 //
-//  GetBucketTagging.h
-//  GetBucketTagging
+//  PutObjectTagging.h
+//  PutObjectTagging
 //
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.
@@ -27,42 +27,72 @@
 
 #import <Foundation/Foundation.h>
 #import <QCloudCore/QCloudCore.h>
-#import "QCloudTagging.h"
+@class QCloudTagging;
 NS_ASSUME_NONNULL_BEGIN
-
 /**
-查询指定存储桶下已有的存储桶标签.
+ 设置存储桶标签的方法
 
-### 功能说明
+ ### 功能说明
+ 
+ PUT Bucket tagging 用于为已存在的存储桶设置标签。
 
-COS 支持为已存在的存储桶查询标签（Tag）。GET Bucket tagging 接口用于查询指定存储桶下已有的存储桶标签.
-
-关于查询指定存储桶下已有的存储桶标签接口的具体描述，请查看https://cloud.tencent.com/document/product/436/34837.
-
-### 示例
+ 关于为已存在的存储桶设置标签接口描述，请查看 https://cloud.tencent.com/document/product/436/34838.
+ 
+ ### 示例
    
   @code
-  
-    QCloudGetBucketTaggingRequest *getReq = [QCloudGetBucketTaggingRequest new];
-    
-    // 存储桶名称，格式为 BucketName-APPID
-    getReq.bucket = @"examplebucket-1250000000";
-    
-    [getReq setFinishBlock:^(QCloudTagging * result, NSError * error) {
-        
-        // tag的集合
-        QCloudTagSet * tagSet = result.tagSet;
-    }];
-    [[QCloudCOSXMLService defaultCOSXML] GetBucketTagging:getReq];
-  
-*/
+ 
+     QCloudPutObjectTaggingRequest *putReq = [QCloudPutObjectTaggingRequest new];
+     
+     // 存储桶名称，格式为 BucketName-APPID
+     putReq.bucket = @"examplebucket-1250000000";
+     
+     // 标签集合
+     QCloudTagging *taggings = [QCloudTagging new];
+     
+     QCloudTag *tag1 = [QCloudTag new];
+     
+     // 标签的 Key，长度不超过128字节, 支持英文字母、数字、空格、加号、减号、下划线、等号、点号、
+     // 冒号、斜线
+     tag1.key = @"age";
+     
+     // 标签的 Value，长度不超过256字节, 支持英文字母、数字、空格、加号、减号、下划线、等号、点号
+     // 、冒号、斜线
+     tag1.value = @"20";
+     QCloudTag *tag2 = [QCloudTag new];
+     tag2.key = @"name";
+     tag2.value = @"karis";
+     
+     // 标签集合，最多支持10个标签
+     QCloudTagSet *tagSet = [QCloudTagSet new];
+     tagSet.tag = @[tag1,tag2];
+     taggings.tagSet = tagSet;
+     
+     // 标签集合
+     putReq.taggings = taggings;
+     
+     [putReq setFinishBlock:^(id outputObject, NSError *error) {
+         // outputObject 包含所有的响应 http 头部
+         NSDictionary* info = (NSDictionary *) outputObject;
+     }];
+     [[QCloudCOSXMLService defaultCOSXML] PutObjectTagging:putReq];
 
-@interface QCloudGetBucketTaggingRequest : QCloudBizHTTPRequest
+
+ */
+@interface QCloudPutObjectTaggingRequest : QCloudBizHTTPRequest
+
+/**
+ 标签集合
+ */
+@property (strong, nonatomic) QCloudTagging *taggings;
 /**
 存储桶名
 */
 @property (strong, nonatomic) NSString *bucket;
 
-- (void) setFinishBlock:(void (^_Nullable)(QCloudTagging* _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock;
+/**
+ 对象 名称
+*/
+@property (strong, nonatomic) NSString *object;
 @end
 NS_ASSUME_NONNULL_END

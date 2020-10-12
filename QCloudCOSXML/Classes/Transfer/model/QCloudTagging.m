@@ -1,6 +1,6 @@
 //
-//  QCloudBucketTagSet.m
-//  QCloudBucketTagSet
+//  QCloudTagging.m
+//  QCloudTagging
 //
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.
@@ -24,26 +24,20 @@
 //
 
 
-#import "QCloudBucketTagSet.h"
+#import "QCloudTagging.h"
 
-#import "QCloudBucketTag.h"
+#import "QCloudTagSet.h"
 
 
 NS_ASSUME_NONNULL_BEGIN
-@implementation QCloudBucketTagSet
+@implementation QCloudTagging
 
-+ (NSDictionary *)modelContainerPropertyGenericClass
-{
-   return @ {
-      @"tag":[QCloudBucketTag class],
-  };
-}
 
 
 + (NSDictionary *)modelCustomPropertyMapper
 {
   return @{
-      @"tag" :@"Tag",
+      @"tagSet" :@"TagSet",
   };
 }
 
@@ -61,22 +55,6 @@ NS_ASSUME_NONNULL_BEGIN
         return dic;
     }
     NSMutableDictionary* transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
-    NSArray* transformArrayKeypaths = @[
-    @"Tag",
-    ];
-
-    for (NSString* keyPath in transformArrayKeypaths) {
-        id object = [dic valueForKeyPath:keyPath];
-        if (!object) {
-            continue;
-        }
-        if ([object isKindOfClass:[NSNull class]]) {
-            continue;
-        }
-        if (![object isKindOfClass:[NSArray class]]) {
-            [transfromDic setValue:@[object] forKeyPath:keyPath];
-        }
-    }
 
     return transfromDic;
 }

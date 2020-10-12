@@ -1,6 +1,6 @@
 //
-//  GetBucketTagging.h
-//  GetBucketTagging
+//  PutObjectTagging.m
+//  PutObjectTagging
 //
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.
@@ -25,44 +25,93 @@
 
 
 
-#import <Foundation/Foundation.h>
+
+
+
+
+
+#import "QCloudPutObjectTaggingRequest.h"
+#import <QCloudCore/QCloudSignatureFields.h>
 #import <QCloudCore/QCloudCore.h>
+#import <QCloudCore/QCloudServiceConfiguration_Private.h>
 #import "QCloudTagging.h"
+
+
 NS_ASSUME_NONNULL_BEGIN
+@implementation QCloudPutObjectTaggingRequest
+- (void) dealloc
+{
+}
+-  (instancetype) init
+{
+    self = [super init];
+    if (!self) {
+        return nil;
+    }
+    return self;
+}
+- (void) configureReuqestSerializer:(QCloudRequestSerializer *)requestSerializer  responseSerializer:(QCloudResponseSerializer *)responseSerializer
+{
 
-/**
-查询指定存储桶下已有的存储桶标签.
+    NSArray* customRequestSerilizers = @[
+                                        QCloudURLFuseURIMethodASURLParamters,
+                                        QCloudURLFuseWithXMLParamters,
+                                        QCloudURLFuseContentMD5Base64StyleHeaders,
+                                        ];
 
-### 功能说明
+    NSArray* responseSerializers = @[
+                                    QCloudAcceptRespnseCodeBlock([NSSet setWithObjects:@(200), @(201), @(202), @(203), @(204), @(205), @(206), @(207), @(208), @(226), nil], nil),
 
-COS 支持为已存在的存储桶查询标签（Tag）。GET Bucket tagging 接口用于查询指定存储桶下已有的存储桶标签.
+                                    ];
+    [requestSerializer setSerializerBlocks:customRequestSerilizers];
+    [responseSerializer setSerializerBlocks:responseSerializers];
 
-关于查询指定存储桶下已有的存储桶标签接口的具体描述，请查看https://cloud.tencent.com/document/product/436/34837.
+    requestSerializer.HTTPMethod = @"put";
+}
 
-### 示例
-   
-  @code
-  
-    QCloudGetBucketTaggingRequest *getReq = [QCloudGetBucketTaggingRequest new];
-    
-    // 存储桶名称，格式为 BucketName-APPID
-    getReq.bucket = @"examplebucket-1250000000";
-    
-    [getReq setFinishBlock:^(QCloudTagging * result, NSError * error) {
-        
-        // tag的集合
-        QCloudTagSet * tagSet = result.tagSet;
-    }];
-    [[QCloudCOSXMLService defaultCOSXML] GetBucketTagging:getReq];
-  
-*/
 
-@interface QCloudGetBucketTaggingRequest : QCloudBizHTTPRequest
-/**
-存储桶名
-*/
-@property (strong, nonatomic) NSString *bucket;
 
-- (void) setFinishBlock:(void (^_Nullable)(QCloudTagging* _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock;
+- (BOOL) buildRequestData:(NSError *__autoreleasing *)error
+{
+    if (![super buildRequestData:error]) {
+        return NO;
+    }
+    if (!self.bucket || ([self.bucket isKindOfClass:NSString.class] && ((NSString*)self.bucket).length == 0)) {
+        if (error != NULL) {
+            *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid message:[NSString stringWithFormat:@"paramter[bucket] is invalid (nil), it must have some value. please check it"]];
+            return NO;
+        }
+    }
+    if (!self.object || ([self.object isKindOfClass:NSString.class] && ((NSString*)self.object).length == 0)) {
+        if (error != NULL) {
+            *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid message:[NSString stringWithFormat:@"InvalidArgument:paramter[object] is invalid (nil), it must have some value. please check it"]];
+            return NO;
+        }
+    }
+    if (!self.taggings) {
+        if (error != NULL) {
+            *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid message:[NSString stringWithFormat:@"paramter[taggings] is invalid (nil), it must have some value. please check it"]];
+            return NO;
+        }
+    }
+    [self.requestData setParameter:[self.taggings qcloud_modelToJSONObject] withKey:@"Tagging"];
+
+    NSURL* __serverURL = [self.runOnService.configuration.endpoint serverURLWithBucket:self.bucket appID:self.runOnService.configuration.appID regionName:self.regionName];
+    self.requestData.serverURL = __serverURL.absoluteString;
+    [self.requestData setValue:__serverURL.host forHTTPHeaderField:@"Host"];
+    self.requestData.URIMethod = @"tagging";
+    NSMutableArray* __pathComponents = [NSMutableArray arrayWithArray:self.requestData.URIComponents];
+    if(self.object) [__pathComponents addObject:self.object];
+    self.requestData.URIComponents = __pathComponents;
+    return YES;
+}
+
+- (QCloudSignatureFields*) signatureFields
+{
+    QCloudSignatureFields* fileds = [QCloudSignatureFields new];
+
+    return fileds;
+}
+
 @end
 NS_ASSUME_NONNULL_END

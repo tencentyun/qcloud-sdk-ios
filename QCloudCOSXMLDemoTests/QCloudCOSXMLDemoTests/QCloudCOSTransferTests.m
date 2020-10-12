@@ -18,6 +18,7 @@
 @interface QCloudCOSTransferTests : XCTestCase <QCloudSignatureProvider>
 @property (nonatomic, strong) NSString* bucket;
 @property (nonatomic, strong) NSMutableArray* tempFilePathArray;
+
 @end
 
 @implementation QCloudCOSTransferTests
@@ -149,6 +150,59 @@
     
 }
 
+- (void) testMultiUploadWithIntelligentTiering {
+
+    QCloudCOSXMLUploadObjectRequest* put = [QCloudCOSXMLUploadObjectRequest new];
+    int randomNumber = arc4random()%100;
+    NSURL* url = [NSURL fileURLWithPath:[self tempFileWithSize:3*1024*1024]];
+    __block NSString *object = [NSUUID UUID].UUIDString;
+    put.body = url;
+    put.object = object;
+    put.bucket = @"karis-maz";
+    put.storageClass = QCloudCOSStorageMAZ_INTELLIGENT_TIERING;
+    [put setSendProcessBlock:^(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"upload %lld totalSend %lld aim %lld", bytesSent, totalBytesSent, totalBytesExpectedToSend);
+    }];
+    XCTestExpectation* exp = [self expectationWithDescription:@"testMultiUpload upload object expectation"];
+    __block QCloudUploadObjectResult* result;
+    [put setFinishBlock:^(QCloudUploadObjectResult *result, NSError *error) {
+        XCTAssertNotNil(result);
+        XCTAssertNotNil([result location]);
+        XCTAssertNil(error);
+        [exp fulfill];
+
+    }];
+    [[QCloudCOSTransferMangerService defaultCOSTransferManager] UploadObject:put];
+    [self waitForExpectationsWithTimeout:200 handler:^(NSError * _Nullable error) {
+    }];
+}
+
+- (void) testMultiUploadWithDeepArchive {
+
+    QCloudCOSXMLUploadObjectRequest* put = [QCloudCOSXMLUploadObjectRequest new];
+    int randomNumber = arc4random()%100;
+    NSURL* url = [NSURL fileURLWithPath:[self tempFileWithSize:3*1024*1024]];
+    __block NSString *object = [NSUUID UUID].UUIDString;
+    put.body = url;
+    put.object = @"deep-archive";
+    put.bucket = self.bucket;
+    put.storageClass = QCloudCOSStorageDEEP_ARCHIVE;
+    [put setSendProcessBlock:^(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"upload %lld totalSend %lld aim %lld", bytesSent, totalBytesSent, totalBytesExpectedToSend);
+    }];
+    XCTestExpectation* exp = [self expectationWithDescription:@"testMultiUpload upload object expectation"];
+    __block QCloudUploadObjectResult* result;
+    [put setFinishBlock:^(QCloudUploadObjectResult *result, NSError *error) {
+        XCTAssertNotNil(result);
+        XCTAssertNotNil([result location]);
+        XCTAssertNil(error);
+        [exp fulfill];
+
+    }];
+    [[QCloudCOSTransferMangerService defaultCOSTransferManager] UploadObject:put];
+    [self waitForExpectationsWithTimeout:200 handler:^(NSError * _Nullable error) {
+    }];
+}
 
 - (void) testHTTPSMultipleUpload {
     QCloudCOSXMLUploadObjectRequest* put = [QCloudCOSXMLUploadObjectRequest new];

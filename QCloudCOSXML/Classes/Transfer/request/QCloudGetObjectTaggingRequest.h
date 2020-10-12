@@ -1,6 +1,6 @@
 //
-//  GetBucketTagging.h
-//  GetBucketTagging
+//  GetObjectTagging.h
+//  GetObjectTagging
 //
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.
@@ -43,7 +43,7 @@ COS 支持为已存在的存储桶查询标签（Tag）。GET Bucket tagging 接
    
   @code
   
-    QCloudGetBucketTaggingRequest *getReq = [QCloudGetBucketTaggingRequest new];
+    QCloudGetObjectTaggingRequest *getReq = [QCloudGetObjectTaggingRequest new];
     
     // 存储桶名称，格式为 BucketName-APPID
     getReq.bucket = @"examplebucket-1250000000";
@@ -53,16 +53,19 @@ COS 支持为已存在的存储桶查询标签（Tag）。GET Bucket tagging 接
         // tag的集合
         QCloudTagSet * tagSet = result.tagSet;
     }];
-    [[QCloudCOSXMLService defaultCOSXML] GetBucketTagging:getReq];
+    [[QCloudCOSXMLService defaultCOSXML] GetObjectTagging:getReq];
   
 */
 
-@interface QCloudGetBucketTaggingRequest : QCloudBizHTTPRequest
+@interface QCloudGetObjectTaggingRequest : QCloudBizHTTPRequest
 /**
 存储桶名
 */
 @property (strong, nonatomic) NSString *bucket;
-
+/**
+ 对象 名称
+*/
+@property (strong, nonatomic) NSString *object;
 - (void) setFinishBlock:(void (^_Nullable)(QCloudTagging* _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END
