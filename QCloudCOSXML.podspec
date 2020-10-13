@@ -9,6 +9,7 @@ s.version              = "5.7.8"
   s.license          = 'MIT'
   s.author           = { "QCloud Terminal Team" => "QCloudTerminalTeam" }
   s.source           = { :git => "https://github.com/tencentyun/qcloud-sdk-ios.git", :tag => s.version.to_s }
+  s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
   s.ios.deployment_target = '8.0'
   s.osx.deployment_target = "10.12"
 
