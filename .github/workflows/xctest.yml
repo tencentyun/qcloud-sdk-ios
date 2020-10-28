@@ -53,3 +53,4 @@ jobs:
         run: |
           echo -e "{\"secretID\":\"${COS_KEY}\", \"secretKey\":\"${COS_SECRET}\","appId":\"${COS_APPID}\"}" >> key.json
           cat key.json
+          cat key.json
