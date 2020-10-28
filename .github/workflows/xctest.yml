@@ -42,6 +42,6 @@ jobs:
             -workspace QCloudCOSXMLDemo.xcworkspace \
             -scheme QCloudCOSXMLDemoTests \
             -sdk iphonesimulator \
-            -destination 'platform=iOS Simulator,OS=14.1,name=iPhone 11' \
+            -destination 'platform=iOS Simulator,OS=14.0,name=iPhone 11' \
             -enableCodeCoverage YES \
             test
