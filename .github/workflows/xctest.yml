@@ -30,15 +30,27 @@ jobs:
           # Version of Xcode to use
           xcode-version: 12.0.1
     
+      - name: Cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-pod-pkg
+        with:
+          path: Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+    
       # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: |
-          
+      - name: Install Dependencies
+        run: pod install --repo-update
 
       # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Run test
         run: |
-          pod install
+          export COS_KEY=${{ secrets.TEST_SECRET_ID }}
+          export COS_SECRET=${{ secrets.TEST_SECRET_KEY }}
+          export COS_APPID=${{ secrets.TEST_COS_APPID }}
+          echo -e "{\"secretID\":\"${COS_KEY}\", \"secretKey\":\"${COS_SECRET}\","appId":\"${COS_APPID}\"}" >> key.json
           xcodebuild \
             -workspace QCloudCOSXMLDemo.xcworkspace \
             -scheme QCloudCOSXMLDemoTests \
