@@ -52,4 +52,4 @@ jobs:
           COS_APPID: ${{ secrets.TEST_COS_APPID }}
           SECRETS_CONTEXT: ${{ toJson(secrets) }}
         run: |
-          run: echo "$SECRETS_CONTEXT"
+          echo "$SECRETS_CONTEXT"
