@@ -31,6 +31,7 @@ jobs:
           xcode-version: 12.0.1
     
       - name: Cache Pods Package
+        id: pod-cache
         uses: actions/cache@v2
         env:
           cache-name: cache-pod-pkg
@@ -42,7 +43,8 @@ jobs:
     
       # Runs a single command using the runners shell
       - name: Install Dependencies
-        run: pod install
+        if: steps.pod-cache.outputs.cache-hit != 'true'
+        run: pod install --repo-upload
 
       # Runs a set of commands using the runners shell
       - name: Run test
