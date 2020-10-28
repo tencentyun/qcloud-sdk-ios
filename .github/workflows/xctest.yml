@@ -41,8 +41,8 @@ jobs:
             ${{ runner.os }}-pods-
     
       # Runs a single command using the runners shell
-      - name: Install Dependencies
-        run: pod install
+#       - name: Install Dependencies
+#         run: pod install
 
       # Runs a set of commands using the runners shell
       - name: Run test
@@ -51,11 +51,4 @@ jobs:
           COS_SECRET: ${{ secrets.TEST_SECRET_KEY }}
           COS_APPID: ${{ secrets.TEST_COS_APPID }}
         run: |
-          echo -e "{\"secretID\":\"${COS_KEY}\", \"secretKey\":\"${COS_SECRET}\","appId":\"${COS_APPID}\"}" >> key.json
-          xcodebuild \
-            -workspace QCloudCOSXMLDemo.xcworkspace \
-            -scheme QCloudCOSXMLDemoTests \
-            -sdk iphonesimulator \
-            -destination 'platform=iOS Simulator,OS=14.0,name=iPhone 11' \
-            -enableCodeCoverage YES \
-            test | xcpretty
+          echo ${COS_APPID}
