@@ -58,4 +58,4 @@ jobs:
             -sdk iphonesimulator \
             -destination 'platform=iOS Simulator,OS=14.0,name=iPhone 11' \
             -enableCodeCoverage YES \
-            test
+            test | xcpretty
