@@ -42,14 +42,15 @@ jobs:
     
       # Runs a single command using the runners shell
       - name: Install Dependencies
-        run: pod install --repo-update
+        run: pod install
 
       # Runs a set of commands using the runners shell
       - name: Run test
+        env: # Or as an environment variable
+          COS_KEY: ${{ secrets.TEST_SECRET_ID }}
+          COS_SECRET: ${{ secrets.TEST_SECRET_KEY }}
+          COS_APPID: ${{ secrets.TEST_COS_APPID }}
         run: |
-          COS_KEY=${{ secrets.TEST_SECRET_ID }}
-          COS_SECRET=${{ secrets.TEST_SECRET_KEY }}
-          COS_APPID=${{ secrets.TEST_COS_APPID }}
           echo -e "{\"secretID\":\"${COS_KEY}\", \"secretKey\":\"${COS_SECRET}\","appId":\"${COS_APPID}\"}" >> key.json
           xcodebuild \
             -workspace QCloudCOSXMLDemo.xcworkspace \
