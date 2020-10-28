@@ -30,7 +30,7 @@ jobs:
           # Version of Xcode to use
           xcode-version: 12.0.1
     
-      - name: Cache node modules
+      - name: Cache Pods Package
         uses: actions/cache@v2
         env:
           cache-name: cache-pod-pkg
@@ -47,9 +47,9 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Run test
         run: |
-          export COS_KEY=${{ secrets.TEST_SECRET_ID }}
-          export COS_SECRET=${{ secrets.TEST_SECRET_KEY }}
-          export COS_APPID=${{ secrets.TEST_COS_APPID }}
+          COS_KEY=${{ secrets.TEST_SECRET_ID }}
+          COS_SECRET=${{ secrets.TEST_SECRET_KEY }}
+          COS_APPID=${{ secrets.TEST_COS_APPID }}
           echo -e "{\"secretID\":\"${COS_KEY}\", \"secretKey\":\"${COS_SECRET}\","appId":\"${COS_APPID}\"}" >> key.json
           xcodebuild \
             -workspace QCloudCOSXMLDemo.xcworkspace \
