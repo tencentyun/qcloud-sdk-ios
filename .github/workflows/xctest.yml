@@ -50,6 +50,6 @@ jobs:
           COS_KEY: ${{ secrets.TEST_SECRET_ID }}
           COS_SECRET: ${{ secrets.TEST_SECRET_KEY }}
           COS_APPID: ${{ secrets.TEST_COS_APPID }}
-          SECRETS_CONTEXT: ${{ toJson(secrets) }}
         run: |
-          echo "$SECRETS_CONTEXT"
+          echo -e "{\"secretID\":\"${COS_KEY}\", \"secretKey\":\"${COS_SECRET}\","appId":\"${COS_APPID}\"}" >> key.json
+          cat key.json
