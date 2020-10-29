@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -25,6 +25,7 @@
 		7F2923D52338ADB8008CE707 /* key.json in Resources */ = {isa = PBXBuildFile; fileRef = 7F2923D42338ADB8008CE707 /* key.json */; };
 		7F41127E2338A97100A3276E /* SecretStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F41127B2338A92200A3276E /* SecretStorage.m */; };
 		7F43AE97213932EA0025DD1B /* QCloudCSPCOSXMLTestUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F43AE96213932EA0025DD1B /* QCloudCSPCOSXMLTestUtility.m */; };
+		A7C6A89E254A6FCB002BF20E /* key.json in Resources */ = {isa = PBXBuildFile; fileRef = 7F2923D42338ADB8008CE707 /* key.json */; platformFilter = ios; };
 		A7CB0119246D5AB700D4DB53 /* QCloudCOSQuicTransferTest.m in Sources */ = {isa = PBXBuildFile; fileRef = A7CB0118246D5AB700D4DB53 /* QCloudCOSQuicTransferTest.m */; };
 		A801AD41201990DC004D1B9A /* NSString+UINCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = A8C56AA31F205F13007D845B /* NSString+UINCategory.m */; };
 		A801AD42201990DC004D1B9A /* QCloudTestTempVariables.m in Sources */ = {isa = PBXBuildFile; fileRef = A80802DF1FB945E800A7020E /* QCloudTestTempVariables.m */; };
@@ -456,6 +457,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A7C6A89E254A6FCB002BF20E /* key.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -674,7 +676,10 @@
 				GCC_PREFIX_HEADER = "$(SRCROOT)/QCloudCOSXMLDemo/PrefixHeader.pch";
 				INFOPLIST_FILE = QCloudCOSXMLDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -699,7 +704,10 @@
 				GCC_PREFIX_HEADER = "$(SRCROOT)/QCloudCOSXMLDemo/PrefixHeader.pch";
 				INFOPLIST_FILE = QCloudCOSXMLDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -719,7 +727,11 @@
 				DEVELOPMENT_TEAM = TD5DJDNRQ4;
 				INFOPLIST_FILE = QCloudCOSXMLDemoTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.qcloud.QCloudCOSXMLDemoTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/QCloudCOSXMLDemo.app/QCloudCOSXMLDemo";
@@ -734,7 +746,11 @@
 				DEVELOPMENT_TEAM = TD5DJDNRQ4;
 				INFOPLIST_FILE = QCloudCOSXMLDemoTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.qcloud.QCloudCOSXMLDemoTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/QCloudCOSXMLDemo.app/QCloudCOSXMLDemo";
