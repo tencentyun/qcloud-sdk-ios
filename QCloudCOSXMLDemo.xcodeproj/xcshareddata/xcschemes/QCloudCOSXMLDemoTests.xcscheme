@@ -51,6 +51,21 @@
             value = "6"
             isEnabled = "YES">
          </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "COS_SECRET_ID"
+            value = "SECRET_ID_PH"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "COS_SECRET_KEY"
+            value = "SECRET_KEY_PH"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "COS_APP_ID"
+            value = "APP_ID_PH"
+            isEnabled = "YES">
+         </EnvironmentVariable>
       </EnvironmentVariables>
    </LaunchAction>
    <ProfileAction

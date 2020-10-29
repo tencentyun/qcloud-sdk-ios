@@ -55,6 +55,10 @@ jobs:
         run: |
           echo -e "{\"secretID\":\"${COS_KEY}\", \"secretKey\":\"${COS_SECRET}\","appId":\"${COS_APPID}\"}" > key.json
           cat key.json
+          sed -i -e "s/SECRET_ID_PH/${COS_KEY}/" QCloudCOSXMLDemo.xcodeproj/xcshareddata/xcschemes/QCloudCOSXMLDemoTests.xcscheme
+          sed -i -e "s/SECRET_KEY_PH/${COS_SECRET}/" QCloudCOSXMLDemo.xcodeproj/xcshareddata/xcschemes/QCloudCOSXMLDemoTests.xcscheme
+          sed -i -e "s/APP_ID_PH/${COS_APPID}/" QCloudCOSXMLDemo.xcodeproj/xcshareddata/xcschemes/QCloudCOSXMLDemoTests.xcscheme
+          rm QCloudCOSXMLDemo.xcodeproj/xcshareddata/xcschemes/QCloudCOSXMLDemoTests.xcscheme-e
           xcodebuild \
             -workspace QCloudCOSXMLDemo.xcworkspace \
             -scheme QCloudCOSXMLDemoTests \

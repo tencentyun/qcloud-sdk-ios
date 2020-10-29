@@ -22,10 +22,10 @@
     self = [super init];
     NSString* path = [[NSBundle mainBundle] pathForResource:@"key" ofType:@"json"];
     NSData* jsonData = [[NSData alloc] initWithContentsOfFile:path];
-    NSDictionary* dict = [NSJSONSerialization JSONObjectWithData:jsonData options:kNilOptions error:nil];
-    self.secretID = dict[@"secretID"];
-    self.secretKey = dict[@"secretKey"];
-    self.appID = dict[@"appId"];
+    NSDictionary* dict = NSProcessInfo.processInfo.environment;
+    self.secretID = [NSString stringWithUTF8String:getenv("COS_SECRET_ID")];
+    self.secretKey = [NSString stringWithUTF8String:getenv("COS_SECRET_KEY") ];
+    self.appID = [NSString stringWithUTF8String:getenv("COS_APP_ID") ];
     return  self;
 }
 @end
