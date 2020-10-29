@@ -15,20 +15,20 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: macos-latest
+    runs-on: [self-hosted, macOS, X64]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Setup Xcode version
-        # You may pin to the exact commit or the version.
-        # uses: maxim-lobanov/setup-xcode@39c72beaae110dbae2076e2a52c179a8ada929e2
-        uses: maxim-lobanov/setup-xcode@v1.2.1
-        with:
-          # Version of Xcode to use
-          xcode-version: 12.0.1
+#       - name: Setup Xcode version
+#         # You may pin to the exact commit or the version.
+#         # uses: maxim-lobanov/setup-xcode@39c72beaae110dbae2076e2a52c179a8ada929e2
+#         uses: maxim-lobanov/setup-xcode@v1.2.1
+#         with:
+#           # Version of Xcode to use
+#           xcode-version: 12.0.1
     
       - name: Cache Pods Package
         id: pod-cache
@@ -63,7 +63,7 @@ jobs:
             -workspace QCloudCOSXMLDemo.xcworkspace \
             -scheme QCloudCOSXMLDemoTests \
             -sdk iphonesimulator \
-            -destination 'platform=iOS Simulator,OS=14.0,name=iPhone 11' \
+            -destination 'platform=iOS Simulator,OS=14.1,name=iPhone 11' \
             -enableCodeCoverage YES \
             test
           
