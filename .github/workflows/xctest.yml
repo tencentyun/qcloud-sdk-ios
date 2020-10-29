@@ -15,30 +15,50 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: macos-latest
+    runs-on: [self-hosted, macOS, X64]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Setup Xcode version
-        # You may pin to the exact commit or the version.
-        # uses: maxim-lobanov/setup-xcode@39c72beaae110dbae2076e2a52c179a8ada929e2
-        uses: maxim-lobanov/setup-xcode@v1.2.1
+#       - name: Setup Xcode version
+#         # You may pin to the exact commit or the version.
+#         # uses: maxim-lobanov/setup-xcode@39c72beaae110dbae2076e2a52c179a8ada929e2
+#         uses: maxim-lobanov/setup-xcode@v1.2.1
+#         with:
+#           # Version of Xcode to use
+#           xcode-version: 12.0.1
+    
+      - name: Cache Pods Package
+        id: pod-cache
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-pod-pkg
         with:
-          # Version of Xcode to use
-          xcode-version: 12.0.1
+          path: Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
     
       # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: |
-          
+      - name: Install Dependencies
+#         if: steps.pod-cache.outputs.cache-hit != 'true'
+        run: pod install
 
       # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Run test
+        env: # Or as an environment variable
+          COS_KEY: ${{ secrets.TEST_SECRET_ID }}
+          COS_SECRET: ${{ secrets.TEST_SECRET_KEY }}
+          COS_APPID: ${{ secrets.TEST_COS_APPID }}
         run: |
-          pod install
+          echo -e "{\"secretID\":\"${COS_KEY}\", \"secretKey\":\"${COS_SECRET}\","appId":\"${COS_APPID}\"}" > key.json
+          cat key.json
+          sed -i -e "s/SECRET_ID_PH/${COS_KEY}/" QCloudCOSXMLDemo.xcodeproj/xcshareddata/xcschemes/QCloudCOSXMLDemoTests.xcscheme
+          sed -i -e "s/SECRET_KEY_PH/${COS_SECRET}/" QCloudCOSXMLDemo.xcodeproj/xcshareddata/xcschemes/QCloudCOSXMLDemoTests.xcscheme
+          sed -i -e "s/APP_ID_PH/${COS_APPID}/" QCloudCOSXMLDemo.xcodeproj/xcshareddata/xcschemes/QCloudCOSXMLDemoTests.xcscheme
+          rm QCloudCOSXMLDemo.xcodeproj/xcshareddata/xcschemes/QCloudCOSXMLDemoTests.xcscheme-e
           xcodebuild \
             -workspace QCloudCOSXMLDemo.xcworkspace \
             -scheme QCloudCOSXMLDemoTests \
@@ -46,3 +66,4 @@ jobs:
             -destination 'platform=iOS Simulator,OS=14.0,name=iPhone 11' \
             -enableCodeCoverage YES \
             test
+          
