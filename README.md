@@ -1,5 +1,7 @@
 # 腾讯云 存储SDK for iOS
 
+![XCTest](https://github.com/tencentyun/qcloud-sdk-ios/workflows/XCTest/badge.svg)
+
 ## 前言  
 您可以在新建项目，配置好SDK或者在已有的项目中集成进SDK，或者先运行下Demo感受下SDK是如何运作的。下载Demo体验请前点击[Demo下载地址](https://github.com/tencentyun/qcloud-sdk-ios-samples.git)。  
 
