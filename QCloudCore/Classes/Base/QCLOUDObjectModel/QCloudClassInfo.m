@@ -14,10 +14,12 @@
 
 QCloudEncodingType QCloudEncodingGetType(const char *typeEncoding) {
     char *type = (char *)typeEncoding;
-    if (!type) return QCloudEncodingTypeUnknown;
+    if (!type)
+        return QCloudEncodingTypeUnknown;
     size_t len = strlen(type);
-    if (len == 0) return QCloudEncodingTypeUnknown;
-    
+    if (len == 0)
+        return QCloudEncodingTypeUnknown;
+
     QCloudEncodingType qualifier = 0;
     bool prefix = true;
     while (prefix) {
@@ -50,50 +52,77 @@ QCloudEncodingType QCloudEncodingGetType(const char *typeEncoding) {
                 qualifier |= QCloudEncodingTypeQualifierOneway;
                 type++;
             } break;
-            default: { prefix = false; } break;
+            default: {
+                prefix = false;
+            } break;
         }
     }
 
     len = strlen(type);
-    if (len == 0) return QCloudEncodingTypeUnknown | qualifier;
+    if (len == 0)
+        return QCloudEncodingTypeUnknown | qualifier;
 
     switch (*type) {
-        case 'v': return QCloudEncodingTypeVoid | qualifier;
-        case 'B': return QCloudEncodingTypeBool | qualifier;
-        case 'c': return QCloudEncodingTypeInt8 | qualifier;
-        case 'C': return QCloudEncodingTypeUInt8 | qualifier;
-        case 's': return QCloudEncodingTypeInt16 | qualifier;
-        case 'S': return QCloudEncodingTypeUInt16 | qualifier;
-        case 'i': return QCloudEncodingTypeInt32 | qualifier;
-        case 'I': return QCloudEncodingTypeUInt32 | qualifier;
-        case 'l': return QCloudEncodingTypeInt32 | qualifier;
-        case 'L': return QCloudEncodingTypeUInt32 | qualifier;
-        case 'q': return QCloudEncodingTypeInt64 | qualifier;
-        case 'Q': return QCloudEncodingTypeUInt64 | qualifier;
-        case 'f': return QCloudEncodingTypeFloat | qualifier;
-        case 'd': return QCloudEncodingTypeDouble | qualifier;
-        case 'D': return QCloudEncodingTypeLongDouble | qualifier;
-        case '#': return QCloudEncodingTypeClass | qualifier;
-        case ':': return QCloudEncodingTypeSEL | qualifier;
-        case '*': return QCloudEncodingTypeCString | qualifier;
-        case '^': return QCloudEncodingTypePointer | qualifier;
-        case '[': return QCloudEncodingTypeCArray | qualifier;
-        case '(': return QCloudEncodingTypeUnion | qualifier;
-        case '{': return QCloudEncodingTypeStruct | qualifier;
+        case 'v':
+            return QCloudEncodingTypeVoid | qualifier;
+        case 'B':
+            return QCloudEncodingTypeBool | qualifier;
+        case 'c':
+            return QCloudEncodingTypeInt8 | qualifier;
+        case 'C':
+            return QCloudEncodingTypeUInt8 | qualifier;
+        case 's':
+            return QCloudEncodingTypeInt16 | qualifier;
+        case 'S':
+            return QCloudEncodingTypeUInt16 | qualifier;
+        case 'i':
+            return QCloudEncodingTypeInt32 | qualifier;
+        case 'I':
+            return QCloudEncodingTypeUInt32 | qualifier;
+        case 'l':
+            return QCloudEncodingTypeInt32 | qualifier;
+        case 'L':
+            return QCloudEncodingTypeUInt32 | qualifier;
+        case 'q':
+            return QCloudEncodingTypeInt64 | qualifier;
+        case 'Q':
+            return QCloudEncodingTypeUInt64 | qualifier;
+        case 'f':
+            return QCloudEncodingTypeFloat | qualifier;
+        case 'd':
+            return QCloudEncodingTypeDouble | qualifier;
+        case 'D':
+            return QCloudEncodingTypeLongDouble | qualifier;
+        case '#':
+            return QCloudEncodingTypeClass | qualifier;
+        case ':':
+            return QCloudEncodingTypeSEL | qualifier;
+        case '*':
+            return QCloudEncodingTypeCString | qualifier;
+        case '^':
+            return QCloudEncodingTypePointer | qualifier;
+        case '[':
+            return QCloudEncodingTypeCArray | qualifier;
+        case '(':
+            return QCloudEncodingTypeUnion | qualifier;
+        case '{':
+            return QCloudEncodingTypeStruct | qualifier;
         case '@': {
             if (len == 2 && *(type + 1) == '?')
                 return QCloudEncodingTypeBlock | qualifier;
             else
                 return QCloudEncodingTypeObject | qualifier;
         }
-        default: return QCloudEncodingTypeUnknown | qualifier;
+        default:
+            return QCloudEncodingTypeUnknown | qualifier;
     }
 }
 
 @implementation QCloudClassIvarInfo
 
 - (instancetype)initWithIvar:(Ivar)ivar {
-    if (!ivar) return nil;
+    if (!ivar)
+        return nil;
     self = [super init];
     _ivar = ivar;
     const char *name = ivar_getName(ivar);
@@ -114,7 +143,8 @@ QCloudEncodingType QCloudEncodingGetType(const char *typeEncoding) {
 @implementation QCloudClassMethodInfo
 
 - (instancetype)initWithMethod:(Method)method {
-    if (!method) return nil;
+    if (!method)
+        return nil;
     self = [super init];
     _method = method;
     _sel = method_getName(method);
@@ -139,7 +169,8 @@ QCloudEncodingType QCloudEncodingGetType(const char *typeEncoding) {
             char *argumentType = method_copyArgumentType(method, i);
             NSString *type = argumentType ? [NSString stringWithUTF8String:argumentType] : nil;
             [argumentTypes addObject:type ? type : @""];
-            if (argumentType) free(argumentType);
+            if (argumentType)
+                free(argumentType);
         }
         _argumentTypeEncodings = argumentTypes;
     }
@@ -151,14 +182,15 @@ QCloudEncodingType QCloudEncodingGetType(const char *typeEncoding) {
 @implementation QCloudClassPropertyInfo
 
 - (instancetype)initWithProperty:(objc_property_t)property {
-    if (!property) return nil;
+    if (!property)
+        return nil;
     self = [super init];
     _property = property;
     const char *name = property_getName(property);
     if (name) {
         _name = [NSString stringWithUTF8String:name];
     }
-    
+
     QCloudEncodingType type = 0;
     unsigned int attrCount;
     objc_property_attribute_t *attrs = property_copyAttributeList(property, &attrCount);
@@ -168,22 +200,25 @@ QCloudEncodingType QCloudEncodingGetType(const char *typeEncoding) {
                 if (attrs[i].value) {
                     _typeEncoding = [NSString stringWithUTF8String:attrs[i].value];
                     type = QCloudEncodingGetType(attrs[i].value);
-                    
+
                     if ((type & QCloudEncodingTypeMask) == QCloudEncodingTypeObject && _typeEncoding.length) {
                         NSScanner *scanner = [NSScanner scannerWithString:_typeEncoding];
-                        if (![scanner scanString:@"@\"" intoString:NULL]) continue;
-                        
+                        if (![scanner scanString:@"@\"" intoString:NULL])
+                            continue;
+
                         NSString *clsName = nil;
-                        if ([scanner scanUpToCharactersFromSet: [NSCharacterSet characterSetWithCharactersInString:@"\"<"] intoString:&clsName]) {
-                            if (clsName.length) _cls = objc_getClass(clsName.UTF8String);
+                        if ([scanner scanUpToCharactersFromSet:[NSCharacterSet characterSetWithCharactersInString:@"\"<"] intoString:&clsName]) {
+                            if (clsName.length)
+                                _cls = objc_getClass(clsName.UTF8String);
                         }
-                        
+
                         NSMutableArray *protocols = nil;
                         while ([scanner scanString:@"<" intoString:NULL]) {
-                            NSString* protocol = nil;
-                            if ([scanner scanUpToString:@">" intoString: &protocol]) {
+                            NSString *protocol = nil;
+                            if ([scanner scanUpToString:@">" intoString:&protocol]) {
                                 if (protocol.length) {
-                                    if (!protocols) protocols = [NSMutableArray new];
+                                    if (!protocols)
+                                        protocols = [NSMutableArray new];
                                     [protocols addObject:protocol];
                                 }
                             }
@@ -228,21 +263,23 @@ QCloudEncodingType QCloudEncodingGetType(const char *typeEncoding) {
                     _setter = NSSelectorFromString([NSString stringWithUTF8String:attrs[i].value]);
                 }
             } // break; commented for code coverage in next line
-            default: break;
+            default:
+                break;
         }
     }
     if (attrs) {
         free(attrs);
         attrs = NULL;
     }
-    
+
     _type = type;
     if (_name.length) {
         if (!_getter) {
             _getter = NSSelectorFromString(_name);
         }
-        if (!_setter &&_name.length) {
-            _setter = NSSelectorFromString([NSString stringWithFormat:@"set%@%@:", [_name substringToIndex:1].uppercaseString, [_name substringFromIndex:1]]);
+        if (!_setter && _name.length) {
+            _setter = NSSelectorFromString(
+                [NSString stringWithFormat:@"set%@%@:", [_name substringToIndex:1].uppercaseString, [_name substringFromIndex:1]]);
         }
     }
     return self;
@@ -255,7 +292,8 @@ QCloudEncodingType QCloudEncodingGetType(const char *typeEncoding) {
 }
 
 - (instancetype)initWithClass:(Class)cls {
-    if (!cls) return nil;
+    if (!cls)
+        return nil;
     self = [super init];
     _cls = cls;
     _superCls = class_getSuperclass(cls);
@@ -274,7 +312,7 @@ QCloudEncodingType QCloudEncodingGetType(const char *typeEncoding) {
     _ivarInfos = nil;
     _methodInfos = nil;
     _propertyInfos = nil;
-    
+
     Class cls = self.cls;
     unsigned int methodCount = 0;
     Method *methods = class_copyMethodList(cls, &methodCount);
@@ -283,7 +321,8 @@ QCloudEncodingType QCloudEncodingGetType(const char *typeEncoding) {
         _methodInfos = methodInfos;
         for (unsigned int i = 0; i < methodCount; i++) {
             QCloudClassMethodInfo *info = [[QCloudClassMethodInfo alloc] initWithMethod:methods[i]];
-            if (info.name) methodInfos[info.name] = info;
+            if (info.name)
+                methodInfos[info.name] = info;
         }
         free(methods);
     }
@@ -294,11 +333,12 @@ QCloudEncodingType QCloudEncodingGetType(const char *typeEncoding) {
         _propertyInfos = propertyInfos;
         for (unsigned int i = 0; i < propertyCount; i++) {
             QCloudClassPropertyInfo *info = [[QCloudClassPropertyInfo alloc] initWithProperty:properties[i]];
-            if (info.name) propertyInfos[info.name] = info;
+            if (info.name)
+                propertyInfos[info.name] = info;
         }
         free(properties);
     }
-    
+
     unsigned int ivarCount = 0;
     Ivar *ivars = class_copyIvarList(cls, &ivarCount);
     if (ivars) {
@@ -306,15 +346,19 @@ QCloudEncodingType QCloudEncodingGetType(const char *typeEncoding) {
         _ivarInfos = ivarInfos;
         for (unsigned int i = 0; i < ivarCount; i++) {
             QCloudClassIvarInfo *info = [[QCloudClassIvarInfo alloc] initWithIvar:ivars[i]];
-            if (info.name) ivarInfos[info.name] = info;
+            if (info.name)
+                ivarInfos[info.name] = info;
         }
         free(ivars);
     }
-    
-    if (!_ivarInfos) _ivarInfos = @{};
-    if (!_methodInfos) _methodInfos = @{};
-    if (!_propertyInfos) _propertyInfos = @{};
-    
+
+    if (!_ivarInfos)
+        _ivarInfos = @{};
+    if (!_methodInfos)
+        _methodInfos = @{};
+    if (!_propertyInfos)
+        _propertyInfos = @{};
+
     _needUpdate = NO;
 }
 
@@ -327,7 +371,8 @@ QCloudEncodingType QCloudEncodingGetType(const char *typeEncoding) {
 }
 
 + (instancetype)classInfoWithClass:(Class)cls {
-    if (!cls) return nil;
+    if (!cls)
+        return nil;
     static CFMutableDictionaryRef classCache;
     static CFMutableDictionaryRef metaCache;
     static dispatch_once_t onceToken;

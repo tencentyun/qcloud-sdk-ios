@@ -24,20 +24,20 @@
 }
 
 - (void)reset {
-    @synchronized (self) {
+    @synchronized(self) {
         currentDelay = 0;
     }
 }
 
 - (void)increase {
-    @synchronized (self) {
+    @synchronized(self) {
         NSInteger cd = currentDelay;
         currentDelay = MIN(MAX(cd * 2, initDelay), maxDelay);
     }
 }
 
 - (NSInteger)getDelay {
-    @synchronized (self) {
+    @synchronized(self) {
         return currentDelay;
     }
 }

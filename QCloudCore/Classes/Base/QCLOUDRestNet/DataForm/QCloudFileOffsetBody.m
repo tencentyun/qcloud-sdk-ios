@@ -9,8 +9,7 @@
 #import "QCloudFileOffsetBody.h"
 
 @implementation QCloudFileOffsetBody
-- (instancetype) initWithFile:(NSURL *)fileURL offset:(NSUInteger)offset slice:(NSUInteger)slice
-{
+- (instancetype)initWithFile:(NSURL *)fileURL offset:(NSUInteger)offset slice:(NSUInteger)slice {
     self = [super init];
     if (!self) {
         return self;

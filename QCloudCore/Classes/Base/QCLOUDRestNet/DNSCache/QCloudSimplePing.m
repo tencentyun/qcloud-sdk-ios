@@ -1,6 +1,6 @@
 
 
-#import "SimplePing.h"
+#import "QCloudSimplePing.h"
 
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -15,16 +15,16 @@
  */
 
 struct IPv4Header {
-    uint8_t     versionAndHeaderLength;
-    uint8_t     differentiatedServices;
-    uint16_t    totalLength;
-    uint16_t    identification;
-    uint16_t    flagsAndFragmentOffset;
-    uint8_t     timeToLive;
-    uint8_t     protocol;
-    uint16_t    headerChecksum;
-    uint8_t     sourceAddress[4];
-    uint8_t     destinationAddress[4];
+    uint8_t versionAndHeaderLength;
+    uint8_t differentiatedServices;
+    uint16_t totalLength;
+    uint16_t identification;
+    uint16_t flagsAndFragmentOffset;
+    uint8_t timeToLive;
+    uint8_t protocol;
+    uint16_t headerChecksum;
+    uint8_t sourceAddress[4];
+    uint8_t destinationAddress[4];
     // options...
     // data...
 };
@@ -51,19 +51,19 @@ __Check_Compile_Time(offsetof(IPv4Header, destinationAddress) == 16);
 
 static uint16_t in_cksum(const void *buffer, size_t bufferLen) {
     //
-    size_t              bytesLeft;
-    int32_t             sum;
-    const uint16_t *    cursor;
+    size_t bytesLeft;
+    int32_t sum;
+    const uint16_t *cursor;
     union {
-        uint16_t        us;
-        uint8_t         uc[2];
+        uint16_t us;
+        uint8_t uc[2];
     } last;
-    uint16_t            answer;
-    
+    uint16_t answer;
+
     bytesLeft = bufferLen;
     sum = 0;
     cursor = buffer;
-    
+
     /*
      * Our algorithm is simple, using a 32 bit accumulator (sum), we add
      * sequential 16 bit words to it, and at the end, fold back all the
@@ -74,58 +74,58 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen) {
         cursor += 1;
         bytesLeft -= 2;
     }
-    
+
     /* mop up an odd byte, if necessary */
     if (bytesLeft == 1) {
-        last.uc[0] = * (const uint8_t *) cursor;
+        last.uc[0] = *(const uint8_t *)cursor;
         last.uc[1] = 0;
         sum += last.us;
     }
-    
+
     /* add back carry outs from top 16 bits to low 16 bits */
-    sum = (sum >> 16) + (sum & 0xffff);    /* add hi 16 to low 16 */
-    sum += (sum >> 16);            /* add carry */
-    answer = (uint16_t) ~sum;   /* truncate to 16 bits */
-    
+    sum = (sum >> 16) + (sum & 0xffff); /* add hi 16 to low 16 */
+    sum += (sum >> 16);                 /* add carry */
+    answer = (uint16_t)~sum;            /* truncate to 16 bits */
+
     return answer;
 }
 
 #pragma mark * SimplePing
 
-@interface SimplePing ()
+@interface QCloudSimplePing ()
 
 // read/write versions of public properties
 
-@property (nonatomic, copy,   readwrite, nullable) NSData *     hostAddress;
-@property (nonatomic, assign, readwrite          ) uint16_t     nextSequenceNumber;
+@property (nonatomic, copy, readwrite, nullable) NSData *hostAddress;
+@property (nonatomic, assign, readwrite) uint16_t nextSequenceNumber;
 
 // private properties
 
 /*! True if nextSequenceNumber has wrapped from 65535 to 0.
  */
 
-@property (nonatomic, assign, readwrite)           BOOL         nextSequenceNumberHasWrapped;
+@property (nonatomic, assign, readwrite) BOOL nextSequenceNumberHasWrapped;
 
 /*! A host object for name-to-address resolution.
  */
 
-@property (nonatomic, strong, readwrite, nullable) CFHostRef host __attribute__ ((NSObject));
+@property (nonatomic, strong, readwrite, nullable) CFHostRef host __attribute__((NSObject));
 
 /*! A socket object for ICMP send and receive.
  */
 
-@property (nonatomic, strong, readwrite, nullable) CFSocketRef socket __attribute__ ((NSObject));
+@property (nonatomic, strong, readwrite, nullable) CFSocketRef socket __attribute__((NSObject));
 
 @end
 
-@implementation SimplePing
+@implementation QCloudSimplePing
 
 - (instancetype)initWithHostName:(NSString *)hostName {
     NSParameterAssert(hostName != nil);
     self = [super init];
     if (self != nil) {
-        self->_hostName   = [hostName copy];
-        self->_identifier = (uint16_t) arc4random();
+        self->_hostName = [hostName copy];
+        self->_identifier = (uint16_t)arc4random();
     }
     return self;
 }
@@ -138,11 +138,11 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen) {
 }
 
 - (sa_family_t)hostAddressFamily {
-    sa_family_t     result;
-    
+    sa_family_t result;
+
     result = AF_UNSPEC;
-    if ( (self.hostAddress != nil) && (self.hostAddress.length >= sizeof(struct sockaddr)) ) {
-        result = ((const struct sockaddr *) self.hostAddress.bytes)->sa_family;
+    if ((self.hostAddress != nil) && (self.hostAddress.length >= sizeof(struct sockaddr))) {
+        result = ((const struct sockaddr *)self.hostAddress.bytes)->sa_family;
     }
     return result;
 }
@@ -152,21 +152,21 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen) {
  */
 
 - (void)didFailWithError:(NSError *)error {
-    id<SimplePingDelegate>  strongDelegate;
-    
+    id<SimplePingDelegate> strongDelegate;
+
     assert(error != nil);
-    
+
     // We retain ourselves temporarily because it's common for the delegate method
     // to release its last reference to us, which causes -dealloc to be called here.
     // If we then reference self on the return path, things go badly.  I don't think
     // that happens currently, but I've got into the habit of doing this as a
     // defensive measure.
-    
-    CFAutorelease( CFBridgingRetain( self ));
-    
+
+    CFAutorelease(CFBridgingRetain(self));
+
     [self stop];
     strongDelegate = self.delegate;
-    if ( (strongDelegate != nil) && [strongDelegate respondsToSelector:@selector(simplePing:didFailWithError:)] ) {
+    if ((strongDelegate != nil) && [strongDelegate respondsToSelector:@selector(simplePing:didFailWithError:)]) {
         [strongDelegate simplePing:self didFailWithError:error];
     }
 }
@@ -178,16 +178,16 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen) {
  */
 
 - (void)didFailWithHostStreamError:(CFStreamError)streamError {
-    NSDictionary *  userInfo;
-    NSError *       error;
-    
+    NSDictionary *userInfo;
+    NSError *error;
+
     if (streamError.domain == kCFStreamErrorDomainNetDB) {
-        userInfo = @{(id) kCFGetAddrInfoFailureKey: @(streamError.error)};
+        userInfo = @{ (id)kCFGetAddrInfoFailureKey : @(streamError.error) };
     } else {
         userInfo = nil;
     }
-    error = [NSError errorWithDomain:(NSString *) kCFErrorDomainCFNetwork code:kCFHostErrorUnknown userInfo:userInfo];
-    
+    error = [NSError errorWithDomain:(NSString *)kCFErrorDomainCFNetwork code:kCFHostErrorUnknown userInfo:userInfo];
+
     [self didFailWithError:error];
 }
 
@@ -199,53 +199,54 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen) {
  */
 
 - (NSData *)pingPacketWithType:(uint8_t)type payload:(NSData *)payload requiresChecksum:(BOOL)requiresChecksum {
-    NSMutableData *         packet;
-    ICMPHeader *            icmpPtr;
-    
+    NSMutableData *packet;
+    ICMPHeader *icmpPtr;
+
     packet = [NSMutableData dataWithLength:sizeof(*icmpPtr) + payload.length];
     assert(packet != nil);
-    
+
     icmpPtr = packet.mutableBytes;
     icmpPtr->type = type;
     icmpPtr->code = 0;
     icmpPtr->checksum = 0;
-    icmpPtr->identifier     = OSSwapHostToBigInt16(self.identifier);
+    icmpPtr->identifier = OSSwapHostToBigInt16(self.identifier);
     icmpPtr->sequenceNumber = OSSwapHostToBigInt16(self.nextSequenceNumber);
     memcpy(&icmpPtr[1], [payload bytes], [payload length]);
-    
+
     if (requiresChecksum) {
         // The IP checksum routine returns a 16-bit number that's already in correct byte order
         // (due to wacky 1's complement maths), so we just put it into the packet as a 16-bit unit.
-        
+
         icmpPtr->checksum = in_cksum(packet.bytes, packet.length);
     }
-    
+
     return packet;
 }
 
 - (void)sendPingWithData:(NSData *)data {
-    int                     err;
-    NSData *                payload;
-    NSData *                packet;
-    ssize_t                 bytesSent;
-    id<SimplePingDelegate>  strongDelegate;
-    
+    int err;
+    NSData *payload;
+    NSData *packet;
+    ssize_t bytesSent;
+    id<SimplePingDelegate> strongDelegate;
+
     // data may be nil
-    NSParameterAssert(self.hostAddress != nil);     // gotta wait for -simplePing:didStartWithAddress:
-    
+    NSParameterAssert(self.hostAddress != nil); // gotta wait for -simplePing:didStartWithAddress:
+
     // Construct the ping packet.
-    
+
     payload = data;
     if (payload == nil) {
-        payload = [[NSString stringWithFormat:@"%28zd bottles of beer on the wall", (ssize_t) 99 - (size_t) (self.nextSequenceNumber % 100) ] dataUsingEncoding:NSASCIIStringEncoding];
+        payload = [[NSString stringWithFormat:@"%28zd bottles of beer on the wall", (ssize_t)99 - (size_t)(self.nextSequenceNumber % 100)]
+            dataUsingEncoding:NSASCIIStringEncoding];
         assert(payload != nil);
-        
+
         // Our dummy payload is sized so that the resulting ICMP packet, including the ICMPHeader, is
         // 64-bytes, which makes it easier to recognise our packets on the wire.
-        
+
         assert([payload length] == 56);
     }
-    
+
     switch (self.hostAddressFamily) {
         case AF_INET: {
             packet = [self pingPacketWithType:ICMPv4TypeEchoRequest payload:payload requiresChecksum:YES];
@@ -258,51 +259,44 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen) {
         } break;
     }
     assert(packet != nil);
-    
+
     // Send the packet.
-    
+
     if (self.socket == NULL) {
         bytesSent = -1;
         err = EBADF;
     } else {
-        bytesSent = sendto(
-                           CFSocketGetNative(self.socket),
-                           packet.bytes,
-                           packet.length,
-                           0,
-                           self.hostAddress.bytes,
-                           (socklen_t) self.hostAddress.length
-                           );
+        bytesSent
+            = sendto(CFSocketGetNative(self.socket), packet.bytes, packet.length, 0, self.hostAddress.bytes, (socklen_t)self.hostAddress.length);
         err = 0;
         if (bytesSent < 0) {
             err = errno;
         }
     }
-    
+
     // Handle the results of the send.
-    
+
     strongDelegate = self.delegate;
-    if ( (bytesSent > 0) && (((NSUInteger) bytesSent) == packet.length) ) {
-        
+    if ((bytesSent > 0) && (((NSUInteger)bytesSent) == packet.length)) {
         // Complete success.  Tell the client.
-        
-        if ( (strongDelegate != nil) && [strongDelegate respondsToSelector:@selector(simplePing:didSendPacket:sequenceNumber:)] ) {
+
+        if ((strongDelegate != nil) && [strongDelegate respondsToSelector:@selector(simplePing:didSendPacket:sequenceNumber:)]) {
             [strongDelegate simplePing:self didSendPacket:packet sequenceNumber:self.nextSequenceNumber];
         }
     } else {
-        NSError *   error;
-        
+        NSError *error;
+
         // Some sort of failure.  Tell the client.
-        
+
         if (err == 0) {
-            err = ENOBUFS;          // This is not a hugely descriptor error, alas.
+            err = ENOBUFS; // This is not a hugely descriptor error, alas.
         }
         error = [NSError errorWithDomain:NSPOSIXErrorDomain code:err userInfo:nil];
-        if ( (strongDelegate != nil) && [strongDelegate respondsToSelector:@selector(simplePing:didFailToSendPacket:sequenceNumber:error:)] ) {
+        if ((strongDelegate != nil) && [strongDelegate respondsToSelector:@selector(simplePing:didFailToSendPacket:sequenceNumber:error:)]) {
             [strongDelegate simplePing:self didFailToSendPacket:packet sequenceNumber:self.nextSequenceNumber error:error];
         }
     }
-    
+
     self.nextSequenceNumber += 1;
     if (self.nextSequenceNumber == 0) {
         self.nextSequenceNumberHasWrapped = YES;
@@ -320,15 +314,15 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen) {
 
 + (NSUInteger)icmpHeaderOffsetInIPv4Packet:(NSData *)packet {
     // Returns the offset of the ICMPv4Header within an IP packet.
-    NSUInteger                  result;
-    const struct IPv4Header *   ipPtr;
-    size_t                      ipHeaderLength;
-    
+    NSUInteger result;
+    const struct IPv4Header *ipPtr;
+    size_t ipHeaderLength;
+
     result = NSNotFound;
     if (packet.length >= (sizeof(IPv4Header) + sizeof(ICMPHeader))) {
-        ipPtr = (const IPv4Header *) packet.bytes;
-        if ( ((ipPtr->versionAndHeaderLength & 0xF0) == 0x40) &&            // IPv4
-            ( ipPtr->protocol == IPPROTO_ICMP ) ) {
+        ipPtr = (const IPv4Header *)packet.bytes;
+        if (((ipPtr->versionAndHeaderLength & 0xF0) == 0x40) && // IPv4
+            (ipPtr->protocol == IPPROTO_ICMP)) {
             ipHeaderLength = (ipPtr->versionAndHeaderLength & 0x0F) * sizeof(uint32_t);
             if (packet.length >= (ipHeaderLength + sizeof(ICMPHeader))) {
                 result = ipHeaderLength;
@@ -353,7 +347,7 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen) {
         //
         // Why 120?  Well, if we send one ping per second, 120 is 2 minutes, which
         // is the standard "max time a packet can bounce around the Internet" value.
-        return ((uint16_t) (self.nextSequenceNumber - sequenceNumber)) < (uint16_t) 120;
+        return ((uint16_t)(self.nextSequenceNumber - sequenceNumber)) < (uint16_t)120;
     } else {
         return sequenceNumber < self.nextSequenceNumber;
     }
@@ -372,35 +366,34 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen) {
  */
 
 - (BOOL)validatePing4ResponsePacket:(NSMutableData *)packet sequenceNumber:(uint16_t *)sequenceNumberPtr {
-    BOOL                result;
-    NSUInteger          icmpHeaderOffset;
-    ICMPHeader *        icmpPtr;
-    uint16_t            receivedChecksum;
-    uint16_t            calculatedChecksum;
-    
+    BOOL result;
+    NSUInteger icmpHeaderOffset;
+    ICMPHeader *icmpPtr;
+    uint16_t receivedChecksum;
+    uint16_t calculatedChecksum;
+
     result = NO;
-    
+
     icmpHeaderOffset = [[self class] icmpHeaderOffsetInIPv4Packet:packet];
     if (icmpHeaderOffset != NSNotFound) {
-        icmpPtr = (struct ICMPHeader *) (((uint8_t *) packet.mutableBytes) + icmpHeaderOffset);
-        
-        receivedChecksum   = icmpPtr->checksum;
-        icmpPtr->checksum  = 0;
+        icmpPtr = (struct ICMPHeader *)(((uint8_t *)packet.mutableBytes) + icmpHeaderOffset);
+
+        receivedChecksum = icmpPtr->checksum;
+        icmpPtr->checksum = 0;
         calculatedChecksum = in_cksum(icmpPtr, packet.length - icmpHeaderOffset);
-        icmpPtr->checksum  = receivedChecksum;
-        
+        icmpPtr->checksum = receivedChecksum;
+
         if (receivedChecksum == calculatedChecksum) {
-            if ( (icmpPtr->type == ICMPv4TypeEchoReply) && (icmpPtr->code == 0) ) {
-                if ( OSSwapBigToHostInt16(icmpPtr->identifier) == self.identifier ) {
-                    uint16_t    sequenceNumber;
-                    
+            if ((icmpPtr->type == ICMPv4TypeEchoReply) && (icmpPtr->code == 0)) {
+                if (OSSwapBigToHostInt16(icmpPtr->identifier) == self.identifier) {
+                    uint16_t sequenceNumber;
+
                     sequenceNumber = OSSwapBigToHostInt16(icmpPtr->sequenceNumber);
                     if ([self validateSequenceNumber:sequenceNumber]) {
-                        
                         // Remove the IPv4 header off the front of the data we received, leaving us with
                         // just the ICMP header and the ping payload.
                         [packet replaceBytesInRange:NSMakeRange(0, icmpHeaderOffset) withBytes:NULL length:0];
-                        
+
                         *sequenceNumberPtr = sequenceNumber;
                         result = YES;
                     }
@@ -408,7 +401,7 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen) {
             }
         }
     }
-    
+
     return result;
 }
 
@@ -420,22 +413,22 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen) {
  */
 
 - (BOOL)validatePing6ResponsePacket:(NSMutableData *)packet sequenceNumber:(uint16_t *)sequenceNumberPtr {
-    BOOL                    result;
-    const ICMPHeader *      icmpPtr;
-    
+    BOOL result;
+    const ICMPHeader *icmpPtr;
+
     result = NO;
-    
+
     if (packet.length >= sizeof(*icmpPtr)) {
         icmpPtr = packet.bytes;
-        
+
         // In the IPv6 case we don't check the checksum because that's hard (we need to
         // cook up an IPv6 pseudo header and we don't have the ingredients) and unnecessary
         // (the kernel has already done this check).
-        
-        if ( (icmpPtr->type == ICMPv6TypeEchoReply) && (icmpPtr->code == 0) ) {
-            if ( OSSwapBigToHostInt16(icmpPtr->identifier) == self.identifier ) {
-                uint16_t    sequenceNumber;
-                
+
+        if ((icmpPtr->type == ICMPv6TypeEchoReply) && (icmpPtr->code == 0)) {
+            if (OSSwapBigToHostInt16(icmpPtr->identifier) == self.identifier) {
+                uint16_t sequenceNumber;
+
                 sequenceNumber = OSSwapBigToHostInt16(icmpPtr->sequenceNumber);
                 if ([self validateSequenceNumber:sequenceNumber]) {
                     *sequenceNumberPtr = sequenceNumber;
@@ -455,8 +448,8 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen) {
  */
 
 - (BOOL)validatePingResponsePacket:(NSMutableData *)packet sequenceNumber:(uint16_t *)sequenceNumberPtr {
-    BOOL        result;
-    
+    BOOL result;
+
     switch (self.hostAddressFamily) {
         case AF_INET: {
             result = [self validatePing4ResponsePacket:packet sequenceNumber:sequenceNumberPtr];
@@ -478,64 +471,63 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen) {
  */
 
 - (void)readData {
-    int                     err;
+    int err;
     struct sockaddr_storage addr;
-    socklen_t               addrLen;
-    ssize_t                 bytesRead;
-    void *                  buffer;
+    socklen_t addrLen;
+    ssize_t bytesRead;
+    void *buffer;
     enum { kBufferSize = 65535 };
-    
+
     // 65535 is the maximum IP packet size, which seems like a reasonable bound
     // here (plus it's what <x-man-page://8/ping> uses).
-    
+
     buffer = malloc(kBufferSize);
     assert(buffer != NULL);
-    
+
     // Actually read the data.  We use recvfrom(), and thus get back the source address,
     // but we don't actually do anything with it.  It would be trivial to pass it to
     // the delegate but we don't need it in this example.
-    
+
     addrLen = sizeof(addr);
-    bytesRead = recvfrom(CFSocketGetNative(self.socket), buffer, kBufferSize, 0, (struct sockaddr *) &addr, &addrLen);
+    bytesRead = recvfrom(CFSocketGetNative(self.socket), buffer, kBufferSize, 0, (struct sockaddr *)&addr, &addrLen);
     err = 0;
     if (bytesRead < 0) {
         err = errno;
     }
-    
+
     // Process the data we read.
-    
+
     if (bytesRead > 0) {
-        NSMutableData *         packet;
-        id<SimplePingDelegate>  strongDelegate;
-        uint16_t                sequenceNumber;
-        
-        packet = [NSMutableData dataWithBytes:buffer length:(NSUInteger) bytesRead];
+        NSMutableData *packet;
+        id<SimplePingDelegate> strongDelegate;
+        uint16_t sequenceNumber;
+
+        packet = [NSMutableData dataWithBytes:buffer length:(NSUInteger)bytesRead];
         assert(packet != nil);
-        
+
         // We got some data, pass it up to our client.
-        
+
         strongDelegate = self.delegate;
-        if ( [self validatePingResponsePacket:packet sequenceNumber:&sequenceNumber] ) {
-            if ( (strongDelegate != nil) && [strongDelegate respondsToSelector:@selector(simplePing:didReceivePingResponsePacket:sequenceNumber:)] ) {
+        if ([self validatePingResponsePacket:packet sequenceNumber:&sequenceNumber]) {
+            if ((strongDelegate != nil) && [strongDelegate respondsToSelector:@selector(simplePing:didReceivePingResponsePacket:sequenceNumber:)]) {
                 [strongDelegate simplePing:self didReceivePingResponsePacket:packet sequenceNumber:sequenceNumber];
             }
         } else {
-            if ( (strongDelegate != nil) && [strongDelegate respondsToSelector:@selector(simplePing:didReceiveUnexpectedPacket:)] ) {
+            if ((strongDelegate != nil) && [strongDelegate respondsToSelector:@selector(simplePing:didReceiveUnexpectedPacket:)]) {
                 [strongDelegate simplePing:self didReceiveUnexpectedPacket:packet];
             }
         }
     } else {
-        
         // We failed to read the data, so shut everything down.
-        
+
         if (err == 0) {
             err = EPIPE;
         }
         [self didFailWithError:[NSError errorWithDomain:NSPOSIXErrorDomain code:err userInfo:nil]];
     }
-    
+
     free(buffer);
-    
+
     // Note that we don't loop back trying to read more data.  Rather, we just
     // let CFSocket call us again.
 }
@@ -553,11 +545,11 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen) {
 static void SocketReadCallback(CFSocketRef s, CFSocketCallBackType type, CFDataRef address, const void *data, void *info) {
     // This C routine is called by CFSocket when there's data waiting on our
     // ICMP socket.  It just redirects the call to Objective-C code.
-    SimplePing *    obj;
-    
-    obj = (__bridge SimplePing *) info;
-    assert([obj isKindOfClass:[SimplePing class]]);
-    
+    QCloudSimplePing *obj;
+
+    obj = (__bridge QCloudSimplePing *)info;
+    assert([obj isKindOfClass:[QCloudSimplePing class]]);
+
 #pragma unused(s)
     assert(s == obj.socket);
 #pragma unused(type)
@@ -566,7 +558,7 @@ static void SocketReadCallback(CFSocketRef s, CFSocketCallBackType type, CFDataR
     assert(address == nil);
 #pragma unused(data)
     assert(data == nil);
-    
+
     [obj readData];
 }
 
@@ -577,13 +569,13 @@ static void SocketReadCallback(CFSocketRef s, CFSocketCallBackType type, CFDataR
  */
 
 - (void)startWithHostAddress {
-    int                     err;
-    int                     fd;
-    
+    int err;
+    int fd;
+
     assert(self.hostAddress != nil);
-    
+
     // Open the socket.
-    
+
     fd = -1;
     err = 0;
     switch (self.hostAddressFamily) {
@@ -603,33 +595,33 @@ static void SocketReadCallback(CFSocketRef s, CFSocketCallBackType type, CFDataR
             err = EPROTONOSUPPORT;
         } break;
     }
-    
+
     if (err != 0) {
         [self didFailWithError:[NSError errorWithDomain:NSPOSIXErrorDomain code:err userInfo:nil]];
     } else {
-        CFSocketContext         context = {0, (__bridge void *)(self), NULL, NULL, NULL};
-        CFRunLoopSourceRef      rls;
-        id<SimplePingDelegate>  strongDelegate;
-        
+        CFSocketContext context = { 0, (__bridge void *)(self), NULL, NULL, NULL };
+        CFRunLoopSourceRef rls;
+        id<SimplePingDelegate> strongDelegate;
+
         // Wrap it in a CFSocket and schedule it on the runloop.
-        
-        self.socket = (CFSocketRef) CFAutorelease( CFSocketCreateWithNative(NULL, fd, kCFSocketReadCallBack, SocketReadCallback, &context) );
+
+        self.socket = (CFSocketRef)CFAutorelease(CFSocketCreateWithNative(NULL, fd, kCFSocketReadCallBack, SocketReadCallback, &context));
         assert(self.socket != NULL);
-        
+
         // The socket will now take care of cleaning up our file descriptor.
-        
-        assert( CFSocketGetSocketFlags(self.socket) & kCFSocketCloseOnInvalidate );
+
+        assert(CFSocketGetSocketFlags(self.socket) & kCFSocketCloseOnInvalidate);
         fd = -1;
-        
+
         rls = CFSocketCreateRunLoopSource(NULL, self.socket, 0);
         assert(rls != NULL);
-        
+
         CFRunLoopAddSource(CFRunLoopGetCurrent(), rls, kCFRunLoopDefaultMode);
-        
+
         CFRelease(rls);
-        
+
         strongDelegate = self.delegate;
-        if ( (strongDelegate != nil) && [strongDelegate respondsToSelector:@selector(simplePing:didStartWithAddress:)] ) {
+        if ((strongDelegate != nil) && [strongDelegate respondsToSelector:@selector(simplePing:didStartWithAddress:)]) {
             [strongDelegate simplePing:self didStartWithAddress:self.hostAddress];
         }
     }
@@ -643,19 +635,19 @@ static void SocketReadCallback(CFSocketRef s, CFSocketCallBackType type, CFDataR
  */
 
 - (void)hostResolutionDone {
-    Boolean     resolved;
-    NSArray *   addresses;
-    
+    Boolean resolved;
+    NSArray *addresses;
+
     // Find the first appropriate address.
-    
-    addresses = (__bridge NSArray *) CFHostGetAddressing(self.host, &resolved);
-    if ( resolved && (addresses != nil) ) {
+
+    addresses = (__bridge NSArray *)CFHostGetAddressing(self.host, &resolved);
+    if (resolved && (addresses != nil)) {
         resolved = false;
-        for (NSData * address in addresses) {
-            const struct sockaddr * addrPtr;
-            
-            addrPtr = (const struct sockaddr *) address.bytes;
-            if ( address.length >= sizeof(struct sockaddr) ) {
+        for (NSData *address in addresses) {
+            const struct sockaddr *addrPtr;
+
+            addrPtr = (const struct sockaddr *)address.bytes;
+            if (address.length >= sizeof(struct sockaddr)) {
                 switch (addrPtr->sa_family) {
                     case AF_INET: {
                         if (self.addressStyle != SimplePingAddressStyleICMPv6) {
@@ -676,13 +668,13 @@ static void SocketReadCallback(CFSocketRef s, CFSocketCallBackType type, CFDataR
             }
         }
     }
-    
+
     // We're done resolving, so shut that down.
-    
+
     [self stopHostResolution];
-    
+
     // If all is OK, start the send and receive infrastructure, otherwise stop.
-    
+
     if (resolved) {
         [self startWithHostAddress];
     } else {
@@ -703,17 +695,17 @@ static void SocketReadCallback(CFSocketRef s, CFSocketCallBackType type, CFDataR
 static void HostResolveCallback(CFHostRef theHost, CFHostInfoType typeInfo, const CFStreamError *error, void *info) {
     // This C routine is called by CFHost when the host resolution is complete.
     // It just redirects the call to the appropriate Objective-C method.
-    SimplePing *    obj;
-    
-    obj = (__bridge SimplePing *) info;
-    assert([obj isKindOfClass:[SimplePing class]]);
-    
+    QCloudSimplePing *obj;
+
+    obj = (__bridge QCloudSimplePing *)info;
+    assert([obj isKindOfClass:[QCloudSimplePing class]]);
+
 #pragma unused(theHost)
     assert(theHost == obj.host);
 #pragma unused(typeInfo)
     assert(typeInfo == kCFHostAddresses);
-    
-    if ( (error != NULL) && (error->domain != 0) ) {
+
+    if ((error != NULL) && (error->domain != 0)) {
         [obj didFailWithHostStreamError:*error];
     } else {
         [obj hostResolutionDone];
@@ -721,22 +713,22 @@ static void HostResolveCallback(CFHostRef theHost, CFHostInfoType typeInfo, cons
 }
 
 - (void)start {
-    Boolean             success;
-    CFHostClientContext context = {0, (__bridge void *)(self), NULL, NULL, NULL};
-    CFStreamError       streamError;
-    
+    Boolean success;
+    CFHostClientContext context = { 0, (__bridge void *)(self), NULL, NULL, NULL };
+    CFStreamError streamError;
+
     assert(self.host == NULL);
     assert(self.hostAddress == nil);
-    
-    self.host = (CFHostRef) CFAutorelease( CFHostCreateWithName(NULL, (__bridge CFStringRef) self.hostName) );
+
+    self.host = (CFHostRef)CFAutorelease(CFHostCreateWithName(NULL, (__bridge CFStringRef)self.hostName));
     assert(self.host != NULL);
-    
+
     CFHostSetClient(self.host, HostResolveCallback, &context);
-    
+
     CFHostScheduleWithRunLoop(self.host, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
-    
+
     success = CFHostStartInfoResolution(self.host, kCFHostAddresses, &streamError);
-    if ( ! success ) {
+    if (!success) {
         [self didFailWithHostStreamError:streamError];
     }
 }
@@ -766,10 +758,10 @@ static void HostResolveCallback(CFHostRef theHost, CFHostInfoType typeInfo, cons
 - (void)stop {
     [self stopHostResolution];
     [self stopSocket];
-    
+
     // Junk the host address on stop.  If the client calls -start again, we'll
     // re-resolve the host name.
-    
+
     self.hostAddress = NULL;
 }
 

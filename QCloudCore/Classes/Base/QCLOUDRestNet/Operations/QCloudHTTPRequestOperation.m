@@ -23,23 +23,20 @@
 #import "NSError+QCloudNetworking.h"
 
 @interface QCloudHTTPRequestOperation ()
-@property (nonatomic, strong, readonly) QCloudHTTPRequest* httpRequest;
-@property (nonatomic, strong) NSString* tempFilePath;
+@property (nonatomic, strong, readonly) QCloudHTTPRequest *httpRequest;
+@property (nonatomic, strong) NSString *tempFilePath;
 @end
 
 @implementation QCloudHTTPRequestOperation
 
-- (void) dealloc
-{
+- (void)dealloc {
     QCloudRemoveFileByPath(self.tempFilePath);
 }
-- (QCloudHTTPRequest*) httpRequest
-{
-    return (QCloudHTTPRequest*)self.request;
+- (QCloudHTTPRequest *)httpRequest {
+    return (QCloudHTTPRequest *)self.request;
 }
 
-- (void) main
-{
+- (void)main {
     @autoreleasepool {
         QCloudRequestFinishBlock originFinishBlock = self.httpRequest.finishBlock;
         if (self.httpRequest.canceled) {
@@ -48,7 +45,7 @@
                 [self.delagte requestOperationFinish:self];
             }
             if (originFinishBlock) {
-                NSError* cancel = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeCanceled message:@"UserCancelled:已经取消了，不再执行"];
+                NSError *cancel = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeCanceled message:@"UserCancelled:已经取消了，不再执行"];
                 originFinishBlock(nil, cancel);
             }
             return;
@@ -63,9 +60,9 @@
                 originFinishBlock(outputObject, error);
             }
         }];
-        
+
         QCloudLogDebug(@"开始执行一个请求:%lld", self.httpRequest.requestID);
-       [[QCloudHTTPSessionManager shareClient] executeRestHTTPReqeust:self.httpRequest];
+        [[QCloudHTTPSessionManager shareClient] executeRestHTTPReqeust:self.httpRequest];
     }
 }
 @end

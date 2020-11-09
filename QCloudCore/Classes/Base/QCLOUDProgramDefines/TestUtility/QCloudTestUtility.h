@@ -6,13 +6,12 @@
 //
 
 #import <Foundation/Foundation.h>
-typedef NS_ENUM(NSInteger,QCloudTestFileUnit) {
+typedef NS_ENUM(NSInteger, QCloudTestFileUnit) {
     QCLOUD_TEST_FILE_UNIT_BYTES = 1,
     QCLOUD_TEST_FILE_UNIT_KB = 1024,
-    QCLOUD_TEST_FILE_UNIT_MB = 1024*1024,
-    QCLOUD_TEST_FILE_UNIT_GB = 1024*1024*1024
+    QCLOUD_TEST_FILE_UNIT_MB = 1024 * 1024,
+    QCLOUD_TEST_FILE_UNIT_GB = 1024 * 1024 * 1024
 };
-
 
 @interface QCloudTestUtility : NSObject
 
@@ -23,11 +22,8 @@ typedef NS_ENUM(NSInteger,QCloudTestFileUnit) {
  @param unit 文件单位，bytes, kb, 等
  @return 文件地址
  */
-+ (NSString* )tempFileWithSize:(NSInteger)size unit:(QCloudTestFileUnit)unit;
++ (NSString *)tempFileWithSize:(NSInteger)size unit:(QCloudTestFileUnit)unit;
 
-
-+ (void)removeFileAtPath:(NSString*)path;
-
++ (void)removeFileAtPath:(NSString *)path;
 
 @end
-

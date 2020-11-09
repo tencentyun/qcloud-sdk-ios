@@ -1,16 +1,16 @@
 
-    
+
 /*
  Copyright (C) 2016 Apple Inc. All Rights Reserved.
  See LICENSE.txt for this sample’s licensing information
- 
+
  Abstract:
  An object wrapper around the low-level BSD Sockets ping function.
  */
 
 @import Foundation;
 
-#include <AssertMacros.h>           // for __Check_Compile_Time
+#include <AssertMacros.h> // for __Check_Compile_Time
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -20,9 +20,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 
 typedef NS_ENUM(NSInteger, SimplePingAddressStyle) {
-    SimplePingAddressStyleAny,          ///< Use the first IPv4 or IPv6 address found; the default.
-    SimplePingAddressStyleICMPv4,       ///< Use the first IPv4 address found.
-    SimplePingAddressStyleICMPv6        ///< Use the first IPv6 address found.
+    SimplePingAddressStyleAny,    ///< Use the first IPv4 or IPv6 address found; the default.
+    SimplePingAddressStyleICMPv4, ///< Use the first IPv4 address found.
+    SimplePingAddressStyleICMPv6  ///< Use the first IPv6 address found.
 };
 
 /*! An object wrapper around the low-level BSD Sockets ping function.
@@ -37,7 +37,7 @@ typedef NS_ENUM(NSInteger, SimplePingAddressStyle) {
  *      confined to a specific thread and that thread must run its run loop.
  */
 
-@interface SimplePing : NSObject
+@interface QCloudSimplePing : NSObject
 
 - (instancetype)init NS_UNAVAILABLE;
 
@@ -52,7 +52,7 @@ typedef NS_ENUM(NSInteger, SimplePingAddressStyle) {
 /*! A copy of the value passed to `-initWithHostName:`.
  */
 
-@property (nonatomic, copy, readonly) NSString * hostName;
+@property (nonatomic, copy, readonly) NSString *hostName;
 
 /*! The delegate for this object.
  *  \details Delegate callbacks are schedule in the default run loop mode of the run loop of the
@@ -73,7 +73,7 @@ typedef NS_ENUM(NSInteger, SimplePingAddressStyle) {
  *      `-simplePing:didStartWithAddress:` is called.
  */
 
-@property (nonatomic, copy, readonly, nullable) NSData * hostAddress;
+@property (nonatomic, copy, readonly, nullable) NSData *hostAddress;
 
 /*! The address family for `hostAddress`, or `AF_UNSPEC` if that's nil.
  */
@@ -154,7 +154,7 @@ typedef NS_ENUM(NSInteger, SimplePingAddressStyle) {
  *      is made, this will have the same value as the `hostAddress` property.
  */
 
-- (void)simplePing:(SimplePing *)pinger didStartWithAddress:(NSData *)address;
+- (void)simplePing:(QCloudSimplePing *)pinger didStartWithAddress:(NSData *)address;
 
 /*! A SimplePing delegate callback, called if the object fails to start up.
  *  \details This is called shortly after you start the object to tell you that the
@@ -167,7 +167,7 @@ typedef NS_ENUM(NSInteger, SimplePingAddressStyle) {
  *  \param error Describes the failure.
  */
 
-- (void)simplePing:(SimplePing *)pinger didFailWithError:(NSError *)error;
+- (void)simplePing:(QCloudSimplePing *)pinger didFailWithError:(NSError *)error;
 
 /*! A SimplePing delegate callback, called when the object has successfully sent a ping packet.
  *  \details Each call to `-sendPingWithData:` will result in either a
@@ -182,7 +182,7 @@ typedef NS_ENUM(NSInteger, SimplePingAddressStyle) {
  *  \param sequenceNumber The ICMP sequence number of that packet.
  */
 
-- (void)simplePing:(SimplePing *)pinger didSendPacket:(NSData *)packet sequenceNumber:(uint16_t)sequenceNumber;
+- (void)simplePing:(QCloudSimplePing *)pinger didSendPacket:(NSData *)packet sequenceNumber:(uint16_t)sequenceNumber;
 
 /*! A SimplePing delegate callback, called when the object fails to send a ping packet.
  *  \details Each call to `-sendPingWithData:` will result in either a
@@ -198,7 +198,7 @@ typedef NS_ENUM(NSInteger, SimplePingAddressStyle) {
  *  \param error Describes the failure.
  */
 
-- (void)simplePing:(SimplePing *)pinger didFailToSendPacket:(NSData *)packet sequenceNumber:(uint16_t)sequenceNumber error:(NSError *)error;
+- (void)simplePing:(QCloudSimplePing *)pinger didFailToSendPacket:(NSData *)packet sequenceNumber:(uint16_t)sequenceNumber error:(NSError *)error;
 
 /*! A SimplePing delegate callback, called when the object receives a ping response.
  *  \details If the object receives an ping response that matches a ping request that it
@@ -210,7 +210,7 @@ typedef NS_ENUM(NSInteger, SimplePingAddressStyle) {
  *  \param sequenceNumber The ICMP sequence number of that packet.
  */
 
-- (void)simplePing:(SimplePing *)pinger didReceivePingResponsePacket:(NSData *)packet sequenceNumber:(uint16_t)sequenceNumber;
+- (void)simplePing:(QCloudSimplePing *)pinger didReceivePingResponsePacket:(NSData *)packet sequenceNumber:(uint16_t)sequenceNumber;
 
 /*! A SimplePing delegate callback, called when the object receives an unmatched ICMP message.
  *  \details If the object receives an ICMP message that does not match a ping request that it
@@ -230,7 +230,7 @@ typedef NS_ENUM(NSInteger, SimplePingAddressStyle) {
  *      follows that in the ICMP message but does not include any IP-level headers.
  */
 
-- (void)simplePing:(SimplePing *)pinger didReceiveUnexpectedPacket:(NSData *)packet;
+- (void)simplePing:(QCloudSimplePing *)pinger didReceiveUnexpectedPacket:(NSData *)packet;
 
 @end
 
@@ -245,11 +245,11 @@ typedef NS_ENUM(NSInteger, SimplePingAddressStyle) {
  */
 
 struct ICMPHeader {
-    uint8_t     type;
-    uint8_t     code;
-    uint16_t    checksum;
-    uint16_t    identifier;
-    uint16_t    sequenceNumber;
+    uint8_t type;
+    uint8_t code;
+    uint16_t checksum;
+    uint16_t identifier;
+    uint16_t sequenceNumber;
     // data...
 };
 typedef struct ICMPHeader ICMPHeader;
@@ -262,13 +262,13 @@ __Check_Compile_Time(offsetof(ICMPHeader, identifier) == 4);
 __Check_Compile_Time(offsetof(ICMPHeader, sequenceNumber) == 6);
 
 enum {
-    ICMPv4TypeEchoRequest = 8,          ///< The ICMP `type` for a ping request; in this case `code` is always 0.
-    ICMPv4TypeEchoReply   = 0           ///< The ICMP `type` for a ping response; in this case `code` is always 0.
+    ICMPv4TypeEchoRequest = 8, ///< The ICMP `type` for a ping request; in this case `code` is always 0.
+    ICMPv4TypeEchoReply = 0    ///< The ICMP `type` for a ping response; in this case `code` is always 0.
 };
 
 enum {
-    ICMPv6TypeEchoRequest = 128,        ///< The ICMP `type` for a ping request; in this case `code` is always 0.
-    ICMPv6TypeEchoReply   = 129         ///< The ICMP `type` for a ping response; in this case `code` is always 0.
+    ICMPv6TypeEchoRequest = 128, ///< The ICMP `type` for a ping request; in this case `code` is always 0.
+    ICMPv6TypeEchoReply = 129    ///< The ICMP `type` for a ping response; in this case `code` is always 0.
 };
 
 NS_ASSUME_NONNULL_END

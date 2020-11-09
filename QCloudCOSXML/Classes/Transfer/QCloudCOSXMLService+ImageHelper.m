@@ -14,24 +14,19 @@
 
 @implementation QCloudCOSXMLService (ImageHelper)
 
-
-- (void) PutWatermarkObject:(QCloudPutObjectWatermarkRequest*)request
-{
-    [super performRequest:request ];
+- (void)PutWatermarkObject:(QCloudPutObjectWatermarkRequest *)request {
+    [super performRequest:request];
 }
 
-- (void) GetRecognitionObject:(QCloudGetRecognitionObjectRequest*)request
-{
-    [super performRequest:request ];
+- (void)GetRecognitionObject:(QCloudGetRecognitionObjectRequest *)request {
+    [super performRequest:request];
 }
 
-
-- (void) GetFilePreviewObject:(QCloudGetFilePreviewRequest*)request
-{
-    [super performRequest:request ];
+- (void)GetFilePreviewObject:(QCloudGetFilePreviewRequest *)request {
+    [super performRequest:request];
 }
 
--(void)GetGenerateSnapshot:(QCloudGetGenerateSnapshotRequest *)request{
+- (void)GetGenerateSnapshot:(QCloudGetGenerateSnapshotRequest *)request {
     [super performRequest:request];
 }
 

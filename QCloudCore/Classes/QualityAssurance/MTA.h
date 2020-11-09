@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#if  TARGET_OS_IOS
+#if TARGET_OS_IOS
 #import <UIKit/UIImage.h>
 #endif
 /**
@@ -21,20 +21,20 @@
  接口统计的枚举值
  */
 typedef enum {
-	/**
-	 接口调用成功
-	 */
-	TACMTA_SUCCESS = 0,
+    /**
+     接口调用成功
+     */
+    TACMTA_SUCCESS = 0,
 
-	/**
-	 接口调用失败
-	 */
-	TACMTA_FAILURE = 1,
+    /**
+     接口调用失败
+     */
+    TACMTA_FAILURE = 1,
 
-	/**
-	 接口调用出现逻辑错误
-	 */
-	TACMTA_LOGIC_FAILURE = 2
+    /**
+     接口调用出现逻辑错误
+     */
+    TACMTA_LOGIC_FAILURE = 2
 } TACMTAAppMonitorErrorType;
 
 /**
@@ -44,10 +44,9 @@ typedef enum {
  - TACAT_OTH: 其他账号
  */
 typedef NS_ENUM(NSUInteger, TACMTAAccountType) {
-	TACAT_QQ,
-	TACAT_OTH,
+    TACAT_QQ,
+    TACAT_OTH,
 };
-
 
 /**
  TACMTA错误码
@@ -58,10 +57,10 @@ typedef NS_ENUM(NSUInteger, TACMTAAccountType) {
  - TACEC_INPUT_LENGTH_LIMIT: 参数过长，详细情况请查看自定义事件API的注释
  */
 typedef NS_ENUM(NSInteger, TACMTAErrorCode) {
-	TACEC_OK = 0,
-	TACEC_SERVICE_DISABLE = -1,
-	TACEC_ARGUMENT_INVALID = 1000,
-	TACEC_INPUT_LENGTH_LIMIT = 1001,
+    TACEC_OK = 0,
+    TACEC_SERVICE_DISABLE = -1,
+    TACEC_ARGUMENT_INVALID = 1000,
+    TACEC_INPUT_LENGTH_LIMIT = 1001,
 };
 
 /**
@@ -138,7 +137,6 @@ typedef NS_ENUM(NSInteger, TACMTAErrorCode) {
  */
 + (void)trackPageViewBegin:(NSString *)page;
 
-
 /**
  标记一起页面访问的开始
  并且指定上报方式
@@ -149,7 +147,6 @@ typedef NS_ENUM(NSInteger, TACMTAErrorCode) {
  @param appkey 若此参数不为nil，则上报到此appkey。否则，上报到startWithAppkey中传入的appkey
  */
 + (void)trackPageViewBegin:(NSString *)page appkey:(NSString *)appkey;
-
 
 /**
  标记一次页面访问的结束
@@ -182,7 +179,6 @@ typedef NS_ENUM(NSInteger, TACMTAErrorCode) {
  @return TACMTA错误码，详情请看TACMTAErrorCode相关注释与自定义参数长度限制说明
  */
 + (TACMTAErrorCode)trackError:(NSString *)error;
-
 
 /**
  统计程序逻辑错误
@@ -287,7 +283,7 @@ typedef NS_ENUM(NSInteger, TACMTAErrorCode) {
 
  @param event_id 事件的ID，ID需要先在TACMTA前台配置好才能生效
  @param kvs 事件的参数，参数需要先在TACMTA前台配置好才能生效
- 			参数中的key和value必须跟开始统计时传入的参数一样才能正常配对
+            参数中的key和value必须跟开始统计时传入的参数一样才能正常配对
  @return TACMTA错误码，详情请看TACMTAErrorCode相关注释与自定义参数长度限制说明
  */
 + (TACMTAErrorCode)trackCustomKeyValueEventEnd:(NSString *)event_id props:(NSDictionary *)kvs;
@@ -300,13 +296,12 @@ typedef NS_ENUM(NSInteger, TACMTAErrorCode) {
 
  @param event_id 事件的ID，ID需要先在TACMTA前台配置好才能生效
  @param kvs 事件的参数，参数需要先在TACMTA前台配置好才能生效
- 			参数中的key和value必须跟开始统计时传入的参数一样才能正常配对
+            参数中的key和value必须跟开始统计时传入的参数一样才能正常配对
  @param appkey 需要上报的appKey，若传入nil，则上报到启动函数中的appkey
  @param isRealTime 是否实时上报，若传入YES，则忽略全局上报策略实时上报。否则按照全局策略上报。
  @return TACMTA错误码，详情请看TACMTAErrorCode相关注释与自定义参数长度限制说明
  */
 + (TACMTAErrorCode)trackCustomKeyValueEventEnd:(NSString *)event_id props:(NSDictionary *)kvs appkey:(NSString *)appkey isRealTime:(BOOL)isRealTime;
-
 
 /**
  直接统计自定义时长事件
@@ -331,7 +326,11 @@ typedef NS_ENUM(NSInteger, TACMTAErrorCode) {
  @param isRealTime 是否实时上报，若传入YES，则忽略全局上报策略实时上报。否则按照全局策略上报。
  @return TACMTA错误码，详情请看TACMTAErrorCode相关注释与自定义参数长度限制说明
  */
-+ (TACMTAErrorCode)trackCustomKeyValueEventDuration:(float)seconds withEventid:(NSString *)event_id props:(NSDictionary *)kvs appKey:(NSString *)appkey isRealTime:(BOOL)isRealTime;
++ (TACMTAErrorCode)trackCustomKeyValueEventDuration:(float)seconds
+                                        withEventid:(NSString *)event_id
+                                              props:(NSDictionary *)kvs
+                                             appKey:(NSString *)appkey
+                                         isRealTime:(BOOL)isRealTime;
 
 /**
  上报当前缓存的数据
@@ -424,7 +423,6 @@ typedef NS_ENUM(NSInteger, TACMTAErrorCode) {
  @return TACMTA内部设备标识
  */
 + (NSString *)getMtaUDID;
-
 
 #pragma mark - TACMTA高级功能，具体使用方法请咨询客服
 + (void)reportAccount:(NSString *)account type:(uint32_t)type ext:(NSString *)ext;

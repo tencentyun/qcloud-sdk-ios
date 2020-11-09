@@ -9,12 +9,11 @@
 #import "QCloudFileZipper.h"
 
 @interface QCloudFileZipper ()
-@property (nonatomic, strong) NSString* inputPath;
+@property (nonatomic, strong) NSString *inputPath;
 @end
 
 @implementation QCloudFileZipper
-- (instancetype) initWithInputFilePath:(NSString *)path
-{
+- (instancetype)initWithInputFilePath:(NSString *)path {
     self = [super init];
     if (!self) {
         return self;
@@ -23,10 +22,7 @@
     return self;
 }
 
-- (BOOL) outputToPath:(NSString *)path
-{
-    
-    
+- (BOOL)outputToPath:(NSString *)path {
     return YES;
 }
 @end

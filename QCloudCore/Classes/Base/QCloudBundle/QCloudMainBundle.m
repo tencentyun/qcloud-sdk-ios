@@ -8,14 +8,12 @@
 
 #import "QCloudMainBundle.h"
 
-
-NSBundle* QCloudMainBundle() {
-    static NSBundle* bundle = nil;
+NSBundle *QCloudMainBundle() {
+    static NSBundle *bundle = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSString* path = [[NSBundle mainBundle] pathForResource:@"QCloudBundle" ofType:@"bundle"];
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"QCloudBundle" ofType:@"bundle"];
         bundle = [NSBundle bundleWithPath:path];
     });
     return bundle;
 }
-

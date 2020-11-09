@@ -10,8 +10,7 @@
 #import "QCloudNetEnv.h"
 
 @implementation QCloudIntelligenceTimeOutAdapter
-+ (double) recommendTimeOut
-{
++ (double)recommendTimeOut {
     if ([QCloudNetEnv shareEnv].currentNetStatus == QCloudReachableViaWiFi) {
         return 30;
     } else {

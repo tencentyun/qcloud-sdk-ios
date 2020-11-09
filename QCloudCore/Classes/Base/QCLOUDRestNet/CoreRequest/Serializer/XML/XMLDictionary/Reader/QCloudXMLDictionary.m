@@ -31,19 +31,16 @@
 
 #import "QCloudXMLDictionary.h"
 
-
 #pragma GCC diagnostic ignored "-Wobjc-missing-property-synthesis"
 #pragma GCC diagnostic ignored "-Wpartial-availability"
 #pragma GCC diagnostic ignored "-Wdirect-ivar-access"
 #pragma GCC diagnostic ignored "-Wformat-non-iso"
 #pragma GCC diagnostic ignored "-Wgnu"
 
-
 #import <Availability.h>
 #if !__has_feature(objc_arc)
 #error This class requires automatic reference counting
 #endif
-
 
 @interface QCloudXMLDictionaryParser () <NSXMLParserDelegate>
 
@@ -53,24 +50,19 @@
 
 @end
 
-
 @implementation QCloudXMLDictionaryParser
 
-+ (QCloudXMLDictionaryParser *)sharedInstance
-{
++ (QCloudXMLDictionaryParser *)sharedInstance {
     static dispatch_once_t once;
     static QCloudXMLDictionaryParser *sharedInstance;
     dispatch_once(&once, ^{
-        
         sharedInstance = [[QCloudXMLDictionaryParser alloc] init];
     });
     return sharedInstance;
 }
 
-- (instancetype)init
-{
-    if ((self = [super init]))
-    {
+- (instancetype)init {
+    if ((self = [super init])) {
         _collapseTextNodes = YES;
         _stripEmptyNodes = YES;
         _trimWhiteSpace = YES;
@@ -81,8 +73,7 @@
     return self;
 }
 
-- (id)copyWithZone:(NSZone *)zone
-{
+- (id)copyWithZone:(NSZone *)zone {
     QCloudXMLDictionaryParser *copy = [[[self class] allocWithZone:zone] init];
     copy.collapseTextNodes = _collapseTextNodes;
     copy.stripEmptyNodes = _stripEmptyNodes;
@@ -95,8 +86,7 @@
     return copy;
 }
 
-- (NSDictionary<NSString *, id> *)dictionaryWithParser:(NSXMLParser *)parser
-{
+- (NSDictionary<NSString *, id> *)dictionaryWithParser:(NSXMLParser *)parser {
     parser.delegate = self;
     [parser parse];
     id result = _root;
@@ -106,462 +96,354 @@
     return result;
 }
 
-- (NSDictionary<NSString *, id> *)dictionaryWithData:(NSData *)data
-{
-	NSXMLParser *parser = [[NSXMLParser alloc] initWithData:data];
+- (NSDictionary<NSString *, id> *)dictionaryWithData:(NSData *)data {
+    NSXMLParser *parser = [[NSXMLParser alloc] initWithData:data];
     return [self dictionaryWithParser:parser];
 }
 
-- (NSDictionary<NSString *, id> *)dictionaryWithString:(NSString *)string
-{
+- (NSDictionary<NSString *, id> *)dictionaryWithString:(NSString *)string {
     NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
     return [self dictionaryWithData:data];
 }
 
-- (NSDictionary<NSString *, id> *)dictionaryWithFile:(NSString *)path
-{	
-	NSData *data = [NSData dataWithContentsOfFile:path];
-	return [self dictionaryWithData:data];
+- (NSDictionary<NSString *, id> *)dictionaryWithFile:(NSString *)path {
+    NSData *data = [NSData dataWithContentsOfFile:path];
+    return [self dictionaryWithData:data];
 }
 
-+ (NSString *)XMLStringForNode:(id)node withNodeName:(NSString *)nodeName
-{	
-    if ([node isKindOfClass:[NSArray class]])
-    {
++ (NSString *)XMLStringForNode:(id)node withNodeName:(NSString *)nodeName {
+    if ([node isKindOfClass:[NSArray class]]) {
         NSMutableArray<NSString *> *nodes = [NSMutableArray arrayWithCapacity:[node count]];
-        for (id individualNode in node)
-        {
+        for (id individualNode in node) {
             [nodes addObject:[self XMLStringForNode:individualNode withNodeName:nodeName]];
         }
         return [nodes componentsJoinedByString:@"\n"];
-    }
-    else if ([node isKindOfClass:[NSDictionary class]])
-    {
-        NSDictionary<NSString *, NSString *> *attributes = [(NSDictionary *) node qcxml_attributes];
+    } else if ([node isKindOfClass:[NSDictionary class]]) {
+        NSDictionary<NSString *, NSString *> *attributes = [(NSDictionary *)node qcxml_attributes];
         NSMutableString *attributeString = [NSMutableString string];
         [attributes enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *value, __unused BOOL *stop) {
             [attributeString appendFormat:@" %@=\"%@\"", key.description.QCXMLEncodedString, value.description.QCXMLEncodedString];
         }];
-        
+
         NSString *innerXML = [node qcxml_innerXML];
-        if (innerXML.length)
-        {
+        if (innerXML.length) {
             return [NSString stringWithFormat:@"<%1$@%2$@>%3$@</%1$@>", nodeName, attributeString, innerXML];
-        }
-        else
-        {
+        } else {
             return [NSString stringWithFormat:@"<%@%@/>", nodeName, attributeString];
         }
-    }
-    else
-    {
+    } else {
         return [NSString stringWithFormat:@"<%1$@>%2$@</%1$@>", nodeName, [node description].QCXMLEncodedString];
     }
 }
 
-- (void)endText
-{
-	if (_trimWhiteSpace)
-	{
-		_text = [[_text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] mutableCopy];
-	}
-	if (_text.length)
-	{
+- (void)endText {
+    if (_trimWhiteSpace) {
+        _text = [[_text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] mutableCopy];
+    }
+    if (_text.length) {
         NSMutableDictionary *top = _stack.lastObject;
-		id existing = top[QCloudXMLDictionaryTextKey];
-        if ([existing isKindOfClass:[NSArray class]])
-        {
+        id existing = top[QCloudXMLDictionaryTextKey];
+        if ([existing isKindOfClass:[NSArray class]]) {
             [existing addObject:_text];
+        } else if (existing) {
+            top[QCloudXMLDictionaryTextKey] = [@[ existing, _text ] mutableCopy];
+        } else {
+            top[QCloudXMLDictionaryTextKey] = _text;
         }
-        else if (existing)
-        {
-            top[QCloudXMLDictionaryTextKey] = [@[existing, _text] mutableCopy];
-        }
-		else
-		{
-			top[QCloudXMLDictionaryTextKey] = _text;
-		}
-	}
-	_text = nil;
+    }
+    _text = nil;
 }
 
-- (void)addText:(NSString *)text
-{	
-	if (!_text)
-	{
-		_text = [NSMutableString stringWithString:text];
-	}
-	else
-	{
-		[_text appendString:text];
-	}
+- (void)addText:(NSString *)text {
+    if (!_text) {
+        _text = [NSMutableString stringWithString:text];
+    } else {
+        [_text appendString:text];
+    }
 }
 
-- (void)parser:(__unused NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(__unused NSString *)namespaceURI qualifiedName:(__unused NSString *)qName attributes:(NSDictionary *)attributeDict
-{
-    if ([elementName isEqualToString:@"CommonPrefixes"] || [elementName isEqualToString:@"Key"] ) {
+- (void)parser:(__unused NSXMLParser *)parser
+    didStartElement:(NSString *)elementName
+       namespaceURI:(__unused NSString *)namespaceURI
+      qualifiedName:(__unused NSString *)qName
+         attributes:(NSDictionary *)attributeDict {
+    if ([elementName isEqualToString:@"CommonPrefixes"] || [elementName isEqualToString:@"Key"]) {
         self.trimWhiteSpace = NO;
     }
-	[self endText];
-	
-	NSMutableDictionary<NSString *, id> *node = [NSMutableDictionary dictionary];
-	switch (_nodeNameMode)
-	{
-        case QCloudXMLDictionaryNodeNameModeRootOnly:
-        {
-            if (!_root)
-            {
+    [self endText];
+
+    NSMutableDictionary<NSString *, id> *node = [NSMutableDictionary dictionary];
+    switch (_nodeNameMode) {
+        case QCloudXMLDictionaryNodeNameModeRootOnly: {
+            if (!_root) {
                 node[QCloudXMLDictionaryNodeNameKey] = elementName;
             }
             break;
         }
-        case QCloudXMLDictionaryNodeNameModeAlways:
-        {
+        case QCloudXMLDictionaryNodeNameModeAlways: {
             node[QCloudXMLDictionaryNodeNameKey] = elementName;
             break;
         }
-        case QCloudXMLDictionaryNodeNameModeNever:
-        {
+        case QCloudXMLDictionaryNodeNameModeNever: {
             break;
         }
-	}
-    
-	if (attributeDict.count)
-	{
-        switch (_attributesMode)
-        {
-            case QCloudXMLDictionaryAttributesModePrefixed:
-            {
-                for (NSString *key in attributeDict)
-                {
+    }
+
+    if (attributeDict.count) {
+        switch (_attributesMode) {
+            case QCloudXMLDictionaryAttributesModePrefixed: {
+                for (NSString *key in attributeDict) {
                     node[[QCloudXMLDictionaryAttributePrefix stringByAppendingString:key]] = attributeDict[key];
                 }
                 break;
             }
-            case QCloudXMLDictionaryAttributesModeDictionary:
-            {
+            case QCloudXMLDictionaryAttributesModeDictionary: {
                 node[QCloudXMLDictionaryAttributesKey] = attributeDict;
                 break;
             }
-            case QCloudXMLDictionaryAttributesModeUnprefixed:
-            {
+            case QCloudXMLDictionaryAttributesModeUnprefixed: {
                 [node addEntriesFromDictionary:attributeDict];
                 break;
             }
-            case QCloudXMLDictionaryAttributesModeDiscard:
-            {
+            case QCloudXMLDictionaryAttributesModeDiscard: {
                 break;
             }
         }
-	}
-	
-	if (!_root)
-	{
+    }
+
+    if (!_root) {
         _root = node;
         _stack = [NSMutableArray arrayWithObject:node];
-        if (_wrapRootNode)
-        {
+        if (_wrapRootNode) {
             _root = [NSMutableDictionary dictionaryWithObject:_root forKey:elementName];
             [_stack insertObject:_root atIndex:0];
         }
-	}
-	else
-	{
+    } else {
         NSMutableDictionary<NSString *, id> *top = _stack.lastObject;
-		id existing = top[elementName];
-        if ([existing isKindOfClass:[NSArray class]])
-        {
+        id existing = top[elementName];
+        if ([existing isKindOfClass:[NSArray class]]) {
             [(NSMutableArray *)existing addObject:node];
-        }
-        else if (existing)
-        {
-            top[elementName] = [@[existing, node] mutableCopy];
-        }
-        else if (_alwaysUseArrays)
-        {
+        } else if (existing) {
+            top[elementName] = [@[ existing, node ] mutableCopy];
+        } else if (_alwaysUseArrays) {
             top[elementName] = [NSMutableArray arrayWithObject:node];
+        } else {
+            top[elementName] = node;
         }
-		else
-		{
-			top[elementName] = node;
-		}
-		[_stack addObject:node];
-	}
+        [_stack addObject:node];
+    }
 }
 
-- (NSString *)nameForNode:(NSDictionary<NSString *, id> *)node inDictionary:(NSDictionary<NSString *, id> *)dict
-{
-	if (node.qcxml_nodeName)
-	{
-		return node.qcxml_nodeName;
-	}
-	else
-	{
-		for (NSString *name in dict)
-		{
-			id object = dict[name];
-			if (object == node)
-			{
-				return name;
-			}
-			else if ([object isKindOfClass:[NSArray class]] && [(NSArray *)object containsObject:node])
-			{
-				return name;
-			}
-		}
-	}
-	return nil;
+- (NSString *)nameForNode:(NSDictionary<NSString *, id> *)node inDictionary:(NSDictionary<NSString *, id> *)dict {
+    if (node.qcxml_nodeName) {
+        return node.qcxml_nodeName;
+    } else {
+        for (NSString *name in dict) {
+            id object = dict[name];
+            if (object == node) {
+                return name;
+            } else if ([object isKindOfClass:[NSArray class]] && [(NSArray *)object containsObject:node]) {
+                return name;
+            }
+        }
+    }
+    return nil;
 }
 
-- (void)parser:(__unused NSXMLParser *)parser didEndElement:(__unused NSString *)elementName namespaceURI:(__unused NSString *)namespaceURI qualifiedName:(__unused NSString *)qName
-{	
-	[self endText];
-    
+- (void)parser:(__unused NSXMLParser *)parser
+    didEndElement:(__unused NSString *)elementName
+     namespaceURI:(__unused NSString *)namespaceURI
+    qualifiedName:(__unused NSString *)qName {
+    [self endText];
+
     NSMutableDictionary<NSString *, id> *top = _stack.lastObject;
     [_stack removeLastObject];
-    
-	if (!top.qcxml_attributes && !top.qcxml_childNodes && !top.qcxml_comments)
-    {
+
+    if (!top.qcxml_attributes && !top.qcxml_childNodes && !top.qcxml_comments) {
         NSMutableDictionary<NSString *, id> *newTop = _stack.lastObject;
         NSString *nodeName = [self nameForNode:top inDictionary:newTop];
-        if (nodeName)
-        {
+        if (nodeName) {
             id parentNode = newTop[nodeName];
             NSString *innerText = top.qcxml_innerText;
-            if (innerText && _collapseTextNodes)
-            {
-                if ([parentNode isKindOfClass:[NSArray class]])
-                {
+            if (innerText && _collapseTextNodes) {
+                if ([parentNode isKindOfClass:[NSArray class]]) {
                     parentNode[[parentNode count] - 1] = innerText;
-                }
-                else
-                {
+                } else {
                     newTop[nodeName] = innerText;
                 }
-            }
-            else if (!innerText)
-            {
-                if (_stripEmptyNodes)
-                {
-                    if ([parentNode isKindOfClass:[NSArray class]])
-                    {
+            } else if (!innerText) {
+                if (_stripEmptyNodes) {
+                    if ([parentNode isKindOfClass:[NSArray class]]) {
                         [(NSMutableArray *)parentNode removeLastObject];
-                    }
-                    else
-                    {
+                    } else {
                         [newTop removeObjectForKey:nodeName];
                     }
-                }
-                else if (!_collapseTextNodes)
-                {
+                } else if (!_collapseTextNodes) {
                     top[QCloudXMLDictionaryTextKey] = @"";
                 }
             }
         }
-	}
+    }
 }
 
-- (void)parser:(__unused NSXMLParser *)parser foundCharacters:(NSString *)string
-{
-	[self addText:string];
+- (void)parser:(__unused NSXMLParser *)parser foundCharacters:(NSString *)string {
+    [self addText:string];
 }
 
-- (void)parser:(__unused NSXMLParser *)parser foundCDATA:(NSData *)CDATABlock
-{
-	[self addText:[[NSString alloc] initWithData:CDATABlock encoding:NSUTF8StringEncoding]];
+- (void)parser:(__unused NSXMLParser *)parser foundCDATA:(NSData *)CDATABlock {
+    [self addText:[[NSString alloc] initWithData:CDATABlock encoding:NSUTF8StringEncoding]];
 }
 
-- (void)parser:(__unused NSXMLParser *)parser foundComment:(NSString *)comment
-{
-	if (_preserveComments)
-	{
+- (void)parser:(__unused NSXMLParser *)parser foundComment:(NSString *)comment {
+    if (_preserveComments) {
         NSMutableDictionary<NSString *, id> *top = _stack.lastObject;
-		NSMutableArray<NSString *> *comments = top[QCloudXMLDictionaryCommentsKey];
-		if (!comments)
-		{
-			comments = [@[comment] mutableCopy];
-			top[QCloudXMLDictionaryCommentsKey] = comments;
-		}
-		else
-		{
-			[comments addObject:comment];
-		}
-	}
+        NSMutableArray<NSString *> *comments = top[QCloudXMLDictionaryCommentsKey];
+        if (!comments) {
+            comments = [@[ comment ] mutableCopy];
+            top[QCloudXMLDictionaryCommentsKey] = comments;
+        } else {
+            [comments addObject:comment];
+        }
+    }
 }
 
 @end
 
+@implementation NSDictionary (QCloudXMLDictionary)
 
-@implementation NSDictionary(QCloudXMLDictionary)
-
-+ (NSDictionary<NSString *, id> *)qcxml_dictionaryWithXMLParser:(NSXMLParser *)parser
-{
-	return [[[QCloudXMLDictionaryParser sharedInstance] copy] dictionaryWithParser:parser];
++ (NSDictionary<NSString *, id> *)qcxml_dictionaryWithXMLParser:(NSXMLParser *)parser {
+    return [[[QCloudXMLDictionaryParser sharedInstance] copy] dictionaryWithParser:parser];
 }
 
-+ (NSDictionary<NSString *, id> *)qcxml_dictionaryWithXMLData:(NSData *)data
-{
-	return [[[QCloudXMLDictionaryParser sharedInstance] copy] dictionaryWithData:data];
++ (NSDictionary<NSString *, id> *)qcxml_dictionaryWithXMLData:(NSData *)data {
+    return [[[QCloudXMLDictionaryParser sharedInstance] copy] dictionaryWithData:data];
 }
 
-+ (NSDictionary<NSString *, id> *)qcxml_dictionaryWithXMLString:(NSString *)string
-{
-	return [[[QCloudXMLDictionaryParser sharedInstance] copy] dictionaryWithString:string];
++ (NSDictionary<NSString *, id> *)qcxml_dictionaryWithXMLString:(NSString *)string {
+    return [[[QCloudXMLDictionaryParser sharedInstance] copy] dictionaryWithString:string];
 }
 
-+ (NSDictionary<NSString *, id> *)qcxml_dictionaryWithXMLFile:(NSString *)path
-{
-	return [[[QCloudXMLDictionaryParser sharedInstance] copy] dictionaryWithFile:path];
++ (NSDictionary<NSString *, id> *)qcxml_dictionaryWithXMLFile:(NSString *)path {
+    return [[[QCloudXMLDictionaryParser sharedInstance] copy] dictionaryWithFile:path];
 }
 
-- (nullable NSDictionary<NSString *, NSString *> *)qcxml_attributes
-{
-	NSDictionary<NSString *, NSString *> *attributes = self[QCloudXMLDictionaryAttributesKey];
-	if (attributes)
-	{
-		return attributes.count? attributes: nil;
-	}
-	else
-	{
-		NSMutableDictionary<NSString *, id> *filteredDict = [NSMutableDictionary dictionaryWithDictionary:self];
-        [filteredDict removeObjectsForKeys:@[QCloudXMLDictionaryCommentsKey, QCloudXMLDictionaryTextKey, QCloudXMLDictionaryNodeNameKey]];
-        for (NSString *key in filteredDict.allKeys)
-        {
+- (nullable NSDictionary<NSString *, NSString *> *)qcxml_attributes {
+    NSDictionary<NSString *, NSString *> *attributes = self[QCloudXMLDictionaryAttributesKey];
+    if (attributes) {
+        return attributes.count ? attributes : nil;
+    } else {
+        NSMutableDictionary<NSString *, id> *filteredDict = [NSMutableDictionary dictionaryWithDictionary:self];
+        [filteredDict removeObjectsForKeys:@[ QCloudXMLDictionaryCommentsKey, QCloudXMLDictionaryTextKey, QCloudXMLDictionaryNodeNameKey ]];
+        for (NSString *key in filteredDict.allKeys) {
             [filteredDict removeObjectForKey:key];
-            if ([key hasPrefix:QCloudXMLDictionaryAttributePrefix])
-            {
+            if ([key hasPrefix:QCloudXMLDictionaryAttributePrefix]) {
                 filteredDict[[key substringFromIndex:QCloudXMLDictionaryAttributePrefix.length]] = self[key];
             }
         }
-        return filteredDict.count? filteredDict: nil;
-	}
-	return nil;
+        return filteredDict.count ? filteredDict : nil;
+    }
+    return nil;
 }
 
-- (nullable NSDictionary *)qcxml_childNodes
-{	
-	NSMutableDictionary *filteredDict = [self mutableCopy];
-	[filteredDict removeObjectsForKeys:@[QCloudXMLDictionaryAttributesKey, QCloudXMLDictionaryCommentsKey, QCloudXMLDictionaryTextKey, QCloudXMLDictionaryNodeNameKey]];
-	for (NSString *key in filteredDict.allKeys)
-    {
-        if ([key hasPrefix:QCloudXMLDictionaryAttributePrefix])
-        {
+- (nullable NSDictionary *)qcxml_childNodes {
+    NSMutableDictionary *filteredDict = [self mutableCopy];
+    [filteredDict removeObjectsForKeys:@[
+        QCloudXMLDictionaryAttributesKey, QCloudXMLDictionaryCommentsKey, QCloudXMLDictionaryTextKey, QCloudXMLDictionaryNodeNameKey
+    ]];
+    for (NSString *key in filteredDict.allKeys) {
+        if ([key hasPrefix:QCloudXMLDictionaryAttributePrefix]) {
             [filteredDict removeObjectForKey:key];
         }
     }
-    return filteredDict.count? filteredDict: nil;
+    return filteredDict.count ? filteredDict : nil;
 }
 
-- (nullable NSArray *)qcxml_comments
-{
-	return self[QCloudXMLDictionaryCommentsKey];
+- (nullable NSArray *)qcxml_comments {
+    return self[QCloudXMLDictionaryCommentsKey];
 }
 
-- (nullable NSString *)qcxml_nodeName
-{
-	return self[QCloudXMLDictionaryNodeNameKey];
+- (nullable NSString *)qcxml_nodeName {
+    return self[QCloudXMLDictionaryNodeNameKey];
 }
 
-- (id)qcxml_innerText
-{	
-	id text = self[QCloudXMLDictionaryTextKey];
-	if ([text isKindOfClass:[NSArray class]])
-	{
-		return [text componentsJoinedByString:@"\n"];
-	}
-	else
-	{
-		return text;
-	}
+- (id)qcxml_innerText {
+    id text = self[QCloudXMLDictionaryTextKey];
+    if ([text isKindOfClass:[NSArray class]]) {
+        return [text componentsJoinedByString:@"\n"];
+    } else {
+        return text;
+    }
 }
 
-- (NSString *)qcxml_innerXML
-{	
-	NSMutableArray *nodes = [NSMutableArray array];
-	
-	for (NSString *comment in [self qcxml_comments])
-	{
+- (NSString *)qcxml_innerXML {
+    NSMutableArray *nodes = [NSMutableArray array];
+
+    for (NSString *comment in [self qcxml_comments]) {
         [nodes addObject:[NSString stringWithFormat:@"<!--%@-->", [comment QCXMLEncodedString]]];
-	}
-    
+    }
+
     NSDictionary *childNodes = [self qcxml_childNodes];
-	for (NSString *key in childNodes)
-	{
-		[nodes addObject:[QCloudXMLDictionaryParser XMLStringForNode:childNodes[key] withNodeName:key]];
-	}
-	
+    for (NSString *key in childNodes) {
+        [nodes addObject:[QCloudXMLDictionaryParser XMLStringForNode:childNodes[key] withNodeName:key]];
+    }
+
     NSString *text = [self qcxml_innerText];
-    if (text)
-    {
+    if (text) {
         [nodes addObject:[text QCXMLEncodedString]];
     }
-	
-	return [nodes componentsJoinedByString:@"\n"];
+
+    return [nodes componentsJoinedByString:@"\n"];
 }
 
-- (NSString *)qcxml_XMLString
-{
-    if (self.count == 1 && ![self qcxml_nodeName])
-    {
-        //ignore outermost dictionary
+- (NSString *)qcxml_XMLString {
+    if (self.count == 1 && ![self qcxml_nodeName]) {
+        // ignore outermost dictionary
         return [self qcxml_innerXML];
-    }
-    else
-    {
+    } else {
         return [QCloudXMLDictionaryParser XMLStringForNode:self withNodeName:[self qcxml_nodeName] ?: @"root"];
     }
 }
 
-- (nullable NSArray *)qcxml_arrayValueForKeyPath:(NSString *)keyPath
-{
+- (nullable NSArray *)qcxml_arrayValueForKeyPath:(NSString *)keyPath {
     id value = [self valueForKeyPath:keyPath];
-    if (value && ![value isKindOfClass:[NSArray class]])
-    {
-        return @[value];
+    if (value && ![value isKindOfClass:[NSArray class]]) {
+        return @[ value ];
     }
     return value;
 }
 
-- (nullable NSString *)qcxml_stringValueForKeyPath:(NSString *)keyPath
-{
+- (nullable NSString *)qcxml_stringValueForKeyPath:(NSString *)keyPath {
     id value = [self valueForKeyPath:keyPath];
-    if ([value isKindOfClass:[NSArray class]])
-    {
+    if ([value isKindOfClass:[NSArray class]]) {
         value = ((NSArray *)value).firstObject;
     }
-    if ([value isKindOfClass:[NSDictionary class]])
-    {
-        return [(NSDictionary *) value qcxml_innerText];
+    if ([value isKindOfClass:[NSDictionary class]]) {
+        return [(NSDictionary *)value qcxml_innerText];
     }
     return value;
 }
 
-- (nullable NSDictionary<NSString *, id> *)qcxml_dictionaryValueForKeyPath:(NSString *)keyPath
-{
+- (nullable NSDictionary<NSString *, id> *)qcxml_dictionaryValueForKeyPath:(NSString *)keyPath {
     id value = [self valueForKeyPath:keyPath];
-    if ([value isKindOfClass:[NSArray class]])
-    {
-        value = [value count]? value[0]: nil;
+    if ([value isKindOfClass:[NSArray class]]) {
+        value = [value count] ? value[0] : nil;
     }
-    if ([value isKindOfClass:[NSString class]])
-    {
-        return @{QCloudXMLDictionaryTextKey: value};
+    if ([value isKindOfClass:[NSString class]]) {
+        return @{ QCloudXMLDictionaryTextKey : value };
     }
     return value;
 }
 
 @end
 
-
 @implementation NSString (QCloudXMLDictionary)
 
-- (NSString *)QCXMLEncodedString
-{	
-	return [[[[[self stringByReplacingOccurrencesOfString:@"&" withString:@"&amp;"]
-               stringByReplacingOccurrencesOfString:@"<" withString:@"&lt;"]
-              stringByReplacingOccurrencesOfString:@">" withString:@"&gt;"]
-             stringByReplacingOccurrencesOfString:@"\"" withString:@"&quot;"]
-            stringByReplacingOccurrencesOfString:@"\'" withString:@"&apos;"];
+- (NSString *)QCXMLEncodedString {
+    return [[[[[self stringByReplacingOccurrencesOfString:@"&" withString:@"&amp;"] stringByReplacingOccurrencesOfString:@"<" withString:@"&lt;"]
+        stringByReplacingOccurrencesOfString:@">"
+                                  withString:@"&gt;"] stringByReplacingOccurrencesOfString:@"\""
+                                                                                withString:@"&quot;"] stringByReplacingOccurrencesOfString:@"\'"
+                                                                                                                                withString:@"&apos;"];
 }
 
 @end

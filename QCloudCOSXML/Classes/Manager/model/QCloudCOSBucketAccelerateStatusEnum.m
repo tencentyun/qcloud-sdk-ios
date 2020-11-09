@@ -7,29 +7,24 @@
 
 #import "QCloudCOSBucketAccelerateStatusEnum.h"
 
-
-QCloudCOSBucketAccelerateStatus QCloudCOSBucketAccelerateStatusDumpFromString(NSString* key) {
-      if (NO) {}
-      else if ([key isEqualToString:@"Enabled"]) {
-          return QCloudCOSBucketAccelerateStatusEnabled;
-      }
-      else if ([key isEqualToString:@"Suspended"]) {
-          return QCloudCOSBucketAccelerateStatusSuspended;
-      }
-      return 0;
+QCloudCOSBucketAccelerateStatus QCloudCOSBucketAccelerateStatusDumpFromString(NSString *key) {
+    if (NO) {
+    } else if ([key isEqualToString:@"Enabled"]) {
+        return QCloudCOSBucketAccelerateStatusEnabled;
+    } else if ([key isEqualToString:@"Suspended"]) {
+        return QCloudCOSBucketAccelerateStatusSuspended;
+    }
+    return 0;
 }
-NSString* QCloudCOSBucketAccelerateStatusTransferToString(QCloudCOSBucketAccelerateStatus type) {
-    switch(type) {
-        case QCloudCOSBucketAccelerateStatusEnabled:
-        {
+NSString *QCloudCOSBucketAccelerateStatusTransferToString(QCloudCOSBucketAccelerateStatus type) {
+    switch (type) {
+        case QCloudCOSBucketAccelerateStatusEnabled: {
             return @"Enabled";
         }
-        case QCloudCOSBucketAccelerateStatusSuspended:
-        {
+        case QCloudCOSBucketAccelerateStatusSuspended: {
             return @"Suspended";
         }
         default:
             return nil;
     }
 }
-

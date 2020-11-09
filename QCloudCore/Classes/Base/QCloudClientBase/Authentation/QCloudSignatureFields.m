@@ -10,8 +10,7 @@
 #import "QCloudFileUtils.h"
 #import "QCLOUDRestNet.h"
 @implementation QCloudSignatureFields
-- (instancetype) init
-{
+- (instancetype)init {
     self = [super init];
     if (!self) {
         return self;
@@ -19,9 +18,8 @@
     _once = NO;
     return self;
 }
-- (NSString* ) filed
-{
-    NSString* filed = @"/";
+- (NSString *)filed {
+    NSString *filed = @"/";
     if (self.appID.length) {
         filed = QCloudPathJoin(filed, self.appID);
     }
@@ -30,7 +28,7 @@
     }
     if (self.directory.length) {
         filed = QCloudPathJoin(filed, self.directory);
-        filed= QCloudPathJoin(filed, @"/");
+        filed = QCloudPathJoin(filed, @"/");
     }
     if (self.fileName.length) {
         filed = QCloudPathJoin(filed, self.fileName);

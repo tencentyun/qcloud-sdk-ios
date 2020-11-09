@@ -1,10 +1,13 @@
-# 5.7.8    
-1. storageClass增加智能分层和深度归档两种类型 
-2. 增加设置和获取存储桶智能分层存储配置的接口 
-3. 修复写日志时隐磁盘空间不足导致的crash 
+# 5.7.9    
+修复 #import <Commoncrypto/CommonDigest.h> 大小写问题
+    
+# 5.7.7    
+1. storageClass增加智能分层和深度归档两种类型。 
+2. 增加设置和获取存储桶智能分层存储配置的接口。 
+3. 修复写日志时隐磁盘空间不足导致的crash。
 4. 上传时检测文件是否存在，不存在抛出错误。
-5. 支持用户自定义需要签名的header和paramate，可通过shouldSignedList设置
-6. 支持用户自定义签名是拼接在url还是host中：可通过请求的isSignedInURL属性设置
+5. 支持用户自定义需要签名的header和paramate，可通过shouldSignedList设置。
+6. 支持用户自定义签名是拼接在url还是host中：可通过请求的isSignedInURL属性设置。
     
 # 5.7.7    
 修MD5

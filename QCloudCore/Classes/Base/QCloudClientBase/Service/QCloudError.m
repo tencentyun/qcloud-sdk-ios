@@ -7,6 +7,4 @@
 //
 
 #import "QCloudError.h"
-NSString* const QCloudErrorDomain = @"com.tencent.qcloud.error";
-
-
+NSString *const QCloudErrorDomain = @"com.tencent.qcloud.error";

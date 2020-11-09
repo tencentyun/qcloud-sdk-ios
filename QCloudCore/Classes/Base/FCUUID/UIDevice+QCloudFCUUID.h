@@ -11,8 +11,7 @@
 
 @interface UIDevice (QCloudFCUUID)
 
--(NSString *)qcloud_uuid;
+- (NSString *)qcloud_uuid;
 
 @end
 #endif
-

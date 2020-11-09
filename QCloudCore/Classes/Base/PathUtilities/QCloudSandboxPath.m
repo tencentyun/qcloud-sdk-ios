@@ -9,7 +9,7 @@
 #import "QCloudFileUtils.h"
 @implementation QCloudSandboxPath
 - (NSURL *)fileURL {
-    NSString *restoredPath  = QCloudGenerateLocalPath(self.originURL);
+    NSString *restoredPath = QCloudGenerateLocalPath(self.originURL);
     return [NSURL fileURLWithPath:restoredPath];
 }
 @end

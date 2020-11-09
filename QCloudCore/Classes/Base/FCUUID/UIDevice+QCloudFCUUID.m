@@ -9,8 +9,7 @@
 
 @implementation UIDevice (QCloudFCUUID)
 
--(NSString *)qcloud_uuid
-{
+- (NSString *)qcloud_uuid {
     return [QCloudFCUUID uuidForDevice];
 }
 

@@ -9,8 +9,7 @@
 #import "QCloudSupervisoryRecord.h"
 
 @implementation QCloudSupervisoryRecord
-- (instancetype) init
-{
+- (instancetype)init {
     self = [super init];
     if (!self) {
         return self;
@@ -21,8 +20,7 @@
 @end
 
 @implementation QCloudSupervisoryNetworkRecord
-- (instancetype)init
-{
+- (instancetype)init {
     self = [super init];
     if (self) {
         self.type = QCloudSupervisoryRecordTypeNetwork;

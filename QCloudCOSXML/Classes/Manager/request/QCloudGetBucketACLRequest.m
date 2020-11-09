@@ -5,30 +5,29 @@
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.
 //
-//   ██████╗  ██████╗██╗      ██████╗ ██╗   ██╗██████╗     ████████╗███████╗██████╗ ███╗   ███╗██╗███╗   ██╗ █████╗ ██╗         ██╗      █████╗ ██████╗
-//  ██╔═══██╗██╔════╝██║     ██╔═══██╗██║   ██║██╔══██╗    ╚══██╔══╝██╔════╝██╔══██╗████╗ ████║██║████╗  ██║██╔══██╗██║         ██║     ██╔══██╗██╔══██╗
-//  ██║   ██║██║     ██║     ██║   ██║██║   ██║██║  ██║       ██║   █████╗  ██████╔╝██╔████╔██║██║██╔██╗ ██║███████║██║         ██║     ███████║██████╔╝
-//  ██║▄▄ ██║██║     ██║     ██║   ██║██║   ██║██║  ██║       ██║   ██╔══╝  ██╔══██╗██║╚██╔╝██║██║██║╚██╗██║██╔══██║██║         ██║     ██╔══██║██╔══██╗
-//  ╚██████╔╝╚██████╗███████╗╚██████╔╝╚██████╔╝██████╔╝       ██║   ███████╗██║  ██║██║ ╚═╝ ██║██║██║ ╚████║██║  ██║███████╗    ███████╗██║  ██║██████╔╝
-//   ╚══▀▀═╝  ╚═════╝╚══════╝ ╚═════╝  ╚═════╝ ╚═════╝        ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝    ╚══════╝╚═╝  ╚═╝╚═════╝
+//   ██████╗  ██████╗██╗      ██████╗ ██╗   ██╗██████╗     ████████╗███████╗██████╗ ███╗   ███╗██╗███╗   ██╗ █████╗ ██╗         ██╗      █████╗
+//   ██████╗
+//  ██╔═══██╗██╔════╝██║     ██╔═══██╗██║   ██║██╔══██╗    ╚══██╔══╝██╔════╝██╔══██╗████╗ ████║██║████╗  ██║██╔══██╗██║         ██║ ██╔══██╗██╔══██╗
+//  ██║   ██║██║     ██║     ██║   ██║██║   ██║██║  ██║       ██║   █████╗  ██████╔╝██╔████╔██║██║██╔██╗ ██║███████║██║         ██║ ███████║██████╔╝
+//  ██║▄▄ ██║██║     ██║     ██║   ██║██║   ██║██║  ██║       ██║   ██╔══╝  ██╔══██╗██║╚██╔╝██║██║██║╚██╗██║██╔══██║██║         ██║ ██╔══██║██╔══██╗
+//  ╚██████╔╝╚██████╗███████╗╚██████╔╝╚██████╔╝██████╔╝       ██║   ███████╗██║  ██║██║ ╚═╝ ██║██║██║ ╚████║██║  ██║███████╗    ███████╗██║
+//  ██║██████╔╝
+//   ╚══▀▀═╝  ╚═════╝╚══════╝ ╚═════╝  ╚═════╝ ╚═════╝        ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝    ╚══════╝╚═╝ ╚═╝╚═════╝
 //
 //
 //                                                                              _             __                 _                _
 //                                                                             (_)           / _|               | |              | |
-//                                                          ___  ___ _ ____   ___  ___ ___  | |_ ___  _ __    __| | _____   _____| | ___  _ __   ___ _ __ ___
-//                                                         / __|/ _ \ '__\ \ / / |/ __/ _ \ |  _/ _ \| '__|  / _` |/ _ \ \ / / _ \ |/ _ \| '_ \ / _ \ '__/ __|
-//                                                         \__ \  __/ |   \ V /| | (_|  __/ | || (_) | |    | (_| |  __/\ V /  __/ | (_) | |_) |  __/ |  \__
-//                                                         |___/\___|_|    \_/ |_|\___\___| |_| \___/|_|     \__,_|\___| \_/ \___|_|\___/| .__/ \___|_|  |___/
+//                                                          ___  ___ _ ____   ___  ___ ___  | |_ ___  _ __    __| | _____   _____| | ___  _ __   ___ _
+//                                                          __ ___
+//                                                         / __|/ _ \ '__\ \ / / |/ __/ _ \ |  _/ _ \| '__|  / _` |/ _ \ \ / / _ \ |/ _ \| '_ \ / _ \
+//                                                         '__/ __|
+//                                                         \__ \  __/ |   \ V /| | (_|  __/ | || (_) | |    | (_| |  __/\ V /  __/ | (_) | |_) |  __/
+//                                                         |  \__
+//                                                         |___/\___|_|    \_/ |_|\___\___| |_| \___/|_|     \__,_|\___| \_/ \___|_|\___/| .__/
+//                                                         \___|_|  |___/
 //    ______ ______ ______ ______ ______ ______ ______ ______                                                                            | |
 //   |______|______|______|______|______|______|______|______|                                                                           |_|
 //
-
-
-
-
-
-
-
 
 #import "QCloudGetBucketACLRequest.h"
 #import <QCloudCore/QCloudSignatureFields.h>
@@ -36,76 +35,70 @@
 #import <QCloudCore/QCloudServiceConfiguration_Private.h>
 #import "QCloudACLPolicy.h"
 
-
 NS_ASSUME_NONNULL_BEGIN
 @implementation QCloudGetBucketACLRequest
-- (void) dealloc
-{
+- (void)dealloc {
 }
--  (instancetype) init
-{
+- (instancetype)init {
     self = [super init];
     if (!self) {
         return nil;
     }
     return self;
 }
-- (void) configureReuqestSerializer:(QCloudRequestSerializer *)requestSerializer  responseSerializer:(QCloudResponseSerializer *)responseSerializer
-{
+- (void)configureReuqestSerializer:(QCloudRequestSerializer *)requestSerializer responseSerializer:(QCloudResponseSerializer *)responseSerializer {
+    NSArray *customRequestSerilizers = @[
+        QCloudURLFuseURIMethodASURLParamters,
+    ];
 
-    NSArray* customRequestSerilizers = @[
-                                        QCloudURLFuseURIMethodASURLParamters,
-                                        ];
+    NSArray *responseSerializers = @[
+        QCloudAcceptRespnseCodeBlock([NSSet setWithObjects:@(200), @(201), @(202), @(203), @(204), @(205), @(206), @(207), @(208), @(226), nil], nil),
+        QCloudResponseXMLSerializerBlock,
 
-    NSArray* responseSerializers = @[
-                                    QCloudAcceptRespnseCodeBlock([NSSet setWithObjects:@(200), @(201), @(202), @(203), @(204), @(205), @(206), @(207), @(208), @(226), nil], nil),
-                                    QCloudResponseXMLSerializerBlock,
-
-
-                                    QCloudResponseObjectSerilizerBlock([QCloudACLPolicy class])
-                                    ];
+        QCloudResponseObjectSerilizerBlock([QCloudACLPolicy class])
+    ];
     [requestSerializer setSerializerBlocks:customRequestSerilizers];
     [responseSerializer setSerializerBlocks:responseSerializers];
 
     requestSerializer.HTTPMethod = @"get";
 }
 
-
-
-- (BOOL) buildRequestData:(NSError *__autoreleasing *)error
-{
+- (BOOL)buildRequestData:(NSError *__autoreleasing *)error {
     if (![super buildRequestData:error]) {
         return NO;
     }
     self.requestData.URIMethod = @"acl";
-    if (!self.bucket || ([self.bucket isKindOfClass:NSString.class] && ((NSString*)self.bucket).length == 0)) {
+    if (!self.bucket || ([self.bucket isKindOfClass:NSString.class] && ((NSString *)self.bucket).length == 0)) {
         if (error != NULL) {
-            *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid message:[NSString stringWithFormat:@"InvalidArgument:paramter[bucket] is invalid (nil), it must have some value. please check it"]];
+            *error = [NSError
+                qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
+                             message:[NSString stringWithFormat:
+                                                   @"InvalidArgument:paramter[bucket] is invalid (nil), it must have some value. please check it"]];
             return NO;
         }
     }
-    NSURL* __serverURL = [self.runOnService.configuration.endpoint serverURLWithBucket:self.bucket appID:self.runOnService.configuration.appID regionName:self.regionName];
+    NSURL *__serverURL = [self.runOnService.configuration.endpoint serverURLWithBucket:self.bucket
+                                                                                 appID:self.runOnService.configuration.appID
+                                                                            regionName:self.regionName];
     self.requestData.serverURL = __serverURL.absoluteString;
     [self.requestData setValue:__serverURL.host forHTTPHeaderField:@"Host"];
     return YES;
 }
 
--(void)setFinishBlock:(void (^_Nullable )(QCloudACLPolicy * _Nullable, NSError * _Nullable))QCloudRequestFinishBlock{
+- (void)setFinishBlock:(void (^_Nullable)(QCloudACLPolicy *_Nullable, NSError *_Nullable))QCloudRequestFinishBlock {
     [super setFinishBlock:QCloudRequestFinishBlock];
 }
 
-- (QCloudSignatureFields*) signatureFields
-{
-    QCloudSignatureFields* fileds = [QCloudSignatureFields new];
+- (QCloudSignatureFields *)signatureFields {
+    QCloudSignatureFields *fileds = [QCloudSignatureFields new];
 
     return fileds;
 }
--(NSArray<NSMutableDictionary *> *)scopesArray{
-
+- (NSArray<NSMutableDictionary *> *)scopesArray {
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     NSArray *separatetmpArray = [self.requestData.serverURL componentsSeparatedByString:@"://"];
     NSString *str = separatetmpArray[1];
-    NSArray *separateArray = [str  componentsSeparatedByString:@"."];
+    NSArray *separateArray = [str componentsSeparatedByString:@"."];
     dic[@"bucket"] = separateArray[0];
     dic[@"region"] = self.runOnService.configuration.endpoint.regionName;
     dic[@"prefix"] = @"";

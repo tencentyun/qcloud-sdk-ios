@@ -7,12 +7,11 @@
 
 #import "QCloudMultiDelegateProxy.h"
 @interface QCloudMultiDelegateProxy ()
-@property (nonatomic, strong) NSRecursiveLock* lock;
-@property (nonatomic, strong) NSPointerArray* delegates;
+@property (nonatomic, strong) NSRecursiveLock *lock;
+@property (nonatomic, strong) NSPointerArray *delegates;
 @end
 @implementation QCloudMultiDelegateProxy
-- (instancetype) init
-{
+- (instancetype)init {
     self = [super init];
     if (!self) {
         return self;
@@ -21,8 +20,7 @@
     return self;
 }
 
-- (void) addDelegate:(id)delegate
-{
+- (void)addDelegate:(id)delegate {
     [_lock lock];
     NSUInteger index = NSNotFound;
     for (NSUInteger i = 0; i < _delegates.count; i++) {
@@ -32,14 +30,13 @@
         }
     }
     if (index == NSNotFound) {
-        [_delegates addPointer:(void*)delegate];
+        [_delegates addPointer:(void *)delegate];
     }
     [_delegates compact];
     [_lock unlock];
 }
 
-- (void) removeDelegate:(id)delegate
-{
+- (void)removeDelegate:(id)delegate {
     [_lock lock];
     NSUInteger index = NSNotFound;
     for (NSUInteger i = 0; i < _delegates.count; i++) {
@@ -51,30 +48,26 @@
     [_lock unlock];
 }
 
-- (id)forwardingTargetForSelector:(SEL)sel
-{
+- (id)forwardingTargetForSelector:(SEL)sel {
     return self;
 }
 
-- (NSInvocation *)_copyInvocation:(NSInvocation *)invocation
-{
+- (NSInvocation *)_copyInvocation:(NSInvocation *)invocation {
     NSInvocation *copy = [NSInvocation invocationWithMethodSignature:[invocation methodSignature]];
     NSUInteger argCount = [[invocation methodSignature] numberOfArguments];
-    
-    for (int i = 0; i < argCount; i++)
-    {
+
+    for (int i = 0; i < argCount; i++) {
         char buffer[sizeof(intmax_t)];
         [invocation getArgument:(void *)&buffer atIndex:i];
         [copy setArgument:(void *)&buffer atIndex:i];
     }
-    
+
     return copy;
 }
 
-- (void)forwardInvocation:(NSInvocation *)invocation
-{
+- (void)forwardInvocation:(NSInvocation *)invocation {
     [_delegates compact];
-    for (NSUInteger index = 0; index<_delegates.count; index++) {
+    for (NSUInteger index = 0; index < _delegates.count; index++) {
         id object = [_delegates pointerAtIndex:index];
         if ([object respondsToSelector:invocation.selector]) {
             NSInvocation *invocationCopy = [self _copyInvocation:invocation];
@@ -83,10 +76,9 @@
     }
 }
 
-- (NSMethodSignature *)methodSignatureForSelector:(SEL)sel
-{
+- (NSMethodSignature *)methodSignatureForSelector:(SEL)sel {
     [_delegates compact];
-    for (NSUInteger index = 0; index<_delegates.count; index++) {
+    for (NSUInteger index = 0; index < _delegates.count; index++) {
         id object = [_delegates pointerAtIndex:index];
         if (object) {
             id result = [object methodSignatureForSelector:sel];
@@ -96,10 +88,9 @@
     return nil;
 }
 
-- (BOOL)respondsToSelector:(SEL)aSelector
-{
+- (BOOL)respondsToSelector:(SEL)aSelector {
     [_delegates compact];
-    for (NSUInteger index = 0; index<_delegates.count; index++) {
+    for (NSUInteger index = 0; index < _delegates.count; index++) {
         id object = [_delegates pointerAtIndex:index];
         if ([object respondsToSelector:aSelector]) {
             return YES;

@@ -12,45 +12,45 @@
  上报策略枚举值
  */
 typedef enum {
-	/**
-	 实时上报
-	 */
-	TACMTA_STRATEGY_INSTANT = 1,
+    /**
+     实时上报
+     */
+    TACMTA_STRATEGY_INSTANT = 1,
 
-	/**
-	 批量上报，达到缓存临界值时触发发送
-	 */
-	TACMTA_STRATEGY_BATCH = 2,
+    /**
+     批量上报，达到缓存临界值时触发发送
+     */
+    TACMTA_STRATEGY_BATCH = 2,
 
-	/**
-	 应用启动时发送
-	 */
-	TACMTA_STRATEGY_APP_LAUNCH = 3,
+    /**
+     应用启动时发送
+     */
+    TACMTA_STRATEGY_APP_LAUNCH = 3,
 
-	/**
-	 仅在WIFI网络下发送
-	 */
-	TACMTA_STRATEGY_ONLY_WIFI = 4,
+    /**
+     仅在WIFI网络下发送
+     */
+    TACMTA_STRATEGY_ONLY_WIFI = 4,
 
-	/**
-	 每间隔一定最小时间发送，默认24小时
-	 */
-	TACMTA_STRATEGY_PERIOD = 5,
+    /**
+     每间隔一定最小时间发送，默认24小时
+     */
+    TACMTA_STRATEGY_PERIOD = 5,
 
-	/**
-	 开发者在代码中主动调用发送行为
-	 */
-	TACMTA_STRATEGY_DEVELOPER = 6,
+    /**
+     开发者在代码中主动调用发送行为
+     */
+    TACMTA_STRATEGY_DEVELOPER = 6,
 
-	/**
-	 仅在WIFI网络下发送, 发送失败以及非WIFI网络情况下不缓存数据
-	 */
-	TACMTA_STRATEGY_ONLY_WIFI_NO_CACHE = 7,
+    /**
+     仅在WIFI网络下发送, 发送失败以及非WIFI网络情况下不缓存数据
+     */
+    TACMTA_STRATEGY_ONLY_WIFI_NO_CACHE = 7,
 
-	/*
+    /*
      不缓存数据，批量上报+间隔上报组合。适用于上报特别频繁的场景。
      */
-	TACMTA_STRATEGY_NO_CACHE_BATCH_PERIOD = 8
+    TACMTA_STRATEGY_NO_CACHE_BATCH_PERIOD = 8
 
 } TACMTAStatReportStrategy;
 
@@ -82,7 +82,6 @@ typedef enum {
  */
 @property (nonatomic) TACMTAStatReportStrategy reportStrategy;
 
-
 /**
  是否自动统计整个APP的使用时长，默认打开
  */
@@ -110,7 +109,6 @@ typedef enum {
  渠道名，默认为"appstore"
  */
 @property (nonatomic, copy) NSString *channel;
-
 
 /**
  最大缓存的未发送的统计消息，默认1024条
@@ -212,7 +210,7 @@ typedef enum {
 @property (nonatomic, copy) NSString *pushDeviceToken;
 @property (nonatomic, copy) NSString *op;
 @property (nonatomic, copy) NSString *cn;
-@property (nonatomic, copy) NSString* commonJsonAttrs;
+@property (nonatomic, copy) NSString *commonJsonAttrs;
 
 #pragma mark - 废弃API，建议替换
 @property (nonatomic, copy) NSString *customerUserID DEPRECATED_ATTRIBUTE;
@@ -221,6 +219,6 @@ typedef enum {
 @property (nonatomic, copy) NSString *accountExt DEPRECATED_ATTRIBUTE;
 @property (nonatomic, copy) NSString *qq DEPRECATED_ATTRIBUTE;
 
-//typedef void (^crashCallback) (void);
+// typedef void (^crashCallback) (void);
 //@property (nonatomic,copy) crashCallback atCrashCallback; // 崩溃发生时候的回调，将在崩溃发生时候调用
 @end

@@ -11,13 +11,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface QCloudHTTPTaskDelayManager : NSObject
 
-- (instancetype) initWithStart:(NSInteger) startBackoff max:(NSInteger) maxBackoff;
+- (instancetype)initWithStart:(NSInteger)startBackoff max:(NSInteger)maxBackoff;
 
-- (void) reset;
+- (void)reset;
 
-- (void) increase;
+- (void)increase;
 
-- (NSInteger) getDelay;
+- (NSInteger)getDelay;
 
 @end
 

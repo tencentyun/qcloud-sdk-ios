@@ -12,5 +12,3 @@
 + (void)trackRequestSentWithType:(Class)cls;
 + (void)trackRequestFailWithType:(Class)cls Error:(NSError *)error;
 @end
-
-

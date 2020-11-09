@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 cos iOS SDK 盲水印上传请求的方法具体步骤如下：
 
 1. 实例化 QCloudPutObjectWatermarkRequest，填入需要的参数。
- 
+
 2. QCloudPicOperations 设置水印信息
 
 3. 调用 QCloudCOSXMLService 对象中的 PutWatermarkObject 方法发出请求。
@@ -30,9 +30,9 @@ cos iOS SDK 盲水印上传请求的方法具体步骤如下：
 4. 从回调的 finishBlock 中的 outputObject 获取具体内容。
 
 ### 示例
-   
+
   @code
-  
+
     QCloudPutObjectWatermarkRequest* put = [QCloudPutObjectWatermarkRequest new];
     put.object = @"对象名";
     put.bucket = @"桶名";
@@ -49,10 +49,9 @@ cos iOS SDK 盲水印上传请求的方法具体步骤如下：
        完成回调
     }];
     [[QCloudCOSXMLService defaultCOSXML] PutWatermarkObject:put];
-  
-*/
-- (void) PutWatermarkObject:(QCloudPutObjectWatermarkRequest*)request;
 
+*/
+- (void)PutWatermarkObject:(QCloudPutObjectWatermarkRequest *)request;
 
 /**
 COS 对象内容审核的方法.
@@ -63,7 +62,7 @@ COS 对象内容审核的方法.
 cos iOS SDK 中获取 COS 对象请求的方法具体步骤如下：
 
 1. 实例化 QCloudGetRecognitionObjectRequest，填入需要的参数。
- 
+
 2. 设置审核的类型 detectType
 
 3. 调用 QCloudCOSXMLService 对象中的 GetRecognitionObject 方法发出请求。
@@ -71,9 +70,9 @@ cos iOS SDK 中获取 COS 对象请求的方法具体步骤如下：
 4. 从回调的 finishBlock 中的 outputObject 获取具体内容。
 
 ### 示例
-   
+
   @code
-  
+
     QCloudGetRecognitionObjectRequest* request = [QCloudGetRecognitionObjectRequest new];
     request.bucket = @"bucketName"; //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
     request.object = @"objectName";;
@@ -84,10 +83,9 @@ cos iOS SDK 中获取 COS 对象请求的方法具体步骤如下：
     }];
 
     [[QCloudCOSXMLService defaultCOSXML] GetRecognitionObject:request];
-  
-*/
-- (void) GetRecognitionObject:(QCloudGetRecognitionObjectRequest*)request;
 
+*/
+- (void)GetRecognitionObject:(QCloudGetRecognitionObjectRequest *)request;
 
 /**
 COS 文档预览方法.
@@ -98,7 +96,7 @@ COS 文档预览方法.
 cos iOS SDK 中获取 COS 文档预览方法具体步骤如下：
 
 1. 实例化 QCloudGetFilePreviewRequest。
- 
+
 2. 传入参数桶名称 文件名 页码（每次返回该页的预览文件图片data）
 
 3. 调用 QCloudCOSXMLService 对象中的 GetFilePreviewObject 方法发出请求。
@@ -106,9 +104,9 @@ cos iOS SDK 中获取 COS 文档预览方法具体步骤如下：
 4. 从回调的 finishBlock 中的 outputObject 获取具体内容。
 
 ### 示例
-   
+
   @code
-  
+
     QCloudGetFilePreviewRequest *request = [[QCloudGetFilePreviewRequest alloc]init];
     request.bucket = @"桶名称";
     request.object = 文件名;
@@ -118,13 +116,12 @@ cos iOS SDK 中获取 COS 文档预览方法具体步骤如下：
         返回一个字典 包含总页数，文件data
     }];
     [[QCloudCOSXMLService defaultCOSXML] GetFilePreviewObject:request];
-  
-*/
-- (void) GetFilePreviewObject:(QCloudGetFilePreviewRequest*)request;
 
-- (void) GetGenerateSnapshot:(QCloudGetGenerateSnapshotRequest*)request; 
+*/
+- (void)GetFilePreviewObject:(QCloudGetFilePreviewRequest *)request;
+
+- (void)GetGenerateSnapshot:(QCloudGetGenerateSnapshotRequest *)request;
 
 @end
-
 
 NS_ASSUME_NONNULL_END

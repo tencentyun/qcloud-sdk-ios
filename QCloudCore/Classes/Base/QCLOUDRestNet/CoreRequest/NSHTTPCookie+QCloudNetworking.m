@@ -8,24 +8,21 @@
 
 #import "NSHTTPCookie+QCloudNetworking.h"
 
-NSArray* QCloudFuseAndUpdateCookiesArray(NSArray* source, NSArray* aim) {
-    NSMutableArray* aimArray = [NSMutableArray new];
+NSArray *QCloudFuseAndUpdateCookiesArray(NSArray *source, NSArray *aim) {
+    NSMutableArray *aimArray = [NSMutableArray new];
     if (source.count) {
         [aimArray addObjectsFromArray:source];
     }
-    for (NSHTTPCookie* s  in source) {
+    for (NSHTTPCookie *s in source) {
         if (![aimArray containsObject:s]) {
             [aimArray addObject:s];
         }
-
     }
     return aimArray;
 }
 
-
 @implementation NSHTTPCookie (QCloudNetworking)
-- (BOOL) isEqualToQCloudCookie:(NSHTTPCookie*)c
-{
+- (BOOL)isEqualToQCloudCookie:(NSHTTPCookie *)c {
     if (![c.name isEqualToString:self.name]) {
         return NO;
     }
@@ -36,8 +33,8 @@ NSArray* QCloudFuseAndUpdateCookiesArray(NSArray* source, NSArray* aim) {
         return NO;
     }
 
-    NSString* maxDomain  = c.domain.length > self.domain.length ? c.domain : self.domain;
-    NSString* minDomain  = c.domain.length < self.domain.length ? c.domain : self.domain;
+    NSString *maxDomain = c.domain.length > self.domain.length ? c.domain : self.domain;
+    NSString *minDomain = c.domain.length < self.domain.length ? c.domain : self.domain;
     if ([maxDomain hasSuffix:minDomain]) {
         return YES;
     }

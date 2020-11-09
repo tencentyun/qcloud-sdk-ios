@@ -11,20 +11,16 @@
 #import "QCloudBundlePath.h"
 #import "QCloudFileUtils.h"
 
-
-NSString * const kMediaURLPrefix = @"/var/mobile/Media/DCIM";
-#define  kBundlePath  [NSBundle mainBundle].bundlePath
-@interface NSString(UniversalPathExtension)
+NSString *const kMediaURLPrefix = @"/var/mobile/Media/DCIM";
+#define kBundlePath [NSBundle mainBundle].bundlePath
+@interface NSString (UniversalPathExtension)
 
 @end
 
-@implementation NSString(UniversalPathExtension)
-
-
+@implementation NSString (UniversalPathExtension)
 
 - (BOOL)isBundlePath {
     return [self containsString:kBundlePath];
-    
 }
 
 - (BOOL)isSandboxPath {
@@ -36,10 +32,9 @@ NSString * const kMediaURLPrefix = @"/var/mobile/Media/DCIM";
 }
 @end
 
-
 @implementation QCloudUniversalPathFactory
-+ (QCloudUniversalPath *) universalPathWithURL:(NSURL *)url {
-    QCloudUniversalPath *result ;
++ (QCloudUniversalPath *)universalPathWithURL:(NSURL *)url {
+    QCloudUniversalPath *result;
     NSString *strippedURL;
     NSString *absoluteString = url.absoluteString;
     if (!url && ![url isKindOfClass:NSURL.class]) {
@@ -56,23 +51,19 @@ NSString * const kMediaURLPrefix = @"/var/mobile/Media/DCIM";
         result = [[QCloudBundlePath alloc] initWithStrippedURL:strippedURL];
         result.type = QCLOUD_UNIVERSAL_PATH_TYPE_BUNDLE;
     } else if ([absoluteString isSandboxPath]) {
-        //sandbox
+        // sandbox
         NSRange range = [absoluteString rangeOfString:QCloudApplicationDirectory()];
         strippedURL = [absoluteString substringFromIndex:range.location + range.length];
         result = [[QCloudSandboxPath alloc] initWithStrippedURL:strippedURL];
         result.type = QCLOUD_UNIVERSAL_PATH_TYPE_SANDBOX;
     } else {
-        //Unknown, not stripped
+        // Unknown, not stripped
         strippedURL = absoluteString;
         result = [[QCloudUniversalFixedPath alloc] initWithStrippedURL:strippedURL];
         result.type = QCLOUD_UNIVERSAL_PATH_TYPE_FIXED;
     }
-    QCloudLogDebug(@"Origin URL is %@ , stripped URL is %@",absoluteString,strippedURL);
+    QCloudLogDebug(@"Origin URL is %@ , stripped URL is %@", absoluteString, strippedURL);
     return result;
 }
-
-
-
-
 
 @end

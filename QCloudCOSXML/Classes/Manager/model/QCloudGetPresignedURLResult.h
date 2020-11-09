@@ -13,5 +13,5 @@
 /**
  预签名 URL
  */
-@property (nonatomic, strong) NSString* presienedURL;
+@property (nonatomic, strong) NSString *presienedURL;
 @end

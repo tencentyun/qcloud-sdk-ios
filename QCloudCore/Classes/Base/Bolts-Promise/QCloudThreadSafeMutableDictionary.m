@@ -8,7 +8,7 @@
 
 #import "QCloudThreadSafeMutableDictionary.h"
 
-@interface QCloudThreadSafeMutableDictionary()
+@interface QCloudThreadSafeMutableDictionary ()
 
 @property (nonatomic, strong) NSMutableDictionary *dictionary;
 @property (nonatomic, strong) dispatch_queue_t dispatchQueue;
@@ -22,17 +22,17 @@
         _dictionary = [NSMutableDictionary new];
         _dispatchQueue = dispatch_queue_create("com.tencent.qcloud.safedicationary", DISPATCH_QUEUE_SERIAL);
     }
-    
+
     return self;
 }
 
 - (id)objectForKey:(id)aKey {
     __block id returnObject = nil;
-    
+
     dispatch_sync(self.dispatchQueue, ^{
         returnObject = [self.dictionary objectForKey:aKey];
     });
-    
+
     return returnObject;
 }
 
@@ -42,7 +42,7 @@
     });
 }
 
-- (void)setObject:(id)anObject forKey:(id <NSCopying>)aKey {
+- (void)setObject:(id)anObject forKey:(id<NSCopying>)aKey {
     dispatch_sync(self.dispatchQueue, ^{
         [self.dictionary setObject:anObject forKey:aKey];
     });

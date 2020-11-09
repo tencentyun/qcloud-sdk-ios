@@ -12,12 +12,8 @@
 
 - (instancetype)initWithMaxCount:(NSInteger)maxCount sleepTime:(NSTimeInterval)sleepStep {
     self = [super initWithMaxCount:maxCount sleepTime:sleepStep];
-    _errorCode = [NSSet setWithObjects:
-                  @(kCFURLErrorTimedOut),
-                  @(kCFURLErrorNetworkConnectionLost),
-                  @(kCFURLErrorNotConnectedToInternet),
-                  @(kCFURLErrorCannotConnectToHost),
-                  nil];
+    _errorCode = [NSSet setWithObjects:@(kCFURLErrorTimedOut), @(kCFURLErrorNetworkConnectionLost), @(kCFURLErrorNotConnectedToInternet),
+                                       @(kCFURLErrorCannotConnectToHost), nil];
     return self;
 }
 @end

@@ -18,13 +18,8 @@
 
 @end
 
-
-
-
-
 @implementation QCloudNetProfileLevel
-- (instancetype) initWithInterval:(NSTimeInterval)interval
-{
+- (instancetype)initWithInterval:(NSTimeInterval)interval {
     self = [super init];
     if (!self) {
         return self;
@@ -35,101 +30,90 @@
     return self;
 }
 
-- (void) pointDownload:(QCloudNetProfilePoint*)downloadPoint
-{
-        CFTimeInterval current = CFAbsoluteTimeGetCurrent();
-        for (QCloudNetProfilePoint* point in [_downloadPoints copy]) {
-            if (current - point.pointTime > self.interval) {
-                [_downloadPoints removeObject:point];
-            }
+- (void)pointDownload:(QCloudNetProfilePoint *)downloadPoint {
+    CFTimeInterval current = CFAbsoluteTimeGetCurrent();
+    for (QCloudNetProfilePoint *point in [_downloadPoints copy]) {
+        if (current - point.pointTime > self.interval) {
+            [_downloadPoints removeObject:point];
         }
-        [_downloadPoints addObject:downloadPoint];
+    }
+    [_downloadPoints addObject:downloadPoint];
 }
 
-- (int64_t) downloadSpeed
-{
-        CFTimeInterval current = CFAbsoluteTimeGetCurrent();
-        for (QCloudNetProfilePoint* point in [_downloadPoints copy]) {
-            if (current - point.pointTime > self.interval) {
-                [_downloadPoints removeObject:point];
-            }
+- (int64_t)downloadSpeed {
+    CFTimeInterval current = CFAbsoluteTimeGetCurrent();
+    for (QCloudNetProfilePoint *point in [_downloadPoints copy]) {
+        if (current - point.pointTime > self.interval) {
+            [_downloadPoints removeObject:point];
         }
-        if (_downloadPoints.count == 0) {
-            return 0;
-        }
-        QCloudNetProfilePoint* beginPoint = _downloadPoints.firstObject;
-        QCloudNetProfilePoint* lastPoint  =_downloadPoints.lastObject;
-        NSTimeInterval time = lastPoint.pointTime - beginPoint.pointTime;
-        if (time == 0) {
-            time = 0.5;
-        }
-        int64_t total = 0;
-        for (QCloudNetProfilePoint* point  in _downloadPoints) {
-            total += point.downloadBytes;
-        }
-        return total/time;
+    }
+    if (_downloadPoints.count == 0) {
+        return 0;
+    }
+    QCloudNetProfilePoint *beginPoint = _downloadPoints.firstObject;
+    QCloudNetProfilePoint *lastPoint = _downloadPoints.lastObject;
+    NSTimeInterval time = lastPoint.pointTime - beginPoint.pointTime;
+    if (time == 0) {
+        time = 0.5;
+    }
+    int64_t total = 0;
+    for (QCloudNetProfilePoint *point in _downloadPoints) {
+        total += point.downloadBytes;
+    }
+    return total / time;
 }
 
-- (int64_t) uploadSpped
-{
-        CFTimeInterval current = CFAbsoluteTimeGetCurrent();
-        for (QCloudNetProfilePoint* point in [_uploadPoints copy]) {
-            if (current - point.pointTime > self.interval) {
-                [_uploadPoints removeObject:point];
-            }
+- (int64_t)uploadSpped {
+    CFTimeInterval current = CFAbsoluteTimeGetCurrent();
+    for (QCloudNetProfilePoint *point in [_uploadPoints copy]) {
+        if (current - point.pointTime > self.interval) {
+            [_uploadPoints removeObject:point];
         }
-        if (_uploadPoints.count == 0) {
-            return 0;
-        }
-        QCloudNetProfilePoint* beginPoint = _uploadPoints.firstObject;
-        QCloudNetProfilePoint* lastPoint  =_uploadPoints.lastObject;
-        NSTimeInterval time = lastPoint.pointTime - beginPoint.pointTime;
-        if (time == 0) {
-            time = 0.5;
-        }
-        int64_t total = 0;
-        for (QCloudNetProfilePoint* point  in _uploadPoints) {
-            total += point.uploadBytes;
-        }
-        return total/time;
+    }
+    if (_uploadPoints.count == 0) {
+        return 0;
+    }
+    QCloudNetProfilePoint *beginPoint = _uploadPoints.firstObject;
+    QCloudNetProfilePoint *lastPoint = _uploadPoints.lastObject;
+    NSTimeInterval time = lastPoint.pointTime - beginPoint.pointTime;
+    if (time == 0) {
+        time = 0.5;
+    }
+    int64_t total = 0;
+    for (QCloudNetProfilePoint *point in _uploadPoints) {
+        total += point.uploadBytes;
+    }
+    return total / time;
 }
-- (void) pointUpload:(QCloudNetProfilePoint*)downloadPoint{
-        CFTimeInterval current = CFAbsoluteTimeGetCurrent();
-        for (QCloudNetProfilePoint* point in [_uploadPoints copy]) {
-            if (current - point.pointTime > self.interval) {
-                [_uploadPoints removeObject:point];
-            }
+- (void)pointUpload:(QCloudNetProfilePoint *)downloadPoint {
+    CFTimeInterval current = CFAbsoluteTimeGetCurrent();
+    for (QCloudNetProfilePoint *point in [_uploadPoints copy]) {
+        if (current - point.pointTime > self.interval) {
+            [_uploadPoints removeObject:point];
         }
-        [_uploadPoints addObject:downloadPoint];
+    }
+    [_uploadPoints addObject:downloadPoint];
 }
 
 @end
 
+typedef NS_ENUM(NSInteger, QCloudNetSpeedLevel) { QCloudNetSpeedLevel1s, QCloudNetSpeedLevel1m, QCloudNetSpeedLevel30m };
 
-typedef NS_ENUM(NSInteger, QCloudNetSpeedLevel) {
-   QCloudNetSpeedLevel1s,
-    QCloudNetSpeedLevel1m,
-    QCloudNetSpeedLevel30m
-};
-
-@interface QCloudNetProfile ()
-{
+@interface QCloudNetProfile () {
     CFTimeInterval _checkPointInterval;
     dispatch_source_t _timer;
     //
-    NSMutableArray* _sppedLevels;
+    NSMutableArray *_sppedLevels;
     //
     CFTimeInterval _lastCheckPointTimeInterval;
     dispatch_queue_t _readWriteQueue;
 }
 
-
 @end
 @implementation QCloudNetProfile
 
-+ (QCloudNetProfile*) shareProfile
-{
-    static QCloudNetProfile* profile;
++ (QCloudNetProfile *)shareProfile {
+    static QCloudNetProfile *profile;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         profile = [QCloudNetProfile new];
@@ -137,48 +121,45 @@ typedef NS_ENUM(NSInteger, QCloudNetSpeedLevel) {
     return profile;
 }
 
-- (void) checkSpeed
-{
+- (void)checkSpeed {
     dispatch_sync(_readWriteQueue, ^{
-        for (QCloudNetProfileLevel* level in self->_sppedLevels) {
+        for (QCloudNetProfileLevel *level in self->_sppedLevels) {
             QCloudLogDebug(@"%f download spped %lld bytes/s", level.interval, level.downloadSpeed);
             QCloudLogDebug(@"%f upload speed %lld bytes/s", level.interval, level.uploadSpped);
         }
     });
 }
-- (instancetype) init
-{
+- (instancetype)init {
     self = [super init];
     if (!self) {
         return self;
     }
-//#ifdef DEBUG
-//    _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0));
-//    _checkPointInterval = 0.5;
-//
-//    if (_timer) {
-//        __weak typeof(self) weakSelf = self;
-//        dispatch_source_set_timer(_timer, dispatch_time(DISPATCH_TIME_NOW,_checkPointInterval * NSEC_PER_SEC ), _checkPointInterval * NSEC_PER_SEC, (1ull * NSEC_PER_SEC) / 10.0);
-//        dispatch_source_set_event_handler(_timer, ^{
-//            [weakSelf checkSpeed];
-//        });
-//        dispatch_resume(_timer);
-//    }
-//#endif
+    //#ifdef DEBUG
+    //    _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0));
+    //    _checkPointInterval = 0.5;
+    //
+    //    if (_timer) {
+    //        __weak typeof(self) weakSelf = self;
+    //        dispatch_source_set_timer(_timer, dispatch_time(DISPATCH_TIME_NOW,_checkPointInterval * NSEC_PER_SEC ), _checkPointInterval *
+    //        NSEC_PER_SEC, (1ull * NSEC_PER_SEC) / 10.0); dispatch_source_set_event_handler(_timer, ^{
+    //            [weakSelf checkSpeed];
+    //        });
+    //        dispatch_resume(_timer);
+    //    }
+    //#endif
     //
     _readWriteQueue = dispatch_queue_create("com.tencent.network.profile.level", DISPATCH_QUEUE_CONCURRENT);
     _sppedLevels = [NSMutableArray new];
     [_sppedLevels addObject:[[QCloudNetProfileLevel alloc] initWithInterval:1]];
-    [_sppedLevels addObject: [[QCloudNetProfileLevel alloc] initWithInterval:30]];
+    [_sppedLevels addObject:[[QCloudNetProfileLevel alloc] initWithInterval:30]];
     [_sppedLevels addObject:[[QCloudNetProfileLevel alloc] initWithInterval:60]];
     return self;
 }
 
-- (void) pointDownload:(int64_t)bytes
-{
+- (void)pointDownload:(int64_t)bytes {
     dispatch_barrier_async(_readWriteQueue, ^{
-        for (QCloudNetProfileLevel* level in self->_sppedLevels) {
-            QCloudNetProfilePoint* point = [QCloudNetProfilePoint new];
+        for (QCloudNetProfileLevel *level in self->_sppedLevels) {
+            QCloudNetProfilePoint *point = [QCloudNetProfilePoint new];
             point.pointTime = CFAbsoluteTimeGetCurrent();
             point.downloadBytes = bytes;
             [level pointDownload:point];
@@ -186,11 +167,10 @@ typedef NS_ENUM(NSInteger, QCloudNetSpeedLevel) {
     });
 }
 
-- (void) pointUpload:(int64_t)bytes
-{
+- (void)pointUpload:(int64_t)bytes {
     dispatch_barrier_async(_readWriteQueue, ^{
-        for (QCloudNetProfileLevel* level in self->_sppedLevels) {
-            QCloudNetProfilePoint* point = [QCloudNetProfilePoint new];
+        for (QCloudNetProfileLevel *level in self->_sppedLevels) {
+            QCloudNetProfilePoint *point = [QCloudNetProfilePoint new];
             point.pointTime = CFAbsoluteTimeGetCurrent();
             point.uploadBytes = bytes;
             [level pointUpload:point];
@@ -198,7 +178,5 @@ typedef NS_ENUM(NSInteger, QCloudNetSpeedLevel) {
         [[NSNotificationCenter defaultCenter] postNotificationName:kQCloudNetProfileUploadSpeedUpdate object:self->_sppedLevels];
     });
 }
-
-
 
 @end

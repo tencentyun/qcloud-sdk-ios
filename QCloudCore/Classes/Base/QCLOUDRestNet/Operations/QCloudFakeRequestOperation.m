@@ -9,11 +9,10 @@
 #import "QCloudFakeRequestOperation.h"
 #import "QCloudAbstractRequest_FakeRequest.h"
 @implementation QCloudFakeRequestOperation
-- (void) main
-{
+- (void)main {
     @autoreleasepool {
         QCloudRequestFinishBlock originFinishBlock = self.request.finishBlock;
-        
+
         __weak typeof(self) weakSelf = self;
         [self.request setFinishBlock:^(id outputObject, NSError *error) {
             if ([weakSelf.delagte respondsToSelector:@selector(requestOperationFinish:)]) {
@@ -26,6 +25,5 @@
         [self.request fakeStart];
     }
 }
-
 
 @end
