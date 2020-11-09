@@ -6,27 +6,23 @@
 //  Copyright (c) 2015年 tencent. All rights reserved.
 //
 
-
 #import "QCloudIntelligentTieringStatusEnum.h"
 
-QCloudIntelligentTieringStatus QCloudIntelligentTieringStatusDumpFromString(NSString* key) {
-    if (NO) {}
-    else if ([key isEqualToString:@"Suspended"]) {
+QCloudIntelligentTieringStatus QCloudIntelligentTieringStatusDumpFromString(NSString *key) {
+    if (NO) {
+    } else if ([key isEqualToString:@"Suspended"]) {
         return QCloudintelligentTieringStatusSuspended;
-    }
-    else if ([key isEqualToString:@"Enabled"]) {
+    } else if ([key isEqualToString:@"Enabled"]) {
         return QCloudintelligentTieringStatusEnabled;
     }
     return 0;
 }
-NSString* QCloudIntelligentTieringStatusTransferToString(QCloudIntelligentTieringStatus type) {
-    switch(type) {
-        case QCloudintelligentTieringStatusSuspended:
-        {
+NSString *QCloudIntelligentTieringStatusTransferToString(QCloudIntelligentTieringStatus type) {
+    switch (type) {
+        case QCloudintelligentTieringStatusSuspended: {
             return @"Suspended";
         }
-        case QCloudintelligentTieringStatusEnabled:
-        {
+        case QCloudintelligentTieringStatusEnabled: {
             return @"Enabled";
         }
         default:

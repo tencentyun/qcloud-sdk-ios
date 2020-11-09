@@ -11,12 +11,11 @@
 #import "QCloudURLTools.h"
 
 @interface QCloudEndPoint ()
-@property (nonatomic, strong) NSURL* serverURLLiteral;
+@property (nonatomic, strong) NSURL *serverURLLiteral;
 @end
 
 @implementation QCloudEndPoint
-- (instancetype) init
-{
+- (instancetype)init {
     self = [super init];
     if (!self) {
         return self;
@@ -24,8 +23,7 @@
     _useHTTPS = NO;
     return self;
 }
-- (instancetype) initWithLiteralURL:(NSURL *)url
-{
+- (instancetype)initWithLiteralURL:(NSURL *)url {
     self = [super init];
     if (!self) {
         return self;
@@ -39,13 +37,11 @@
     return self;
 }
 
-
-- (NSURL*) serverURLLiteral
-{
+- (NSURL *)serverURLLiteral {
     if (!_serverURLLiteral) {
         return nil;
     }
-    NSString* url = _serverURLLiteral.absoluteString;
+    NSString *url = _serverURLLiteral.absoluteString;
     if ([url.lowercaseString hasPrefix:QCloudHTTPSScheme]) {
         url = [url substringFromIndex:QCloudHTTPSScheme.length];
     } else if ([url.lowercaseString hasPrefix:QCloudHTTPScheme]) {
@@ -59,14 +55,13 @@
     return [NSURL URLWithString:url];
 }
 
--(NSURL *)serverURLWithBucket:(NSString *)bucket appID:(NSString *)appID regionName:(NSString *)regionName{
-    NSString* msg = @"请在子类中实现该方法，在父类中该方法不关心具体业务的拼装！！！";
-    @throw [NSException exceptionWithName:QCloudErrorDomain reason:msg userInfo:@{NSLocalizedDescriptionKey:msg}];
+- (NSURL *)serverURLWithBucket:(NSString *)bucket appID:(NSString *)appID regionName:(NSString *)regionName {
+    NSString *msg = @"请在子类中实现该方法，在父类中该方法不关心具体业务的拼装！！！";
+    @throw [NSException exceptionWithName:QCloudErrorDomain reason:msg userInfo:@{ NSLocalizedDescriptionKey : msg }];
 }
 
-- (instancetype) copyWithZone:(NSZone *)zone
-{
-    QCloudEndPoint* endpoint = [[[self class] allocWithZone:zone] init];
+- (instancetype)copyWithZone:(NSZone *)zone {
+    QCloudEndPoint *endpoint = [[[self class] allocWithZone:zone] init];
     endpoint.useHTTPS = self.useHTTPS;
     endpoint.serviceName = self.serviceName;
     endpoint.regionName = self.regionName;

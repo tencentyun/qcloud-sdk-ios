@@ -5,25 +5,29 @@
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.
 //
-//   ██████╗  ██████╗██╗      ██████╗ ██╗   ██╗██████╗     ████████╗███████╗██████╗ ███╗   ███╗██╗███╗   ██╗ █████╗ ██╗         ██╗      █████╗ ██████╗
-//  ██╔═══██╗██╔════╝██║     ██╔═══██╗██║   ██║██╔══██╗    ╚══██╔══╝██╔════╝██╔══██╗████╗ ████║██║████╗  ██║██╔══██╗██║         ██║     ██╔══██╗██╔══██╗
-//  ██║   ██║██║     ██║     ██║   ██║██║   ██║██║  ██║       ██║   █████╗  ██████╔╝██╔████╔██║██║██╔██╗ ██║███████║██║         ██║     ███████║██████╔╝
-//  ██║▄▄ ██║██║     ██║     ██║   ██║██║   ██║██║  ██║       ██║   ██╔══╝  ██╔══██╗██║╚██╔╝██║██║██║╚██╗██║██╔══██║██║         ██║     ██╔══██║██╔══██╗
-//  ╚██████╔╝╚██████╗███████╗╚██████╔╝╚██████╔╝██████╔╝       ██║   ███████╗██║  ██║██║ ╚═╝ ██║██║██║ ╚████║██║  ██║███████╗    ███████╗██║  ██║██████╔╝
-//   ╚══▀▀═╝  ╚═════╝╚══════╝ ╚═════╝  ╚═════╝ ╚═════╝        ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝    ╚══════╝╚═╝  ╚═╝╚═════╝
+//   ██████╗  ██████╗██╗      ██████╗ ██╗   ██╗██████╗     ████████╗███████╗██████╗ ███╗   ███╗██╗███╗   ██╗ █████╗ ██╗         ██╗      █████╗
+//   ██████╗
+//  ██╔═══██╗██╔════╝██║     ██╔═══██╗██║   ██║██╔══██╗    ╚══██╔══╝██╔════╝██╔══██╗████╗ ████║██║████╗  ██║██╔══██╗██║         ██║ ██╔══██╗██╔══██╗
+//  ██║   ██║██║     ██║     ██║   ██║██║   ██║██║  ██║       ██║   █████╗  ██████╔╝██╔████╔██║██║██╔██╗ ██║███████║██║         ██║ ███████║██████╔╝
+//  ██║▄▄ ██║██║     ██║     ██║   ██║██║   ██║██║  ██║       ██║   ██╔══╝  ██╔══██╗██║╚██╔╝██║██║██║╚██╗██║██╔══██║██║         ██║ ██╔══██║██╔══██╗
+//  ╚██████╔╝╚██████╗███████╗╚██████╔╝╚██████╔╝██████╔╝       ██║   ███████╗██║  ██║██║ ╚═╝ ██║██║██║ ╚████║██║  ██║███████╗    ███████╗██║
+//  ██║██████╔╝
+//   ╚══▀▀═╝  ╚═════╝╚══════╝ ╚═════╝  ╚═════╝ ╚═════╝        ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝    ╚══════╝╚═╝ ╚═╝╚═════╝
 //
 //
 //                                                                              _             __                 _                _
 //                                                                             (_)           / _|               | |              | |
-//                                                          ___  ___ _ ____   ___  ___ ___  | |_ ___  _ __    __| | _____   _____| | ___  _ __   ___ _ __ ___
-//                                                         / __|/ _ \ '__\ \ / / |/ __/ _ \ |  _/ _ \| '__|  / _` |/ _ \ \ / / _ \ |/ _ \| '_ \ / _ \ '__/ __|
-//                                                         \__ \  __/ |   \ V /| | (_|  __/ | || (_) | |    | (_| |  __/\ V /  __/ | (_) | |_) |  __/ |  \__
-//                                                         |___/\___|_|    \_/ |_|\___\___| |_| \___/|_|     \__,_|\___| \_/ \___|_|\___/| .__/ \___|_|  |___/
+//                                                          ___  ___ _ ____   ___  ___ ___  | |_ ___  _ __    __| | _____   _____| | ___  _ __   ___ _
+//                                                          __ ___
+//                                                         / __|/ _ \ '__\ \ / / |/ __/ _ \ |  _/ _ \| '__|  / _` |/ _ \ \ / / _ \ |/ _ \| '_ \ / _ \
+//                                                         '__/ __|
+//                                                         \__ \  __/ |   \ V /| | (_|  __/ | || (_) | |    | (_| |  __/\ V /  __/ | (_) | |_) |  __/
+//                                                         |  \__
+//                                                         |___/\___|_|    \_/ |_|\___\___| |_| \___/|_|     \__,_|\___| \_/ \___|_|\___/| .__/
+//                                                         \___|_|  |___/
 //    ______ ______ ______ ______ ______ ______ ______ ______                                                                            | |
 //   |______|______|______|______|______|______|______|______|                                                                           |_|
 //
-
-
 
 #import <Foundation/Foundation.h>
 #import <QCloudCore/QCloudCore.h>
@@ -31,41 +35,41 @@
 NS_ASSUME_NONNULL_BEGIN
 /**
  获取存储桶内的所有对象及其历史版本信息
- 
+
  ### 功能说明
- 
+
  GET Bucket Object versions 接口用于拉取存储桶内的所有对象及其历史版本信息，您可以通过指定参
  数筛选出存储桶内部分对象及其历史版本信息。该 API 的请求者需要对存储桶有读取权限。
- 
+
  关于获取存储桶内的所有对象及其历史版本信息接口的具体描述，请查看 https://cloud.tencent.com/document/product/436/35521
- 
+
  ### 示例
-   
+
   @code
- 
+
     QCloudListObjectVersionsRequest* listObjectVersionsRequest =
         [[QCloudListObjectVersionsRequest alloc] init];
-    
+
     // 存储桶名称
     listObjectVersionsRequest.bucket = @"bucketname";
-    
+
     // 一页请求数据条目数，默认 1000
     listObjectVersionsRequest.maxKeys = 100;
-    
+
     [listObjectVersionsRequest setFinishBlock:^(QCloudListVersionsResult * _Nonnull result,
                                                 NSError * _Nonnull error) {
         // 已删除的文件
         NSArray<QCloudDeleteMarker*> *deleteMarker = result.deleteMarker;
-        
+
         // 对象版本条目
         NSArray<QCloudVersionContent*> *versionContent = result.versionContent;
-        
+
     }];
-    
+
     [[QCloudCOSXMLService defaultCOSXML] ListObjectVersions:listObjectVersionsRequest];
- 
+
 */
-@interface     QCloudListObjectVersionsRequest : QCloudBizHTTPRequest
+@interface QCloudListObjectVersionsRequest : QCloudBizHTTPRequest
 /**
 存储桶名
 */
@@ -96,7 +100,6 @@ NS_ASSUME_NONNULL_BEGIN
 */
 @property (assign, nonatomic) int maxKeys;
 
-
-- (void) setFinishBlock:(void (^_Nullable)( QCloudListVersionsResult* _Nullable result, NSError * _Nullable  error))QCloudRequestFinishBlock;
+- (void)setFinishBlock:(void (^_Nullable)(QCloudListVersionsResult *_Nullable result, NSError *_Nullable error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

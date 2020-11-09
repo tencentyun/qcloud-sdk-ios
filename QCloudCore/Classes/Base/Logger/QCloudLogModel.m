@@ -8,9 +8,6 @@
 
 #import "QCloudLogModel.h"
 
-
-
-
 @implementation QCloudLogModel
 ///--------------------------------------
 #pragma mark - Logging Messages
@@ -39,29 +36,28 @@
     return description;
 }
 
-- (NSString*) debugDescription
-{
+- (NSString *)debugDescription {
     static BOOL willOutputColor = NO;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        char* xcodeColor = getenv("XcodeColors");
-        if (xcodeColor && (strcmp(xcodeColor, "YES") == 0))
-        {
+        char *xcodeColor = getenv("XcodeColors");
+        if (xcodeColor && (strcmp(xcodeColor, "YES") == 0)) {
             willOutputColor = YES;
             setenv("XcodeColors", "YES", 0);
         }
     });
-    NSString* description;
+    NSString *description;
     if (willOutputColor) {
-        description = [NSMutableString stringWithFormat:@"%@[%@]%@%@",[QCloudLogModel consoleLogColorWithLevel:self.level],[QCloudLogModel _descriptionForLogLevel:self.level],[QCloudLogModel consoleLogColorWithLevel:self.level],self.message];
+        description = [NSMutableString stringWithFormat:@"%@[%@]%@%@", [QCloudLogModel consoleLogColorWithLevel:self.level],
+                                                        [QCloudLogModel _descriptionForLogLevel:self.level],
+                                                        [QCloudLogModel consoleLogColorWithLevel:self.level], self.message];
     } else {
-         description = [NSMutableString stringWithFormat:@"[%@]%@",[QCloudLogModel _descriptionForLogLevel:self.level],self.message];
+        description = [NSMutableString stringWithFormat:@"[%@]%@", [QCloudLogModel _descriptionForLogLevel:self.level], self.message];
     }
     return description;
 }
 
-+ (NSString*) consoleLogColorWithLevel:(QCloudLogLevel)level
-{
++ (NSString *)consoleLogColorWithLevel:(QCloudLogLevel)level {
     switch (level) {
         case QCloudLogLevelInfo:
             return @"🔷";
@@ -79,8 +75,7 @@
     return @"";
 }
 
-+ (NSString*) consoleRestLogColorWithLevel:(QCloudLogLevel)level
-{
++ (NSString *)consoleRestLogColorWithLevel:(QCloudLogLevel)level {
     switch (level) {
         case QCloudLogLevelInfo:
             return @"\033[fg0,0,0;\033[bg255,255,255;";
@@ -97,8 +92,7 @@
     }
     return @"";
 }
-- (NSString*) fileLogColorWithLevel:(QCloudLogLevel)level
-{
+- (NSString *)fileLogColorWithLevel:(QCloudLogLevel)level {
     switch (level) {
         case QCloudLogLevelInfo:
             return @"\e[38;5;38;82m";
@@ -115,13 +109,12 @@
     }
     return @"";
 }
-- (NSString*) fileDescription
-{
-    NSString* color = [self fileLogColorWithLevel:self.level];
-    NSMutableString* log = [NSMutableString new];
+- (NSString *)fileDescription {
+    NSString *color = [self fileLogColorWithLevel:self.level];
+    NSMutableString *log = [NSMutableString new];
     [log appendString:color];
     [log appendFormat:@"[%@]", self.date];
-    [log appendFormat:@"[%@]" , [QCloudLogModel _descriptionForLogLevel:self.level]];
+    [log appendFormat:@"[%@]", [QCloudLogModel _descriptionForLogLevel:self.level]];
     [log appendString:@"\e[0m"];
     if (self.file.length) {
         [log appendFormat:@"[%@]", [self.file componentsSeparatedByString:@"/"].lastObject];
@@ -130,7 +123,7 @@
         [log appendFormat:@"[%@]", self.funciton];
     }
     if (self.line > 0) {
-        [log appendFormat:@"[%d]",self.line];
+        [log appendFormat:@"[%d]", self.line];
     }
     [log appendString:self.message];
     return log;

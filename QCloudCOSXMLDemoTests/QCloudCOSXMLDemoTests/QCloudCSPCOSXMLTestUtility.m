@@ -9,15 +9,15 @@
 #import "QCloudCSPCOSXMLTestUtility.h"
 #import "TestCommonDefine.h"
 @implementation QCloudCSPCOSXMLTestUtility
-+(instancetype)sharedInstance{
-    static QCloudCSPCOSXMLTestUtility* instance;
++ (instancetype)sharedInstance {
+    static QCloudCSPCOSXMLTestUtility *instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         instance = [[QCloudCSPCOSXMLTestUtility alloc] init];
     });
     return instance;
 }
--(QCloudCOSXMLService *)cosxmlService{
+- (QCloudCOSXMLService *)cosxmlService {
     return [QCloudCOSXMLService cosxmlServiceForKey:kCSPServiceKey];
 }
 @end

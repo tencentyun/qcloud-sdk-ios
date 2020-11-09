@@ -8,22 +8,20 @@
 
 #import "QCloudCOSXMLVersion.h"
 
-
 //#if QCloudCoreModuleVersionNumber >= 502000
 #import <QCloudCore/QCloudTestUtility.h>
 #import <QCloudCOSXML/QCloudCOSXML.h>
 @interface QCloudCOSXMLTestUtility : QCloudTestUtility
-@property (nonatomic,strong)QCloudCOSXMLService *cosxmlService;
+@property (nonatomic, strong) QCloudCOSXMLService *cosxmlService;
 + (instancetype)sharedInstance;
-- (NSString*)createTestBucket:(NSString *)bucketName;
-- (NSString*)createTestBucketWithPrefix:(NSString *)prefix;
+- (NSString *)createTestBucket:(NSString *)bucketName;
+- (NSString *)createTestBucketWithPrefix:(NSString *)prefix;
 
-- (void)deleteTestBucket:(NSString*)bucket;
+- (void)deleteTestBucket:(NSString *)bucket;
 
 - (void)deleteAllTestBuckets;
--(NSString *)createTestBucketWithCosSerVice:(QCloudCOSXMLService *)service withPrefix:(NSString *)prefix;
+- (NSString *)createTestBucketWithCosSerVice:(QCloudCOSXMLService *)service withPrefix:(NSString *)prefix;
 
-- (NSString*)uploadTempObjectInBucket:(NSString*)bucket;
+- (NSString *)uploadTempObjectInBucket:(NSString *)bucket;
 @end
 //#endif
-

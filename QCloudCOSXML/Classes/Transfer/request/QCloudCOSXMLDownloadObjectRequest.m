@@ -23,10 +23,10 @@
 
     return self;
 }
--(void)fakeStart{
+- (void)fakeStart {
     [self startGetObject];
 }
--(void)startGetObject{
+- (void)startGetObject {
     QCloudGetObjectRequest *request = [QCloudGetObjectRequest new];
     request.customHeaders = [self.customHeaders copy];
     request.downloadingURL = self.downloadingURL;
@@ -51,13 +51,13 @@
     request.enableQuic = self.enableQuic;
     [self.transferManager.cosService GetObject:request];
 }
--(void)setCOSServerSideEncyption{
+- (void)setCOSServerSideEncyption {
     self.customHeaders[@"x-cos-server-side-encryption"] = @"AES256";
 }
 
--(void)setCOSServerSideEncyptionWithCustomerKey:(NSString *)customerKey{
+- (void)setCOSServerSideEncyptionWithCustomerKey:(NSString *)customerKey {
     NSData *data = [customerKey dataUsingEncoding:NSUTF8StringEncoding];
-    NSString* excryptAES256Key = [data base64EncodedStringWithOptions:0]; // base64格式的字符串
+    NSString *excryptAES256Key = [data base64EncodedStringWithOptions:0]; // base64格式的字符串
     NSString *base64md5key = QCloudEncrytNSDataMD5Base64(data);
     self.customHeaders[@"x-cos-server-side-encryption-customer-algorithm"] = @"AES256";
     self.customHeaders[@"x-cos-server-side-encryption-customer-key"] = excryptAES256Key;

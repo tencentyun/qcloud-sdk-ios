@@ -8,7 +8,7 @@
 
 #import "QCloudHTTPMultiDataStream.h"
 #import "QCloudHTTPBodyPart.h"
-static NSString * QCloudCreateMultipartFormBoundary() {
+static NSString *QCloudCreateMultipartFormBoundary() {
     return [NSString stringWithFormat:@"Boundary+%08X%08X", arc4random(), arc4random()];
 }
 @interface NSStream ()
@@ -16,11 +16,10 @@ static NSString * QCloudCreateMultipartFormBoundary() {
 @property (readwrite, copy) NSError *streamError;
 @end
 
-@implementation QCloudHTTPMultiDataStream
-{
-    NSMutableArray* _bodyParts;
-    QCloudHTTPBodyPart* _currentHTTPBodyPart;
-    NSEnumerator* _partEnumerator;
+@implementation QCloudHTTPMultiDataStream {
+    NSMutableArray *_bodyParts;
+    QCloudHTTPBodyPart *_currentHTTPBodyPart;
+    NSEnumerator *_partEnumerator;
 }
 
 #pragma clang diagnostic push
@@ -29,12 +28,9 @@ static NSString * QCloudCreateMultipartFormBoundary() {
 @synthesize streamError;
 #pragma clang diagnostic pop
 
-- (void) dealloc
-{
-    
+- (void)dealloc {
 }
-- (instancetype) init
-{
+- (instancetype)init {
     self = [super init];
     if (!self) {
         return self;
@@ -45,8 +41,7 @@ static NSString * QCloudCreateMultipartFormBoundary() {
     return self;
 }
 
-- (instancetype) initWithStringEncoding:(NSStringEncoding)encoding
-{
+- (instancetype)initWithStringEncoding:(NSStringEncoding)encoding {
     self = [self init];
     if (!self) {
         return self;
@@ -55,20 +50,17 @@ static NSString * QCloudCreateMultipartFormBoundary() {
     return self;
 }
 
-- (BOOL) hasData
-{
-    return _bodyParts.count?YES:NO;
+- (BOOL)hasData {
+    return _bodyParts.count ? YES : NO;
 }
 
-- (void) setStringEncoding:(NSStringEncoding)stringEncoding
-{
+- (void)setStringEncoding:(NSStringEncoding)stringEncoding {
     _stringEncoding = stringEncoding;
-    for (QCloudHTTPBodyPart* p  in _bodyParts) {
+    for (QCloudHTTPBodyPart *p in _bodyParts) {
         p.stringEncoding = stringEncoding;
     }
 }
-- (void) appendBodyPart:(QCloudHTTPBodyPart*)bodyPart
-{
+- (void)appendBodyPart:(QCloudHTTPBodyPart *)bodyPart {
     NSParameterAssert(bodyPart);
     bodyPart.stringEncoding = self.stringEncoding;
     bodyPart.boundary = self.boundary;
@@ -78,8 +70,7 @@ static NSString * QCloudCreateMultipartFormBoundary() {
     [_bodyParts addObject:bodyPart];
 }
 
-- (void) insertBodyPart:(QCloudHTTPBodyPart *)bodyPart
-{
+- (void)insertBodyPart:(QCloudHTTPBodyPart *)bodyPart {
     NSParameterAssert(bodyPart);
     bodyPart.stringEncoding = self.stringEncoding;
     bodyPart.boundary = self.boundary;
@@ -87,8 +78,6 @@ static NSString * QCloudCreateMultipartFormBoundary() {
         return;
     }
     [_bodyParts insertObject:bodyPart atIndex:0];
-    
-    
 }
 - (void)setInitialAndFinalBoundaries {
     if ([_bodyParts count] > 0) {
@@ -96,12 +85,11 @@ static NSString * QCloudCreateMultipartFormBoundary() {
             bodyPart.hasInitialBoundary = NO;
             bodyPart.hasFinalBoundary = NO;
         }
-        
+
         [[_bodyParts firstObject] setHasInitialBoundary:YES];
         [[_bodyParts lastObject] setHasFinalBoundary:YES];
     }
 }
-
 
 - (BOOL)isEmpty {
     return [_bodyParts count] == 0;
@@ -109,20 +97,17 @@ static NSString * QCloudCreateMultipartFormBoundary() {
 
 #pragma mark - NSInputStream
 
-- (NSInteger)read:(uint8_t *)buffer
-        maxLength:(NSUInteger)length
-{
+- (NSInteger)read:(uint8_t *)buffer maxLength:(NSUInteger)length {
     if ([self streamStatus] == NSStreamStatusClosed) {
         return 0;
     }
-    
+
     NSInteger totalNumberOfBytesRead = 0;
-    
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wgnu"
     while ((NSUInteger)totalNumberOfBytesRead < length) {
-        if (!_currentHTTPBodyPart || ![_currentHTTPBodyPart hasBytesAvailable])
-        {
+        if (!_currentHTTPBodyPart || ![_currentHTTPBodyPart hasBytesAvailable]) {
             if (!(_currentHTTPBodyPart = [_partEnumerator nextObject])) {
                 break;
             }
@@ -138,13 +123,11 @@ static NSString * QCloudCreateMultipartFormBoundary() {
         }
     }
 #pragma clang diagnostic pop
-    
+
     return totalNumberOfBytesRead;
 }
 
-- (BOOL)getBuffer:(__unused uint8_t **)buffer
-           length:(__unused NSUInteger *)len
-{
+- (BOOL)getBuffer:(__unused uint8_t **)buffer length:(__unused NSUInteger *)len {
     return NO;
 }
 
@@ -158,9 +141,9 @@ static NSString * QCloudCreateMultipartFormBoundary() {
     if (self.streamStatus == NSStreamStatusOpen) {
         return;
     }
-    
+
     self.streamStatus = NSStreamStatusOpen;
-    
+
     [self setInitialAndFinalBoundaries];
     _partEnumerator = [_bodyParts objectEnumerator];
 }
@@ -173,19 +156,15 @@ static NSString * QCloudCreateMultipartFormBoundary() {
     return nil;
 }
 
-- (BOOL)setProperty:(__unused id)property
-             forKey:(__unused NSString *)key
-{
+- (BOOL)setProperty:(__unused id)property forKey:(__unused NSString *)key {
     return NO;
 }
 
-- (void)scheduleInRunLoop:(__unused NSRunLoop *)aRunLoop
-                  forMode:(__unused NSString *)mode
-{}
+- (void)scheduleInRunLoop:(__unused NSRunLoop *)aRunLoop forMode:(__unused NSString *)mode {
+}
 
-- (void)removeFromRunLoop:(__unused NSRunLoop *)aRunLoop
-                  forMode:(__unused NSString *)mode
-{}
+- (void)removeFromRunLoop:(__unused NSRunLoop *)aRunLoop forMode:(__unused NSString *)mode {
+}
 
 - (unsigned long long)contentLength {
     unsigned long long length = 0;
@@ -197,13 +176,11 @@ static NSString * QCloudCreateMultipartFormBoundary() {
 
 #pragma mark - Undocumented CFReadStream Bridged Methods
 
-- (void)_scheduleInCFRunLoop:(__unused CFRunLoopRef)aRunLoop
-                     forMode:(__unused CFStringRef)aMode
-{}
+- (void)_scheduleInCFRunLoop:(__unused CFRunLoopRef)aRunLoop forMode:(__unused CFStringRef)aMode {
+}
 
-- (void)_unscheduleFromCFRunLoop:(__unused CFRunLoopRef)aRunLoop
-                         forMode:(__unused CFStringRef)aMode
-{}
+- (void)_unscheduleFromCFRunLoop:(__unused CFRunLoopRef)aRunLoop forMode:(__unused CFStringRef)aMode {
+}
 
 - (BOOL)_setCFClientFlags:(__unused CFOptionFlags)inFlags
                  callback:(__unused CFReadStreamClientCallBack)inCallback
@@ -211,14 +188,12 @@ static NSString * QCloudCreateMultipartFormBoundary() {
     return NO;
 }
 
-
 #ifdef DEBUG
 
-- (NSString*) description
-{
-    NSMutableString* str = [NSMutableString new];
-    for (QCloudHTTPBodyPart* part in _bodyParts) {
-        [str appendFormat:@"%@\n",part];
+- (NSString *)description {
+    NSMutableString *str = [NSMutableString new];
+    for (QCloudHTTPBodyPart *part in _bodyParts) {
+        [str appendFormat:@"%@\n", part];
     }
     return str;
 }

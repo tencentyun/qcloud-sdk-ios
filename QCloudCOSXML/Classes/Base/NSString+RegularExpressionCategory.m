@@ -8,8 +8,8 @@
 #import "NSString+RegularExpressionCategory.h"
 
 @implementation NSString (RegularExpressionCategory)
-- (BOOL) matchesRegularExpression:(NSString *)regularExpression {
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@",regularExpression];
+- (BOOL)matchesRegularExpression:(NSString *)regularExpression {
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regularExpression];
     return [predicate evaluateWithObject:self];
 }
 @end

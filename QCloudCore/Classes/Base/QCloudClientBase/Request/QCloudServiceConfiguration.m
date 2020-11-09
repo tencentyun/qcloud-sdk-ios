@@ -15,10 +15,9 @@
 static NSString *const QCloudServiceConfigurationUnknown = @"Unknown";
 
 @implementation QCloudServiceConfiguration
-- (NSString*) userAgent
-{
-    NSString*(^UserAgent)(NSString* productKey) = ^(NSString* productKey) {
-        return [NSString stringWithFormat:@"%@-%@", productKey,self.productVersion];
+- (NSString *)userAgent {
+    NSString * (^UserAgent)(NSString *productKey) = ^(NSString *productKey) {
+        return [NSString stringWithFormat:@"%@-%@", productKey, self.productVersion];
     };
     if (self.userAgentProductKey.length && self.productVersion.length) {
         return UserAgent(self.userAgentProductKey);
@@ -27,10 +26,8 @@ static NSString *const QCloudServiceConfigurationUnknown = @"Unknown";
     }
 }
 
-
-- (instancetype) copyWithZone:(NSZone *)zone
-{
-    QCloudServiceConfiguration* config = [[QCloudServiceConfiguration  allocWithZone:zone] init];
+- (instancetype)copyWithZone:(NSZone *)zone {
+    QCloudServiceConfiguration *config = [[QCloudServiceConfiguration allocWithZone:zone] init];
     config.signatureProvider = self.signatureProvider;
     config.appID = self.appID;
     config.userAgentProductKey = self.userAgentProductKey;

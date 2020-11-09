@@ -10,22 +10,19 @@
 #import "QCloudNetEnv.h"
 #import "QCloudLogger.h"
 #import "NSError+QCloudNetworking.h"
-@interface QCloudHTTPRetryHanlder()
+@interface QCloudHTTPRetryHanlder ()
 @end
 
-@implementation QCloudHTTPRetryHanlder
-{
+@implementation QCloudHTTPRetryHanlder {
     int _currentTryCount;
-//    NSSet* _errorRetryCode;
+    //    NSSet* _errorRetryCode;
     QCloudHTTPRetryFunction _retryFunction;
 }
 
-+ (QCloudHTTPRetryHanlder*) defaultRetryHandler
-{
++ (QCloudHTTPRetryHanlder *)defaultRetryHandler {
     return [[QCloudHTTPRetryHanlder alloc] initWithMaxCount:3 sleepTime:1];
 }
-- (instancetype) initWithMaxCount:(NSInteger)maxCount sleepTime:(NSTimeInterval)sleepStep
-{
+- (instancetype)initWithMaxCount:(NSInteger)maxCount sleepTime:(NSTimeInterval)sleepStep {
     self = [super init];
     if (!self) {
         return self;
@@ -36,12 +33,11 @@
     return self;
 }
 
-- (void) reset
-{
+- (void)reset {
     _currentTryCount = 0;
 }
 
-- (BOOL) retryFunction:(QCloudHTTPRetryFunction)function whenError:(NSError*)error;
+- (BOOL)retryFunction:(QCloudHTTPRetryFunction)function whenError:(NSError *)error;
 {
     QCloudLogTrance();
     if (!function) {
@@ -57,19 +53,18 @@
     return YES;
 }
 
-- (BOOL) canRetryWhenError:(NSError*)error
-{
+- (BOOL)canRetryWhenError:(NSError *)error {
     if ([error.domain isEqualToString:NSURLErrorDomain]) {
         if (error.code == NSURLErrorTimedOut) {
             [[NSNotificationCenter defaultCenter] postNotificationName:kNetworkSituationChangeKey object:@(QCloudNetworkSituationWeakNetwork)];
         }
     }
-    
+
     if (_currentTryCount >= _maxCount) {
         QCloudLogDebug(@"超过了最大重试次数，不再重试");
         return NO;
     }
-    
+
     return [NSError isNetworkErrorAndRecoverable:error] || ([error.domain isEqualToString:kQCloudNetworkDomain] && error.code >= 500);
 }
 

@@ -8,14 +8,15 @@
 #import "QCloudUniversalPath.h"
 #import <QCloudCore/QCloudCore.h>
 
-
 @implementation QCloudUniversalPath
 - (instancetype)initWithStrippedURL:(NSString *)strippedURL {
     self = [super init];
     _originURL = strippedURL;
     return self;
 }
--(NSURL *)fileURL{
-    @throw [NSException exceptionWithName:QCloudErrorDomain reason:[NSString stringWithFormat:@"不支持该路径下的文件续传:%@",_originURL] userInfo:nil];
+- (NSURL *)fileURL {
+    @throw [NSException exceptionWithName:QCloudErrorDomain
+                                   reason:[NSString stringWithFormat:@"不支持该路径下的文件续传:%@", _originURL]
+                                 userInfo:nil];
 }
 @end

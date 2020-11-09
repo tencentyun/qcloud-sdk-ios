@@ -10,11 +10,11 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface NSDate (QCLOUD)
-+(NSDate *)qcloud_calibrateTime;
-+(void)qcloud_setTimeDeviation:(NSTimeInterval)timeDeviation;
-+(NSTimeInterval)qcloud_getTimeDeviation;
-+(NSString *)qcloud_stringFromDate:(NSDate *)date;
-+(NSDate *)localDate;
++ (NSDate *)qcloud_calibrateTime;
++ (void)qcloud_setTimeDeviation:(NSTimeInterval)timeDeviation;
++ (NSTimeInterval)qcloud_getTimeDeviation;
++ (NSString *)qcloud_stringFromDate:(NSDate *)date;
++ (NSDate *)localDate;
 @end
 
 NS_ASSUME_NONNULL_END

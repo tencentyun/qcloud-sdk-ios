@@ -17,7 +17,7 @@
  *
  *  @return BOOL representing comparison result
  */
--(BOOL) qcloud_isEarlierThan:(NSDate *)date{
+- (BOOL)qcloud_isEarlierThan:(NSDate *)date {
     if (self.timeIntervalSince1970 < date.timeIntervalSince1970) {
         return YES;
     }
@@ -31,7 +31,7 @@
  *
  *  @return BOOL representing comparison result
  */
--(BOOL)qcloud_isLaterThan:(NSDate *)date{
+- (BOOL)qcloud_isLaterThan:(NSDate *)date {
     if (self.timeIntervalSince1970 > date.timeIntervalSince1970) {
         return YES;
     }
@@ -45,7 +45,7 @@
  *
  *  @return BOOL representing comparison result
  */
--(BOOL)qcloud_isEarlierThanOrEqualTo:(NSDate *)date{
+- (BOOL)qcloud_isEarlierThanOrEqualTo:(NSDate *)date {
     if (self.timeIntervalSince1970 <= date.timeIntervalSince1970) {
         return YES;
     }

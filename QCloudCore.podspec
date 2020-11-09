@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
   s.name             = "QCloudCore"
 
-s.version              = "5.7.8"
+s.version              = "5.7.9"
 
   s.summary          = "QCloudCore--腾讯云iOS-SDK Foundation"
 

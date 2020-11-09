@@ -9,11 +9,8 @@
 #import "QCloudPutObjectRequest+CustomBuild.h"
 
 @implementation QCloudPutObjectRequest (CustomBuild)
-- (void) onSuccess:(NSDictionary*)object
-{
+- (void)onSuccess:(NSDictionary *)object {
     [super onSuccess:object];
 }
-
-
 
 @end

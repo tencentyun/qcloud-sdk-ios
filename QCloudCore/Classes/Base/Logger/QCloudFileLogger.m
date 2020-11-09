@@ -17,31 +17,27 @@
 
 #import "QCloudSDKModuleManager.h"
 #import "NSObject+QCloudModel.h"
-@interface QCloudFileLogger ()
-{
+@interface QCloudFileLogger () {
 }
 @property (nonatomic, strong) dispatch_queue_t buildQueue;
-@property (nonatomic, strong) NSFileHandle* fileHandler;
-@property (nonatomic, strong) NSMutableData* sliceData;
+@property (nonatomic, strong) NSFileHandle *fileHandler;
+@property (nonatomic, strong) NSMutableData *sliceData;
 @property (nonatomic, assign) uint64_t sliceSize;
 @end
 
 @implementation QCloudFileLogger
 @synthesize currentSize = _currentSize;
-- (void) commonInit
-{
+- (void)commonInit {
     _buildQueue = dispatch_queue_create("com.tencent.qcloud.logger.build", DISPATCH_QUEUE_SERIAL);
     //
-    _sliceSize = 200*1024;
+    _sliceSize = 200 * 1024;
     _sliceData = [NSMutableData dataWithCapacity:(NSUInteger)_sliceSize];
 }
-- (void) dealloc
-{
+- (void)dealloc {
     [self writeCliceDataToFile];
     [_fileHandler closeFile];
 }
-- (instancetype) initWithPath:(NSString *)path maxSize:(uint64_t)maxSize
-{
+- (instancetype)initWithPath:(NSString *)path maxSize:(uint64_t)maxSize {
     self = [super init];
     if (!self) {
         return self;
@@ -52,47 +48,56 @@
     _currentSize = QCloudFileSize(path);
     if (!QCloudFileExist(path)) {
         [[NSFileManager defaultManager] createFileAtPath:path contents:[NSData data] attributes:nil];
-        NSArray* allModules = [[QCloudSDKModuleManager shareInstance] allModules];
-        NSData* modulestring = [allModules qcloud_modelToJSONData];
+        NSArray *allModules = [[QCloudSDKModuleManager shareInstance] allModules];
+        NSData *modulestring = [allModules qcloud_modelToJSONData];
         [_sliceData appendData:modulestring];
     }
     _fileHandler = [NSFileHandle fileHandleForWritingAtPath:path];
     [_fileHandler seekToEndOfFile];
 #if TARGET_OS_IOS
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(flushAllFiles) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(flushAllFiles) name:UIApplicationWillResignActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(flushAllFiles)
+                                                 name:UIApplicationDidReceiveMemoryWarningNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(flushAllFiles)
+                                                 name:UIApplicationWillResignActiveNotification
+                                               object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(flushAllFiles) name:UIApplicationWillTerminateNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(flushAllFiles) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(flushAllFiles)
+                                                 name:UIApplicationDidEnterBackgroundNotification
+                                               object:nil];
     //
 #elif TARGET_OS_MAC
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(flushAllFiles) name:NSApplicationWillResignActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(flushAllFiles)
+                                                 name:NSApplicationWillResignActiveNotification
+                                               object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(flushAllFiles) name:NSApplicationWillTerminateNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(flushAllFiles) name:NSApplicationWillHideNotification object:nil];
 #endif
     return self;
 }
 
-
-- (void) flushAllFiles
-{
+- (void)flushAllFiles {
     dispatch_async(_buildQueue, ^{
         [self writeCliceDataToFile];
     });
 }
 
-- (void) writeCliceDataToFile
-{
+- (void)writeCliceDataToFile {
     NSError *error = nil;
     NSString *path = QCloudApplicationDirectory();
-    NSDictionary *dic = [[NSFileManager defaultManager]attributesOfFileSystemForPath:path error:&error];
+    NSDictionary *dic = [[NSFileManager defaultManager] attributesOfFileSystemForPath:path error:&error];
     if (error) {
-        QCloudLogError(@"write log error :%@",error);
+        QCloudLogError(@"write log error :%@", error);
         return;
     }
     if (dic) {
         NSNumber *free = [dic objectForKey:NSFileSystemFreeSize];
-        if ([free unsignedLongValue] < 1024*1024) {
-            QCloudLogError(@"磁盘空间不可用：剩余空间 = %d",[free unsignedLongValue]);
+        if ([free unsignedLongValue] < 1024 * 1024) {
+            QCloudLogError(@"磁盘空间不可用：剩余空间 = %d", [free unsignedLongValue]);
             return;
         }
     }
@@ -102,12 +107,11 @@
     }
 }
 
-- (void) appendLog:(QCloudLogModel *(^)(void))logCreate
-{
+- (void)appendLog:(QCloudLogModel * (^)(void))logCreate {
     dispatch_async(_buildQueue, ^{
-        QCloudLogModel* log = logCreate();
-        NSString* message = [NSString stringWithFormat:@"%@\n",[log fileDescription]];
-        NSData* data = [message dataUsingEncoding:NSUTF8StringEncoding];
+        QCloudLogModel *log = logCreate();
+        NSString *message = [NSString stringWithFormat:@"%@\n", [log fileDescription]];
+        NSData *data = [message dataUsingEncoding:NSUTF8StringEncoding];
         self->_currentSize += data.length;
         [self->_sliceData appendData:data];
         //
@@ -124,8 +128,7 @@
     });
 }
 
-- (BOOL) isFull
-{
+- (BOOL)isFull {
     return self.currentSize >= self.maxSize;
 }
 

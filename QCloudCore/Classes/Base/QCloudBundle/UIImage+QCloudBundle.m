@@ -11,11 +11,10 @@
 #import "QCloudMainBundle.h"
 @implementation UIImage (QCloudBunle)
 
-+ (UIImage*) qcloudImageNamed:(NSString *)name class:(Class)cla
-{
-    NSBundle* bundle = QCloudMainBundle();
++ (UIImage *)qcloudImageNamed:(NSString *)name class:(Class)cla {
+    NSBundle *bundle = QCloudMainBundle();
     if (!bundle) {
-        NSString* path = [[NSBundle bundleForClass:cla] pathForResource:@"QCloudBundle" ofType:@"bundle"];
+        NSString *path = [[NSBundle bundleForClass:cla] pathForResource:@"QCloudBundle" ofType:@"bundle"];
         bundle = [NSBundle bundleWithPath:path];
     }
     return [UIImage imageNamed:name inBundle:bundle compatibleWithTraitCollection:nil];
@@ -23,4 +22,3 @@
 
 @end
 #endif
-

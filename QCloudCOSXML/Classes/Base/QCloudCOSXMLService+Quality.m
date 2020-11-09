@@ -9,19 +9,15 @@
 #import "QCloudCOSXMLService+Quality.h"
 #import <objc/runtime.h>
 
-    
 #import <QCloudCore/QCloudCore.h>
 #import <QCloudCore/QCloudLogger.h>
 #import "QCloudCOSXMLVersion.h"
 
-
-#define SuppressPerformSelectorLeakWarning(Stuff) \
-do { \
-_Pragma("clang diagnostic push") \
-_Pragma("clang diagnostic ignored \"-Warc-performSelector-leaks\"") \
-Stuff; \
-_Pragma("clang diagnostic pop") \
-} while (0)
+#define SuppressPerformSelectorLeakWarning(Stuff)                                                                   \
+    do {                                                                                                            \
+        _Pragma("clang diagnostic push") _Pragma("clang diagnostic ignored \"-Warc-performSelector-leaks\"") Stuff; \
+        _Pragma("clang diagnostic pop")                                                                             \
+    } while (0)
 
 @implementation QCloudCOSXMLService (Quality)
 
@@ -30,27 +26,23 @@ _Pragma("clang diagnostic pop") \
     dispatch_once(&onceToken, ^{
         [self changeImplementation];
     });
-    
 }
 
-+ (void) changeImplementation {
++ (void)changeImplementation {
     Class class = object_getClass((id)self);
     Method originMethod = class_getClassMethod(class, @selector(registerDefaultCOSXMLWithConfiguration:));
-    Method replacedMethod = class_getClassMethod(class,  @selector(Quality_registerDefaultCOSXMLWithConfiguration:));
+    Method replacedMethod = class_getClassMethod(class, @selector(Quality_registerDefaultCOSXMLWithConfiguration:));
     method_exchangeImplementations(originMethod, replacedMethod);
-    
 }
 
-+ (QCloudCOSXMLService*) Quality_registerDefaultCOSXMLWithConfiguration:(QCloudServiceConfiguration*)configuration {
++ (QCloudCOSXMLService *)Quality_registerDefaultCOSXMLWithConfiguration:(QCloudServiceConfiguration *)configuration {
     id result = [self Quality_registerDefaultCOSXMLWithConfiguration:configuration];
-    
+
     [self initMTA];
     return result;
 }
 
-
-+ (void) initMTA {
-  
++ (void)initMTA {
     Class cls = NSClassFromString(@"TACMTAConfig");
     if (cls) {
         QCloudLogDebug(@"Quality assurence service start");
@@ -59,14 +51,11 @@ _Pragma("clang diagnostic pop") \
             [config performSelector:NSSelectorFromString(@"setReportStrategy:") withObject:kQAUploadStrategy];
             [config performSelector:NSSelectorFromString(@"setCustomerAppVersion:") withObject:QCloudCOSXMLModuleVersion];
             Class tacCls = NSClassFromString(@"TACMTA");
-            if (tacCls) {
-                [tacCls performSelector:NSSelectorFromString(@"startWithAppkey:") withObject:kQAccount];
-            }
-                                           
-                                           
+            if (tacCls) { [tacCls performSelector:NSSelectorFromString(@"startWithAppkey:") withObject:kQAccount]; }
+
         );
-        
-    }else{
+
+    } else {
         QCloudLogDebug(@"please pod MTA");
     }
 }

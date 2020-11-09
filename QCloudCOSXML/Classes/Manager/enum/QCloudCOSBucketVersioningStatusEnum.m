@@ -6,27 +6,23 @@
 //  Copyright (c) 2015年 tencent. All rights reserved.
 //
 
-
 #import "QCloudCOSBucketVersioningStatusEnum.h"
 
-QCloudCOSBucketVersioningStatus QCloudCOSBucketVersioningStatusDumpFromString(NSString* key) {
-      if (NO) {}
-      else if ([key isEqualToString:@"Enabled"]) {
-          return QCloudCOSBucketVersioningStatusEnabled;
-      }
-      else if ([key isEqualToString:@"Suspended"]) {
-          return QCloudCOSBucketVersioningStatusSuspended;
-      }
-      return 0;
+QCloudCOSBucketVersioningStatus QCloudCOSBucketVersioningStatusDumpFromString(NSString *key) {
+    if (NO) {
+    } else if ([key isEqualToString:@"Enabled"]) {
+        return QCloudCOSBucketVersioningStatusEnabled;
+    } else if ([key isEqualToString:@"Suspended"]) {
+        return QCloudCOSBucketVersioningStatusSuspended;
+    }
+    return 0;
 }
-NSString* QCloudCOSBucketVersioningStatusTransferToString(QCloudCOSBucketVersioningStatus type) {
-    switch(type) {
-        case QCloudCOSBucketVersioningStatusEnabled:
-        {
+NSString *QCloudCOSBucketVersioningStatusTransferToString(QCloudCOSBucketVersioningStatus type) {
+    switch (type) {
+        case QCloudCOSBucketVersioningStatusEnabled: {
             return @"Enabled";
         }
-        case QCloudCOSBucketVersioningStatusSuspended:
-        {
+        case QCloudCOSBucketVersioningStatusSuspended: {
             return @"Suspended";
         }
         default:

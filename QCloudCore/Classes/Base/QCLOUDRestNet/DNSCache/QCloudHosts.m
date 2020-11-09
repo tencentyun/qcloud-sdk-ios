@@ -8,14 +8,12 @@
 
 #import "QCloudHosts.h"
 #import "QCloudDomain.h"
-@implementation QCloudHosts
-{
-    NSMutableDictionary* _cache;
+@implementation QCloudHosts {
+    NSMutableDictionary *_cache;
     dispatch_queue_t _hostChangeQueue;
 }
 
-- (instancetype) init
-{
+- (instancetype)init {
     self = [super init];
     if (!self) {
         return self;
@@ -25,8 +23,7 @@
     return self;
 }
 
-- (void) putDomain:(NSString*)domain ip:(NSString*)ip
-{
+- (void)putDomain:(NSString *)domain ip:(NSString *)ip {
 #ifdef DEBUG
     NSParameterAssert(domain);
     NSParameterAssert(ip);
@@ -39,7 +36,7 @@
     }
 #endif
     dispatch_barrier_async(_hostChangeQueue, ^{
-        NSMutableArray* array = [self->_cache objectForKey:domain];
+        NSMutableArray *array = [self->_cache objectForKey:domain];
         if (!array) {
             array = [NSMutableArray new];
         }
@@ -50,24 +47,22 @@
     });
 }
 
-- (NSArray*) queryIPForDomain:(NSString*)domain
-{
-    __block NSArray* array = nil;
+- (NSArray *)queryIPForDomain:(NSString *)domain {
+    __block NSArray *array = nil;
     dispatch_sync(_hostChangeQueue, ^(void) {
         array = [[self->_cache objectForKey:domain] copy];
     });
     return array;
 }
 
-- (BOOL) checkContainsIP:(NSString*)ip
-{
+- (BOOL)checkContainsIP:(NSString *)ip {
     if (!ip) {
         return NO;
     }
     __block BOOL contained = NO;
     dispatch_sync(_hostChangeQueue, ^{
-        for (NSArray* array in self->_cache.allValues) {
-            for (NSString* cachedIP in array) {
+        for (NSArray *array in self->_cache.allValues) {
+            for (NSString *cachedIP in array) {
                 if ([cachedIP isEqualToString:ip]) {
                     contained = YES;
                     break;
@@ -81,8 +76,7 @@
     return contained;
 }
 
-- (void) clean
-{
+- (void)clean {
     dispatch_barrier_async(_hostChangeQueue, ^{
         [self->_cache removeAllObjects];
     });

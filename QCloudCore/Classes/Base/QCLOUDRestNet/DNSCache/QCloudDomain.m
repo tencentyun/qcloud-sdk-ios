@@ -9,8 +9,7 @@
 #import "QCloudDomain.h"
 
 @implementation QCloudDomain
-- (instancetype) initWithDomain:(NSString *)domain
-{
+- (instancetype)initWithDomain:(NSString *)domain {
     self = [super init];
     if (!self) {
         return self;

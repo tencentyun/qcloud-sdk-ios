@@ -9,16 +9,15 @@
 
 @implementation QCloudListAllMyBucketsResult (CustomModelTransfer)
 - (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dic {
-    
     if (!dic) {
         return dic;
     }
-    NSMutableDictionary* transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
-    NSArray* transformArrayKeypaths = @[
-                                        @"Buckets",
-                                        ];
-    
-    for (NSString* keyPath in transformArrayKeypaths) {
+    NSMutableDictionary *transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
+    NSArray *transformArrayKeypaths = @[
+        @"Buckets",
+    ];
+
+    for (NSString *keyPath in transformArrayKeypaths) {
         id object = [dic valueForKeyPath:keyPath];
         if (!object) {
             continue;
@@ -32,15 +31,14 @@
                 if ([value isKindOfClass:[NSArray class]]) {
                     [transfromDic setValue:value forKey:keyPath];
                 } else {
-                [transfromDic setValue:@[value] forKey:keyPath];
+                    [transfromDic setValue:@[ value ] forKey:keyPath];
                 }
             }
-//            [transfromDic setValue:@[object] forKeyPath:keyPath];
+            //            [transfromDic setValue:@[object] forKeyPath:keyPath];
         }
     }
-    
+
     return transfromDic;
-    
 }
 
 @end

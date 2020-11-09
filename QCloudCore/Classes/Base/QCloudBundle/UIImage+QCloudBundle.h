@@ -8,11 +8,10 @@
 #if TARGET_OS_IOS
 #import <UIKit/UIKit.h>
 
-
-#define QCloudImageNamed(name, cla)    [UIImage qcloudImageNamed:@""#name class:cla]
-#define QCloudImageNamedInSelfBundle(name)    [UIImage qcloudImageNamed:@""#name class:self.class]
+#define QCloudImageNamed(name, cla) [UIImage qcloudImageNamed:@"" #name class:cla]
+#define QCloudImageNamedInSelfBundle(name) [UIImage qcloudImageNamed:@"" #name class:self.class]
 
 @interface UIImage (QCloudBunle)
-+ (UIImage*) qcloudImageNamed:(NSString *)name class:(Class)cla;
++ (UIImage *)qcloudImageNamed:(NSString *)name class:(Class)cla;
 @end
 #endif

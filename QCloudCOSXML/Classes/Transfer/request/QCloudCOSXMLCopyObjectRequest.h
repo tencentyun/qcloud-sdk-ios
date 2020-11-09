@@ -10,22 +10,22 @@
 #import "QCloudCopyObjectResult.h"
 #import "QCloudCOSTransferMangerService.h"
 NS_ASSUME_NONNULL_BEGIN
-typedef void(^CopyProgressBlock)(int64_t partsSent, int64_t totalPartsExpectedToSent) ;
-typedef void(^RequestsMetricArrayBlock)(NSMutableArray * _Nullable requstMetricArray);
+typedef void (^CopyProgressBlock)(int64_t partsSent, int64_t totalPartsExpectedToSent);
+typedef void (^RequestsMetricArrayBlock)(NSMutableArray *_Nullable requstMetricArray);
 
 /**
  复制对象
- 
+
  1：先初始化一个 QCloudCOSXMLCopyObjectRequest 对象
- 
+
  2：然后调用 QCloudCOSTransferMangerService 的 CopyObject 方法即可。
- 
+
  注意对于比较大的文件，将会使用分块复制的方式进行复制。这个过程对于用户是没有感知的。
- 
+
  ### 示例
-   
+
   @code
- 
+
     QCloudCOSXMLCopyObjectRequest* request = [[QCloudCOSXMLCopyObjectRequest alloc] init];
     request.bucket = @"examplebucket-1250000000";//目的 \<BucketName-APPID>，需要是公有读或者在当前账号有权限
     request.object = @"exampleobject";//目的文件名称
@@ -41,7 +41,7 @@ typedef void(^RequestsMetricArrayBlock)(NSMutableArray * _Nullable requstMetricA
 
     //注意如果是跨地域复制，这里使用的 transferManager 所在的 region 必须为目标桶所在的 region
     [[QCloudCOSTransferMangerService defaultCOSTransferManager] CopyObject:request];
- 
+
  */
 
 @interface QCloudCOSXMLCopyObjectRequest : QCloudAbstractRequest
@@ -57,26 +57,26 @@ typedef void(^RequestsMetricArrayBlock)(NSMutableArray * _Nullable requstMetricA
 /**
  复制的源文件所在Bucket
  */
-@property (nonatomic, copy) NSString* sourceBucket;
+@property (nonatomic, copy) NSString *sourceBucket;
 
 /**
  复制的源文件的对象名，key
  */
-@property (nonatomic, copy) NSString* sourceObject;
+@property (nonatomic, copy) NSString *sourceObject;
 
 /**
  复制的源文件的appID
  */
-@property (nonatomic, copy) NSString* sourceAPPID;
+@property (nonatomic, copy) NSString *sourceAPPID;
 
 /**
  复制的源文件所在的区域。
  */
-@property (nonatomic, copy) NSString* sourceRegion;
+@property (nonatomic, copy) NSString *sourceRegion;
 /**
  源文件的版本ID
  */
-@property (nonatomic, copy) NSString* sourceObjectVersionID;
+@property (nonatomic, copy) NSString *sourceObjectVersionID;
 /**
  是否拷贝元数据，枚举值：Copy, Replaced，默认值 Copy。假如标记为 Copy，忽略 Header
  中的用户元数据信息直接复制；假如标记为 Replaced，按 Header 信息修改元数据。当目标路径和原路径一致
@@ -130,30 +130,27 @@ typedef void(^RequestsMetricArrayBlock)(NSMutableArray * _Nullable requstMetricA
  */
 @property (strong, nonatomic) NSString *grantFullControl;
 
-
-
-@property (nonatomic, weak) QCloudCOSTransferMangerService* transferManager;
+@property (nonatomic, weak) QCloudCOSTransferMangerService *transferManager;
 /*
  在进行HTTP请求的时候，可以通过设置该参数来设置自定义的一些头部信息。
  通常情况下，携带特定的额外HTTP头部可以使用某项功能，如果是这类需求，可以通过设置该属性来实现。
  */
-@property (strong, nonatomic) NSMutableDictionary* customHeaders;
-@property (strong,nonatomic) NSString *regionName;
+@property (strong, nonatomic) NSMutableDictionary *customHeaders;
+@property (strong, nonatomic) NSString *regionName;
 /**
  在对大文件进行复制的过程中，会通过分片的方式进行复制。从该进度回调里可以获取当前已经复制了多少分片。
 
  @param copyProgressBlock 进度回调block
  */
-- (void)setCopyProgressBlock:(void(^)(int64_t partsSent, int64_t totalPartsExpectedToSent))copyProgressBlock;
-@property (nonatomic,copy) RequestsMetricArrayBlock requstsMetricArrayBlock;
-
+- (void)setCopyProgressBlock:(void (^)(int64_t partsSent, int64_t totalPartsExpectedToSent))copyProgressBlock;
+@property (nonatomic, copy) RequestsMetricArrayBlock requstsMetricArrayBlock;
 
 /**
  Copy操作完成后的回调
 
  @param QCloudRequestFinishBlock 完成回调
  */
-- (void) setFinishBlock:(void (^ _Nullable )(QCloudCopyObjectResult* _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock;
--(void)setCOSServerSideEncyptionWithCustomerKey:(NSString *)customerKey;
+- (void)setFinishBlock:(void (^_Nullable)(QCloudCopyObjectResult *_Nullable result, NSError *_Nullable error))QCloudRequestFinishBlock;
+- (void)setCOSServerSideEncyptionWithCustomerKey:(NSString *)customerKey;
 @end
 NS_ASSUME_NONNULL_END

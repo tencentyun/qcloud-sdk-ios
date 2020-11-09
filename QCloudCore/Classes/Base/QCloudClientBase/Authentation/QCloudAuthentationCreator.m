@@ -9,8 +9,7 @@
 #import "QCloudAuthentationCreator.h"
 #import "QCloudError.h"
 @implementation QCloudAuthentationCreator
-- (instancetype) initWithCredential:(QCloudCredential *)credential
-{
+- (instancetype)initWithCredential:(QCloudCredential *)credential {
     self = [super init];
     if (!self) {
         return self;
@@ -18,8 +17,7 @@
     _credential = credential;
     return self;
 }
-- (QCloudSignature*) signatureForData:(id)signData
-{
+- (QCloudSignature *)signatureForData:(id)signData {
     @throw [NSException exceptionWithName:QCloudErrorDomain reason:@"请在子类中实现该函数" userInfo:nil];
 }
 @end

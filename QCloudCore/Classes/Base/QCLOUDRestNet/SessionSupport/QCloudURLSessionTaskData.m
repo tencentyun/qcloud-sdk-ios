@@ -11,19 +11,16 @@
 #import <objc/runtime.h>
 #import "QCloudFileUtils.h"
 
-@interface QCloudURLSessionTaskData ()
-{
-    NSMutableData* _cacheData;
-    NSFileHandle* _writeFileHandler;
+@interface QCloudURLSessionTaskData () {
+    NSMutableData *_cacheData;
+    NSFileHandle *_writeFileHandler;
     int64_t _initDataLength;
 }
 @end
 
-
 @implementation QCloudURLSessionTaskData
 @synthesize uploadTempFilePath = _uploadTempFilePath;
-- (void) dealloc
-{
+- (void)dealloc {
     if (self.uploadTempFilePath) {
         QCloudRemoveFileByPath(self.uploadTempFilePath);
     }
@@ -32,14 +29,12 @@
     }
 }
 
-- (void) closeWrite
-{
+- (void)closeWrite {
     if (_writeFileHandler) {
         [_writeFileHandler closeFile];
     }
 }
-- (instancetype) init
-{
+- (instancetype)init {
     self = [super init];
     if (!self) {
         return self;
@@ -48,8 +43,7 @@
     return self;
 }
 
-- (instancetype) initWithDowndingFileHandler:(NSFileHandle*)fileHandler
-{
+- (instancetype)initWithDowndingFileHandler:(NSFileHandle *)fileHandler {
     self = [self init];
     if (!self) {
         return self;
@@ -61,15 +55,13 @@
     return self;
 }
 
-- (NSString*) uploadTempFilePath
-{
+- (NSString *)uploadTempFilePath {
     if (!_uploadTempFilePath) {
         _uploadTempFilePath = QCloudTempFilePathWithExtension(@"uploadpart");
     }
     return _uploadTempFilePath;
 }
-- (NSUInteger) totalRecivedLength
-{
+- (NSUInteger)totalRecivedLength {
     if (_writeFileHandler) {
         return [_writeFileHandler offsetInFile] - _initDataLength;
     } else {
@@ -77,8 +69,7 @@
     }
 }
 
-- (void) restData
-{
+- (void)restData {
     if (_writeFileHandler) {
         [_writeFileHandler seekToFileOffset:0];
     } else {
@@ -86,22 +77,19 @@
     }
 }
 
-- (NSData*) data
-{
+- (NSData *)data {
     return [_cacheData copy];
 }
 
-- (void) appendData:(NSData*)data
-{
+- (void)appendData:(NSData *)data {
     if (_writeFileHandler && !_forbidenWirteToFile) {
-        @synchronized (_writeFileHandler) {
+        @synchronized(_writeFileHandler) {
             [_writeFileHandler writeData:data];
         }
     } else {
-        @synchronized (_cacheData) {
+        @synchronized(_cacheData) {
             [_cacheData appendData:data];
         }
     }
 }
 @end
-

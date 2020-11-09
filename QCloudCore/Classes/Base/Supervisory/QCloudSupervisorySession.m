@@ -9,9 +9,8 @@
 #import "QCloudSupervisorySession.h"
 #import "QCloudFCUUID.h"
 
-@interface QCloudSupervisorySession ()
-{
-    NSMutableArray* _recordArray;
+@interface QCloudSupervisorySession () {
+    NSMutableArray *_recordArray;
 }
 @end
 
@@ -19,8 +18,7 @@
 @synthesize traceIdentifier = _traceIdentifier;
 @synthesize beginDate = _beginDate;
 
-- (instancetype) init
-{
+- (instancetype)init {
     self = [super init];
     if (!self) {
         return self;
@@ -31,21 +29,18 @@
     return self;
 }
 
-- (void) markFinish
-{
+- (void)markFinish {
     _endDate = [NSDate date];
 }
 
-- (void) appendRecord:(QCloudSupervisoryRecord *)record
-{
+- (void)appendRecord:(QCloudSupervisoryRecord *)record {
     if (!record) {
         return;
     }
     [_recordArray addObject:record];
 }
 
-- (NSArray<QCloudSupervisoryRecord*>*) records
-{
+- (NSArray<QCloudSupervisoryRecord *> *)records {
     return [_recordArray copy];
 }
 

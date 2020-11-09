@@ -9,21 +9,18 @@
 #import "QCloudNetEnv.h"
 #import "QCloudReachability.h"
 
-NSString* const kQCloudNetEnvChangedNotification = @"kQCloudNetEnvChangedNotification";
+NSString *const kQCloudNetEnvChangedNotification = @"kQCloudNetEnvChangedNotification";
 
-@implementation QCloudNetEnv
-{
-    QCloudReachability* _reachAbility;
+@implementation QCloudNetEnv {
+    QCloudReachability *_reachAbility;
     BOOL _isInit;
 }
 @synthesize currentNetStatus = _currentNetStatus;
-- (void) dealloc
-{
+- (void)dealloc {
     [_reachAbility stopNotifier];
 }
-+ (instancetype) shareEnv
-{
-    static QCloudNetEnv* env = nil;
++ (instancetype)shareEnv {
+    static QCloudNetEnv *env = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         env = [QCloudNetEnv new];
@@ -31,21 +28,19 @@ NSString* const kQCloudNetEnvChangedNotification = @"kQCloudNetEnvChangedNotific
     return env;
 }
 
-- (instancetype) init
-{
+- (instancetype)init {
     self = [super init];
     if (!self) {
         return self;
     }
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networChanged:) name:kQCloudReachabilityChangedNotification object:nil];
-    _reachAbility  = [QCloudReachability reachabilityWithHostname:@"www.tencent.com"];
+    _reachAbility = [QCloudReachability reachabilityWithHostname:@"www.tencent.com"];
     [_reachAbility startNotifier];
     _isInit = NO;
     return self;
 }
 
-- (void) networChanged:(NSNotification*)nc
-{
+- (void)networChanged:(NSNotification *)nc {
     id object = nc.object;
     if (object != _reachAbility) {
         return;
@@ -70,13 +65,11 @@ NSString* const kQCloudNetEnvChangedNotification = @"kQCloudNetEnvChangedNotific
     [[NSNotificationCenter defaultCenter] postNotificationName:kQCloudNetEnvChangedNotification object:self];
 }
 
-- (QCloudNetworkStatus) currentNetStatus
-{
+- (QCloudNetworkStatus)currentNetStatus {
     if (!_isInit) {
         if ([self isReachableViaWifi]) {
             _currentNetStatus = QCloudReachableViaWiFi;
-        } else if ([self isReachableVia2g3g4g])
-        {
+        } else if ([self isReachableVia2g3g4g]) {
             _currentNetStatus = QCloudReachableViaWWAN;
         } else if (![_reachAbility isReachable]) {
             _currentNetStatus = QCloudNotReachable;
@@ -84,23 +77,19 @@ NSString* const kQCloudNetEnvChangedNotification = @"kQCloudNetEnvChangedNotific
             _currentNetStatus = QCloudReachableViaWiFi;
         }
         _isInit = YES;
-        
     }
     return _currentNetStatus;
 }
 
-- (BOOL) isReachableViaWifi
-{
+- (BOOL)isReachableViaWifi {
     return [_reachAbility isReachableViaWiFi];
 }
 
-- (BOOL) isReachableVia2g3g4g
-{
+- (BOOL)isReachableVia2g3g4g {
     return [_reachAbility isReachableViaWWAN];
 }
 
-- (BOOL) isReachable
-{
+- (BOOL)isReachable {
     return [_reachAbility isReachable];
 }
 

@@ -10,35 +10,27 @@
 
 static QCloudEnviroment QCloudGlobalEnviroment = QCloudNormalEnviroment;
 
-void QCloudChangeGlobalEnviroment(QCloudEnviroment env){
+void QCloudChangeGlobalEnviroment(QCloudEnviroment env) {
     QCloudGlobalEnviroment = env;
 }
 
-
-BOOL __IS_QCloud_NORMAL_ENV()
-{
+BOOL __IS_QCloud_NORMAL_ENV() {
     if (QCloudGlobalEnviroment == QCloudNormalEnviroment) {
         return YES;
     }
     return NO;
 }
 
-
-BOOL __IS_QCloud_TEST_ENV()
-{
+BOOL __IS_QCloud_TEST_ENV() {
     if (QCloudGlobalEnviroment == QCloudTestEnviroment) {
         return YES;
     }
     return NO;
 }
 
-
-BOOL __IS_QCloud_DEBUG_ENV()
-{
+BOOL __IS_QCloud_DEBUG_ENV() {
     if (QCloudGlobalEnviroment == QCloudDebugEnviroment) {
         return YES;
     }
     return NO;
 }
-
-

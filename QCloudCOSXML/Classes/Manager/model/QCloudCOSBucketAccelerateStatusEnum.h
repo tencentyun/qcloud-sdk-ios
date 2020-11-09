@@ -13,11 +13,10 @@ NS_ASSUME_NONNULL_BEGIN
 */
 typedef NS_ENUM(NSInteger, QCloudCOSBucketAccelerateStatus) {
 
-  QCloudCOSBucketAccelerateStatusEnabled = 1,
-  QCloudCOSBucketAccelerateStatusSuspended = 2,
+    QCloudCOSBucketAccelerateStatusEnabled = 1,
+    QCloudCOSBucketAccelerateStatusSuspended = 2,
 };
 
-FOUNDATION_EXTERN QCloudCOSBucketAccelerateStatus QCloudCOSBucketAccelerateStatusDumpFromString(NSString* key);
-FOUNDATION_EXTERN NSString* QCloudCOSBucketAccelerateStatusTransferToString(QCloudCOSBucketAccelerateStatus type);
+FOUNDATION_EXTERN QCloudCOSBucketAccelerateStatus QCloudCOSBucketAccelerateStatusDumpFromString(NSString *key);
+FOUNDATION_EXTERN NSString *QCloudCOSBucketAccelerateStatusTransferToString(QCloudCOSBucketAccelerateStatus type);
 NS_ASSUME_NONNULL_END
-

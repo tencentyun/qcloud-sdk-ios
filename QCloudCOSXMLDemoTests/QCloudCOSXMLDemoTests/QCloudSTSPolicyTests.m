@@ -17,13 +17,13 @@
 #define kTestSTSBucket @"9899-1253653367"
 #define kTestSTSRegion @"ap-beijing-1"
 #define kTestSTSCopyOringeRegion @"ap-beijing-1"
-@interface QCloudSTSPolicyTests : XCTestCase<QCloudSignatureProvider>
-@property (nonatomic,strong)NSString *region;
-@property (nonatomic, strong) NSString* bucket;
-@property (nonatomic, strong) NSString* authorizedUIN;
-@property (nonatomic, strong) NSString* ownerUIN;
-@property (nonatomic, strong) NSString* appID;
-@property (nonatomic, strong) NSMutableArray* tempFilePathArray;
+@interface QCloudSTSPolicyTests : XCTestCase <QCloudSignatureProvider>
+@property (nonatomic, strong) NSString *region;
+@property (nonatomic, strong) NSString *bucket;
+@property (nonatomic, strong) NSString *authorizedUIN;
+@property (nonatomic, strong) NSString *ownerUIN;
+@property (nonatomic, strong) NSString *appID;
+@property (nonatomic, strong) NSMutableArray *tempFilePathArray;
 @end
 
 @implementation QCloudSTSPolicyTests
@@ -33,15 +33,15 @@
 //                   compelete:(QCloudHTTPAuthentationContinueBlock)continueBlock
 //{
 //    //取出参数
-//    NSMutableURLRequest *stsrequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://127.0.0.1:3000/sts"] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:15];
-//    NSMutableArray *array = [NSMutableArray array];
-//    NSMutableDictionary *paramas = [NSMutableDictionary dictionary];
-//    stsrequest.HTTPMethod = @"POST";
-//    [stsrequest setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-//    [stsrequest setHTTPBody:[NSJSONSerialization dataWithJSONObject:request.scopesArray options:NSJSONWritingPrettyPrinted error:nil]];
-//    
+//    NSMutableURLRequest *stsrequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://127.0.0.1:3000/sts"]
+//    cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:15]; NSMutableArray *array = [NSMutableArray array]; NSMutableDictionary
+//    *paramas = [NSMutableDictionary dictionary]; stsrequest.HTTPMethod = @"POST"; [stsrequest setValue:@"application/json"
+//    forHTTPHeaderField:@"Content-Type"]; [stsrequest setHTTPBody:[NSJSONSerialization dataWithJSONObject:request.scopesArray
+//    options:NSJSONWritingPrettyPrinted error:nil]];
+//
 //    NSLog(@"stsrequest Body:  %@",[[NSString alloc]initWithData:stsrequest.HTTPBody encoding:NSUTF8StringEncoding]);
-//    [[[NSURLSession sharedSession] dataTaskWithRequest:stsrequest completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+//    [[[NSURLSession sharedSession] dataTaskWithRequest:stsrequest completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response,
+//    NSError * _Nullable error) {
 //        QCloudLogDebug(@"sts responsedata:%@",[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding]);
 //        if (data && !error) {
 //            id obj = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
@@ -68,7 +68,7 @@
 //    configuration.endpoint = endpoint;
 //    [QCloudCOSTransferMangerService registerCOSTransferMangerWithConfiguration:configuration withKey:kSTSPolicyServiceKey];
 //    [QCloudCOSXMLService registerCOSXMLWithConfiguration:configuration withKey:kSTSPolicyServiceKey];
-//    
+//
 //    QCloudServiceConfiguration* configuration1 = [QCloudServiceConfiguration new];
 //    configuration1.signatureProvider = self;
 //    configuration1.appID = kAppID;
@@ -85,11 +85,10 @@
 //     [super setUp];
 //    [self registerSTSPolicyTransferManager];
 //     self.tempFilePathArray   = self.tempFilePathArray = [[NSMutableArray alloc] init];
-//    self.bucket = [[QCloudCOSXMLTestUtility sharedInstance] createTestBucketWithCosSerVice:[QCloudCOSXMLService cosxmlServiceForKey:kSTSPolicyServiceKey ] withPrefix:@"sts"];
-//    self.appID = kAppID;
-//    self.authorizedUIN = @"1131975903";
-//    self.ownerUIN = @"1278687956";
-//    
+//    self.bucket = [[QCloudCOSXMLTestUtility sharedInstance] createTestBucketWithCosSerVice:[QCloudCOSXMLService
+//    cosxmlServiceForKey:kSTSPolicyServiceKey ] withPrefix:@"sts"]; self.appID = kAppID; self.authorizedUIN = @"1131975903"; self.ownerUIN =
+//    @"1278687956";
+//
 //}
 //
 //-(QCloudCOSXMLService *)cosxmlService{
@@ -106,10 +105,10 @@
 //    request.prefix = @"0";
 //    request.delimiter = @"0";
 //    request.encodingType = @"url";
-//    
+//
 //    request.prefix = request.delimiter = request.encodingType = nil;
 //    XCTestExpectation* exp = [self expectationWithDescription:@"delete"];
-//    
+//
 //    __block QCloudListBucketResult* listResult;
 //    [request setFinishBlock:^(QCloudListBucketResult * _Nonnull result, NSError * _Nonnull error) {
 //        listResult = result;
@@ -118,7 +117,7 @@
 //    }];
 //    [[self cosxmlService] GetBucket:request];
 //    [self waitForExpectationsWithTimeout:100 handler:nil];
-//    
+//
 //    XCTAssertNotNil(listResult);
 //    NSString* listResultName = listResult.name;
 //    NSString* expectListResultName = [NSString stringWithFormat:@"%@",self.bucket];
@@ -132,7 +131,7 @@
 //    putBucketRequest.bucket = [NSString stringWithFormat:@"bucketcanbedelete%i-%@",arc4random()%1000,kAppID];
 //    [putBucketRequest setFinishBlock:^(id outputObject, NSError* error) {
 //        XCTAssertNil(error);
-//        
+//
 //            [exception fulfill];
 //    }];
 //    [[self cosxmlService] PutBucket:putBucketRequest];
@@ -186,7 +185,7 @@
 //-(void)testPUT_GET_DELETE_BucketCORS{
 //    QCloudPutBucketCORSRequest* putCORS = [QCloudPutBucketCORSRequest new];
 //    QCloudCORSConfiguration* putCors = [QCloudCORSConfiguration new];
-//    
+//
 //    QCloudCORSRule* rule = [QCloudCORSRule new];
 //    rule.identifier = @"sdk";
 //    rule.allowedHeader = @[@"origin",@"accept",@"content-type",@"authorization"];
@@ -194,26 +193,26 @@
 //    rule.allowedMethod = @[@"GET",@"PUT",@"POST", @"DELETE", @"HEAD"];
 //    rule.maxAgeSeconds = 3600;
 //    rule.allowedOrigin = @"*";
-//    
+//
 //    putCors.rules = @[rule];
-//    
+//
 //    putCORS.corsConfiguration = putCors;
 //    putCORS.bucket = self.bucket;
 //    __block NSError* localError1;
-//    
-//    
+//
+//
 //    __block QCloudCORSConfiguration* cors;
 //    __block XCTestExpectation* exp = [self expectationWithDescription:@"delete"];
-//    
-//    
+//
+//
 //    [putCORS setFinishBlock:^(id outputObject, NSError *error) {
-//        
+//
 //        QCloudGetBucketCORSRequest* corsReqeust = [QCloudGetBucketCORSRequest new];
 //        corsReqeust.bucket = self.bucket;
 //        [corsReqeust setFinishBlock:^(QCloudCORSConfiguration * _Nonnull result, NSError * _Nonnull error) {
 //            XCTAssertNil(error);
 //            cors = result;
-//         
+//
 //            QCloudDeleteBucketCORSRequest* deleteCORS = [QCloudDeleteBucketCORSRequest new];
 //            deleteCORS.bucket = self.bucket;
 //            [deleteCORS setFinishBlock:^(id outputObject, NSError *error) {
@@ -224,11 +223,11 @@
 //            }];
 //            [[self cosxmlService] DeleteBucketCORS:deleteCORS];
 //        }];
-//        
+//
 //        [[self cosxmlService] GetBucketCORS:corsReqeust];
 //    }];
-//    
-//    
+//
+//
 //    [[self cosxmlService] PutBucketCORS:putCORS];
 //    [self waitForExpectationsWithTimeout:200 handler:^(NSError * _Nullable error) {
 //    }];
@@ -251,7 +250,7 @@
 //    QCloudLifecycleRuleFilter* filter = [[QCloudLifecycleRuleFilter alloc] init];
 //    filter.prefix = @"0";
 //    rule.filter = filter;
-//    
+//
 //    QCloudLifecycleTransition* transition = [[QCloudLifecycleTransition alloc] init];
 //    transition.days = 100;
 //    transition.storageClass = QCloudCOSStorageStandardIA;
@@ -263,7 +262,7 @@
 //        XCTAssertNil(putLifecycleError);
 //        //Get Configuration
 //        XCTAssertNil(putLifecycleError);
-//        
+//
 //        QCloudGetBucketLifecycleRequest* request = [QCloudGetBucketLifecycleRequest new];
 //        request.bucket = self.bucket;
 //        [request setFinishBlock:^(QCloudLifecycleConfiguration* getLifecycleReuslt,NSError* getLifeCycleError) {
@@ -272,7 +271,7 @@
 //            XCTAssert(getLifecycleReuslt.rules.count==configuration.rules.count);
 //            XCTAssert([getLifecycleReuslt.rules.firstObject.identifier isEqualToString:configuration.rules.firstObject.identifier]);
 //            XCTAssert(getLifecycleReuslt.rules.firstObject.status==configuration.rules.firstObject.status);
-//            
+//
 //            //delete configuration
 //            QCloudDeleteBucketLifeCycleRequest* request = [[QCloudDeleteBucketLifeCycleRequest alloc ] init];
 //            request.bucket = self.bucket;
@@ -283,7 +282,7 @@
 //            }];
 //            [[self cosxmlService] DeleteBucketLifeCycle:request];
 //            //delete configuration end
-//            
+//
 //        }];
 //        [[self cosxmlService] GetBucketLifecycle:request];
 //        //Get configuration end
@@ -306,7 +305,7 @@
 //    }];
 //    [[self cosxmlService] ListBucketMultipartUploads:uploads];
 //    [self waitForExpectationsWithTimeout:20 handler:nil];
-//    
+//
 //    XCTAssertNil(localError);
 //    XCTAssert(multiPartUploadsResult.maxUploads==1000);
 //    NSString* expectedBucketString = [NSString stringWithFormat:@"%@",self.bucket];
@@ -398,17 +397,17 @@
 //    QCloudHeadObjectRequest* headerRequest = [QCloudHeadObjectRequest new];
 //    headerRequest.object = object;
 //    headerRequest.bucket = self.bucket;
-//    
+//
 //    XCTestExpectation* exp = [self expectationWithDescription:@"header"];
 //    __block id resultError;
 //    [headerRequest setFinishBlock:^(NSDictionary* result, NSError *error) {
 //        resultError = error;
 //        [exp fulfill];
 //    }];
-//    
+//
 //    [[self cosxmlService] HeadObject:headerRequest];
 //    [self waitForExpectationsWithTimeout:80 handler:^(NSError * _Nullable error) {
-//        
+//
 //    }];
 //    XCTAssertNil(resultError);
 //}
@@ -420,16 +419,16 @@
 //    put.bucket = self.bucket;
 //    NSURL* fileURL = [NSURL fileURLWithPath:[self tempFileWithSize:1024*1024*3]];
 //    put.body = fileURL;
-//    
-//    
+//
+//
 //    XCTestExpectation* exp = [self expectationWithDescription:@"delete"];
 //    __block QCloudGetObjectRequest* request = [QCloudGetObjectRequest new];
 //    request.downloadingURL = [NSURL URLWithString:QCloudTempFilePathWithExtension(@"downding")];
-//    
+//
 //    [put setFinishBlock:^(id outputObject, NSError *error) {
 //        request.bucket = self.bucket;
 //        request.object = object;
-//        
+//
 //        [request setFinishBlock:^(id outputObject, NSError *error) {
 //            XCTAssertNil(error);
 //            [exp fulfill];
@@ -438,12 +437,12 @@
 //            NSLog(@"⏬⏬⏬⏬DOWN [Total]%lld  [Downloaded]%lld [Download]%lld", totalBytesExpectedToDownload, totalBytesDownload, bytesDownload);
 //        }];
 //        [[self cosxmlService] GetObject:request];
-//        
+//
 //    }];
 //    [[self cosxmlService] PutObject:put];
-//    
+//
 //    [self waitForExpectationsWithTimeout:80 handler:nil];
-//    
+//
 //    XCTAssertEqual(QCloudFileSize(request.downloadingURL.path), QCloudFileSize(fileURL.path));
 //}
 //
@@ -458,15 +457,14 @@
 //    __block NSError* resultError;
 //    __block QCloudCopyObjectResult* copyObjectResult;
 //    [put setFinishBlock:^(id outputObject, NSError *error) {
-//        NSURL* serviceURL = [[self cosxmlService].configuration.endpoint serverURLWithBucket:self.bucket appID:self.appID regionName:kTestSTSRegion];
-//        NSMutableString* objectCopySource = [serviceURL.absoluteString mutableCopy] ;
-//        [objectCopySource appendFormat:@"/%@",copyObjectSourceName];
-//        objectCopySource = [[objectCopySource substringFromIndex:8] mutableCopy];
+//        NSURL* serviceURL = [[self cosxmlService].configuration.endpoint serverURLWithBucket:self.bucket appID:self.appID
+//        regionName:kTestSTSRegion]; NSMutableString* objectCopySource = [serviceURL.absoluteString mutableCopy] ; [objectCopySource
+//        appendFormat:@"/%@",copyObjectSourceName]; objectCopySource = [[objectCopySource substringFromIndex:8] mutableCopy];
 //        QCloudPutObjectCopyRequest* request = [[QCloudPutObjectCopyRequest alloc] init];
 //        request.bucket = self.bucket;
 //        request.object = @"copyedObject";
 //        request.objectCopySource = objectCopySource;
-//        
+//
 //        [request setFinishBlock:^(QCloudCopyObjectResult* result, NSError* error) {
 //            putObjectCopyError = result;
 //            resultError = error;
@@ -490,21 +488,14 @@
 ////    [uploadObjectRequest setFinishBlock:^(QCloudUploadObjectResult *result, NSError *error) {
 ////        XCTAssertNil(error,@"error occures on uploading");
 ////        QCloudCOSXMLCopyObjectRequest* request = [[QCloudCOSXMLCopyObjectRequest alloc] init];
-////        
-////        request.bucket = [[QCloudCOSXMLTestUtility sharedInstance] createTestBucketWithCosSerVice:[QCloudCOSXMLService cosxmlServiceForKey:kSTSPolicyServiceKey] withPrefix:@"sts"];
-////        request.object = @"copy-result-test";
-////        request.sourceBucket = self.bucket;
-////        request.sourceObject = tempFileName;
-////        request.sourceAPPID = [self cosxmlService].configuration.appID;
-////        request.sourceRegion= [self cosxmlService].configuration.endpoint.regionName;
-////        [request setFinishBlock:^(QCloudCopyObjectResult* result, NSError* error) {
-////            XCTAssertNil(error);
-////            [uploadExpectation fulfill];
-////        }];
-////        [[self transferService] CopyObject:request];
-////    }];
-////    [[self transferService] UploadObject:uploadObjectRequest];
-////    [self waitForExpectationsWithTimeout:10000 handler:nil];
+////
+////        request.bucket = [[QCloudCOSXMLTestUtility sharedInstance] createTestBucketWithCosSerVice:[QCloudCOSXMLService
+///cosxmlServiceForKey:kSTSPolicyServiceKey] withPrefix:@"sts"]; /        request.object = @"copy-result-test"; /        request.sourceBucket =
+///self.bucket; /        request.sourceObject = tempFileName; /        request.sourceAPPID = [self cosxmlService].configuration.appID; /
+///request.sourceRegion= [self cosxmlService].configuration.endpoint.regionName; /        [request setFinishBlock:^(QCloudCopyObjectResult* result,
+///NSError* error) { /            XCTAssertNil(error); /            [uploadExpectation fulfill]; /        }]; /        [[self transferService]
+///CopyObject:request]; /    }]; /    [[self transferService] UploadObject:uploadObjectRequest]; /    [self waitForExpectationsWithTimeout:10000
+///handler:nil];
 ////}
 //
 //-(void)testPUT_GET_ObjectACL{
@@ -528,32 +519,24 @@
 //        }];
 //        [[self cosxmlService] GetObjectACL:getRequest];
 //    }];
-//    
+//
 //    [[self cosxmlService] PutObjectACL:request];
 //    [self waitForExpectationsWithTimeout:1000 handler:nil];
-//    
+//
 //}
 //
 //
 ////-(void)testSampleCopy{
-////    NSString *bucket = [[QCloudCOSXMLTestUtility sharedInstance] createTestBucketWithCosSerVice:[QCloudCOSXMLService cosxmlServiceForKey:kSTSPolicyServiceKey] withPrefix:@"sts"];
-////    XCTestExpectation* uploadExpectation = [self expectationWithDescription:@"upload temp object"];
-////    QCloudCOSXMLUploadObjectRequest* uploadObjectRequest = [[QCloudCOSXMLUploadObjectRequest alloc] init];
-////    NSString* tempFileName =  @"test/subtest/1MBTpFile";
-////    uploadObjectRequest.bucket = self.bucket;
-////    uploadObjectRequest.object = tempFileName;
-////    uploadObjectRequest.body = [NSURL fileURLWithPath:[self tempFileWithSize:1*1024*1024]];
-////    [uploadObjectRequest setFinishBlock:^(QCloudUploadObjectResult *result, NSError *error) {
-////        XCTAssertNotNil(result);
-////        XCTAssertNil(error);
-////        QCloudCOSXMLCopyObjectRequest* request = [[QCloudCOSXMLCopyObjectRequest alloc] init];
-////        request.bucket = bucket;
-////        request.object = @"copy-result-sts";
-////        request.sourceBucket = self.bucket;
-////        request.sourceObject = tempFileName;
-////        request.sourceAPPID = [self cosxmlService].configuration.appID;
-////        request.sourceRegion= [self cosxmlService].configuration.endpoint.regionName;
-////        
+////    NSString *bucket = [[QCloudCOSXMLTestUtility sharedInstance] createTestBucketWithCosSerVice:[QCloudCOSXMLService
+///cosxmlServiceForKey:kSTSPolicyServiceKey] withPrefix:@"sts"]; /    XCTestExpectation* uploadExpectation = [self expectationWithDescription:@"upload
+///temp object"]; /    QCloudCOSXMLUploadObjectRequest* uploadObjectRequest = [[QCloudCOSXMLUploadObjectRequest alloc] init]; /    NSString*
+///tempFileName =  @"test/subtest/1MBTpFile"; /    uploadObjectRequest.bucket = self.bucket; /    uploadObjectRequest.object = tempFileName; /
+///uploadObjectRequest.body = [NSURL fileURLWithPath:[self tempFileWithSize:1*1024*1024]]; /    [uploadObjectRequest
+///setFinishBlock:^(QCloudUploadObjectResult *result, NSError *error) { /        XCTAssertNotNil(result); /        XCTAssertNil(error); /
+///QCloudCOSXMLCopyObjectRequest* request = [[QCloudCOSXMLCopyObjectRequest alloc] init]; /        request.bucket = bucket; /        request.object =
+///@"copy-result-sts"; /        request.sourceBucket = self.bucket; /        request.sourceObject = tempFileName; /        request.sourceAPPID = [self
+///cosxmlService].configuration.appID; /        request.sourceRegion= [self cosxmlService].configuration.endpoint.regionName;
+////
 ////        [request setFinishBlock:^(QCloudCopyObjectResult* result, NSError* error) {
 ////            XCTAssertNil(error);
 ////            [uploadExpectation fulfill];
@@ -561,43 +544,43 @@
 ////        [[self transferService] CopyObject:request];
 ////    }];
 ////    [[self transferService] UploadObject:uploadObjectRequest];
-////   
+////
 ////    [self waitForExpectationsWithTimeout:100 handler:nil];
 ////}
 //
 //
 //
 //-(void)testPostObjectRestore{
-//    
+//
 //}
 //
 //-(void)testDeleteObject{
-//    
+//
 //    NSString* object = [self uploadTempObject];
 //    QCloudDeleteObjectRequest* deleteObjectRequest = [QCloudDeleteObjectRequest new];
 //    deleteObjectRequest.bucket = self.bucket;
 //    deleteObjectRequest.object = object;
-//    
+//
 //    XCTestExpectation* exp = [self expectationWithDescription:@"delete"];
-//    
+//
 //    __block NSError* localError;
 //    [deleteObjectRequest setFinishBlock:^(id outputObject, NSError *error) {
 //        localError = error;
 //        [exp fulfill];
 //    }];
 //    [[self cosxmlService] DeleteObject:deleteObjectRequest];
-//    
+//
 //    [self waitForExpectationsWithTimeout:80 handler:^(NSError * _Nullable error) {
-//        
+//
 //    }];
-//    
+//
 //    XCTAssertNil(localError);
 //}
 //
 //-(void)testDeleteMultipleObjects{
 //    NSString* object1 = [self uploadTempObject];
 //    NSString* object2 = [self uploadTempObject];
-//    
+//
 //    QCloudDeleteMultipleObjectRequest* delteRequest = [QCloudDeleteMultipleObjectRequest new];
 //    delteRequest.bucket = self.bucket;
 //
@@ -640,15 +623,14 @@
 //
 //
 //-(void)testUploadPartCopyFromAnotherRegion{
-//    
-//    
+//
+//
 //    XCTestExpectation* uploadExpectation = [self expectationWithDescription:@"upload temp object"];
 //    QCloudCOSXMLUploadObjectRequest* uploadObjectRequest = [[QCloudCOSXMLUploadObjectRequest alloc] init];
 //    NSString* tempFileName =  @"test/subtest/20MBTempFile";
-//    uploadObjectRequest.bucket = [[QCloudCOSXMLTestUtility sharedInstance] createTestBucketWithCosSerVice:[QCloudCOSXMLService cosxmlServiceForKey:kTestSTSCopyOringeRegion] withPrefix:@"sts"];
-//    uploadObjectRequest.object = tempFileName;
-//    uploadObjectRequest.body = [NSURL fileURLWithPath:[self tempFileWithSize:20*1024*1024]];
-//    [uploadObjectRequest setFinishBlock:^(QCloudUploadObjectResult *result, NSError *error) {
+//    uploadObjectRequest.bucket = [[QCloudCOSXMLTestUtility sharedInstance] createTestBucketWithCosSerVice:[QCloudCOSXMLService
+//    cosxmlServiceForKey:kTestSTSCopyOringeRegion] withPrefix:@"sts"]; uploadObjectRequest.object = tempFileName; uploadObjectRequest.body = [NSURL
+//    fileURLWithPath:[self tempFileWithSize:20*1024*1024]]; [uploadObjectRequest setFinishBlock:^(QCloudUploadObjectResult *result, NSError *error) {
 //        XCTAssertNil(error,@"error occures on uploading");
 //        QCloudCOSXMLCopyObjectRequest* request = [[QCloudCOSXMLCopyObjectRequest alloc] init];
 //        request.bucket = self.bucket;
@@ -661,12 +643,12 @@
 //            XCTAssertNil(error);
 //            [uploadExpectation fulfill];
 //        }];
-//        
+//
 //        [ [self transferService]CopyObject:request];
 //    }];
 //    [[QCloudCOSTransferMangerService costransfermangerServiceForKey:kTestSTSCopyOringeRegion] UploadObject:uploadObjectRequest];
-//    
-//   
+//
+//
 //    [self waitForExpectationsWithTimeout:10000 handler:nil];
 //}
 //
@@ -677,23 +659,23 @@
 //    put.object = [NSUUID UUID].UUIDString;
 //    put.bucket = self.bucket;
 //    put.body =  [@"1234jdjdjdjjdjdjyuehjshgdytfakjhsghgdhg" dataUsingEncoding:NSUTF8StringEncoding];
-//    
+//
 //    XCTestExpectation* exp = [self expectationWithDescription:@"delete"];
-//    
+//
 //    [put setFinishBlock:^(id outputObject, NSError *error) {
 //        [exp fulfill];
 //    }];
 //    [[self cosxmlService] PutObject:put];
-//    
+//
 //    [self waitForExpectationsWithTimeout:80 handler:^(NSError * _Nullable error) {
-//        
+//
 //    }];
 //    return put.object;
 //}
 //- (NSString*) tempFileWithSize:(int)size
 //{
 //    NSString* file4MBPath = QCloudPathJoin(QCloudTempDir(), [NSUUID UUID].UUIDString);
-//    
+//
 //    if (!QCloudFileExist(file4MBPath)) {
 //        [[NSFileManager defaultManager] createFileAtPath:file4MBPath contents:[NSData data] attributes:nil];
 //    }
@@ -701,7 +683,7 @@
 //    [handler truncateFileAtOffset:size];
 //    [handler closeFile];
 //    [self.tempFilePathArray  addObject:file4MBPath];
-//    
+//
 //    return file4MBPath;
 //}
 //

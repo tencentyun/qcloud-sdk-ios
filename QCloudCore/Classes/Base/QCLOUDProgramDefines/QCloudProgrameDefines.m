@@ -9,10 +9,7 @@
 #import "QCloudProgrameDefines.h"
 #import <objc/runtime.h>
 
-
-
-void   DZEnsureMainThread(void(^mainSafeBlock)(void))
-{
+void DZEnsureMainThread(void (^mainSafeBlock)(void)) {
     if (mainSafeBlock == NULL) {
         return;
     }

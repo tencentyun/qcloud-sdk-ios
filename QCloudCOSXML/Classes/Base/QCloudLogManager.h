@@ -16,8 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  是否显示日志信息
  */
-@property (nonatomic,assign)BOOL shouldShowLog;
-+ (instancetype) sharedInstance;
+@property (nonatomic, assign) BOOL shouldShowLog;
++ (instancetype)sharedInstance;
 
 /**
  已经产生的日志
@@ -28,9 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
  根据日志路径读取日志
  @params path 日志路径
  */
-- (NSString *) readLog:(NSString *)path;
+- (NSString *)readLog:(NSString *)path;
 - (BOOL)shouldShowLog;
 @end
 
 NS_ASSUME_NONNULL_END
-

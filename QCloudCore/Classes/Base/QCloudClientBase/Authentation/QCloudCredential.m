@@ -13,8 +13,7 @@
 /**
  Use the time after fix to compare,avoid time skew caused by Device
  */
-- (BOOL) valid
-{
+- (BOOL)valid {
     if (!self.experationDate) {
         return YES;
     }
