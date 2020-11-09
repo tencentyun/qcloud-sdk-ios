@@ -8,7 +8,7 @@
 
 #import "QCloudFileUtils.h"
 #import <Foundation/Foundation.h>
-#import <Commoncrypto/CommonDigest.h>
+#import <CommonCrypto/CommonDigest.h>
 #import "QCloudSHAPart.h"
 
 void QCloudEnsurePathExist(NSString *path) {

@@ -1,5 +1,9 @@
+# 5.8.1    
+修复 #import <CommonCrypto/CommonDigest.h> 大小写问题
+    
 # 5.8.0    
 修复已知问题，优化用户体验
+
     
 # 5.7.9    
 修复 #import <Commoncrypto/CommonDigest.h> 大小写问题
