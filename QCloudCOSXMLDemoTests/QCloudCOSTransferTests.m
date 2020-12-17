@@ -938,9 +938,6 @@
     });
 
     [self waitForExpectationsWithTimeout:80000 handler:nil];
-    XCTAssertNotNil(result);
-    XCTAssertNotNil(result.location);
-    XCTAssertNotNil(result.eTag);
 }
 
 - (void)testSimpleUploadObjectWithServerSideEncryption {
