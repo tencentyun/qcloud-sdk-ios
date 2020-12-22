@@ -17,13 +17,13 @@
 #import "QCloudTestTempVariables.h"
 #import "QCloudCOSXMLTestUtility.h"
 #import "SecretStorage.h"
+#define kCOSTestBucketKey @"bucket"
 @interface QCloudCOSXMLBucketTests : XCTestCase <QCloudSignatureProvider>
-@property (nonatomic, strong) NSString *bucket;
 @property (nonatomic, strong) NSString *authorizedUIN;
 @property (nonatomic, strong) NSString *ownerUIN;
 @property (nonatomic, strong) NSString *appID;
 @end
-
+static QCloudBucket *cosxmlTestBucket;
 @implementation QCloudCOSXMLBucketTests
 
 - (void)signatureWithFields:(QCloudSignatureFields *)fileds
@@ -52,17 +52,16 @@
 }
 
 + (void)setUp {
-    [QCloudTestTempVariables sharedInstance].testBucket = [[QCloudCOSXMLTestUtility sharedInstance] createTestBucketWithPrefix:@"bt"];
+    cosxmlTestBucket = [[QCloudCOSXMLTestUtility sharedInstance] createTestBucketWithPrefix:kCOSTestBucketKey];
 }
 
 + (void)tearDown {
-    [[QCloudCOSXMLTestUtility sharedInstance] deleteAllTestBuckets];
+    [[QCloudCOSXMLTestUtility sharedInstance] deleteTestBucket:cosxmlTestBucket];
 }
 
 - (void)setUp {
     [super setUp];
     [self setupSpecialCOSXMLShareService];
-    self.bucket = [QCloudTestTempVariables sharedInstance].testBucket;
     self.appID = kAppID;
     self.authorizedUIN = @"1131975903";
     self.ownerUIN = @"1278687956";
@@ -77,7 +76,7 @@
     __weak typeof(self) weakSelf = self;
     [request setFinishBlock:^(id outputObject, NSError *error) {
         XCTAssertNil(error);
-        self.bucket = bucketName;
+        cosxmlTestBucket.name = bucketName;
         [QCloudTestTempVariables sharedInstance].testBucket = bucketName;
         responseError = error;
         [exception fulfill];
@@ -88,7 +87,7 @@
 
 - (void)tearDown {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
-    //    [[QCloudCOSXMLTestUtility sharedInstance] deleteTestBucket:self.bucket];
+    //    [[QCloudCOSXMLTestUtility sharedInstance] deleteTestBucket:cosxmlTestBucket.name];
     [super tearDown];
 }
 
@@ -178,7 +177,7 @@
 
 - (void)testGetBucket {
     QCloudGetBucketRequest *request = [QCloudGetBucketRequest new];
-    request.bucket = self.bucket;
+    request.bucket = cosxmlTestBucket.name;
     request.maxKeys = 1000;
     request.prefix = @"0";
     request.delimiter = @"0";
@@ -198,7 +197,7 @@
 
     XCTAssertNotNil(listResult);
     NSString *listResultName = listResult.name;
-    NSString *expectListResultName = [NSString stringWithFormat:@"%@-%@", self.bucket, self.appID];
+    NSString *expectListResultName = [NSString stringWithFormat:@"%@-%@", cosxmlTestBucket.name, self.appID];
     XCTAssert([listResultName isEqualToString:expectListResultName]);
 }
 
@@ -217,7 +216,7 @@
     cors.rules = @[ rule ];
 
     putCORS.corsConfiguration = cors;
-    putCORS.bucket = self.bucket;
+    putCORS.bucket = cosxmlTestBucket.name;
     __block NSError *localError;
     XCTestExpectation *exp = [self expectationWithDescription:@"putacl"];
     [putCORS setFinishBlock:^(id outputObject, NSError *error) {
@@ -244,7 +243,7 @@
 //    putCors.rules = @[ rule ];
 //
 //    putCORS.corsConfiguration = putCors;
-//    putCORS.bucket = self.bucket;
+//    putCORS.bucket = cosxmlTestBucket.name;
 //    __block NSError *localError1;
 //
 //    __block QCloudCORSConfiguration *cors;
@@ -252,7 +251,7 @@
 //
 //    [putCORS setFinishBlock:^(id outputObject, NSError *error) {
 //        QCloudGetBucketCORSRequest *corsReqeust = [QCloudGetBucketCORSRequest new];
-//        corsReqeust.bucket = self.bucket;
+//        corsReqeust.bucket = cosxmlTestBucket.name;
 //
 //        [corsReqeust setFinishBlock:^(QCloudCORSConfiguration *_Nonnull result, NSError *_Nonnull error) {
 //            XCTAssertNil(error);
@@ -279,11 +278,11 @@
 
 - (void)testCORS3_OpetionObject {
     QCloudOptionsObjectRequest *request = [[QCloudOptionsObjectRequest alloc] init];
-    request.bucket = self.bucket;
+    request.bucket = cosxmlTestBucket.name;
     request.origin = @"http://www.qcloud.com";
     request.accessControlRequestMethod = @"GET";
     request.accessControlRequestHeaders = @"origin";
-    request.object = [[QCloudCOSXMLTestUtility sharedInstance] uploadTempObjectInBucket:self.bucket];
+    request.object = [[QCloudCOSXMLTestUtility sharedInstance] uploadTempObjectInBucket:cosxmlTestBucket.name];
     XCTestExpectation *exp = [self expectationWithDescription:@"option object"];
 
     __block id resultError;
@@ -303,7 +302,7 @@
 
 - (void)testCORS4_DeleteBucketCORS {
     QCloudDeleteBucketCORSRequest *deleteCORS = [QCloudDeleteBucketCORSRequest new];
-    deleteCORS.bucket = self.bucket;
+    deleteCORS.bucket = cosxmlTestBucket.name;
 
     NSLog(@"test");
 
@@ -324,7 +323,7 @@
 
 - (void)testGetBucketLocation {
     QCloudGetBucketLocationRequest *locationReq = [QCloudGetBucketLocationRequest new];
-    locationReq.bucket = self.bucket;
+    locationReq.bucket = cosxmlTestBucket.name;
     XCTestExpectation *exp = [self expectationWithDescription:@"delete"];
     __block QCloudBucketLocationConstraint *location;
 
@@ -381,13 +380,13 @@
 
     [ACLGrants addObject:g1];
     [ACLGrants addObject:g2];
-    putACL.bucket = self.bucket;
+    putACL.bucket = cosxmlTestBucket.name;
     XCTestExpectation *exp = [self expectationWithDescription:@"putacl"];
     __block NSError *localError;
     [putACL setFinishBlock:^(id outputObject, NSError *error) {
         XCTAssertNil(error);
         QCloudGetBucketACLRequest *getBucketACLRequest = [[QCloudGetBucketACLRequest alloc] init];
-        getBucketACLRequest.bucket = self.bucket;
+        getBucketACLRequest.bucket = cosxmlTestBucket.name;
         [getBucketACLRequest setFinishBlock:^(QCloudACLPolicy *result, NSError *error) {
             XCTAssertNil(error);
             XCTAssertNotNil(result);
@@ -404,7 +403,7 @@
 
 - (void)testHeadBucket {
     QCloudHeadBucketRequest *request = [QCloudHeadBucketRequest new];
-    request.bucket = self.bucket;
+    request.bucket = cosxmlTestBucket.name;
     XCTestExpectation *exp = [self expectationWithDescription:@"putacl"];
     __block NSError *resultError;
     [request setFinishBlock:^(id outputObject, NSError *error) {
@@ -419,7 +418,7 @@
 - (void)testListMultipartUpload {
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     QCloudCOSXMLUploadObjectRequest *uploadObjectRequest = [[QCloudCOSXMLUploadObjectRequest alloc] init];
-    uploadObjectRequest.bucket = self.bucket;
+    uploadObjectRequest.bucket = cosxmlTestBucket.name;
     uploadObjectRequest.object = @"object-aborted";
     uploadObjectRequest.body = [NSURL URLWithString:[QCloudTestUtility tempFileWithSize:5 unit:QCLOUD_TEST_FILE_UNIT_MB]];
     __weak QCloudCOSXMLUploadObjectRequest *weakRequest = uploadObjectRequest;
@@ -440,7 +439,7 @@
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
 
     QCloudListMultipartRequest *request = [[QCloudListMultipartRequest alloc] init];
-    request.bucket = self.bucket;
+    request.bucket = cosxmlTestBucket.name;
     request.object = uploadObjectRequest.object;
     request.uploadId = uploadID;
 
@@ -456,7 +455,7 @@
 
 - (void)testListBucketUploads {
     QCloudListBucketMultipartUploadsRequest *uploads = [QCloudListBucketMultipartUploadsRequest new];
-    uploads.bucket = self.bucket;
+    uploads.bucket = cosxmlTestBucket.name;
     uploads.maxUploads = 1000;
     __block NSError *localError;
     __block QCloudListMultipartUploadsResult *multiPartUploadsResult;
@@ -471,7 +470,7 @@
 
     XCTAssertNil(localError);
     XCTAssert(multiPartUploadsResult.maxUploads == 1000);
-    NSString *expectedBucketString = [NSString stringWithFormat:@"%@-%@", self.bucket, self.appID];
+    NSString *expectedBucketString = [NSString stringWithFormat:@"%@-%@", cosxmlTestBucket.name, self.appID];
     XCTAssert([multiPartUploadsResult.bucket isEqualToString:expectedBucketString]);
     XCTAssert(multiPartUploadsResult.maxUploads == 1000);
     if (multiPartUploadsResult.uploads.count) {
@@ -485,7 +484,7 @@
 
 - (void)testaPut_Get_Delete_BucketLifeCycle {
     QCloudPutBucketLifecycleRequest *request = [QCloudPutBucketLifecycleRequest new];
-    request.bucket = self.bucket;
+    request.bucket = cosxmlTestBucket.name;
     __block QCloudLifecycleConfiguration *configuration = [[QCloudLifecycleConfiguration alloc] init];
     QCloudLifecycleRule *rule = [[QCloudLifecycleRule alloc] init];
     rule.identifier = @"id1";
@@ -507,7 +506,7 @@
         XCTAssertNil(putLifecycleError);
 
         QCloudGetBucketLifecycleRequest *request = [QCloudGetBucketLifecycleRequest new];
-        request.bucket = self.bucket;
+        request.bucket = cosxmlTestBucket.name;
         [request setFinishBlock:^(QCloudLifecycleConfiguration *getLifecycleReuslt, NSError *getLifeCycleError) {
             XCTAssertNil(getLifeCycleError);
             XCTAssertNotNil(getLifecycleReuslt);
@@ -517,7 +516,7 @@
 
             // delete configuration
             QCloudDeleteBucketLifeCycleRequest *request = [[QCloudDeleteBucketLifeCycleRequest alloc] init];
-            request.bucket = self.bucket;
+            request.bucket = cosxmlTestBucket.name;
             [request setFinishBlock:^(QCloudLifecycleConfiguration *deleteResult, NSError *deleteError) {
                 XCTAssert(deleteResult);
                 XCTAssertNil(deleteError);
@@ -544,7 +543,7 @@
         XCTAssertNil(error);
 
         QCloudGetBucketVersioningRequest *request = [[QCloudGetBucketVersioningRequest alloc] init];
-        request.bucket = self.bucket;
+        request.bucket = cosxmlTestBucket.name;
         [request setFinishBlock:^(QCloudBucketVersioningConfiguration *result, NSError *error) {
             XCTAssert(result);
             XCTAssertNil(error);
@@ -557,7 +556,7 @@
 
     //
     QCloudPutBucketVersioningRequest *suspendRequest = [[QCloudPutBucketVersioningRequest alloc] init];
-    suspendRequest.bucket = self.bucket;
+    suspendRequest.bucket = cosxmlTestBucket.name;
     QCloudBucketVersioningConfiguration *suspendConfiguration = [[QCloudBucketVersioningConfiguration alloc] init];
     request.configuration = suspendConfiguration;
     suspendConfiguration.status = QCloudCOSBucketVersioningStatusSuspended;
@@ -647,7 +646,7 @@
 //    // Then enable replication for source bucket;
 //    XCTestExpectation* putReplicationExpectation = [self expectationWithDescription:@"put replication expectation"];
 //    QCloudPutBucketReplicationRequest* putBucketReplicationRequest = [[QCloudPutBucketReplicationRequest alloc] init];
-//    putBucketReplicationRequest.bucket = self.bucket;
+//    putBucketReplicationRequest.bucket = cosxmlTestBucket.name;
 //    QCloudBucketReplicationConfiguation* putReplicationConfiguration = [[QCloudBucketReplicationConfiguation alloc] init];
 //    putBucketReplicationRequest.configuation = putReplicationConfiguration;
 //    putReplicationConfiguration.status = QCloudCOSBucketVersioningStatusEnabled;
@@ -957,14 +956,14 @@
 - (void)testPUT_GETBucketAccelerate {
     XCTestExpectation *expectation = [self expectationWithDescription:@"Put Object Copy"];
     QCloudPutBucketAccelerateRequest *req = [QCloudPutBucketAccelerateRequest new];
-    req.bucket = self.bucket;
+    req.bucket = cosxmlTestBucket.name;
     QCloudBucketAccelerateConfiguration *config = [QCloudBucketAccelerateConfiguration new];
     config.status = QCloudCOSBucketAccelerateStatusEnabled;
     req.configuration = config;
     [req setFinishBlock:^(id _Nullable outputObject, NSError *_Nullable error) {
         if (!error) {
             QCloudGetBucketAccelerateRequest *get = [QCloudGetBucketAccelerateRequest new];
-            get.bucket = self.bucket;
+            get.bucket = cosxmlTestBucket.name;
             [get setFinishBlock:^(QCloudBucketAccelerateConfiguration *_Nullable result, NSError *_Nullable error) {
                 XCTAssertNil(error);
                 [expectation fulfill];
@@ -982,7 +981,7 @@
 - (void)testPUT_GETBucketIntelligentTiering {
     XCTestExpectation *exp = [self expectationWithDescription:@"IntelligentTiering"];
     QCloudPutBucketIntelligentTieringRequest *put = [QCloudPutBucketIntelligentTieringRequest new];
-    put.bucket = self.bucket;
+    put.bucket = cosxmlTestBucket.name;
     QCloudIntelligentTieringConfiguration *config = [QCloudIntelligentTieringConfiguration new];
     config.status = QCloudintelligentTieringStatusEnabled;
     QCloudIntelligentTieringTransition *transition = [QCloudIntelligentTieringTransition new];
@@ -993,7 +992,7 @@
         XCTAssertNil(error);
         if (!error) {
             QCloudGetBucketIntelligentTieringRequest *get = [QCloudGetBucketIntelligentTieringRequest new];
-            get.bucket = self.bucket;
+            get.bucket = cosxmlTestBucket.name;
             [get setFinishBlock:^(QCloudIntelligentTieringConfiguration *_Nonnull result, NSError *_Nonnull error) {
                 XCTAssertNil(error);
                 XCTAssertEqual(result.status, QCloudintelligentTieringStatusEnabled);

@@ -13,8 +13,8 @@
 #import "QCloudTestTempVariables.h"
 #import "QCloudCOSXMLTestUtility.h"
 #import "SecretStorage.h"
+#define kCOSDemoBucketKey @"demo"
 @interface QCloudCOSXMLDemoTests : XCTestCase <QCloudSignatureProvider>
-@property (nonatomic, strong) NSString *bucket;
 @property (nonatomic, strong) NSString *appID;
 @property (nonatomic, strong) NSString *ownerID;
 @property (nonatomic, strong) NSString *authorizedUIN;
@@ -22,7 +22,7 @@
 @property (nonatomic, strong) NSMutableArray *tempFilePathArray;
 
 @end
-
+static QCloudBucket *demoTestBucket;
 @implementation QCloudCOSXMLDemoTests
 - (void)signatureWithFields:(QCloudSignatureFields *)fileds
                     request:(QCloudBizHTTPRequest *)request
@@ -52,11 +52,11 @@
 }
 
 + (void)setUp {
-    [QCloudTestTempVariables sharedInstance].testBucket = [[QCloudCOSXMLTestUtility sharedInstance] createTestBucketWithPrefix:@"dt"];
+    demoTestBucket = [[QCloudCOSXMLTestUtility sharedInstance] createTestBucketWithPrefix:kCOSDemoBucketKey];
 }
 
 + (void)tearDown {
-    [[QCloudCOSXMLTestUtility sharedInstance] deleteAllTestBuckets];
+    [[QCloudCOSXMLTestUtility sharedInstance] deleteTestBucket:demoTestBucket];
 }
 
 - (void)setUp {
@@ -67,13 +67,12 @@
     self.ownerID = @"1278687956";
     self.authorizedUIN = @"1131975903";
     self.ownerUIN = @"1278687956";
-    self.bucket = [QCloudTestTempVariables sharedInstance].testBucket;
     self.tempFilePathArray = [NSMutableArray array];
 }
 
 - (void)tearDown {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
-    //    [[QCloudCOSXMLTestUtility sharedInstance] deleteTestBucket:self.bucket];
+    //    [[QCloudCOSXMLTestUtility sharedInstance] deleteTestBucket:demoTestBucket.name];
     [self.tempFilePathArray enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
         NSFileManager *manager = [NSFileManager defaultManager];
         if ([manager fileExistsAtPath:obj]) {
@@ -134,7 +133,7 @@
 
 - (void)testGetACL {
     QCloudGetObjectACLRequest *request = [QCloudGetObjectACLRequest new];
-    request.bucket = self.bucket;
+    request.bucket = demoTestBucket.name;
     request.object = [self uploadTempObject];
     XCTestExpectation *exp = [self expectationWithDescription:@"delete"];
     [request setFinishBlock:^(QCloudACLPolicy *_Nonnull policy, NSError *_Nonnull error) {
@@ -154,7 +153,7 @@
 - (NSString *)uploadTempObject {
     QCloudPutObjectRequest *put = [QCloudPutObjectRequest new];
     put.object = [NSUUID UUID].UUIDString;
-    put.bucket = self.bucket;
+    put.bucket = demoTestBucket.name;
     put.body = [@"1234jdjdjdjjdjdjyuehjshgdytfakjhsghgdhg" dataUsingEncoding:NSUTF8StringEncoding];
 
     XCTestExpectation *exp = [self expectationWithDescription:@"delete"];
@@ -173,7 +172,7 @@
 - (void)testDeleteObject {
     NSString *object = [self uploadTempObject];
     QCloudDeleteObjectRequest *deleteObjectRequest = [QCloudDeleteObjectRequest new];
-    deleteObjectRequest.bucket = self.bucket;
+    deleteObjectRequest.bucket = demoTestBucket.name;
     deleteObjectRequest.object = object;
 
     XCTestExpectation *exp = [self expectationWithDescription:@"delete"];
@@ -198,7 +197,7 @@
     NSString *object2 = [self uploadTempObject];
 
     QCloudDeleteMultipleObjectRequest *delteRequest = [QCloudDeleteMultipleObjectRequest new];
-    delteRequest.bucket = self.bucket;
+    delteRequest.bucket = demoTestBucket.name;
 
     QCloudDeleteObjectInfo *object = [QCloudDeleteObjectInfo new];
     object.key = object1;
@@ -239,7 +238,7 @@
 - (void)testPutObjectACL {
     QCloudPutObjectACLRequest *request = [QCloudPutObjectACLRequest new];
     request.object = [self uploadTempObject];
-    request.bucket = self.bucket;
+    request.bucket = demoTestBucket.name;
     NSString *ownerIdentifier = [NSString stringWithFormat:@"qcs::cam::uin/%@:uin/%@", self.authorizedUIN, self.authorizedUIN];
     NSString *grantString = [NSString stringWithFormat:@"id=\"%@\"", ownerIdentifier];
     request.grantFullControl = grantString;
@@ -255,14 +254,13 @@
 }
 
 - (void)testLimitACL {
-    NSString *bucket = [[QCloudCOSXMLTestUtility sharedInstance] createTestBucketWithPrefix:@"dt"];
 
     for (int i = 0; i < 1; i++) {
         QCloudPutBucketACLRequest *request = [QCloudPutBucketACLRequest new];
         NSString *ownerIdentifier = [NSString stringWithFormat:@"qcs::cam::uin/%@:uin/%@", self.authorizedUIN, self.authorizedUIN];
         NSString *grantString = [NSString stringWithFormat:@"id=\"%@\"", ownerIdentifier];
         request.grantFullControl = grantString;
-        request.bucket = bucket;
+        request.bucket = demoTestBucket.name;
         request.accessControlList = @"private";
         XCTestExpectation *exp = [self expectationWithDescription:@"acl"];
         __block NSError *localError;
@@ -279,7 +277,7 @@
 - (void)testPutObject {
     QCloudPutObjectRequest *put = [QCloudPutObjectRequest new];
     put.object = @"1/4.txt";
-    put.bucket = self.bucket;
+    put.bucket = demoTestBucket.name;
     NSURL *url = [NSURL fileURLWithPath:[self tempFileWithSize:30 * 1024 * 1024]];
     put.body = url;
     XCTestExpectation *exp = [self expectationWithDescription:@"delete"];
@@ -295,14 +293,14 @@
     //
     //    XCTAssertNil(resultError);
     //    QCloudDeleteObjectRequest* deleteObjectRequest = [[QCloudDeleteObjectRequest alloc] init];
-    //    deleteObjectRequest.bucket = self.bucket;
+    //    deleteObjectRequest.bucket = demoTestBucket.name;
     //    deleteObjectRequest.object = put.object;
     //    [[QCloudCOSXMLService defaultCOSXML] DeleteObject:deleteObjectRequest];
 }
 
 - (void)testPutObjectWithACL {
     QCloudPutObjectRequest *put = [QCloudPutObjectRequest new];
-    put.object = put.bucket = self.bucket;
+    put.object = put.bucket = demoTestBucket.name;
     put.body = [@"1234jdjdjdjjdjdjyuehjshgdytfakjhsghgdhg" dataUsingEncoding:NSUTF8StringEncoding];
     NSString *ownerIdentifier = [NSString stringWithFormat:@"qcs::cam::uin/%@:uin/%@", @"2779643970", @"2779643970"];
     NSString *grantString = [NSString stringWithFormat:@"id=\"%@\"", ownerIdentifier];
@@ -318,14 +316,14 @@
 
     XCTAssertNil(resultError);
     QCloudDeleteObjectRequest *deleteObjectRequest = [[QCloudDeleteObjectRequest alloc] init];
-    deleteObjectRequest.bucket = self.bucket;
+    deleteObjectRequest.bucket = demoTestBucket.name;
     deleteObjectRequest.object = put.object;
     [[QCloudCOSXMLService defaultCOSXML] DeleteObject:deleteObjectRequest];
 }
 
 - (void)testInitMultipartUpload {
     QCloudInitiateMultipartUploadRequest *initrequest = [QCloudInitiateMultipartUploadRequest new];
-    initrequest.bucket = self.bucket;
+    initrequest.bucket = demoTestBucket.name;
     initrequest.object = [NSUUID UUID].UUIDString;
 
     XCTestExpectation *exp = [self expectationWithDescription:@"delete"];
@@ -340,7 +338,7 @@
     [self waitForExpectationsWithTimeout:80
                                  handler:^(NSError *_Nullable error) {
                                  }];
-    NSString *expectedBucketString = [NSString stringWithFormat:@"%@-%@", self.bucket, self.appID];
+    NSString *expectedBucketString = [NSString stringWithFormat:@"%@-%@", demoTestBucket.name, self.appID];
     XCTAssert([initResult.bucket isEqualToString:expectedBucketString]);
     XCTAssert([initResult.key isEqualToString:initrequest.object]);
 }
@@ -361,7 +359,7 @@
     NSString *object = [self uploadTempObject];
     QCloudHeadObjectRequest *headerRequest = [QCloudHeadObjectRequest new];
     headerRequest.object = object;
-    headerRequest.bucket = self.bucket;
+    headerRequest.bucket = demoTestBucket.name;
 
     XCTestExpectation *exp = [self expectationWithDescription:@"header"];
     __block id resultError;
@@ -382,7 +380,7 @@
     QCloudPutObjectRequest *put = [QCloudPutObjectRequest new];
     NSString *object = [NSUUID UUID].UUIDString;
     put.object = @"test/1/2/3/4/5.jpg";
-    put.bucket = self.bucket;
+    put.bucket = demoTestBucket.name;
     NSURL *fileURL = [NSURL fileURLWithPath:[self tempFileWithSize:1024 * 1024 * 3]];
     put.body = fileURL;
 
@@ -391,7 +389,7 @@
     request.downloadingURL = [NSURL URLWithString:QCloudTempFilePathWithExtension(@"downding")];
 
     [put setFinishBlock:^(id outputObject, NSError *error) {
-        request.bucket = self.bucket;
+        request.bucket = demoTestBucket.name;
         request.object = @"test/1/2/3/4/5.jpg";
 
         [request setFinishBlock:^(id outputObject, NSError *error) {
@@ -414,7 +412,7 @@
     QCloudCOSXMLUploadObjectRequest *put = [QCloudCOSXMLUploadObjectRequest new];
     NSString *object = [NSUUID UUID].UUIDString;
     put.object = object;
-    put.bucket = self.bucket;
+    put.bucket = demoTestBucket.name;
     NSURL *fileURL = [NSURL fileURLWithPath:[self tempFileWithSize:1024 * 1024 * 1]];
     put.body = fileURL;
     NSLog(@"fileURL  %@", fileURL.absoluteString);
@@ -422,7 +420,7 @@
     __block QCloudGetObjectRequest *request = [QCloudGetObjectRequest new];
     request.downloadingURL = [NSURL URLWithString:QCloudTempFilePathWithExtension(@"downding")];
     [put setFinishBlock:^(id outputObject, NSError *error) {
-        request.bucket = self.bucket;
+        request.bucket = demoTestBucket.name;
         request.object = object;
         request.enableMD5Verification = YES;
         [request setFinishBlock:^(id outputObject, NSError *error) {
@@ -473,199 +471,7 @@
     //    XCTAssertEqual(QCloudFileSize(request.downloadingURL.path), QCloudFileSize(fileURL.path));
 }
 
-- (void)testPutObjectCopy {
-    NSString *copyObjectSourceName = [NSUUID UUID].UUIDString;
-    QCloudPutObjectRequest *put = [QCloudPutObjectRequest new];
-    put.object = copyObjectSourceName;
-    put.versionID = @"versionID111111";
-    put.bucket = self.bucket;
-    put.body = [@"4324ewr325" dataUsingEncoding:NSUTF8StringEncoding];
-    __block XCTestExpectation *exception = [self expectationWithDescription:@"Put Object Copy Exception"];
-    __block NSError *putObjectCopyError;
-    __block NSError *resultError;
-    __block QCloudCopyObjectResult *copyObjectResult;
-    [put setFinishBlock:^(id outputObject, NSError *error) {
-        NSURL *serviceURL = [[QCloudCOSXMLService defaultCOSXML].configuration.endpoint serverURLWithBucket:self.bucket
-                                                                                                      appID:self.appID
-                                                                                                 regionName:put.regionName];
-        NSMutableString *objectCopySource = [serviceURL.absoluteString mutableCopy];
-        [objectCopySource appendFormat:@"/%@", copyObjectSourceName];
-        objectCopySource = [[objectCopySource substringFromIndex:7] mutableCopy];
-        QCloudPutObjectCopyRequest *request = [[QCloudPutObjectCopyRequest alloc] init];
-        request.bucket = self.bucket;
-        request.object = [NSUUID UUID].UUIDString;
-        request.objectCopySource = objectCopySource;
-        request.versionID = @"versionID111111";
-        [request setFinishBlock:^(QCloudCopyObjectResult *result, NSError *error) {
-            putObjectCopyError = result;
-            resultError = error;
-            [exception fulfill];
-        }];
-        [[QCloudCOSXMLService defaultCOSXML] PutObjectCopy:request];
-    }];
-    [[QCloudCOSXMLService defaultCOSXML] PutObject:put];
-    [self waitForExpectationsWithTimeout:100 handler:nil];
-    XCTAssertNil(resultError);
-}
 
-- (void)testMultiplePutObjectCopy {
-    NSString *tempBucket = [[QCloudCOSXMLTestUtility sharedInstance] createTestBucketWithPrefix:@"dt"];
-
-    XCTestExpectation *uploadExpectation = [self expectationWithDescription:@"upload temp object"];
-    QCloudCOSXMLUploadObjectRequest *uploadObjectRequest = [[QCloudCOSXMLUploadObjectRequest alloc] init];
-    NSString *tempFileName = @"30MBTempFile";
-    uploadObjectRequest.bucket = tempBucket;
-    uploadObjectRequest.object = tempFileName;
-    uploadObjectRequest.body = [NSURL fileURLWithPath:[self tempFileWithSize:30 * 1024 * 1024]];
-    [uploadObjectRequest setFinishBlock:^(QCloudUploadObjectResult *result, NSError *error) {
-        XCTAssertNil(error, @"error occures on uploading");
-        [uploadExpectation fulfill];
-    }];
-    [[QCloudCOSTransferMangerService defaultCOSTransferManager] UploadObject:uploadObjectRequest];
-    [self waitForExpectationsWithTimeout:600 handler:nil];
-    QCloudCOSXMLCopyObjectRequest *request = [[QCloudCOSXMLCopyObjectRequest alloc] init];
-
-    request.bucket = self.bucket;
-    request.object = @"copy-result-test";
-    request.sourceBucket = tempBucket;
-    request.sourceObject = tempFileName;
-    request.sourceAPPID = [QCloudCOSXMLService defaultCOSXML].configuration.appID;
-    request.sourceRegion = [QCloudCOSXMLService defaultCOSXML].configuration.endpoint.regionName;
-
-    XCTestExpectation *expectation = [self expectationWithDescription:@"Put Object Copy"];
-    [request setFinishBlock:^(QCloudCopyObjectResult *result, NSError *error) {
-        XCTAssertNil(error);
-        [expectation fulfill];
-    }];
-    request.requstsMetricArrayBlock = ^(NSMutableArray *requstMetricArray) {
-        QCloudLogDebug(@"testMetric %@", requstMetricArray);
-    };
-    [[QCloudCOSTransferMangerService defaultCOSTransferManager] CopyObject:request];
-    [self waitForExpectationsWithTimeout:10000 handler:nil];
-}
-
-- (void)testForInCopyObject {
-    NSString *tempBucket = [[QCloudCOSXMLTestUtility sharedInstance] createTestBucketWithPrefix:@"dt"];
-    NSString *tempFileName = @"30MBTempFile";
-
-    for (int i = 0; i < 5; i++) {
-        XCTestExpectation *uploadExpectation = [self expectationWithDescription:@"upload temp object"];
-        QCloudCOSXMLUploadObjectRequest *uploadObjectRequest = [[QCloudCOSXMLUploadObjectRequest alloc] init];
-        uploadObjectRequest.bucket = tempBucket;
-        uploadObjectRequest.object = tempFileName;
-        uploadObjectRequest.body = [NSURL fileURLWithPath:[self tempFileWithSize:30 * 1024 * 1024]];
-        [uploadObjectRequest setFinishBlock:^(QCloudUploadObjectResult *result, NSError *error) {
-            XCTAssertNil(error, @"error occures on uploading");
-            [uploadExpectation fulfill];
-        }];
-        [[QCloudCOSTransferMangerService defaultCOSTransferManager] UploadObject:uploadObjectRequest];
-        [self waitForExpectationsWithTimeout:200 handler:nil];
-    }
-
-    XCTestExpectation *getBucketExpectation = [self expectationWithDescription:@"get bucket"];
-    __block NSArray *contentsArray;
-    QCloudGetBucketRequest *getBucketRequest = [[QCloudGetBucketRequest alloc] init];
-    getBucketRequest.bucket = tempBucket;
-    getBucketRequest.maxKeys = 1000;
-    [getBucketRequest setFinishBlock:^(QCloudListBucketResult *_Nonnull result, NSError *_Nonnull error) {
-        contentsArray = result.contents;
-        XCTAssertNil(error, @"error during get bucket");
-        [getBucketExpectation fulfill];
-    }];
-    [[QCloudCOSXMLService defaultCOSXML] GetBucket:getBucketRequest];
-    [self waitForExpectationsWithTimeout:120 handler:nil];
-
-    for (QCloudBucketContents *content in contentsArray) {
-        QCloudCOSXMLCopyObjectRequest *request = [[QCloudCOSXMLCopyObjectRequest alloc] init];
-
-        request.bucket = self.bucket;
-        request.object = [NSString stringWithFormat:@"copy-%@", tempFileName];
-        request.sourceBucket = tempBucket;
-        request.sourceObject = content.key;
-        request.sourceAPPID = [QCloudCOSXMLService defaultCOSXML].configuration.appID;
-        request.sourceRegion = [QCloudCOSXMLService defaultCOSXML].configuration.endpoint.regionName;
-
-        XCTestExpectation *expectation = [self expectationWithDescription:@"Put Object Copy"];
-        [request setFinishBlock:^(QCloudCopyObjectResult *result, NSError *error) {
-            XCTAssertNil(error);
-            [expectation fulfill];
-        }];
-        [[QCloudCOSTransferMangerService defaultCOSTransferManager] CopyObject:request];
-        [self waitForExpectationsWithTimeout:10000 handler:nil];
-    }
-}
-
-- (void)testCopyWithChineseNameAndWhiteSpace {
-    NSString *tempBucket = [[QCloudCOSXMLTestUtility sharedInstance] createTestBucketWithPrefix:@"dt"];
-    NSString *tempFileName = @"30MBTempFile";
-
-    XCTestExpectation *uploadChineseNameSmallFileExpectation = [self expectationWithDescription:@"upload temp object"];
-    QCloudCOSXMLUploadObjectRequest *uploadObjectRequest1 = [[QCloudCOSXMLUploadObjectRequest alloc] init];
-    uploadObjectRequest1.bucket = tempBucket;
-    uploadObjectRequest1.object = @"中文名小文件";
-    uploadObjectRequest1.body = [NSURL fileURLWithPath:[self tempFileWithSize:1024]];
-    [uploadObjectRequest1 setFinishBlock:^(QCloudUploadObjectResult *result, NSError *error) {
-        XCTAssertNil(error, @"error occures on uploading");
-        [uploadChineseNameSmallFileExpectation fulfill];
-    }];
-    [[QCloudCOSTransferMangerService defaultCOSTransferManager] UploadObject:uploadObjectRequest1];
-    [self waitForExpectationsWithTimeout:200 handler:nil];
-
-    //    XCTestExpectation* uploadChineseNameBigFileExpectation = [self expectationWithDescription:@"upload temp object"];
-    //    QCloudCOSXMLUploadObjectRequest* uploadObjectRequest2 = [[QCloudCOSXMLUploadObjectRequest alloc] init];
-    //    uploadObjectRequest2.bucket = tempBucket;
-    //    uploadObjectRequest2.object = @"中文名Copy大文件";
-    //    uploadObjectRequest2.body = [NSURL fileURLWithPath:[self tempFileWithSize:30*1024*1024]];
-    //    [uploadObjectRequest2 setFinishBlock:^(QCloudUploadObjectResult *result, NSError *error) {
-    //        XCTAssertNil(error,@"error occures on uploading");
-    //        [uploadChineseNameBigFileExpectation fulfill];
-    //    }];
-    //    [[QCloudCOSTransferMangerService defaultCOSTransferManager] UploadObject:uploadObjectRequest2];
-    //    [self waitForExpectationsWithTimeout:1000 handler:nil];
-
-    XCTestExpectation *uploadWhiteSpaceExpectation = [self expectationWithDescription:@"upload temp object"];
-    QCloudCOSXMLUploadObjectRequest *uploadObjectRequest3 = [[QCloudCOSXMLUploadObjectRequest alloc] init];
-    uploadObjectRequest3.bucket = tempBucket;
-    uploadObjectRequest3.object = tempFileName;
-    uploadObjectRequest3.body = [NSURL fileURLWithPath:[self tempFileWithSize:30 * 1024 * 1024]];
-    [uploadObjectRequest3 setFinishBlock:^(QCloudUploadObjectResult *result, NSError *error) {
-        XCTAssertNil(error, @"error occures on uploading");
-        [uploadWhiteSpaceExpectation fulfill];
-    }];
-    [[QCloudCOSTransferMangerService defaultCOSTransferManager] UploadObject:uploadObjectRequest3];
-    [self waitForExpectationsWithTimeout:1000 handler:nil];
-
-    XCTestExpectation *getBucketExpectation = [self expectationWithDescription:@"get bucket"];
-    QCloudGetBucketRequest *getBucketRequest = [[QCloudGetBucketRequest alloc] init];
-    __block NSArray *contentsArray;
-    getBucketRequest.bucket = tempBucket;
-    getBucketRequest.maxKeys = 1000;
-    [getBucketRequest setFinishBlock:^(QCloudListBucketResult *_Nonnull result, NSError *_Nonnull error) {
-        XCTAssertNil(error, @"error during get bucket");
-        contentsArray = result.contents;
-        [getBucketExpectation fulfill];
-    }];
-    [[QCloudCOSXMLService defaultCOSXML] GetBucket:getBucketRequest];
-    [self waitForExpectationsWithTimeout:120 handler:nil];
-
-    for (QCloudBucketContents *content in contentsArray) {
-        QCloudCOSXMLCopyObjectRequest *request = [[QCloudCOSXMLCopyObjectRequest alloc] init];
-        request.bucket = self.bucket;
-        request.object = [NSString stringWithFormat:@"copy-%@", tempFileName];
-        request.sourceBucket = tempBucket;
-        request.sourceObject = content.key;
-        request.sourceAPPID = [QCloudCOSXMLService defaultCOSXML].configuration.appID;
-        request.sourceRegion = [QCloudCOSXMLService defaultCOSXML].configuration.endpoint.regionName;
-
-        XCTestExpectation *expectation = [self expectationWithDescription:@"Put Object Copy"];
-        [request setFinishBlock:^(QCloudCopyObjectResult *result, NSError *error) {
-            XCTAssertNil(error);
-            [expectation fulfill];
-        }];
-        [[QCloudCOSTransferMangerService defaultCOSTransferManager] CopyObject:request];
-        [self waitForExpectationsWithTimeout:10000 handler:nil];
-    }
-}
 
 - (void)createTestBucket {
     QCloudPutBucketRequest *request = [QCloudPutBucketRequest new];
@@ -676,7 +482,7 @@
     __weak typeof(self) weakSelf = self;
     [request setFinishBlock:^(id outputObject, NSError *error) {
         XCTAssertNil(error);
-        self.bucket = bucketName;
+        demoTestBucket.name = bucketName;
         [QCloudTestTempVariables sharedInstance].testBucket = bucketName;
         responseError = error;
         [exception fulfill];
@@ -687,7 +493,7 @@
 
 - (void)testGetObjectURL {
     NSString *obejctKey = [self uploadTempObject];
-    NSString *objectDownloadURL = [[QCloudCOSXMLService defaultCOSXML] getURLWithBucket:self.bucket
+    NSString *objectDownloadURL = [[QCloudCOSXMLService defaultCOSXML] getURLWithBucket:demoTestBucket.name
                                                                                  object:obejctKey
                                                                       withAuthorization:YES
                                                                              regionName:@"ap-guangzhou"];
@@ -709,7 +515,7 @@
 - (void)testGetPresignedURL {
     NSString *obejctKey = [self uploadTempObject];
     QCloudGetPresignedURLRequest *getPresignedURLRequest = [[QCloudGetPresignedURLRequest alloc] init];
-    getPresignedURLRequest.bucket = self.bucket;
+    getPresignedURLRequest.bucket = demoTestBucket.name;
     getPresignedURLRequest.object = obejctKey;
     getPresignedURLRequest.HTTPMethod = @"GET";
     XCTestExpectation *expectation = [self expectationWithDescription:@"GET PRESIGNED URL"];
@@ -737,7 +543,7 @@
 
 - (void)testPutObjectWithPresignedURL {
     QCloudGetPresignedURLRequest *getPresignedURLRequest = [[QCloudGetPresignedURLRequest alloc] init];
-    getPresignedURLRequest.bucket = self.bucket;
+    getPresignedURLRequest.bucket = demoTestBucket.name;
     getPresignedURLRequest.HTTPMethod = @"PUT";
     getPresignedURLRequest.object = @"testUploadWithPresignedURL";
     XCTestExpectation *expectation = [self expectationWithDescription:@"GET PRESIGNED URL"];
@@ -766,7 +572,7 @@
 
 - (void)testListObjectVersions {
     QCloudPutBucketVersioningRequest *putBucketVersioningRequest = [[QCloudPutBucketVersioningRequest alloc] init];
-    putBucketVersioningRequest.bucket = self.bucket;
+    putBucketVersioningRequest.bucket = demoTestBucket.name;
     putBucketVersioningRequest.configuration = [[QCloudBucketVersioningConfiguration alloc] init];
     putBucketVersioningRequest.configuration.status = QCloudCOSBucketVersioningStatusEnabled;
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
@@ -781,7 +587,7 @@
 
     QCloudListObjectVersionsRequest *listObjectRequest = [[QCloudListObjectVersionsRequest alloc] init];
     listObjectRequest.maxKeys = 100;
-    listObjectRequest.bucket = self.bucket;
+    listObjectRequest.bucket = demoTestBucket.name;
     [listObjectRequest setFinishBlock:^(QCloudListVersionsResult *_Nonnull result, NSError *_Nonnull error) {
         XCTAssertNil(error);
         XCTAssertNotNil(result);
@@ -796,7 +602,7 @@
 
 - (void)testPutFolder {
     QCloudPutObjectRequest *putObjectRequest = [[QCloudPutObjectRequest alloc] init];
-    putObjectRequest.bucket = self.bucket;
+    putObjectRequest.bucket = demoTestBucket.name;
     putObjectRequest.object = @"testFolder/";
     XCTestExpectation *expectation = [self expectationWithDescription:@"put object"];
 
@@ -825,7 +631,7 @@
 
     QCloudCOSXMLCopyObjectRequest *request = [[QCloudCOSXMLCopyObjectRequest alloc] init];
 
-    request.bucket = self.bucket;
+    request.bucket = demoTestBucket.name;
     request.object = @"copy-result-test";
     request.sourceBucket = uploadObjectRequest.bucket;
     request.sourceObject = tempFileName;
@@ -859,7 +665,7 @@
 
     QCloudCOSXMLCopyObjectRequest *request = [[QCloudCOSXMLCopyObjectRequest alloc] init];
 
-    request.bucket = self.bucket;
+    request.bucket = demoTestBucket.name;
     request.object = @"copy-result-test";
     request.sourceBucket = uploadObjectRequest.bucket;
     request.sourceObject = tempFileName;

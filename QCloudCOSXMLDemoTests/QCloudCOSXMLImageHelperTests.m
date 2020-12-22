@@ -13,16 +13,15 @@
 #import "QCloudTestTempVariables.h"
 #import "QCloudCOSXMLTestUtility.h"
 #import "SecretStorage.h"
-
+#define kCOSImageBucketKey @"imgBucket"
 @interface QCloudCOSXMLImageHelperTests : XCTestCase <QCloudSignatureProvider>
-@property (nonatomic, strong) NSString *bucket;
 @property (nonatomic, strong) NSString *appID;
 @property (nonatomic, strong) NSString *ownerID;
 @property (nonatomic, strong) NSString *authorizedUIN;
 @property (nonatomic, strong) NSString *ownerUIN;
 @property (nonatomic, strong) NSMutableArray *tempFilePathArray;
 @end
-
+static QCloudBucket *imageTestBucket;
 @implementation QCloudCOSXMLImageHelperTests
 
 - (void)signatureWithFields:(QCloudSignatureFields *)fileds
@@ -53,11 +52,11 @@
 }
 
 + (void)setUp {
-    [QCloudTestTempVariables sharedInstance].testBucket = [[QCloudCOSXMLTestUtility sharedInstance] createTestBucketWithPrefix:@"dt"];
+    imageTestBucket = [[QCloudCOSXMLTestUtility sharedInstance] createTestBucketWithPrefix:kCOSImageBucketKey];
 }
 
 + (void)tearDown {
-    [[QCloudCOSXMLTestUtility sharedInstance] deleteAllTestBuckets];
+    [[QCloudCOSXMLTestUtility sharedInstance] deleteTestBucket:imageTestBucket];
 }
 
 - (void)setUp {
@@ -68,13 +67,10 @@
     self.ownerID = @"1278687956";
     self.authorizedUIN = @"1131975903";
     self.ownerUIN = @"1278687956";
-    self.bucket = [QCloudTestTempVariables sharedInstance].testBucket;
     self.tempFilePathArray = [NSMutableArray array];
 }
 
-- (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-    //    [[QCloudCOSXMLTestUtility sharedInstance] deleteTestBucket:self.bucket];
+- (void)tearDown {;
     [self.tempFilePathArray enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL *_Nonnull stop) {
         NSFileManager *manager = [NSFileManager defaultManager];
         if ([manager fileExistsAtPath:obj]) {

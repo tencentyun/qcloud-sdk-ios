@@ -77,8 +77,9 @@
     dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
     return bucketName;
 }
-- (NSString *)createTestBucketWithPrefix:(NSString *)prefix {
+- (QCloudBucket *)createTestBucketWithPrefix:(NSString *)prefix {
     NSMutableString *bucketName = [[NSMutableString alloc] init];
+    [bucketName appendString:prefix];
     [bucketName appendString:kTestBucketPrefix];
     [bucketName appendString:[self cNowTimestamp]];
     [bucketName appendFormat:@"%i", arc4random() % 3000];
@@ -91,57 +92,25 @@
     if ([QCloudCOSXMLService defaultCOSXML] == nil) {
         NSLog(@"sfasf");
     }
+    QCloudBucket *bucket = [QCloudBucket new];
+    bucket.name = bucketName;
+    bucket.location = self.cosxmlService.configuration.endpoint.regionName;
     [self.cosxmlService PutBucket:putBucket];
     dispatch_semaphore_wait(self.semaphore, DISPATCH_TIME_FOREVER);
-    return bucketName;
+    return bucket;
 }
 
-- (void)deleteTestBucket:(NSString *)testBucket {
+- (void)deleteTestBucket:(QCloudBucket *)bucket {
     __block dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    __block NSArray<QCloudBucketContents *> *listBucketContents;
-    QCloudGetBucketRequest *getBucketRequest = [[QCloudGetBucketRequest alloc] init];
-    getBucketRequest.bucket = testBucket;
-    getBucketRequest.maxKeys = 500;
-    [getBucketRequest setFinishBlock:^(QCloudListBucketResult *_Nonnull result, NSError *_Nonnull error) {
-        listBucketContents = result.contents;
-        dispatch_semaphore_signal(semaphore);
-    }];
-    [self.cosxmlService GetBucket:getBucketRequest];
-    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-
-    if (listBucketContents == nil) {
-        QCloudDeleteBucketRequest *deleteBucketRequest = [[QCloudDeleteBucketRequest alloc] init];
-        deleteBucketRequest.bucket = testBucket;
-        [deleteBucketRequest setFinishBlock:^(id outputObject, NSError *error) {
-            dispatch_semaphore_signal(semaphore);
-        }];
-        [self.cosxmlService DeleteBucket:deleteBucketRequest];
-        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-    }
-
-    QCloudDeleteMultipleObjectRequest *deleteMultipleObjectRequest = [[QCloudDeleteMultipleObjectRequest alloc] init];
-    deleteMultipleObjectRequest.bucket = testBucket;
-    deleteMultipleObjectRequest.deleteObjects = [[QCloudDeleteInfo alloc] init];
-    NSMutableArray *deleteObjectInfoArray = [[NSMutableArray alloc] init];
-    for (QCloudBucketContents *bucketContents in listBucketContents) {
-        QCloudDeleteObjectInfo *objctInfo = [[QCloudDeleteObjectInfo alloc] init];
-        objctInfo.key = bucketContents.key;
-        [deleteObjectInfoArray addObject:objctInfo];
-    }
-    deleteMultipleObjectRequest.deleteObjects.objects = [deleteObjectInfoArray copy];
-    [deleteMultipleObjectRequest setFinishBlock:^(QCloudDeleteResult *_Nonnull result, NSError *_Nonnull error) {
-        if (error == nil) {
-            NSLog(@"Delete ALL Object Success!");
-        } else {
-            NSLog(@"Delete all object fail! error:%@", error);
-        }
-        dispatch_semaphore_signal(semaphore);
-    }];
-    [self.cosxmlService DeleteMultipleObject:deleteMultipleObjectRequest];
-    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    
+            // This is the bucket should be deleted
+    [self cleanFilesInBucket:bucket];
+    [self cleanMultipleUploadsInBucket:bucket];
+    [self cleanMultipleVersionFilesInBucket:bucket];
 
     QCloudDeleteBucketRequest *deleteBucketRequest = [[QCloudDeleteBucketRequest alloc] init];
-    deleteBucketRequest.bucket = testBucket;
+    deleteBucketRequest.regionName = bucket.location;
+    deleteBucketRequest.bucket = bucket.name;
     [deleteBucketRequest setFinishBlock:^(id outputObject, NSError *error) {
         dispatch_semaphore_signal(semaphore);
     }];
@@ -255,22 +224,12 @@
         }
         NSString *bucketNamePrefix = [bucket.name substringToIndex:prefixLength];
         if ([bucketNamePrefix isEqualToString:prefix]) {
-            // This is the bucket should be deleted
-            [self cleanFilesInBucket:bucket];
-            [self cleanMultipleUploadsInBucket:bucket];
-            [self cleanMultipleVersionFilesInBucket:bucket];
-
-            QCloudDeleteBucketRequest *deleteBucketRequest = [[QCloudDeleteBucketRequest alloc] init];
-            deleteBucketRequest.regionName = bucket.location;
-            deleteBucketRequest.bucket = bucket.name;
-            [deleteBucketRequest setFinishBlock:^(id outputObject, NSError *error) {
-                dispatch_semaphore_signal(semaphore);
-            }];
-            [self.cosxmlService DeleteBucket:deleteBucketRequest];
-            dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+            [self deleteTestBucket:bucket];
         }
     }
 }
+
+
 
 - (void)cleanFilesInBucket:(QCloudBucket *)bucket {
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);

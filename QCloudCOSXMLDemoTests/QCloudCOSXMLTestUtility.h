@@ -15,9 +15,9 @@
 @property (nonatomic, strong) QCloudCOSXMLService *cosxmlService;
 + (instancetype)sharedInstance;
 - (NSString *)createTestBucket:(NSString *)bucketName;
-- (NSString *)createTestBucketWithPrefix:(NSString *)prefix;
+- (QCloudBucket *)createTestBucketWithPrefix:(NSString *)prefix;
 
-- (void)deleteTestBucket:(NSString *)bucket;
+- (void)deleteTestBucket:(QCloudBucket *)bucket;
 
 - (void)deleteAllTestBuckets;
 - (NSString *)createTestBucketWithCosSerVice:(QCloudCOSXMLService *)service withPrefix:(NSString *)prefix;
