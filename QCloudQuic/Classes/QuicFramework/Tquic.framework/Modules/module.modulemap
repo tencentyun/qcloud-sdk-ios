@@ -1,0 +1,6 @@
+framework module Tquic {
+  umbrella header "Tquic.h"
+
+  export *
+  module * { export * }
+}
