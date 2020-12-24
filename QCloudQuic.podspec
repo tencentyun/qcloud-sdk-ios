@@ -26,13 +26,11 @@ TODO: Add long description of the pod here.aaa
   s.license          = 'MIT'
   s.author           = { "QCloudTerminalLab" => "g_PDTC_storage_DEV_terminallab@tencent.com" }
   s.source           = { :git => "https://github.com/tencentyun/qcloud-sdk-ios.git", :tag => s.version.to_s }
+s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
   s.ios.deployment_target = '8.0'
-  s.source_files = 'Pod/Classes/QCloudBase/**/*','Pod/Classes/QuicFramework//*.{h}'
-  s.vendored_frameworks = 'Pod/Classes/QuicFramework/Tquic.framework'
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
+  s.source_files = 'QCloudQuic/Classes/QCloudBase/**/*','QCloudQuic/Classes/QuicFramework//*.{h}'
+  s.vendored_frameworks = 'QCloudQuic/Classes/QuicFramework/Tquic.framework'
   s.static_framework = true
   
 
