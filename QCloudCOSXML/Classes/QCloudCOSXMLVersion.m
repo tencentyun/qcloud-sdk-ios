@@ -1,23 +1,19 @@
 #import "QCloudCOSXMLVersion.h"
-NSString * const QCloudCOSXMLModuleVersion = @"5.8.1";
-NSString * const QCloudCOSXMLModuleName = @"QCloudCOSXML";
+NSString *const QCloudCOSXMLModuleVersion = @"5.8.2";
+NSString *const QCloudCOSXMLModuleName = @"QCloudCOSXML";
 @interface QCloudQCloudCOSXMLLoad : NSObject
 @end
 
 @implementation QCloudQCloudCOSXMLLoad
-+ (void) load
-{
++ (void)load {
     Class cla = NSClassFromString(@"QCloudSDKModuleManager");
     if (cla) {
-        NSMutableDictionary* module = [@{
-                                 @"name" : QCloudCOSXMLModuleName,
-                                 @"version" : QCloudCOSXMLModuleVersion
-                                 } mutableCopy];
+        NSMutableDictionary *module = [@{ @"name" : QCloudCOSXMLModuleName, @"version" : QCloudCOSXMLModuleVersion } mutableCopy];
 
-          NSString* buglyID = @"";
-          if (buglyID.length > 0) {
-              module[@"crashID"] = buglyID;
-          }
+        NSString *buglyID = @"";
+        if (buglyID.length > 0) {
+            module[@"crashID"] = buglyID;
+        }
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"

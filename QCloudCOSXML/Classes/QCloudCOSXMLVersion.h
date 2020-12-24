@@ -5,12 +5,12 @@
 
 #ifndef QCloudCOSXMLModuleVersion_h
 #define QCloudCOSXMLModuleVersion_h
-#define QCloudCOSXMLModuleVersionNumber 508001
+#define QCloudCOSXMLModuleVersionNumber 508002
 
-//dependency
+// dependency
 
 //
-FOUNDATION_EXTERN NSString * const QCloudCOSXMLModuleVersion;
-FOUNDATION_EXTERN NSString * const QCloudCOSXMLModuleName;
+FOUNDATION_EXTERN NSString *const QCloudCOSXMLModuleVersion;
+FOUNDATION_EXTERN NSString *const QCloudCOSXMLModuleName;
 
 #endif

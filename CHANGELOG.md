@@ -1,3 +1,6 @@
+# 5.8.2    
+- quic发布
+    
 # 5.8.1    
 修复 #import <CommonCrypto/CommonDigest.h> 大小写问题
     
