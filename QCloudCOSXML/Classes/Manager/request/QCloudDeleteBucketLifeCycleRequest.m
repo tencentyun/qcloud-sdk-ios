@@ -96,7 +96,7 @@ NS_ASSUME_NONNULL_BEGIN
     dic[@"bucket"] = separateArray[0];
     dic[@"region"] = self.runOnService.configuration.endpoint.regionName;
     dic[@"prefix"] = @"";
-    dic[@"action"] = @"name/cos:DeleteBucketLifecycle";
+    dic[@"action"] = @"name/cos:DeleteBucketLifeCycle";
     NSMutableArray *array = [NSMutableArray array];
     [array addObject:dic];
     return [array copy];

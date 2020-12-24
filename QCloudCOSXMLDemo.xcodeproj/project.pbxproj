@@ -43,6 +43,7 @@
 		D22FB268246E303100C04C54 /* QCloudMyBucketListCtor.m in Sources */ = {isa = PBXBuildFile; fileRef = D22FB267246E303100C04C54 /* QCloudMyBucketListCtor.m */; };
 		D22FB26C246E3FBF00C04C54 /* QCCouldMyBucketCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D22FB26B246E3FBF00C04C54 /* QCCouldMyBucketCell.m */; };
 		D22FB272246E8E2100C04C54 /* QCloudFileListCtor.m in Sources */ = {isa = PBXBuildFile; fileRef = D22FB271246E8E2100C04C54 /* QCloudFileListCtor.m */; };
+		D2A14B1925948B14009F41EE /* QCloudCOSXMLModelCoverage.m in Sources */ = {isa = PBXBuildFile; fileRef = D2A14B1825948B14009F41EE /* QCloudCOSXMLModelCoverage.m */; };
 		D2B7008624721C9600F59994 /* BucketFileItemViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B7008424721C9600F59994 /* BucketFileItemViewCell.m */; };
 		D2B7008A247220C800F59994 /* UIViewController+Loading.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B70089247220C800F59994 /* UIViewController+Loading.m */; };
 		D2B7008E2472280400F59994 /* QCloudBucketContents+Addition.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B7008D2472280400F59994 /* QCloudBucketContents+Addition.m */; };
@@ -135,6 +136,7 @@
 		D22FB26D246E40B900C04C54 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		D22FB270246E8E2100C04C54 /* QCloudFileListCtor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QCloudFileListCtor.h; sourceTree = "<group>"; };
 		D22FB271246E8E2100C04C54 /* QCloudFileListCtor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QCloudFileListCtor.m; sourceTree = "<group>"; };
+		D2A14B1825948B14009F41EE /* QCloudCOSXMLModelCoverage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QCloudCOSXMLModelCoverage.m; sourceTree = "<group>"; };
 		D2B7008324721C9600F59994 /* BucketFileItemViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BucketFileItemViewCell.h; sourceTree = "<group>"; };
 		D2B7008424721C9600F59994 /* BucketFileItemViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BucketFileItemViewCell.m; sourceTree = "<group>"; };
 		D2B70088247220C800F59994 /* UIViewController+Loading.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Loading.h"; sourceTree = "<group>"; };
@@ -253,6 +255,7 @@
 				7F43AE95213932EA0025DD1B /* QCloudCSPCOSXMLTestUtility.h */,
 				7F43AE96213932EA0025DD1B /* QCloudCSPCOSXMLTestUtility.m */,
 				D2221E15248E605100AC5A4A /* QCloudCOSXMLImageHelperTests.m */,
+				D2A14B1825948B14009F41EE /* QCloudCOSXMLModelCoverage.m */,
 			);
 			path = QCloudCOSXMLDemoTests;
 			sourceTree = "<group>";
@@ -543,6 +546,7 @@
 				1A1C1DB31ED4324400EF74AB /* QCloudCOSTransferTests.m in Sources */,
 				A84AB4FB201AC62100A47F14 /* QCloudCOSXMLTestUtility.m in Sources */,
 				1AB3815E1EE8FFCA00F6E302 /* QCloudCOSXMLBucketTests.m in Sources */,
+				D2A14B1925948B14009F41EE /* QCloudCOSXMLModelCoverage.m in Sources */,
 				1AB1440A1E601E0500830F93 /* QCloudCOSXMLDemoTests.m in Sources */,
 				7F26A8E7213557200078097B /* QCloudCOSCSPTest.m in Sources */,
 				7F43AE97213932EA0025DD1B /* QCloudCSPCOSXMLTestUtility.m in Sources */,

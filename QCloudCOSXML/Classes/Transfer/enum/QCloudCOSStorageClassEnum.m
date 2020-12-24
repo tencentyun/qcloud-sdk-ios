@@ -32,10 +32,10 @@ QCloudCOSStorageClass QCloudCOSStorageClassDumpFromString(NSString *key) {
 NSString *QCloudCOSStorageClassTransferToString(QCloudCOSStorageClass type) {
     switch (type) {
         case QCloudCOSStorageStandard: {
-            return @"Standard";
+            return @"STANDARD";
         }
         case QCloudCOSStorageStandardIA: {
-            return @"Standard_IA";
+            return @"STANDARD_IA";
         }
         case QCloudCOSStorageARCHIVE: {
             return @"ARCHIVE";

@@ -99,6 +99,7 @@ static QCloudBucket *demoTestBucket;
             info.key = content.key;
             [deleteObjectInfoArray addObject:info];
         }
+    
         [deleteMultipleObjectRequest setFinishBlock:^(QCloudDeleteResult *result, NSError *error) {
             if (!error) {
                 QCloudDeleteBucketRequest *deleteBucketRequest = [[QCloudDeleteBucketRequest alloc] init];
@@ -172,8 +173,18 @@ static QCloudBucket *demoTestBucket;
 - (void)testDeleteObject {
     NSString *object = [self uploadTempObject];
     QCloudDeleteObjectRequest *deleteObjectRequest = [QCloudDeleteObjectRequest new];
-    deleteObjectRequest.bucket = demoTestBucket.name;
+    
+    NSError * error;
+    [deleteObjectRequest buildRequestData:&error];
+    XCTAssertNotNil(error);
+
+    
     deleteObjectRequest.object = object;
+    
+    [deleteObjectRequest buildRequestData:&error];
+    XCTAssertNotNil(error);
+    
+    deleteObjectRequest.bucket = demoTestBucket.name;
 
     XCTestExpectation *exp = [self expectationWithDescription:@"delete"];
 
@@ -210,6 +221,14 @@ static QCloudBucket *demoTestBucket;
     deleteInfo.objects = @[ object, deleteObject2 ];
 
     delteRequest.deleteObjects = deleteInfo;
+    
+    
+    for (NSDictionary * dic in delteRequest.scopesArray) {
+        NSString * action = dic[@"action"];
+        XCTAssertTrue([action isEqualToString:@"name/cos:DeleteObject"]);
+    }
+    
+    
     XCTestExpectation *exp = [self expectationWithDescription:@"delete"];
 
     __block NSError *localError;
@@ -326,6 +345,18 @@ static QCloudBucket *demoTestBucket;
     initrequest.bucket = demoTestBucket.name;
     initrequest.object = [NSUUID UUID].UUIDString;
 
+    NSArray * actions = @[@"name/cos:InitiateMultipartUpload",
+                          @"name/cos:ListParts",
+                          @"name/cos:UploadPart",
+                          @"name/cos:CompleteMultipartUpload",
+                          @"name/cos:AbortMultipartUpload"
+                        ];
+    
+    for (NSDictionary * dic in initrequest.scopesArray) {
+        NSString * action = dic[@"action"];
+        XCTAssertTrue([actions containsObject:action]);
+    }
+    
     XCTestExpectation *exp = [self expectationWithDescription:@"delete"];
     __block QCloudInitiateMultipartUploadResult *initResult;
     [initrequest setFinishBlock:^(QCloudInitiateMultipartUploadResult *outputObject, NSError *error) {
@@ -471,7 +502,135 @@ static QCloudBucket *demoTestBucket;
     //    XCTAssertEqual(QCloudFileSize(request.downloadingURL.path), QCloudFileSize(fileURL.path));
 }
 
+- (void)testPutObjectCopy {
+    NSString *copyObjectSourceName = [NSUUID UUID].UUIDString;
+    QCloudPutObjectRequest *put = [QCloudPutObjectRequest new];
+    put.object = copyObjectSourceName;
+    put.versionID = @"versionID111111";
+    put.bucket = demoTestBucket.name;
+    put.body = [@"4324ewr325" dataUsingEncoding:NSUTF8StringEncoding];
+    __block XCTestExpectation *exception = [self expectationWithDescription:@"Put Object Copy Exception"];
+    __block NSError *putObjectCopyError;
+    __block NSError *resultError;
+    __block QCloudCopyObjectResult *copyObjectResult;
+    [put setFinishBlock:^(id outputObject, NSError *error) {
+        NSURL *serviceURL = [[QCloudCOSXMLService defaultCOSXML].configuration.endpoint serverURLWithBucket:demoTestBucket.name
+                                                                                                      appID:self.appID
+                                                                                                 regionName:put.regionName];
+        NSMutableString *objectCopySource = [serviceURL.absoluteString mutableCopy];
+        [objectCopySource appendFormat:@"/%@", copyObjectSourceName];
+        objectCopySource = [[objectCopySource substringFromIndex:7] mutableCopy];
+        QCloudPutObjectCopyRequest *request = [[QCloudPutObjectCopyRequest alloc] init];
+        request.bucket = demoTestBucket.name;
+        request.object = [NSUUID UUID].UUIDString;
+        request.objectCopySource = objectCopySource;
+        request.versionID = @"versionID111111";
+        
+        NSArray * actions = @[@"name/cos:GetObject",@"name/cos:PutObject"];
+        
+        for (NSDictionary *dic in request.scopesArray) {
+            NSString * action = dic[@"action"];
+            XCTAssertTrue([actions containsObject:action]);
+        }
+        
+        [request setFinishBlock:^(QCloudCopyObjectResult *result, NSError *error) {
+            putObjectCopyError = result;
+            resultError = error;
+            [exception fulfill];
+        }];
+        [[QCloudCOSXMLService defaultCOSXML] PutObjectCopy:request];
+    }];
+    [[QCloudCOSXMLService defaultCOSXML] PutObject:put];
+    [self waitForExpectationsWithTimeout:100 handler:nil];
+    XCTAssertNil(resultError);
+}
 
+- (void)testMultiplePutObjectCopy {
+    NSString *tempBucket = [[QCloudCOSXMLTestUtility sharedInstance] createTestBucketWithPrefix:@"dt"].name;
+
+    XCTestExpectation *uploadExpectation = [self expectationWithDescription:@"upload temp object"];
+    QCloudCOSXMLUploadObjectRequest *uploadObjectRequest = [[QCloudCOSXMLUploadObjectRequest alloc] init];
+    NSString *tempFileName = @"30MBTempFile";
+    uploadObjectRequest.bucket = tempBucket;
+    uploadObjectRequest.object = tempFileName;
+    uploadObjectRequest.body = [NSURL fileURLWithPath:[self tempFileWithSize:30 * 1024 * 1024]];
+    [uploadObjectRequest setFinishBlock:^(QCloudUploadObjectResult *result, NSError *error) {
+        XCTAssertNil(error, @"error occures on uploading");
+        [uploadExpectation fulfill];
+    }];
+    [[QCloudCOSTransferMangerService defaultCOSTransferManager] UploadObject:uploadObjectRequest];
+    [self waitForExpectationsWithTimeout:600 handler:nil];
+    QCloudCOSXMLCopyObjectRequest *request = [[QCloudCOSXMLCopyObjectRequest alloc] init];
+
+    request.bucket = demoTestBucket.name;
+    request.object = @"copy-result-test";
+    request.sourceBucket = tempBucket;
+    request.sourceObject = tempFileName;
+    request.sourceAPPID = [QCloudCOSXMLService defaultCOSXML].configuration.appID;
+    request.sourceRegion = [QCloudCOSXMLService defaultCOSXML].configuration.endpoint.regionName;
+
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Put Object Copy"];
+    [request setFinishBlock:^(QCloudCopyObjectResult *result, NSError *error) {
+        XCTAssertNil(error);
+        [expectation fulfill];
+    }];
+    request.requstsMetricArrayBlock = ^(NSMutableArray *requstMetricArray) {
+        QCloudLogDebug(@"testMetric %@", requstMetricArray);
+    };
+    [[QCloudCOSTransferMangerService defaultCOSTransferManager] CopyObject:request];
+    [self waitForExpectationsWithTimeout:10000 handler:nil];
+}
+
+- (void)testForInCopyObject {
+    NSString *tempBucket = [[QCloudCOSXMLTestUtility sharedInstance] createTestBucketWithPrefix:@"dt"].name;
+    NSString *tempFileName = @"30MBTempFile";
+
+    for (int i = 0; i < 5; i++) {
+        XCTestExpectation *uploadExpectation = [self expectationWithDescription:@"upload temp object"];
+        QCloudCOSXMLUploadObjectRequest *uploadObjectRequest = [[QCloudCOSXMLUploadObjectRequest alloc] init];
+        uploadObjectRequest.bucket = tempBucket;
+        uploadObjectRequest.object = tempFileName;
+        uploadObjectRequest.body = [NSURL fileURLWithPath:[self tempFileWithSize:30 * 1024 * 1024]];
+        [uploadObjectRequest setFinishBlock:^(QCloudUploadObjectResult *result, NSError *error) {
+            XCTAssertNil(error, @"error occures on uploading");
+            [uploadExpectation fulfill];
+        }];
+        [[QCloudCOSTransferMangerService defaultCOSTransferManager] UploadObject:uploadObjectRequest];
+        [self waitForExpectationsWithTimeout:200 handler:nil];
+    }
+
+    XCTestExpectation *getBucketExpectation = [self expectationWithDescription:@"get bucket"];
+    __block NSArray *contentsArray;
+    QCloudGetBucketRequest *getBucketRequest = [[QCloudGetBucketRequest alloc] init];
+    getBucketRequest.bucket = tempBucket;
+    getBucketRequest.maxKeys = 1000;
+    [getBucketRequest setFinishBlock:^(QCloudListBucketResult *_Nonnull result, NSError *_Nonnull error) {
+        contentsArray = result.contents;
+        XCTAssertNil(error, @"error during get bucket");
+        [getBucketExpectation fulfill];
+    }];
+    [[QCloudCOSXMLService defaultCOSXML] GetBucket:getBucketRequest];
+    [self waitForExpectationsWithTimeout:120 handler:nil];
+
+    for (QCloudBucketContents *content in contentsArray) {
+        QCloudCOSXMLCopyObjectRequest *request = [[QCloudCOSXMLCopyObjectRequest alloc] init];
+
+        request.bucket = demoTestBucket.name;
+        request.object = [NSString stringWithFormat:@"copy-%@", tempFileName];
+        request.sourceBucket = tempBucket;
+        request.sourceObject = content.key;
+        request.sourceAPPID = [QCloudCOSXMLService defaultCOSXML].configuration.appID;
+        request.sourceRegion = [QCloudCOSXMLService defaultCOSXML].configuration.endpoint.regionName;
+
+        XCTestExpectation *expectation = [self expectationWithDescription:@"Put Object Copy"];
+        [request setFinishBlock:^(QCloudCopyObjectResult *result, NSError *error) {
+            XCTAssertNil(error);
+            [expectation fulfill];
+        }];
+        [[QCloudCOSTransferMangerService defaultCOSTransferManager] CopyObject:request];
+        [self waitForExpectationsWithTimeout:10000 handler:nil];
+    }
+}
 
 - (void)createTestBucket {
     QCloudPutBucketRequest *request = [QCloudPutBucketRequest new];
@@ -588,6 +747,12 @@ static QCloudBucket *demoTestBucket;
     QCloudListObjectVersionsRequest *listObjectRequest = [[QCloudListObjectVersionsRequest alloc] init];
     listObjectRequest.maxKeys = 100;
     listObjectRequest.bucket = demoTestBucket.name;
+    
+    for (NSDictionary * dic in listObjectRequest.scopesArray) {
+        NSString * action = dic[@"action"];
+        XCTAssertTrue([action isEqualToString:@"name/cos:GetBucketObjectVersions"]);
+    }
+    
     [listObjectRequest setFinishBlock:^(QCloudListVersionsResult *_Nonnull result, NSError *_Nonnull error) {
         XCTAssertNil(error);
         XCTAssertNotNil(result);

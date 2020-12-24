@@ -16,6 +16,8 @@
 #define kHTTPServiceKey @"HTTPService"
 #define ktransferTestBucketKey @"tf"
 #import "SecretStorage.h"
+#import <QCloudCOSXMLService.h>
+#import <QCloudGenerateSnapshotConfiguration.h>
 @interface QCloudCOSTransferTests : XCTestCase <QCloudSignatureProvider>
 @property (nonatomic, strong) NSMutableArray *tempFilePathArray;
 @property (nonatomic, strong) NSString *appID;
@@ -787,6 +789,77 @@ static QCloudBucket *sourceTestBucket;
     [put setFinishBlock:^(id outputObject, NSError *error) {
         result = outputObject;
         [exp fulfill];
+        
+        QCloudPutObjectTaggingRequest *putReq = [QCloudPutObjectTaggingRequest new];
+
+        NSError * localError;
+        [putReq buildRequestData:&localError];
+        XCTAssertNotNil(localError);
+        
+        // 存储桶名称，格式为 BucketName-APPID
+        putReq.bucket = transferTestBucket.name;
+        
+        [putReq buildRequestData:&localError];
+        XCTAssertNotNil(localError);
+        putReq.object = put.object;
+        
+        [putReq buildRequestData:&localError];
+        XCTAssertNotNil(localError);
+        // 标签集合
+        QCloudTagging *taggings = [QCloudTagging new];
+
+        QCloudTag *tag1 = [QCloudTag new];
+
+        tag1.key = @"age";
+        tag1.value = @"18";
+        QCloudTag *tag2 = [QCloudTag new];
+        tag2.key = @"name";
+        tag2.value = @"garen";
+
+        QCloudTagSet *tagSet = [QCloudTagSet new];
+        tagSet.tag = @[tag1,tag2];
+        taggings.tagSet = tagSet;
+
+        // 标签集合
+        putReq.taggings = taggings;
+
+        [putReq setFinishBlock:^(id outputObject, NSError *error) {
+            // outputObject 包含所有的响应 http 头部
+            NSDictionary* info = (NSDictionary *) outputObject;
+            
+            QCloudGetObjectTaggingRequest *getReq = [QCloudGetObjectTaggingRequest new];
+            NSError * localError;
+            [getReq buildRequestData:&localError];
+            XCTAssertNotNil(localError);
+            
+            // 存储桶名称，格式为 BucketName-APPID
+            getReq.bucket = transferTestBucket.name;
+            
+            [getReq buildRequestData:&localError];
+            XCTAssertNotNil(localError);
+            getReq.object = put.object;
+            
+            [getReq setFinishBlock:^(QCloudTagging * result, NSError * error) {
+
+                // tag的集合
+                QCloudTagSet * tagSet = result.tagSet;
+                for (QCloudTag * tag in tagSet.tag) {
+                    if ([tag.key isEqualToString:@"age"]) {
+                        XCTAssertTrue(tag.value.intValue == 18);
+                    }
+                    
+                    if ([tag.key isEqualToString:@"name"]) {
+                        XCTAssertTrue([tag.value isEqualToString:@"garen"]);
+                    }
+                }
+                
+            }];
+            [[QCloudCOSXMLService defaultCOSXML] GetObjectTagging:getReq];
+            
+            
+        }];
+        [[QCloudCOSXMLService defaultCOSXML] PuObjectTagging:putReq];
+        
     }];
     [[QCloudCOSTransferMangerService defaultCOSTransferManager] UploadObject:put];
     [self waitForExpectationsWithTimeout:18000
@@ -1161,4 +1234,51 @@ static QCloudBucket *sourceTestBucket;
     [[QCloudCOSXMLService defaultCOSXML] SelectObjectContent:request];
 }
 
+-(void)testQCloudPostObjectRestoreRequest{
+    XCTestExpectation* expectation = [self expectationWithDescription:@"testQCloudPostObjectRestoreRequest"];
+    QCloudPostObjectRestoreRequest *req = [QCloudPostObjectRestoreRequest new];
+    
+    NSError * localError;
+    
+    [req buildRequestData:&localError];
+    XCTAssertNotNil(localError);
+    req.bucket = transferTestBucket.name;
+    
+    [req buildRequestData:&localError];
+    XCTAssertNotNil(localError);
+    req.object = @"test";
+
+    req.restoreRequest.days  = 10;
+
+    req.restoreRequest.CASJobParameters.tier =QCloudCASTierStandard;
+
+    [req setFinishBlock:^(id outputObject, NSError *error) {
+
+        [expectation fulfill];
+
+    }];
+
+    [[QCloudCOSXMLService defaultCOSXML] PostObjectRestore:req];
+    [self waitForExpectationsWithTimeout:80 handler:nil];
+}
+
+-(void)testQCloudGetGenerateSnapshotRequest{
+    XCTestExpectation* expectation = [self expectationWithDescription:@"testQCloudPostObjectRestoreRequest"];
+    QCloudGetGenerateSnapshotRequest * shotRequest = [QCloudGetGenerateSnapshotRequest new];
+    NSError * localError;
+    [shotRequest buildRequestData:&localError];
+    XCTAssertNotNil(localError);
+    shotRequest.bucket = transferTestBucket.name;
+    
+    [shotRequest buildRequestData:&localError];
+    XCTAssertNotNil(localError);
+    
+    shotRequest.generateSnapshotConfiguration = [QCloudGenerateSnapshotConfiguration new];
+    
+    shotRequest.finishBlock = ^(id outputObject, NSError *error) {
+        [expectation fulfill];
+    };
+    [[QCloudCOSXMLService defaultCOSXML] GetGenerateSnapshot:shotRequest];
+    [self waitForExpectationsWithTimeout:80 handler:nil];
+}
 @end

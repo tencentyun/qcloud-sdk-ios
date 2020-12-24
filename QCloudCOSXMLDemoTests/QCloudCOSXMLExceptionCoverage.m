@@ -73,11 +73,11 @@
 
 - (void)testStorateEnum {
     QCloudLogInfo(@"QCloudCOSXMLExceptionCoverage:testStorateEnum");
-    XCTAssertEqual(QCloudCOSStorageClassDumpFromString(@"Standard"), 0);
-    XCTAssertEqual(QCloudCOSStorageClassDumpFromString(@"Standard_IA"), 0);
+    XCTAssertEqual(QCloudCOSStorageClassDumpFromString(@"STANDARD"), 0);
+    XCTAssertEqual(QCloudCOSStorageClassDumpFromString(@"STANDARD_IA"), 1);
 
-    XCTAssert([QCloudCOSStorageClassTransferToString(QCloudCOSStorageStandard) isEqualToString:@"Standard"]);
-    XCTAssert([QCloudCOSStorageClassTransferToString(QCloudCOSStorageStandardIA) isEqualToString:@"Standard_IA"]);
+    XCTAssert([QCloudCOSStorageClassTransferToString(QCloudCOSStorageStandard) isEqualToString:@"STANDARD"]);
+    XCTAssert([QCloudCOSStorageClassTransferToString(QCloudCOSStorageStandardIA) isEqualToString:@"STANDARD_IA"]);
 }
 
 - (void)testDeleteMultipartInfo {
@@ -277,6 +277,19 @@
     XCTAssert(![request buildURLRequest:&error]);
     request.uploadId = @"uploadIDTest";
     XCTAssert(![request buildURLRequest:&error]);
+    
+    NSArray * actions = @[
+        @"name/cos:InitiateMultipartUpload",
+        @"name/cos:ListParts",
+        @"name/cos:UploadPart",
+        @"name/cos:CompleteMultipartUpload",
+        @"name/cos:AbortMultipartUpload",
+    ];
+            
+    for (NSDictionary *dic in request.scopesArray) {
+        NSString * action = dic[@"action"];
+        XCTAssertTrue([actions containsObject:action]);
+    }
 }
 
 - (void)testCoverOptionsObjectRequest {
@@ -305,6 +318,19 @@
     XCTAssert(![request buildURLRequest:&error]);
     request.uploadId = @"uploadIDTest";
     XCTAssert(![request buildURLRequest:&error]);
+    
+    NSArray * actions = @[
+        @"name/cos:InitiateMultipartUpload",
+        @"name/cos:ListParts",
+        @"name/cos:UploadPart",
+        @"name/cos:CompleteMultipartUpload",
+        @"name/cos:AbortMultipartUpload",
+    ];
+            
+    for (NSDictionary *dic in request.scopesArray) {
+        NSString * action = dic[@"action"];
+        XCTAssertTrue([actions containsObject:action]);
+    }
 }
 
 - (void)testCoverListMultipartUploadResult {
@@ -318,7 +344,7 @@
     XCTAssert([[request performSelector:@selector(modelCustomWillTransformFromDictionary:) withObject:testInput] isKindOfClass:[NSDictionary class]]);
 }
 
-- (void)tetCoverUploadPartRequest {
+- (void)testCoverUploadPartRequest {
     QCloudLogInfo(@"QCloudCOSXMLExceptionCoverage:tetCoverUploadPartRequest");
     QCloudUploadPartRequest *request = [[QCloudUploadPartRequest alloc] init];
     NSError *error;
@@ -333,7 +359,20 @@
     request.uploadId = @"uploadIDTest";
     request.contentSHA1 = @"contentSHA1";
     request.expect = @"expect";
-    XCTAssert(![request buildURLRequest:&error]);
+    XCTAssert([request buildURLRequest:&error]);
+    
+    NSArray * actions = @[
+        @"name/cos:InitiateMultipartUpload",
+        @"name/cos:ListParts",
+        @"name/cos:UploadPart",
+        @"name/cos:CompleteMultipartUpload",
+        @"name/cos:AbortMultipartUpload",
+    ];
+            
+    for (NSDictionary *dic in request.scopesArray) {
+        NSString * action = dic[@"action"];
+        XCTAssertTrue([actions containsObject:action]);
+    }
 }
 
 - (NSString *)formattedBucket:(NSString *)bucket withAPPID:(NSString *)APPID {
@@ -522,6 +561,120 @@
     XCTAssert([QCloudCOSPermissionTransferToString(QCloudCOSPermissionRead) isEqualToString:@"READ"]);
     XCTAssert([QCloudCOSPermissionTransferToString(QCloudCOSPermissionWrite) isEqualToString:@"WRITE"]);
     XCTAssert([QCloudCOSPermissionTransferToString(QCloudCOSPermissionFullControl) isEqualToString:@"FULL_CONTROL"]);
+}
+
+-(void)testQCloudUploadPartCopyRequest{
+    QCloudLogInfo(@"QCloudCOSXMLExceptionCoverage:testQCloudUploadPartCopyRequest");
+    QCloudUploadPartCopyRequest *request = [[QCloudUploadPartCopyRequest alloc] init];
+    NSError *error;
+    XCTAssert(![request buildRequestData:&error]);
+    
+    error = nil;
+    request.bucket = kTestBucket;
+    XCTAssert(![request buildRequestData:&error]);
+    
+    error = nil;
+    request.object = @"testObject";
+    XCTAssert(![request buildRequestData:&error]);
+
+    error = nil;
+    request.source = @"test.test.test";
+    XCTAssert([request buildRequestData:&error]);
+    
+    NSArray * actions = @[
+        @"name/cos:GetObject",
+        @"name/cos:InitiateMultipartUpload",
+        @"name/cos:ListParts",
+        @"name/cos:PutObject",
+        @"name/cos:CompleteMultipartUpload",
+        @"name/cos:AbortMultipartUpload",
+    ];
+            
+    for (NSDictionary *dic in request.scopesArray) {
+        NSString * action = dic[@"action"];
+        XCTAssertTrue([actions containsObject:action]);
+    }
+    
+    NSString *testValue = @"testValue";
+    request.sourceRange = testValue;
+    request.sourceIfModifiedSince = testValue;
+    request.sourceIfUnmodifiedSince = testValue;
+    request.sourceIfMatch = testValue;
+    request.sourceIfNoneMatch = testValue;
+    request.versionID = testValue;
+    error = nil;
+    XCTAssert([request buildRequestData:&error]);
+    
+}
+
+-(void)testQCloudPutBucketRequestExp{
+    QCloudPutBucketRequest *request = [[QCloudPutBucketRequest alloc] init];
+    
+    NSError *error;
+    XCTAssert(![request buildRequestData:&error]);
+    
+    request.bucket = @"test";
+    request.accessControlList = @"test";
+    request.grantRead = @"test";
+    request.grantWrite = @"test";
+    request.grantFullControl = @"test";
+    
+    XCTAssert([request buildRequestData:&error]);
+}
+
+-(void)testQCloudGetObjectACLRequestExp{
+    QCloudGetObjectACLRequest *request = [[QCloudGetObjectACLRequest alloc] init];
+    
+    NSError *error;
+    XCTAssert(![request buildRequestData:&error]);
+    
+    request.bucket = @"test";
+    error = nil;
+    XCTAssert(![request buildRequestData:&error]);
+ 
+}
+
+
+
+-(void)testQCloudDeleteBucketReplicationRequestExp{
+    
+    NSArray * arrayTestBucket = @[
+        QCloudDeleteBucketReplicationRequest.class,
+        QCloudPutBucketAccelerateRequest.class,
+        QCloudPutBucketReplicationRequest.class,
+        QCloudPutBucketVersioningRequest.class,
+        QCloudGetBucketRequest.class,
+        QCloudGetBucketReplicationRequest.class,
+        QCloudGetBucketAccelerateRequest.class,
+        QCloudGetBucketLifecycleRequest.class,
+        QCloudGetBucketVersioningRequest.class,
+        QCloudGetBucketLocationRequest.class,
+        QCloudGetBucketACLRequest.class,
+        QCloudGetBucketCORSRequest.class,
+        QCloudGetRecognitionObjectRequest.class,
+        QCloudListObjectVersionsRequest.class,
+        QCloudListBucketMultipartUploadsRequest.class,
+        QCloudGetObjectRequest.class,
+        QCloudSelectObjectContentRequest.class,
+        QCloudPutBucketWebsiteRequest.class,
+        QCloudDeleteBucketInventoryRequest.class,
+        QCloudPutBucketTaggingRequest.class,
+        QCloudPutBucketInventoryRequest.class,
+        QCloudGetBucketInventoryRequest.class,
+        QCloudPutBucketDomainRequest.class,
+        QCloudGetBucketRequest.class
+    ];
+    
+    NSArray * arrayTestObject = @[
+        QCloudSelectObjectContentRequest.class,
+    ];
+    
+    for (Class clazz in arrayTestObject) {
+        QCloudBizHTTPRequest * obj = [clazz new];
+        NSError *error;
+        
+        XCTAssert(![obj buildRequestData:&error]);
+    }
 }
 
 @end

@@ -160,7 +160,7 @@ NS_ASSUME_NONNULL_BEGIN
             path = [path stringByAppendingString:@"/"];
         }
     }
-    NSArray *hostsArray = [tmpstrsArr[0] componentsSeparatedByString:@"."];
+    NSArray *hostsArray = [tmpstrsArr[1] componentsSeparatedByString:@"."];
     orginDic[@"bucket"] = hostsArray[0];
     orginDic[@"region"] = hostsArray[2];
     orginDic[@"prefix"] = path;

@@ -81,10 +81,22 @@ static QCloudBucket *imageTestBucket;
 }
 
 - (void)testSetupWaterMark {
+    XCTestExpectation* exp = [self expectationWithDescription:@"Recognition"];
     QCloudPutObjectWatermarkRequest *put = [QCloudPutObjectWatermarkRequest new];
+    
+    NSError * localError;
+    [put buildRequestData:&localError];
+    XCTAssertNotNil(localError);
     put.object = @"objectName";
-    put.bucket = [QCloudTestTempVariables sharedInstance].testBucket;
+    
+    [put buildRequestData:&localError];
+    XCTAssertNotNil(localError);
+    put.bucket = imageTestBucket.name;
+    
+    [put buildRequestData:&localError];
+    XCTAssertNotNil(localError);
     put.body = [@"123456789" dataUsingEncoding:NSUTF8StringEncoding];
+    
     QCloudPicOperations *op = [[QCloudPicOperations alloc] init];
     op.is_pic_info = NO;
     QCloudPicOperationRule *rule = [[QCloudPicOperationRule alloc] init];
@@ -92,25 +104,82 @@ static QCloudBucket *imageTestBucket;
     rule.text = @"123"; // 水印文字只能是 [a-zA-Z0-9]
     rule.type = QCloudPicOperationRuleText;
     op.rule = @[ rule ];
+    
+    NSDictionary * dic = [put.scopesArray firstObject];
+    NSString * action = dic[@"action"];
+    XCTAssertTrue([action isEqualToString:@"name/cos:PutObject"]);
+    
+    [put buildRequestData:&localError];
+    XCTAssertNotNil(localError);
     put.picOperations = op;
+    
     [put setFinishBlock:^(id outputObject, NSError *error) {
-
+        [exp fulfill];
     }];
     [[QCloudCOSXMLService defaultCOSXML] PutWatermarkObject:put];
+    [self waitForExpectationsWithTimeout:100 handler:nil];
 }
 
 - (void)testRecognition {
-    //
+    XCTestExpectation* exp = [self expectationWithDescription:@"Recognition"];
     QCloudGetRecognitionObjectRequest *request = [QCloudGetRecognitionObjectRequest new];
-    request.bucket = [QCloudTestTempVariables sharedInstance].testBucket;
-    ; //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
+    
+    NSError * localError;
+    [request buildRequestData:&localError];
+    XCTAssertNotNil(localError);
+    request.bucket = imageTestBucket.name;
+    
+    [request buildRequestData:&localError];
+    XCTAssertNotNil(localError);
     request.object = @"objectName";
+    
+    [request buildRequestData:&localError];
+    XCTAssertNotNil(localError);
     request.detectType = QCloudRecognitionPorn | QCloudRecognitionAds; // 支持多种类型同时审核
+    
+    NSDictionary * dic = [request.scopesArray firstObject];
+    NSString * action = dic[@"action"];
+    XCTAssertTrue([action isEqualToString:@"name/cos:GetObject"]);
+    
     [request setFinishBlock:^(QCloudGetRecognitionObjectResult *_Nullable outputObject, NSError *_Nullable error) {
         NSLog(@"%@", outputObject);
+        [exp fulfill];
     }];
 
     [[QCloudCOSXMLService defaultCOSXML] GetRecognitionObject:request];
+    [self waitForExpectationsWithTimeout:100 handler:nil];
+}
+
+-(void)testQCloudGetFilePreviewRequest{
+    XCTestExpectation* exp = [self expectationWithDescription:@"QCloudGetFilePreviewRequest"];
+    
+    QCloudGetFilePreviewRequest *request = [[QCloudGetFilePreviewRequest alloc]init];
+    
+    NSError * localError;
+    [request buildRequestData:&localError];
+    XCTAssertNotNil(localError);
+    
+    request.bucket = imageTestBucket.name;
+    [request buildRequestData:&localError];
+    XCTAssertNotNil(localError);
+    
+    request.object = @"test";
+    [request buildRequestData:&localError];
+    XCTAssertNotNil(localError);
+    
+    request.page = 0;
+    request.regionName = kRegion;
+    
+    NSDictionary *dic = [request.scopesArray firstObject];
+    NSString * action = dic[@"action"];
+    XCTAssertTrue([action isEqualToString:@"name/cos:GetObject"]);
+    
+    [request setFinishBlock:^(QCloudGetFilePreviewResult * _Nullable result, NSError * _Nullable error) {
+        [exp fulfill];
+    }];
+    [[QCloudCOSXMLService defaultCOSXML] GetFilePreviewObject:request];
+    
+    [self waitForExpectationsWithTimeout:100 handler:nil];
 }
 
 - (void)testPerformanceExample {
