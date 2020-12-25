@@ -546,12 +546,11 @@ static QCloudBucket *demoTestBucket;
 }
 
 - (void)testMultiplePutObjectCopy {
-    NSString *tempBucket = [[QCloudCOSXMLTestUtility sharedInstance] createTestBucketWithPrefix:@"dt"].name;
 
     XCTestExpectation *uploadExpectation = [self expectationWithDescription:@"upload temp object"];
     QCloudCOSXMLUploadObjectRequest *uploadObjectRequest = [[QCloudCOSXMLUploadObjectRequest alloc] init];
     NSString *tempFileName = @"30MBTempFile";
-    uploadObjectRequest.bucket = tempBucket;
+    uploadObjectRequest.bucket = demoTestBucket.name;
     uploadObjectRequest.object = tempFileName;
     uploadObjectRequest.body = [NSURL fileURLWithPath:[self tempFileWithSize:30 * 1024 * 1024]];
     [uploadObjectRequest setFinishBlock:^(QCloudUploadObjectResult *result, NSError *error) {
@@ -564,7 +563,7 @@ static QCloudBucket *demoTestBucket;
 
     request.bucket = demoTestBucket.name;
     request.object = @"copy-result-test";
-    request.sourceBucket = tempBucket;
+    request.sourceBucket = demoTestBucket.name;
     request.sourceObject = tempFileName;
     request.sourceAPPID = [QCloudCOSXMLService defaultCOSXML].configuration.appID;
     request.sourceRegion = [QCloudCOSXMLService defaultCOSXML].configuration.endpoint.regionName;
@@ -782,9 +781,7 @@ static QCloudBucket *demoTestBucket;
     XCTestExpectation *uploadExpectation = [self expectationWithDescription:@"upload temp object"];
     QCloudCOSXMLUploadObjectRequest *uploadObjectRequest = [[QCloudCOSXMLUploadObjectRequest alloc] init];
     NSString *tempFileName = @"test/subtest/30MBTempFile";
-    uploadObjectRequest.bucket =
-        [[QCloudCOSXMLTestUtility sharedInstance] createTestBucketWithCosSerVice:[QCloudCOSXMLService cosxmlServiceForKey:kTestFromAnotherRegionCopy]
-                                                                      withPrefix:@"sts"];
+    uploadObjectRequest.bucket = demoTestBucket.name;
     uploadObjectRequest.object = tempFileName;
     uploadObjectRequest.body = [NSURL fileURLWithPath:[self tempFileWithSize:30 * 1024 * 1024]];
     [uploadObjectRequest setFinishBlock:^(QCloudUploadObjectResult *result, NSError *error) {
@@ -816,9 +813,7 @@ static QCloudBucket *demoTestBucket;
     XCTestExpectation *uploadExpectation = [self expectationWithDescription:@"upload temp object"];
     QCloudCOSXMLUploadObjectRequest *uploadObjectRequest = [[QCloudCOSXMLUploadObjectRequest alloc] init];
     NSString *tempFileName = @"test/subtest/30MBTempFile";
-    uploadObjectRequest.bucket =
-        [[QCloudCOSXMLTestUtility sharedInstance] createTestBucketWithCosSerVice:[QCloudCOSXMLService cosxmlServiceForKey:kTestFromAnotherRegionCopy]
-                                                                      withPrefix:@"sts"];
+    uploadObjectRequest.bucket = demoTestBucket.name;
     uploadObjectRequest.object = tempFileName;
     uploadObjectRequest.body = [NSURL fileURLWithPath:[self tempFileWithSize:1 * 1024 * 1024]];
     [uploadObjectRequest setFinishBlock:^(QCloudUploadObjectResult *result, NSError *error) {
