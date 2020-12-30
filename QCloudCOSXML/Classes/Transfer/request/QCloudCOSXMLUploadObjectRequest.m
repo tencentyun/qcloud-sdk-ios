@@ -92,6 +92,7 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     _enableMD5Verification = YES;
     _retryHandler = [QCloudHTTPRetryHanlder defaultRetryHandler];
     startPartNumber = -1;
+    _sliceLimitSize = kQCloudCOSXMLUploadLengthLimit;
     self.priority = QCloudAbstractRequestPriorityHigh;
     return self;
 }
@@ -172,6 +173,9 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
         }
     }
 }
+- (void)setSliceLimitSize:(NSUInteger)sliceLimitSize {
+    _sliceLimitSize = MAX(sliceLimitSize, kQCloudCOSXMLUploadLengthLimit);
+}
 
 - (void)getContinueInfo:(NSArray *)existParts {
     _uploadParts = [NSMutableArray new];
@@ -246,7 +250,7 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
             return;
         }
         self.dataContentLength = QCloudFileSize(url.path);
-        if (self.dataContentLength > kQCloudCOSXMLUploadLengthLimit) {
+        if (self.dataContentLength > _sliceLimitSize) {
             //开始分片上传的时候，上传的起始位置是0
             uploadedSize = 0;
             startPartNumber = 0;
@@ -663,7 +667,7 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
 }
 
 - (QCloudCOSXMLUploadObjectResumeData)productingReqsumeData:(NSError *__autoreleasing *)error {
-    if (_dataContentLength <= kQCloudCOSXMLUploadLengthLimit) {
+    if (_dataContentLength <= _sliceLimitSize) {
         if (NULL != error) {
             *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorUnsupportOperationError
                                            message:@"UnsupportOperation:无法暂停当前的上传请求，因为使用的是单次上传"];

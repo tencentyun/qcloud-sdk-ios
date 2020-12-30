@@ -46,6 +46,7 @@ typedef void (^RequestsMetricArrayBlock)(NSMutableArray *_Nullable requstMetricA
  */
 @interface QCloudCOSXMLUploadObjectRequest<BodyType> : QCloudAbstractRequest
 @property (nonatomic, assign) NSUInteger sliceSize;
+@property (nonatomic, assign) NSUInteger sliceLimitSize;
 @property (nonatomic, assign) QCloudAbstractRequestPriority uploadPriority;
 /**
  上传文件（对象）的文件名，也是对象的key，请注意文件名中不可以含有问号即"?"字符
@@ -145,6 +146,7 @@ RFC 2616 中定义用于指示资源的MIME类型，将作为 Object 元数据�
  */
 @property (strong, nonatomic) NSMutableDictionary *_Nullable customHeaders;
 @property (strong, nonatomic) NSString *_Nullable regionName;
+
 /**
  上传完成后会通过该block回调。若error为空，可视为成功。
 

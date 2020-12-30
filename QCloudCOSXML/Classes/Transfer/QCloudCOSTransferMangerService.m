@@ -58,6 +58,7 @@ QCloudThreadSafeMutableDictionary *QCloudCOSTransferMangerServiceCache() {
 
 @implementation QCloudCOSTransferMangerService
 static QCloudCOSTransferMangerService *COSTransferMangerService = nil;
+@synthesize configuration;
 
 + (QCloudCOSTransferMangerService *)defaultCOSTransferManager {
     @synchronized(self) {
@@ -98,12 +99,16 @@ static QCloudCOSTransferMangerService *COSTransferMangerService = nil;
         return self;
     }
     _cosService = [[QCloudCOSXMLService alloc] initWithConfiguration:configuration];
+    _configuration = configuration;
     _uploadFileQueue = [QCloudOperationQueue new];
     return self;
 }
 
 - (void)UploadObject:(QCloudCOSXMLUploadObjectRequest *)request {
     request.transferManager = self;
+    if (_configuration.sliceUploadLimitLength > 0) {
+        request.sliceLimitSize = _configuration.sliceUploadLimitLength;
+    }
     QCloudLogDebug(@"UploadObject set transferManager %@", request.transferManager);
     QCloudFakeRequestOperation *operation = [[QCloudFakeRequestOperation alloc] initWithRequest:request];
     [self.uploadFileQueue addOpreation:operation];
@@ -127,5 +132,20 @@ static QCloudCOSTransferMangerService *COSTransferMangerService = nil;
  @param identifier        The identifier of the URL session requiring attention.
  @param completionHandler The completion handler to call when you finish processing the events.
  */
+
+@end
+
+NSString *const kSliceUploadLimitLength = @"sliceUploadLimitLengthKey";
+
+@implementation QCloudServiceConfiguration (Transfer)
+
+- (void)setSliceUploadLimitLength:(NSUInteger)length {
+    objc_setAssociatedObject(self, &kSliceUploadLimitLength, @(length), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (NSUInteger) sliceUploadLimitLength {
+    NSNumber *number = objc_getAssociatedObject(self, &kSliceUploadLimitLength);
+    return number ? [number longValue] : 0;
+}
 
 @end

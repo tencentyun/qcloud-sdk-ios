@@ -40,6 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface QCloudCOSTransferMangerService : QCloudService
 
 @property (nonatomic, strong, readonly) QCloudCOSXMLService *cosService;
+@property (nonatomic, strong, readonly) QCloudServiceConfiguration *configuration;
 
 #pragma hidden super selectors
 - (int)performRequest:(QCloudBizHTTPRequest *)httpRequst NS_UNAVAILABLE;
@@ -54,6 +55,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)UploadObject:(QCloudCOSXMLUploadObjectRequest *)upload;
 - (void)CopyObject:(QCloudCOSXMLCopyObjectRequest *)copy;
 - (void)DownloadObject:(QCloudCOSXMLDownloadObjectRequest *)get;
+
+@end
+
+@interface QCloudServiceConfiguration (Transfer)
+
+@property (nonatomic, assign) NSUInteger sliceUploadLimitLength;
 
 @end
 NS_ASSUME_NONNULL_END
