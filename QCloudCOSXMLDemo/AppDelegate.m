@@ -78,7 +78,6 @@
 
 }
 
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [self setupCOSXMLShareService];
     self.credentialFenceQueue = [QCloudCredentailFenceQueue new];

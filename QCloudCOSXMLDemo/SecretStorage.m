@@ -7,7 +7,6 @@
 //
 
 #import "SecretStorage.h"
-
 @implementation SecretStorage
 +(instancetype)sharedInstance {
     static SecretStorage* instance;
@@ -17,7 +16,6 @@
     });
     return  instance;
 }
-
 -(instancetype) init {
     self = [super init];
     NSString* path = [[NSBundle mainBundle] pathForResource:@"key" ofType:@"json"];

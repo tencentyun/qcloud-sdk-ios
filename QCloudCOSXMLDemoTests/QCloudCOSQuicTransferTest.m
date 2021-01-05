@@ -11,9 +11,7 @@
 #import <QCloudCOSXML/QCloudCOSXML.h>
 #import "SecretStorage.h"
 #import "TestCommonDefine.h"
-
 #define ServiceKey @"QUIC"
-
 #define QUIC_BUCKET @"demo-ap-shanghai"
 #define QUIC_BUCKET_REGION @"ap-shanghai"
 
@@ -56,7 +54,7 @@
     [super setUp];
     [self setupSpecialCOSXMLShareService];
 
-    [[QCloudHttpDNS shareDNS] setIp:@"101.227.219.151"
+    [[QCloudHttpDNS shareDNS] setIp:@"**********"
                           forDomain:[NSString stringWithFormat:@"%@-%@.cos.%@.myqcloud.com", QUIC_BUCKET, kAppID, QUIC_BUCKET_REGION]];
 }
 

@@ -7,7 +7,6 @@
 //
 
 #import "QCloudCOSXMLConfiguration.h"
-
 @implementation QCloudCOSXMLConfiguration
 + (instancetype)sharedInstance  {
     
@@ -18,7 +17,6 @@
     });
     return instacne;
 }
-
 - (NSArray *)availableRegions {
   return   @[@"ap-beijing",@"ap-shanghai",@"ap-guangzhou",@"ap-chengdu",@"ap-chongqing",@"ap-singapore",@"ap-hongkong",@"eu-frankfurt",@"ap-mumbai",@"ap-seoul",@"na-siliconvalley",@"na-ashburn"];
 }

@@ -7,12 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
-
 NS_ASSUME_NONNULL_BEGIN
 
 @interface SecretStorage : NSObject
 + (instancetype)sharedInstance;
-
 @property (nonatomic, copy) NSString* appID;
 @property (nonatomic, copy) NSString* secretID;
 @property (nonatomic, copy) NSString* secretKey;
