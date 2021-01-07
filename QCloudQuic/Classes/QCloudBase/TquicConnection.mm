@@ -207,6 +207,7 @@ class TnetAsyncDelegate : public TnetRequestDelegate{
     }
     config.congestion_type_ = kBBR;
     config.race_type = kQUICHTTP;
+    config.quic_version_ = 43;
     request_sp.reset(new TnetQuicRequest(tquic_delegate_sp.get(),config));
     tquic_delegate_sp.get()->request_sp = request_sp;
     self.quicReqeust = quicRequest;
