@@ -9,8 +9,23 @@
 #import "QCloudNetEnv.h"
 #import "QCloudReachability.h"
 
+
 NSString *const kQCloudNetEnvChangedNotification = @"kQCloudNetEnvChangedNotification";
 
+NSString * QCloudNetworkSituationToString(QCloudNetworkStatus situation){
+    switch (situation) {
+        case QCloudReachableViaWiFi:
+            return @"WIFI";
+            break;
+        case QCloudReachableViaWWAN:
+            return @"WWAN";
+            break;
+        default:
+            return @"NONE";
+            break;
+    }
+    return @"NONE";
+}
 @implementation QCloudNetEnv {
     QCloudReachability *_reachAbility;
     BOOL _isInit;

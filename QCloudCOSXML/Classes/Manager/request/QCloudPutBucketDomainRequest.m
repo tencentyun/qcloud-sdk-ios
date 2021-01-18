@@ -76,7 +76,6 @@ NS_ASSUME_NONNULL_BEGIN
         }
     }
     
-    
     NSMutableDictionary * configJson = [[self.domain qcloud_modelToJSONObject] mutableCopy];
     
     for (NSMutableDictionary * dic in configJson[@"DomainRule"]) {
@@ -85,8 +84,6 @@ NS_ASSUME_NONNULL_BEGIN
     }
     
     [self.requestData setParameter:configJson withKey:@"DomainConfiguration"];
-    
-    [self.requestData setParameter:[self.domain qcloud_modelToJSONObject] withKey:@"DomainConfiguration"];
     if (!self.bucket || ([self.bucket isKindOfClass:NSString.class] && ((NSString *)self.bucket).length == 0)) {
         if (error != NULL) {
             *error = [NSError

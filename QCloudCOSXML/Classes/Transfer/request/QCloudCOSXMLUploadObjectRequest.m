@@ -255,7 +255,7 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
             [self startSimpleUpload];
         }
     } else {
-        @throw [NSException exceptionWithName:kQCloudNetworkDomain
+        @throw [NSException exceptionWithName:QCloudErrorDomain
                                        reason:@"不支持设置该类型的body，支持的类型为NSData、QCloudFileOffsetBody"
                                      userInfo:@{}];
     }
@@ -475,7 +475,7 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
 
             __strong typeof(weakSelf) strongSelf = weakSelf;
             __strong typeof(weakRequest) strongRequst = weakRequest;
-            [strongSelf.requstMetricArray addObject:@ { [NSString stringWithFormat:@"%@", strongRequst] : weakRequest.benchMarkMan.tastMetrics }];
+            [strongSelf.requstMetricArray addObject:@ { [NSString stringWithFormat:@"%@", strongRequst] : strongRequst.benchMarkMan.tastMetrics }];
 
             if (error && error.code != QCloudNetworkErrorCodeCanceled) {
                 NSError *transferError = [weakSelf tranformErrorToResume:error];

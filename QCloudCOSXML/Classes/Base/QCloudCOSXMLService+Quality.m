@@ -5,19 +5,15 @@
 //  Created by erichmzhang(张恒铭) on 2018/8/23.
 //
 #define kQAUploadStrategy @(2)
-#define kQAccount @"I79GMXS2ZR8Y"
+#define kQAccount @"0AND0VEVB24UBGDU"
+
 #import "QCloudCOSXMLService+Quality.h"
 #import <objc/runtime.h>
 
 #import <QCloudCore/QCloudCore.h>
 #import <QCloudCore/QCloudLogger.h>
 #import "QCloudCOSXMLVersion.h"
-
-#define SuppressPerformSelectorLeakWarning(Stuff)                                                                   \
-    do {                                                                                                            \
-        _Pragma("clang diagnostic push") _Pragma("clang diagnostic ignored \"-Warc-performSelector-leaks\"") Stuff; \
-        _Pragma("clang diagnostic pop")                                                                             \
-    } while (0)
+#import "QualityDataUploader.h"
 
 @implementation QCloudCOSXMLService (Quality)
 
@@ -43,20 +39,6 @@
 }
 
 + (void)initMTA {
-    Class cls = NSClassFromString(@"TACMTAConfig");
-    if (cls) {
-        QCloudLogDebug(@"Quality assurence service start");
-        SuppressPerformSelectorLeakWarning(
-            Class config = [cls performSelector:NSSelectorFromString(@"getInstance")];
-            [config performSelector:NSSelectorFromString(@"setReportStrategy:") withObject:kQAUploadStrategy];
-            [config performSelector:NSSelectorFromString(@"setCustomerAppVersion:") withObject:QCloudCOSXMLModuleVersion];
-            Class tacCls = NSClassFromString(@"TACMTA");
-            if (tacCls) { [tacCls performSelector:NSSelectorFromString(@"startWithAppkey:") withObject:kQAccount]; }
-
-        );
-
-    } else {
-        QCloudLogDebug(@"please pod MTA");
-    }
+    [QualityDataUploader startWithAppkey:kQAccount];
 }
 @end

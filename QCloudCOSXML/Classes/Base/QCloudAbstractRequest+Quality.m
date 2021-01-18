@@ -21,12 +21,21 @@
     Class class = [self class];
     Method originNotifyErrorMethod = class_getInstanceMethod(class, @selector(__notifyError:));
     Method swizzedNotifyErrorMethod = class_getInstanceMethod(class, @selector(__quality__notifyError:));
+    Method originNotifySuccessMethod = class_getInstanceMethod(class, @selector(__notifySuccess:));
+    Method swizzedNotifySuccessMethod = class_getInstanceMethod(class, @selector(__quality__notifySuccess:));
+    
     method_exchangeImplementations(originNotifyErrorMethod, swizzedNotifyErrorMethod);
+    method_exchangeImplementations(originNotifySuccessMethod, swizzedNotifySuccessMethod);
 }
 
 - (void)__quality__notifyError:(NSError *)error {
     [self __quality__notifyError:error];
-    [QualityDataUploader trackRequestFailWithType:self.class Error:error];
+    [QualityDataUploader trackSDKRequestFailWithRequest:self error:error];
+}
+
+- (void)__quality__notifySuccess:(id)object {
+    [self __quality__notifySuccess:object];
+    [QualityDataUploader trackSDKRequestSuccessWithRequest:self];
 }
 
 @end

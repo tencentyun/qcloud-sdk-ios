@@ -6,9 +6,12 @@
 //
 
 #import <Foundation/Foundation.h>
+@class QCloudAbstractRequest;
 
 @interface QualityDataUploader : NSObject
-
-+ (void)trackRequestSentWithType:(Class)cls;
-+ (void)trackRequestFailWithType:(Class)cls Error:(NSError *)error;
++ (void)startWithAppkey:(NSString *)appkey;
++ (void)trackSDKRequestSuccessWithRequest:(QCloudAbstractRequest *)request;
++ (void)trackSDKRequestFailWithRequest:(QCloudAbstractRequest *)request error:(NSError *)error;
++ (void)trackSDKExceptionWithException:(NSException *)exception;
++ (void)trackNormalEventWithKey:(NSString *)key props:(NSDictionary *)props;
 @end

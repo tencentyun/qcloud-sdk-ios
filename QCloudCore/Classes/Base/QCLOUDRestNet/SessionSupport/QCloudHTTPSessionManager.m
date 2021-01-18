@@ -585,6 +585,8 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache() {
         [self cacheTask:quicTask data:taskData forSEQ:(int)httpRequest.requestID];
     }
     [httpRequest configTaskResume];
+    NSString *host = [[task.currentRequest.URL.absoluteString stringByReplacingOccurrencesOfString: task.currentRequest.URL.scheme withString:@""] stringByReplacingOccurrencesOfString:@"://" withString:@""];
+    [httpRequest.benchMarkMan directSetValue:host forKey:kHost];
     //先创建task，在启动
     if (quicTask) {
         [quicTask performSelector:NSSelectorFromString(@"start")];

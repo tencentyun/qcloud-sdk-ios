@@ -80,6 +80,11 @@ NS_ASSUME_NONNULL_BEGIN
             return NO;
         }
     }
+    NSURL *__serverURL = [self.runOnService.configuration.endpoint serverURLWithBucket:self.bucket
+                                                                                 appID:self.runOnService.configuration.appID
+                                                                            regionName:self.regionName];
+    self.requestData.serverURL = __serverURL.absoluteString;
+    [self.requestData setValue:__serverURL.host forHTTPHeaderField:@"Host"];
     [self.requestData setParameter:[self.generateSnapshotConfiguration qcloud_modelToJSONObject] withKey:@"Request"];
     self.requestData.URIMethod = @"snapshot";
     return YES;

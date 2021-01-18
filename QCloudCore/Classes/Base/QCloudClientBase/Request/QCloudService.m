@@ -11,6 +11,7 @@
 #import "QCloudServiceConfiguration_Private.h"
 #import "NSError+QCloudNetworking.h"
 #import "QCloudLogger.h"
+#import <QCloudCore/QCloudError.h>
 @interface QCloudService () {
     NSMutableDictionary *_signatureCache;
     dispatch_queue_t _writeReadQueue;
@@ -28,14 +29,14 @@
     }
     configuration = [configuration copy];
     if (!configuration.endpoint) {
-        @throw [NSException exceptionWithName:kQCloudNetworkDomain
+        @throw [NSException exceptionWithName:QCloudErrorDomain
                                        reason:[NSString stringWithFormat:@"您没有配置EndPoint就使用了服务%@", self.class]
                                      userInfo:nil];
     }
 
     if (![configuration.signatureProvider conformsToProtocol:NSProtocolFromString(@"QCloudSignatureProvider")]) {
         @throw
-            [NSException exceptionWithName:kQCloudNetworkDomain
+            [NSException exceptionWithName:QCloudErrorDomain
                                     reason:[NSString stringWithFormat:@"您没有配置signatureProvider或者没有实现对应的方法就使用了服务%@", self.class]
                                   userInfo:nil];
     }

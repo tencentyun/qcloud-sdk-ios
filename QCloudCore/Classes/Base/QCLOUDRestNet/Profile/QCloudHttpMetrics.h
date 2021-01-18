@@ -23,7 +23,7 @@ extern NSString *const kLocalAddress;
 extern NSString *const kLocalPort;
 extern NSString *const kRemoteAddress;
 extern NSString *const kRemotePort;
-
+extern NSString *const kHost;
 @interface QCloudHttpMetrics : NSObject
 - (void)benginWithKey:(NSString *)key;
 - (void)markFinishWithKey:(NSString *)key;
@@ -31,6 +31,7 @@ extern NSString *const kRemotePort;
 - (void)directSetValue:(id)value forKey:(NSString *)key;
 
 - (double)costTimeForKey:(NSString *)key;
+- (NSString *)objectForKey:(NSString *)key;
 - (NSDictionary *)tastMetrics;
 - (NSString *)readablityDescription;
 @end

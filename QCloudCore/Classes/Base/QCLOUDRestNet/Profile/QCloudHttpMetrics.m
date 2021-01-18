@@ -22,7 +22,7 @@ NSString *const kLocalAddress = @"kLocalAddress";
 NSString *const kLocalPort = @"kLocalPort";
 NSString *const kRemoteAddress = @"kRemoteAddress";
 NSString *const kRemotePort = @"kRemotePort";
-
+NSString *const kHost = @"kHost";
 @interface QCloudHttpMetrics () {
     NSMutableDictionary *_beginCache;
     NSMutableDictionary *_benchMarkCache;
@@ -86,6 +86,15 @@ NSString *const kRemotePort = @"kRemotePort";
     @synchronized(self) {
         NSNumber *cost = _benchMarkCache[key];
         return [cost doubleValue];
+    }
+}
+
+-(NSString *)objectForKey:(NSString *)key{
+    if (!key) {
+        return @"";
+    }
+    @synchronized(self) {
+        return _benchMarkCache[key];
     }
 }
 

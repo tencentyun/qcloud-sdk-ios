@@ -33,6 +33,4 @@ typedef NS_ENUM(NSInteger, QCloudSupervisoryRecordType) { QCloudSupervisoryRecor
 @property (nonatomic, strong) NSString *errorMessage;
 @property (nonatomic, assign) QCloudNetworkStatus networkStatus;
 @property (nonatomic, strong) NSString *userAgent;
-@property (nonatomic, assign) NSTimeInterval caculateMD5;
-@property (nonatomic, assign) NSTimeInterval sign;
 @end

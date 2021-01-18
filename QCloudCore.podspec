@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
   s.name             = "QCloudCore"
 
-s.version              = "5.8.2"
+s.version              = "5.8.3"
 
   s.summary          = "QCloudCore--腾讯云iOS-SDK Foundation"
 
@@ -39,7 +39,7 @@ QCloudCore--腾讯云iOS-SDK Foundation。提供腾讯云iOS相关SDK的基础�
     s.default_subspec = 'Default'
     s.subspec 'Default' do |default|
         default.source_files = 'QCloudCore/Classes/Base/**/*','QCloudCore/Classes/QualityAssurance/*'
-    default.vendored_libraries='QCloudCore/Classes/QualityAssurance/libmtasdk.a'
+        default.vendored_frameworks = 'Pod/Classes/BeaconFramework/BeaconAPI_Base.framework','Pod/Classes/BeaconFramework/BeaconId.framework'
     end
     s.subspec 'WithoutMTA' do |withoutMTA|
         withoutMTA.source_files = 'QCloudCore/Classes/Base/**/*'
