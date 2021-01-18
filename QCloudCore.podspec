@@ -29,17 +29,17 @@ QCloudCore--腾讯云iOS-SDK Foundation。提供腾讯云iOS相关SDK的基础�
   s.author           = { "QCloud Terminal Team" => "QCloudTerminalTeam" }
   s.source           = { :git => "https://github.com/tencentyun/qcloud-sdk-ios.git", :tag => s.version.to_s }
   s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
+  s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
   s.ios.deployment_target = '8.0'
   s.osx.deployment_target = "10.12"
-  s.frameworks ='CoreMedia', "Accelerate", "SystemConfiguration" 
+  s.frameworks ='CoreMedia', "Accelerate", "SystemConfiguration"
   s.libraries = "z","c++"
   s.static_framework = true
-
     s.default_subspec = 'Default'
     s.subspec 'Default' do |default|
         default.source_files = 'QCloudCore/Classes/Base/**/*'
-        default.vendored_frameworks = 'QCloudCore/Classes/BeaconFramework/BeaconAPI_Base.framework','QCloudCore/Classes/BeaconFramework/BeaconId.framework'
+        default.ios.vendored_frameworks = 'QCloudCore/Classes/BeaconFramework/BeaconAPI_Base.framework','QCloudCore/Classes/BeaconFramework/BeaconId.framework'
     end
     s.subspec 'WithoutMTA' do |withoutMTA|
         withoutMTA.source_files = 'QCloudCore/Classes/Base/**/*'
