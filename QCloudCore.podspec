@@ -39,7 +39,7 @@ QCloudCore--腾讯云iOS-SDK Foundation。提供腾讯云iOS相关SDK的基础�
     s.default_subspec = 'Default'
     s.subspec 'Default' do |default|
         default.source_files = 'QCloudCore/Classes/Base/**/*','QCloudCore/Classes/QualityAssurance/*'
-        default.vendored_frameworks = 'Pod/Classes/BeaconFramework/BeaconAPI_Base.framework','Pod/Classes/BeaconFramework/BeaconId.framework'
+        default.vendored_frameworks = 'QCloudCore/Classes/BeaconFramework/BeaconAPI_Base.framework','QCloudCore/Classes/BeaconFramework/BeaconId.framework'
     end
     s.subspec 'WithoutMTA' do |withoutMTA|
         withoutMTA.source_files = 'QCloudCore/Classes/Base/**/*'
