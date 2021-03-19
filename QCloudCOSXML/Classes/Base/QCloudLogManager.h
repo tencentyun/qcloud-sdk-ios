@@ -8,9 +8,12 @@
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
+#if TARGET_OS_IOS
 @interface QCloudLogTableViewController : UIViewController
 - (instancetype)initWithLog:(NSArray *)logContent;
 @end
+#endif
+
 /**
  QCloudCOSXML 日志管理类
  */
