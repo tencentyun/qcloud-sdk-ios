@@ -18,6 +18,7 @@
 #import "QCloudSDKModuleManager.h"
 #import "NSObject+QCloudModel.h"
 @interface QCloudFileLogger () {
+    dispatch_source_t _timer;
 }
 @property (nonatomic, strong) dispatch_queue_t buildQueue;
 @property (nonatomic, strong) NSFileHandle *fileHandler;
@@ -31,11 +32,17 @@
     _buildQueue = dispatch_queue_create("com.tencent.qcloud.logger.build", DISPATCH_QUEUE_SERIAL);
     //
     _sliceSize = 200 * 1024;
+    _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, _buildQueue);
+    dispatch_source_set_timer(_timer, DISPATCH_TIME_NOW, 10 * NSEC_PER_SEC, 0);
+    dispatch_source_set_event_handler(_timer, ^{
+        [self writeCliceDataToFile];
+    });
     _sliceData = [NSMutableData dataWithCapacity:(NSUInteger)_sliceSize];
 }
 - (void)dealloc {
     [self writeCliceDataToFile];
     [_fileHandler closeFile];
+    dispatch_source_cancel(_timer);
 }
 - (instancetype)initWithPath:(NSString *)path maxSize:(uint64_t)maxSize {
     self = [super init];
@@ -52,6 +59,7 @@
         NSData *modulestring = [allModules qcloud_modelToJSONData];
         [_sliceData appendData:modulestring];
     }
+    dispatch_resume(_timer);
     _fileHandler = [NSFileHandle fileHandleForWritingAtPath:path];
     [_fileHandler seekToEndOfFile];
 #if TARGET_OS_IOS

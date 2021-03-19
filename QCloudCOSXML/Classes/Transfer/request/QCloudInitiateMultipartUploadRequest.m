@@ -34,7 +34,6 @@
 #import <QCloudCore/QCloudCore.h>
 #import <QCloudCore/QCloudServiceConfiguration_Private.h>
 #import "QCloudInitiateMultipartUploadResult.h"
-
 NS_ASSUME_NONNULL_BEGIN
 @implementation QCloudInitiateMultipartUploadRequest
 - (void)dealloc {
@@ -84,6 +83,7 @@ NS_ASSUME_NONNULL_BEGIN
                                                    @"InvalidArgument:paramter[bucket] is invalid (nil), it must have some value. please check it"]];
             return NO;
         }
+    } else {
     }
     NSURL *__serverURL = [self.runOnService.configuration.endpoint serverURLWithBucket:self.bucket
                                                                                  appID:self.runOnService.configuration.appID

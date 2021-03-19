@@ -24,11 +24,12 @@
     method_exchangeImplementations(originMethod, replacedMethod);
 }
 
-+(NSException *)qcloud_exceptionWithName:(NSExceptionName)name reason:(NSString *)reason userInfo:(NSDictionary *)userInfo{
++ (NSException *)qcloud_exceptionWithName:(NSExceptionName)name reason:(NSString *)reason userInfo:(NSDictionary *)userInfo {
     NSException *exp = [self qcloud_exceptionWithName:name reason:reason userInfo:userInfo];
-    [QualityDataUploader trackSDKExceptionWithException:exp];
+    if ([name isEqualToString:QCloudErrorDomain]) {
+        [QualityDataUploader trackSDKExceptionWithException:exp];
+    }
     return exp;
-    
 }
 
 @end

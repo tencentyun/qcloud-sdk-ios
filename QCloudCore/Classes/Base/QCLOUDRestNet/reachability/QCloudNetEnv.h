@@ -26,7 +26,7 @@ typedef NS_ENUM(NSInteger, QCloudNetworkStatus) {
 typedef NS_ENUM(NSInteger, QCloudNetworkSituation) { QCloudNetworkSituationWeakNetwork = 0, QCloudNetworkSituationGreatNetork = 1 };
 
 extern NSString *const kQCloudNetEnvChangedNotification;
-NSString * QCloudNetworkSituationToString(QCloudNetworkStatus situation);
+NSString *QCloudNetworkSituationToString(QCloudNetworkStatus situation);
 @interface QCloudNetEnv : NSObject
 + (instancetype)shareEnv;
 @property (nonatomic, assign, readonly) QCloudNetworkStatus currentNetStatus;

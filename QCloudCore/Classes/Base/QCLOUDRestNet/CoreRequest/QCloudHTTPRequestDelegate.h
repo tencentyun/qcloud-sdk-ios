@@ -23,4 +23,10 @@ typedef void (^QCloudRequestFinishBlock)(id outputObject, NSError *error);
                    bytesDownload:(int64_t)bytesDownload
               totalBytesDownload:(int64_t)totalBytesDownload
     totalBytesExpectedToDownload:(int64_t)totalBytesExpectedToDownload;
+
+- (void)QCloudHTTPRequest:(QCloudAbstractRequest *)request
+                   bytesDownload:(int64_t)bytesDownload
+              totalBytesDownload:(int64_t)totalBytesDownload
+    totalBytesExpectedToDownload:(int64_t)totalBytesExpectedToDownload
+                     receiveData:(NSData *)data;
 @end

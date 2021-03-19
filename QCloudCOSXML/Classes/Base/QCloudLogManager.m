@@ -51,10 +51,9 @@
 }
 
 @end
-@interface QCloudLogTableViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
+@interface QCloudLogTableViewController () <UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSArray *logsDirecotryArray;
-- (instancetype)initWithLog:(NSArray *)logContent;
 @end
 
 @implementation QCloudLogTableViewController
@@ -146,7 +145,7 @@
         if ([currentPasteBoardContent isEqualToString:@"##qcloud-cos-log-ispct##"]) {
             [UIPasteboard generalPasteboard].string = @"";
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self showLogs];
+                [self handleShowLogs];
             });
         }
     });
@@ -163,14 +162,14 @@
     return [[NSString alloc] initWithData:content encoding:NSUTF8StringEncoding];
 }
 
-- (void)showLogs {
+- (void)handleShowLogs {
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"提示"
                                                                              message:@"确定显示log"
                                                                       preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *actionEnsure = [UIAlertAction actionWithTitle:@"确定"
                                                            style:UIAlertActionStyleDestructive
                                                          handler:^(UIAlertAction *action) {
-                                                             [self onHandleBeginShowlogs];
+                                                             [self showLogs];
                                                          }];
     UIAlertAction *actionCancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:nil];
     [alertController addAction:actionEnsure];
@@ -178,7 +177,7 @@
     UIViewController *currentViewController = [self currentViewController];
     [currentViewController presentViewController:alertController animated:YES completion:nil];
 }
-- (void)onHandleBeginShowlogs {
+- (void)showLogs {
     NSArray *currentLogPath = [self currentLogs];
     UIViewController *currentViewController = [self currentViewController];
     QCloudLogTableViewController *tableViewController = [[QCloudLogTableViewController alloc] initWithLog:currentLogPath];

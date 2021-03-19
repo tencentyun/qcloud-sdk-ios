@@ -164,6 +164,7 @@ typedef NS_ENUM(NSInteger, QCloudNetSpeedLevel) { QCloudNetSpeedLevel1s, QCloudN
             point.downloadBytes = bytes;
             [level pointDownload:point];
         }
+        [[NSNotificationCenter defaultCenter] postNotificationName:kQCloudNetProfileUploadSpeedUpdate object:self->_sppedLevels];
     });
 }
 

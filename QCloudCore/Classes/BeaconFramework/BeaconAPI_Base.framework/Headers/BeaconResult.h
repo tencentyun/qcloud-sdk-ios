@@ -11,12 +11,12 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSInteger, BeaconResultType) {
-    BeaconResultTypeSuccess = 0,                // 成功
-    BeaconResultTypeIllegalParameters,          // 参数非法，一般是接口入参校验不通过
-    BeaconResultTypeConfigOff,                  // 配置关闭，导致上报失败或者不需要上报
-    BeaconResultTypeParamsExceededLength,       // 参数长度过长
-    BeaconResultTypeSDKNotStarted,              // SDK未初始化就进行上报
-    BeaconResultTypeUnknow,                     // 未知错误
+    BeaconResultTypeSuccess = 0,          // 成功
+    BeaconResultTypeIllegalParameters,    // 参数非法，一般是接口入参校验不通过
+    BeaconResultTypeConfigOff,            // 配置关闭，导致上报失败或者不需要上报
+    BeaconResultTypeParamsExceededLength, // 参数长度过长
+    BeaconResultTypeSDKNotStarted,        // SDK未初始化就进行上报
+    BeaconResultTypeUnknow,               // 未知错误
 };
 
 @interface BeaconBaseResult : NSObject
@@ -31,7 +31,6 @@ typedef NS_ENUM(NSInteger, BeaconResultType) {
 @property (nonatomic, copy) NSString *eventId;
 
 @end
-
 
 @interface BeaconReportResult : BeaconBaseResult
 

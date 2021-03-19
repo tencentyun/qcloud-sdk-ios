@@ -10,12 +10,7 @@
 #import "BeaconQimei.h"
 #import "BeaconReportConfig.h"
 
-typedef enum : NSInteger {
-    BeaconNotReachable = 0,
-    BeaconReachableViaWiFi,
-    BeaconReachableViaWWAN,
-    BeaconReachableUnknow
-} BeaconNetworkStatus;
+typedef enum : NSInteger { BeaconNotReachable = 0, BeaconReachableViaWiFi, BeaconReachableViaWWAN, BeaconReachableUnknow } BeaconNetworkStatus;
 
 @class BeaconLocalConfig;
 
@@ -58,8 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (copy) NSString *sessionId;
 
 /// 缓存服务端返回的sId，请求时带上，给服务端从缓存取解密后的密钥
-@property ( copy) NSString *sId;
-
+@property (copy) NSString *sId;
 
 // 版本相关
 @property (copy) NSString *appVersion;
@@ -101,6 +95,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) long serverTimeDelta;
 /// app安装时间
 @property (assign, readonly) long long appInstallTime;
+
+// 延迟初始化相关需要耗时的参数，需在子线程调用
+- (void)initBaseInfo;
 
 @end
 

@@ -18,7 +18,8 @@ typedef double QCloudAbstractRequestPriority;
 #define QCloudAbstractRequestPriorityBackground 0.0
 typedef void (^QCloudRequestSendProcessBlock)(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend);
 typedef void (^QCloudRequestDownProcessBlock)(int64_t bytesDownload, int64_t totalBytesDownload, int64_t totalBytesExpectedToDownload);
-
+typedef void (^QCloudRequestDownProcessWithDataBlock)(int64_t bytesDownload, int64_t totalBytesDownload, int64_t totalBytesExpectedToDownload,
+                                                      NSData *receivedData);
 /**
  请求的抽象基类，该类封装了用于进行request-response模式数据请求的通用属性和接口。包括发起请求，相应结果，优先级处理，性能监控能常见特性。
  */
@@ -51,10 +52,16 @@ typedef void (^QCloudRequestDownProcessBlock)(int64_t bytesDownload, int64_t tot
 
 @property (nonatomic, strong) QCloudRequestDownProcessBlock _Nullable downProcessBlock;
 
+@property (nonatomic, strong) QCloudRequestDownProcessWithDataBlock _Nullable downProcessWithDataBlock;
 - (void)setFinishBlock:(void (^_Nullable)(id _Nullable outputObject, NSError *_Nullable error))QCloudRequestFinishBlock;
 - (void)setDownProcessBlock:(void (^_Nullable)(int64_t bytesDownload, int64_t totalBytesDownload,
                                                int64_t totalBytesExpectedToDownload))downloadProcessBlock;
+- (void)setDownProcessWithDataBlock:(void (^_Nullable)(int64_t bytesDownload, int64_t totalBytesDownload,
+
+                                                       int64_t totalBytesExpectedToDownload, NSData *receiveData))downloadProcessWithDataBlock;
+
 - (void)setSendProcessBlock:(void (^_Nullable)(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend))sendProcessBlock;
+
 /**
    请求过程出错，进行处理。默认只处理HTTP协议层错误信息。并进行delegate的通知。
       @param error 请求过程出错信息，默认只处理HTTP层错误信息
@@ -72,6 +79,11 @@ typedef void (^QCloudRequestDownProcessBlock)(int64_t bytesDownload, int64_t tot
 - (void)notifyDownloadProgressBytesDownload:(int64_t)bytesDownload
                          totalBytesDownload:(int64_t)totalBytesDownload
                totalBytesExpectedToDownload:(int64_t)totalBytesExpectedToDownload;
+
+- (void)notifyDownloadProgressBytesDownload:(int64_t)bytesDownload
+                         totalBytesDownload:(int64_t)totalBytesDownload
+               totalBytesExpectedToDownload:(int64_t)totalBytesExpectedToDownload
+                               receivedData:(NSData *_Nullable)data;
 
 - (void)notifySendProgressBytesSend:(int64_t)bytesSend
                      totalBytesSend:(int64_t)totalBytesSend

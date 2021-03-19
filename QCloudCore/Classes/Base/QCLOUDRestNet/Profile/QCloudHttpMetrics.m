@@ -89,7 +89,7 @@ NSString *const kHost = @"kHost";
     }
 }
 
--(NSString *)objectForKey:(NSString *)key{
+- (NSString *)objectForKey:(NSString *)key {
     if (!key) {
         return @"";
     }

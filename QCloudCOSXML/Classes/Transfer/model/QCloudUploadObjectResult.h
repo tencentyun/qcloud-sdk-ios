@@ -57,5 +57,11 @@ NS_ASSUME_NONNULL_BEGIN
 对象对应的Version ID（在开启了多版本的情况才有）
 */
 @property (strong, nonatomic) NSString *versionID;
+
+/**
+文件大小
+*/
+@property (assign, nonatomic) NSInteger size;
+
 @end
 NS_ASSUME_NONNULL_END

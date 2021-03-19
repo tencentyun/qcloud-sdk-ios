@@ -23,7 +23,7 @@
     Method swizzedNotifyErrorMethod = class_getInstanceMethod(class, @selector(__quality__notifyError:));
     Method originNotifySuccessMethod = class_getInstanceMethod(class, @selector(__notifySuccess:));
     Method swizzedNotifySuccessMethod = class_getInstanceMethod(class, @selector(__quality__notifySuccess:));
-    
+
     method_exchangeImplementations(originNotifyErrorMethod, swizzedNotifyErrorMethod);
     method_exchangeImplementations(originNotifySuccessMethod, swizzedNotifySuccessMethod);
 }

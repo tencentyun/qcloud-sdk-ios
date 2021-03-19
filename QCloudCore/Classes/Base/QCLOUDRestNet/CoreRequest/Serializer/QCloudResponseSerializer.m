@@ -15,7 +15,7 @@
 typedef id (^QCloudResponseSerializerBlock)(NSHTTPURLResponse *response, id inputData, NSError *__autoreleasing *error);
 
 QCloudResponseSerializerBlock QCloudResponseXMLSerializerBlock = ^(NSHTTPURLResponse *response, id inputData, NSError *__autoreleasing *error) {
-    QCloudLogDebug(@"response  %@", response);
+    //    QCloudLogDebug(@"response  %@", response);
     if (![inputData isKindOfClass:[NSData class]]) {
         if (NULL != error) {
             *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeResponseDataTypeInvalid
@@ -30,7 +30,7 @@ QCloudResponseSerializerBlock QCloudResponseXMLSerializerBlock = ^(NSHTTPURLResp
 
 #ifdef DEBUG
     NSString *xmlString = [[NSString alloc] initWithData:inputData encoding:NSUTF8StringEncoding];
-    QCloudLogDebug(@"XML RESPONSE:%@", xmlString);
+//    QCloudLogDebug(@"XML RESPONSE:%@", xmlString);
 #endif
     QCloudXMLDictionaryParser *parser = [QCloudXMLDictionaryParser new];
 
@@ -43,6 +43,12 @@ QCloudResponseSerializerBlock QCloudResponseXMLSerializerBlock = ^(NSHTTPURLResp
                                                                               [[NSString alloc] initWithData:inputData
                                                                                                     encoding:NSUTF8StringEncoding]]];
         }
+        return (id)nil;
+    }
+    if (output[@"Code"] && [output[@"__name"] isEqualToString:@"Error"]) {
+        *error = [NSError qcloud_errorWithCode:500
+                                       message:[NSString stringWithFormat:output[@"Code"], [[NSString alloc] initWithData:inputData
+                                                                                                                 encoding:NSUTF8StringEncoding]]];
         return (id)nil;
     }
     return (id)output;

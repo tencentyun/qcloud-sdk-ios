@@ -11,6 +11,5 @@
 
 #import <BeaconId/BeaconIdInfoCollector.h>
 
-
 #endif /* BeaconId_h */
 #define BEACONID_SDK_VERSION @"1.0.7"

@@ -60,8 +60,6 @@ static const NSInteger kWeakNetworkConcurrentCount = 1;
 }
 
 - (void)addOpreation:(QCloudRequestOperation *)operation {
-    __block NSUInteger count = 0;
-
     [_dataLock lock];
     if (operation.request.priority > QCloudAbstractRequestPriorityNormal) {
         [_highPerfomanceRequest addObject:operation];
@@ -205,8 +203,8 @@ static const NSInteger kWeakNetworkConcurrentCount = 1;
     int64_t currentUploadSpeedPerOperation = uploadSpeedIn30S / concurrentCount;
     //若每个任务速度大于250KB/s
     static const int64_t increaseConcurrentCountThreashold = 250 * 1024;
-    //    QCloudLogDebug(@"Current network speed per operation = %lu  KB/S， uploadSpeedIn30S = %llu KB/s, max concurrent count =
-    //    %lu",currentUploadSpeedPerOperation/(1024),uploadSpeedIn30S/1024,self.maxConcurrentCount);
+    //        NSLog(@"Current network speed per operation = %lu  KB/S， uploadSpeedIn30S = %llu KB/s, max concurrent count
+    //        =%lu",currentUploadSpeedPerOperation/(1024),uploadSpeedIn30S/1024,self.maxConcurrentCount);
     if (currentUploadSpeedPerOperation > increaseConcurrentCountThreashold) {
         self.uploadSpeedReachThresholdTimes++;
     } else {

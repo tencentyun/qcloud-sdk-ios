@@ -91,27 +91,21 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache() {
     _session = [NSURLSession sessionWithConfiguration:_configuration delegate:self delegateQueue:_sessionTaskQueue];
     Class cls = NSClassFromString(@"QCloudQuicSession");
     if (cls) {
-        _quicSession = [cls performSelector:NSSelectorFromString(@"quicSessionDelegate:") withObject:self];
+        SEL createQuicSessionSelector = NSSelectorFromString(@"quicSessionDelegate:");
+        if ([cls respondsToSelector:createQuicSessionSelector]) {
+            IMP imp = [cls methodForSelector:createQuicSessionSelector];
+            id (*func)(id, SEL, id) = (void *)imp;
+            _quicSession = func(cls, createQuicSessionSelector, self);
+        }
     } else {
         QCloudLogDebug(@"quicSession is nil");
     }
-    //    _quicSession = [QCloudQuicSession quicSessionDelegate:self];
-
     _buildDataQueue = dispatch_queue_create("com.tencent.qcloud.build.data", NULL);
     _taskQueue = [NSMutableDictionary new];
     _operationQueue = [QCloudOperationQueue new];
     return self;
 }
 
-- (QCloudHTTPSessionManager *)initWithBackgroundSessionWithBackgroundIdentifier:(NSString *)backgroundIdentifier {
-    NSAssert(backgroundIdentifier, @"后台传输的标识符为nil，请检查是否设置了backgroundIdentifier");
-    NSURLSessionConfiguration *backgroundConfiguration =
-        [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:backgroundIdentifier];
-    if (self = [self initWithConfigruation:backgroundConfiguration]) {
-        [QCloudNetEnv shareEnv];
-    }
-    return self;
-}
 - (void)setCustomConcurrentCount:(int)customConcurrentCount {
     _customConcurrentCount = customConcurrentCount;
     _operationQueue.customConcurrentCount = customConcurrentCount;
@@ -283,14 +277,15 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache() {
         if (taskData.httpRequest) {
             [taskData.httpRequest notifyDownloadProgressBytesDownload:(int64_t)data.length
                                                    totalBytesDownload:(int64_t)taskData.totalRecivedLength
-                                         totalBytesExpectedToDownload:(int64_t)[dataTask.response expectedContentLength]];
+                                         totalBytesExpectedToDownload:(int64_t)[dataTask.response expectedContentLength]
+                                                         receivedData:data];
         }
         [[QCloudNetProfile shareProfile] pointDownload:data.length];
     }
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
-    QCloudLogDebug(@"任务完成的回调 didCompleteWithError = %@", error);
+    QCloudLogInfo(@"任务完成的回调 didCompleteWithError response = %@ error = ", task.response, error);
     [[NSNotificationCenter defaultCenter]
         postNotificationName:kQCloudRestNetURLUsageNotification
                       object:nil
@@ -344,7 +339,6 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache() {
                         [httpRequset.requestData clean];
                         if (QCloudFileExist(httpRequset.downloadingURL.path)) {
                             httpRequset.localCacheDownloadOffset = QCloudFileSize(httpRequset.downloadingURL.path);
-                            NSLog(@"localCacheDownloadOffset = %d", httpRequset.localCacheDownloadOffset);
                         }
                         [weakSelf executeRestHTTPReqeust:httpRequset];
                     }
@@ -354,7 +348,6 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache() {
         }
 
     } else {
-        NSURL *requestURL = task.currentRequest.URL;
         NSString *port = [task.currentRequest.URL.scheme isEqualToString:@"https"] ? @"443" : @"8080";
         [[QCloudHttpDNS shareDNS] prepareFetchIPListForHost:hostURL.host port:port];
         [taskData.httpRequest onReciveRespone:task.response data:taskData.data];
@@ -498,6 +491,7 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache() {
                 [mutableRequest setValue:[@(fileBody.sliceLength) stringValue] forHTTPHeaderField:@"Content-Length"];
                 [handler closeFile];
                 uploadFileURL = [NSURL fileURLWithPath:tempFile];
+                QCloudLogDebug(@"uploadTempFilePath length = %lld", QCloudFileSize(tempFile));
             }
 
         } else {
@@ -570,26 +564,35 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache() {
         } else {
             dic[@"body"] = [NSNull null];
         }
-
-        quicTask = [_quicSession performSelector:NSSelectorFromString(@"quicDataTaskWithRequst:infos:") withObject:transformRequest withObject:dic];
+        SEL createQuicTaskSelector = NSSelectorFromString(@"quicDataTaskWithRequst:infos:");
+        if ([_quicSession respondsToSelector:createQuicTaskSelector]) {
+            IMP imp = [_quicSession methodForSelector:createQuicTaskSelector];
+            id (*func)(id, SEL, NSMutableURLRequest *, NSDictionary *) = (void *)imp;
+            quicTask = func(_quicSession, createQuicTaskSelector, transformRequest, dic);
+        }
     }
 
-    QCloudLogDebug(@"transferHttpHeadera %@", transformRequest.allHTTPHeaderFields);
+    QCloudLogDebug(@"transferHttpHeader %@", transformRequest.allHTTPHeaderFields);
     taskData.httpRequest = httpRequest;
     QCloudHTTPRetryHanlder *retryHandler = httpRequest.retryPolicy;
     taskData.retryHandler = retryHandler;
-
     if (task) {
         [self cacheTask:task data:taskData forSEQ:(int)httpRequest.requestID];
     } else {
         [self cacheTask:quicTask data:taskData forSEQ:(int)httpRequest.requestID];
     }
     [httpRequest configTaskResume];
-    NSString *host = [[task.currentRequest.URL.absoluteString stringByReplacingOccurrencesOfString: task.currentRequest.URL.scheme withString:@""] stringByReplacingOccurrencesOfString:@"://" withString:@""];
+    NSString *host = [[task.currentRequest.URL.absoluteString stringByReplacingOccurrencesOfString:task.currentRequest.URL.scheme
+                                                                                        withString:@""] stringByReplacingOccurrencesOfString:@"://"
+                                                                                                                                  withString:@""];
     [httpRequest.benchMarkMan directSetValue:host forKey:kHost];
     //先创建task，在启动
-    if (quicTask) {
-        [quicTask performSelector:NSSelectorFromString(@"start")];
+    SEL quicStartSelector = NSSelectorFromString(@"start");
+    if (quicTask && [quicTask respondsToSelector:quicStartSelector]) {
+        IMP imp = [quicTask methodForSelector:quicStartSelector];
+        void (*func)(id, SEL) = (void *)imp;
+        func(quicTask, quicStartSelector);
+
     } else {
         [task resume];
     }

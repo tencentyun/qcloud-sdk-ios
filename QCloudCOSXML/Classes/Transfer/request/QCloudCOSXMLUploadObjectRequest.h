@@ -145,6 +145,7 @@ RFC 2616 中定义用于指示资源的MIME类型，将作为 Object 元数据�
  */
 @property (strong, nonatomic) NSMutableDictionary *_Nullable customHeaders;
 @property (strong, nonatomic) NSString *_Nullable regionName;
+@property (assign, nonatomic) bool uploadBodyIsCompleted;
 /**
  上传完成后会通过该block回调。若error为空，可视为成功。
 

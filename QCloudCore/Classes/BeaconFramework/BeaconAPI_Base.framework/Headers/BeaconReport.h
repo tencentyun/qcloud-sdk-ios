@@ -23,7 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
           line:(NSUInteger)line
       threadID:(NSInteger)threadID
         module:(NSString *)module
-        folder:(int)folder level:(int)level;
+        folder:(int)folder
+         level:(int)level;
 
 @end
 
@@ -55,7 +56,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// 穿山甲日志代理
 @property (nonatomic, weak) id<BeaconMttProtocal> mttDelegate;
 
-
 + (BeaconReport *)sharedInstance;
 
 /// 初始化接口，开启灯塔服务，会向服务器查询策略，初始化各个模块的默认数据上传器等
@@ -84,16 +84,16 @@ NS_ASSUME_NONNULL_BEGIN
 /// @return 如果设备第一次安装集成了灯塔SDK的APP,第一次启动时有可能获取不到，返回空
 - (nullable BeaconQimei *)getQimei;
 
-/// 异步获取qimei，如果本地没有, 则等待网络请求的回调，针对的是APP首次安装本地没有qimei的场景。！！！建议在APP启动阶段调用一次本异步接口，其余阶段使用同步接口获取qimei
+/// 异步获取qimei，如果本地没有,
+/// 则等待网络请求的回调，针对的是APP首次安装本地没有qimei的场景。！！！建议在APP启动阶段调用一次本异步接口，其余阶段使用同步接口获取qimei
 /// @param block 异步回调的block
-- (void)getQimeiWithBlock:(void (^)(BeaconQimei * _Nullable qimei))block;
+- (void)getQimeiWithBlock:(void (^)(BeaconQimei *_Nullable qimei))block;
 
 /// 获取所有灯塔已默认采集的公参
 - (BeaconBaseInfoModel *)getCommonParams;
- 
+
 @end
 
 NS_ASSUME_NONNULL_END
 
-
-#define BEACON_SDK_VERSION @"4.1.26"
+#define BEACON_SDK_VERSION @"4.1.28"

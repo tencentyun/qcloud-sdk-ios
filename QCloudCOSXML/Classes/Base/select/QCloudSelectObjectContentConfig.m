@@ -33,7 +33,6 @@
 
 #import "QCloudInputSerialization.h"
 #import "QCloudOutputSerialization.h"
-#import "QCloudCOSXMLStatusEnum.h"
 
 NS_ASSUME_NONNULL_BEGIN
 @implementation QCloudSelectObjectContentConfig

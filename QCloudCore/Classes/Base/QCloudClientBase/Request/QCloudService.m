@@ -127,8 +127,6 @@
     }
 }
 - (int)performRequest:(QCloudBizHTTPRequest *)httpRequst {
-    QCloudLogDebug(@"performRequest begin httpRequst.runOnService :%@", httpRequst.runOnService);
-
     httpRequst.timeoutInterval = self.configuration.timeoutInterval;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSError *error;

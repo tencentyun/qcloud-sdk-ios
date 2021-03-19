@@ -8,7 +8,9 @@
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
-
+@interface QCloudLogTableViewController : UIViewController
+- (instancetype)initWithLog:(NSArray *)logContent;
+@end
 /**
  QCloudCOSXML 日志管理类
  */
@@ -18,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign) BOOL shouldShowLog;
 + (instancetype)sharedInstance;
-
+- (void)showLogs;
 /**
  已经产生的日志
  */

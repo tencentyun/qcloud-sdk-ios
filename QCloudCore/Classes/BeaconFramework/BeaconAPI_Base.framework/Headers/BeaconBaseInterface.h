@@ -8,15 +8,15 @@
 #import "BeaconEventUploader.h"
 #import "BeaconBaseInfoModel.h"
 
-#define Beacon_CLASS_DEPRECATED_APP(versionBegin, versionDeprecated, description, ...) __attribute__((deprecated("从 "#versionDeprecated" 版本开始废弃, "#description", "#__VA_ARGS__""))) __attribute__((weak_import))
-Beacon_CLASS_DEPRECATED_APP(1.0.0, 3.2.0, "推荐使用BeaconReport类")
-@interface BeaconBaseInterface : NSObject
+#define Beacon_CLASS_DEPRECATED_APP(versionBegin, versionDeprecated, description, ...) \
+    __attribute__((deprecated("从 " #versionDeprecated " 版本开始废弃, " #description ", " #__VA_ARGS__ ""))) __attribute__((weak_import))
+Beacon_CLASS_DEPRECATED_APP(1.0.0, 3.2.0, "推荐使用BeaconReport类") @interface BeaconBaseInterface : NSObject
 
 //设置appKey（灯塔事件），启动灯塔SDK
 + (void)setAppKey:(NSString *)appKey;
 
-//1 fetal 2 error 3 warn 4 info
-//in debug version: 5 debug 10 all
+// 1 fetal 2 error 3 warn 4 info
+// in debug version: 5 debug 10 all
 + (void)setLogLevel:(int)logLevel;
 
 //得到灯塔sdk的版本
@@ -26,27 +26,75 @@ Beacon_CLASS_DEPRECATED_APP(1.0.0, 3.2.0, "推荐使用BeaconReport类")
 + (BOOL)enableEventRecord:(BOOL)enable;
 
 //实时用户事件上报通用接口，该接口会保存用户事件实时上报
-//event 事件名称 isSucceed 事件执行是否成功 elapse 事件执行耗时，单位ms size 上报包大小，单位kb params 其他参数，用户自定义
-+ (BOOL)onDirectUserAction: (NSString *)eventName isSucceed:(BOOL)isSucceed elapse:(long)elapse size:(long)size params:(NSDictionary *)params;
-+ (BOOL)onDirectUserAction: (NSString *)eventName isImmediately:(BOOL)isImmediately isSucceed:(BOOL)isSucceed elapse:(long)elapse size:(long)size params:(NSDictionary *)params;
+// event 事件名称 isSucceed 事件执行是否成功 elapse 事件执行耗时，单位ms size 上报包大小，单位kb params 其他参数，用户自定义
++ (BOOL)onDirectUserAction:(NSString *)eventName isSucceed:(BOOL)isSucceed elapse:(long)elapse size:(long)size params:(NSDictionary *)params;
++ (BOOL)onDirectUserAction:(NSString *)eventName
+             isImmediately:(BOOL)isImmediately
+                 isSucceed:(BOOL)isSucceed
+                    elapse:(long)elapse
+                      size:(long)size
+                    params:(NSDictionary *)params;
 
-+ (BOOL)onDirectUserActionToTunnel:(NSString *)appKey eventName:(NSString *)eventName isSucceed:(BOOL)isSucceed elapse:(long)elapse size:(long)size params:(NSDictionary *)params;
-+ (BOOL)onDirectUserActionToTunnel:(NSString *)appKey eventName:(NSString *)eventName isImmediately:(BOOL)isImmediately isSucceed:(BOOL)isSucceed elapse:(long)elapse size:(long)size params:(NSDictionary *)params;
++ (BOOL)onDirectUserActionToTunnel:(NSString *)appKey
+                         eventName:(NSString *)eventName
+                         isSucceed:(BOOL)isSucceed
+                            elapse:(long)elapse
+                              size:(long)size
+                            params:(NSDictionary *)params;
++ (BOOL)onDirectUserActionToTunnel:(NSString *)appKey
+                         eventName:(NSString *)eventName
+                     isImmediately:(BOOL)isImmediately
+                         isSucceed:(BOOL)isSucceed
+                            elapse:(long)elapse
+                              size:(long)size
+                            params:(NSDictionary *)params;
 
 //用户事件上报通用接口，该接口会保存用户事件到本地，根据上报策略择机上报
-//event 事件名称 isSucceed 事件执行是否成功 elapse 事件执行耗时，单位ms size 上报包大小，单位kb params 其他参数，用户自定义
+// event 事件名称 isSucceed 事件执行是否成功 elapse 事件执行耗时，单位ms size 上报包大小，单位kb params 其他参数，用户自定义
 + (BOOL)onUserAction:(NSString *)eventName isSucceed:(BOOL)isSucceed elapse:(long)elapse size:(long)size params:(NSDictionary *)params;
-+ (BOOL)onUserAction: (NSString*) eventName isSucceed:(BOOL) isSucceed elapse:(long) elapse size:(long) size params:(NSDictionary *) params isOnlyWifiUpload:(BOOL)isOnlyWifiUpload;
++ (BOOL)onUserAction:(NSString *)eventName
+           isSucceed:(BOOL)isSucceed
+              elapse:(long)elapse
+                size:(long)size
+              params:(NSDictionary *)params
+    isOnlyWifiUpload:(BOOL)isOnlyWifiUpload;
 
-+ (BOOL)onUserActionToTunnel:(NSString *)appKey eventName:(NSString *)eventName  isSucceed:(BOOL)isSucceed elapse:(long)elapse size:(long)size params:(NSDictionary *)params;
-+ (BOOL)onUserActionToTunnel:(NSString *)appKey eventName:(NSString *)eventName isSucceed:(BOOL) isSucceed elapse:(long) elapse size:(long) size params:(NSDictionary *) params isOnlyWifiUpload:(BOOL)isOnlyWifiUpload;
++ (BOOL)onUserActionToTunnel:(NSString *)appKey
+                   eventName:(NSString *)eventName
+                   isSucceed:(BOOL)isSucceed
+                      elapse:(long)elapse
+                        size:(long)size
+                      params:(NSDictionary *)params;
++ (BOOL)onUserActionToTunnel:(NSString *)appKey
+                   eventName:(NSString *)eventName
+                   isSucceed:(BOOL)isSucceed
+                      elapse:(long)elapse
+                        size:(long)size
+                      params:(NSDictionary *)params
+            isOnlyWifiUpload:(BOOL)isOnlyWifiUpload;
 
 // 大同SDK 专属接口 其他三方禁止调用
-+ (BOOL)onDTDirectUserAction: (NSString *)eventName isSucceed:(BOOL)isSucceed elapse:(long)elapse size:(long)size params:(NSDictionary *)params;
-+ (BOOL)onDTDirectUserAction: (NSString *)eventName isImmediately:(BOOL)isImmediately isSucceed:(BOOL)isSucceed elapse:(long)elapse size:(long)size params:(NSDictionary *)params;
++ (BOOL)onDTDirectUserAction:(NSString *)eventName isSucceed:(BOOL)isSucceed elapse:(long)elapse size:(long)size params:(NSDictionary *)params;
++ (BOOL)onDTDirectUserAction:(NSString *)eventName
+               isImmediately:(BOOL)isImmediately
+                   isSucceed:(BOOL)isSucceed
+                      elapse:(long)elapse
+                        size:(long)size
+                      params:(NSDictionary *)params;
 /// 大同多通道上报接口
-+ (BOOL)onDTDirectUserActionToTunnel:(NSString *)appKey eventName: (NSString *)eventName isSucceed:(BOOL)isSucceed elapse:(long)elapse size:(long)size params:(NSDictionary *)params;
-+ (BOOL)onDTDirectUserActionToTunnel:(NSString *)appKey eventName: (NSString *)eventName isImmediately:(BOOL)isImmediately isSucceed:(BOOL)isSucceed elapse:(long)elapse size:(long)size params:(NSDictionary *)params;
++ (BOOL)onDTDirectUserActionToTunnel:(NSString *)appKey
+                           eventName:(NSString *)eventName
+                           isSucceed:(BOOL)isSucceed
+                              elapse:(long)elapse
+                                size:(long)size
+                              params:(NSDictionary *)params;
++ (BOOL)onDTDirectUserActionToTunnel:(NSString *)appKey
+                           eventName:(NSString *)eventName
+                       isImmediately:(BOOL)isImmediately
+                           isSucceed:(BOOL)isSucceed
+                              elapse:(long)elapse
+                                size:(long)size
+                              params:(NSDictionary *)params;
 
 //设置实时事件上报的间隔,默认为5s,单位是秒  保护区间<=60 >＝1
 + (void)setUserRealEventDurationSecond:(int)seconds;
@@ -76,12 +124,12 @@ Beacon_CLASS_DEPRECATED_APP(1.0.0, 3.2.0, "推荐使用BeaconReport类")
 + (NSString *)getQimeiWithKey:(NSString *)key;
 
 //如果本地没有缓存, 则请求网络获取,同getQIMEI,由于接口设计问题请不要重复调用,回调时间取决于网络请求时间
-+ (void)getQIMEIwithBlock:(void (^)(NSString * qimei)) block;
++ (void)getQIMEIwithBlock:(void (^)(NSString *qimei))block;
 
 //打开海外版本,需要在初始化之前设置,默认关闭
 + (void)enableAbroad:(BOOL)enalbe;
 
-//sessionid 设置sessionid可以帮您区分哪些事件属于同一次会话
+// sessionid 设置sessionid可以帮您区分哪些事件属于同一次会话
 + (void)setSessionid:(NSString *)sessionid;
 
 + (NSString *)getSessionid;
@@ -90,7 +138,7 @@ Beacon_CLASS_DEPRECATED_APP(1.0.0, 3.2.0, "推荐使用BeaconReport类")
 + (void)setOmgId:(NSString *)omgId;
 
 //设置渠道（灯塔事件）
-+ (void)setChannelId:(NSString*)chanId;
++ (void)setChannelId:(NSString *)chanId;
 
 //设置appVersion
 + (void)setAppVersion:(NSString *)bundleVer;
@@ -103,20 +151,20 @@ Beacon_CLASS_DEPRECATED_APP(1.0.0, 3.2.0, "推荐使用BeaconReport类")
 + (BOOL)setStrategyForMaxPkgSize:(int)maxPkgSize dbMaxSize:(int)dbMaxSize;
 
 //登录事件
-+ (BOOL)onLogin: (BOOL) isSucceed elapse:(long) elapse size:(long) size params:(NSDictionary *) params;
++ (BOOL)onLogin:(BOOL)isSucceed elapse:(long)elapse size:(long)size params:(NSDictionary *)params;
 //上传图片事件
-+ (BOOL)onUploadPicture: (BOOL) isSucceed elapse:(long) elapse size:(long) size params:(NSDictionary *) params;
++ (BOOL)onUploadPicture:(BOOL)isSucceed elapse:(long)elapse size:(long)size params:(NSDictionary *)params;
 //写日志事件
-+ (BOOL)onWriteBlog: (BOOL) isSucceed elapse:(long) elapse size:(long) size params:(NSDictionary *) params;
++ (BOOL)onWriteBlog:(BOOL)isSucceed elapse:(long)elapse size:(long)size params:(NSDictionary *)params;
 
 //启动事件
-+ (BOOL)onStart: (BOOL) isSucceed elapse:(long) elapse size:(long) size params:(NSDictionary *) params;
++ (BOOL)onStart:(BOOL)isSucceed elapse:(long)elapse size:(long)size params:(NSDictionary *)params;
 //写操作
-+ (BOOL)onWrite: (BOOL) isSucceed elapse:(long) elapse size:(long) size params:(NSDictionary *) params;
++ (BOOL)onWrite:(BOOL)isSucceed elapse:(long)elapse size:(long)size params:(NSDictionary *)params;
 //刷新操作
-+ (BOOL)onRefresh: (BOOL) isSucceed elapse:(long) elapse size:(long) size params:(NSDictionary *) params;
++ (BOOL)onRefresh:(BOOL)isSucceed elapse:(long)elapse size:(long)size params:(NSDictionary *)params;
 //界面渲染
-+ (BOOL)onRender: (BOOL) isSucceed elapse:(long) elapse size:(long) size params:(NSDictionary *) params;
++ (BOOL)onRender:(BOOL)isSucceed elapse:(long)elapse size:(long)size params:(NSDictionary *)params;
 
 /**
  主通道的通用参数, 设置所有事件都会带的参数
@@ -130,7 +178,7 @@ Beacon_CLASS_DEPRECATED_APP(1.0.0, 3.2.0, "推荐使用BeaconReport类")
  **/
 + (BeaconBaseInfoModel *)getCommonParams;
 
-//2.3.4
+// 2.3.4
 /**
  * 事件接口总开关
  * @param isEventUpOnOff 默认为YES
@@ -142,12 +190,9 @@ Beacon_CLASS_DEPRECATED_APP(1.0.0, 3.2.0, "推荐使用BeaconReport类")
  */
 + (void)setStrictModeOnOff:(BOOL)yesOrNo;
 
-
-#pragma mark -- 已废弃的无效接口
-//sdk的状态，未开启，初始化中，初始化完成，与服务器同步完成，错误
-typedef enum {
-    notenabled, initialing, initialed, syncedwithserver, initerror
-} sdkstatus;
+#pragma mark-- 已废弃的无效接口
+// sdk的状态，未开启，初始化中，初始化完成，与服务器同步完成，错误
+typedef enum { notenabled, initialing, initialed, syncedwithserver, initerror } sdkstatus;
 
 //获取当前sdk的运行状态
 + (sdkstatus)getSDKStatus;
@@ -181,7 +226,7 @@ typedef enum {
 //开启和关闭灯塔上报（包括属性采集／启动上报／退出事件／使用状况上报）
 + (BOOL)setEnableReport:(BOOL)enabled;
 
-//1.8.4
+// 1.8.4
 /**
  * wifi上报控制
  */
@@ -220,6 +265,5 @@ typedef enum {
  * 离开页面跟踪，在viewWillDisappear或viewDidDisappear方法里调用此方法
  */
 + (void)onPageEnd:(NSString *)pageName;
-
 
 @end

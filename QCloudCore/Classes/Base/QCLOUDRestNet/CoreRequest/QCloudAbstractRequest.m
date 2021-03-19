@@ -132,6 +132,26 @@ __attribute__((noinline)) void cosWarnBlockingOperationOnMainThread() {
     }
 }
 
+- (void)notifyDownloadProgressBytesDownload:(int64_t)bytesDownload
+                         totalBytesDownload:(int64_t)totalBytesDownload
+               totalBytesExpectedToDownload:(int64_t)totalBytesExpectedToDownload
+                               receivedData:(NSData *)data {
+    [self notifyDownloadProgressBytesDownload:bytesDownload
+                           totalBytesDownload:totalBytesDownload
+                 totalBytesExpectedToDownload:totalBytesExpectedToDownload];
+
+    if (self.downProcessWithDataBlock) {
+        self.downProcessWithDataBlock(bytesDownload, totalBytesDownload, totalBytesExpectedToDownload, data);
+    }
+    if ([self.delegate respondsToSelector:@selector(QCloudHTTPRequest:bytesDownload:totalBytesDownload:totalBytesExpectedToDownload:receiveData:)]) {
+        [self.delegate QCloudHTTPRequest:self
+                           bytesDownload:bytesDownload
+                      totalBytesDownload:totalBytesDownload
+            totalBytesExpectedToDownload:totalBytesExpectedToDownload
+                             receiveData:data];
+    }
+}
+
 - (void)notifySendProgressBytesSend:(int64_t)bytesSend
                      totalBytesSend:(int64_t)totalBytesSend
            totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {

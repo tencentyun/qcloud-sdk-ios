@@ -31,7 +31,6 @@
 
 #import <Foundation/Foundation.h>
 #import <QCloudCore/QCloudCore.h>
-#import "QCloudCOSXMLStatusEnum.h"
 #import "QCloudInputFileHeaderInfoEnum.h"
 #import "QCloudOutputQuoteFieldsEnum.h"
 
