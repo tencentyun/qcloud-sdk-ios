@@ -144,14 +144,12 @@ BOOL QCloudCheckIPVaild(NSString *ip) {
 }
 
 - (void)pingIp:(NSString *)ip host:(NSString *)host fulfil:(dispatch_semaphore_t)sema {
-    nil;
     dispatch_async(dispatch_get_main_queue(), ^{
         NSString *ipAdd;
         if ([ip hasSuffix:IP_ADDR_IPv4]) {
             ipAdd = [ip stringByReplacingOccurrencesOfString:IP_ADDR_IPv4 withString:@""];
         } else if ([ip hasSuffix:IP_ADDR_IPv6]) {
-            ipAdd = [ip stringByReplacingOccurrencesOfString:IP_ADDR_IPv4 withString:@""];
-            return;
+            ipAdd = [ip stringByReplacingOccurrencesOfString:IP_ADDR_IPv6 withString:@""];
         }
         QCloudPingTester *pingTester = [[QCloudPingTester alloc] initWithIp:ipAdd host:host fulfil:sema];
         pingTester.delegate = self;

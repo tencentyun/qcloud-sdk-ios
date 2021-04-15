@@ -203,7 +203,9 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen) {
     ICMPHeader *icmpPtr;
 
     packet = [NSMutableData dataWithLength:sizeof(*icmpPtr) + payload.length];
-    assert(packet != nil);
+    if (packet == nil) {
+        return nil;
+    }
 
     icmpPtr = packet.mutableBytes;
     icmpPtr->type = type;
@@ -231,8 +233,11 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen) {
     id<SimplePingDelegate> strongDelegate;
 
     // data may be nil
-    NSParameterAssert(self.hostAddress != nil); // gotta wait for -simplePing:didStartWithAddress:
+//    NSParameterAssert(self.hostAddress != nil); // gotta wait for -simplePing:didStartWithAddress:
 
+    if (self.hostAddress == nil) {
+        return;
+    }
     // Construct the ping packet.
 
     payload = data;
@@ -255,10 +260,13 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen) {
             packet = [self pingPacketWithType:ICMPv6TypeEchoRequest payload:payload requiresChecksum:NO];
         } break;
         default: {
-            assert(NO);
+            return;
         } break;
     }
-    assert(packet != nil);
+//    assert(packet != nil);
+    if (packet == nil) {
+        return;
+    }
 
     // Send the packet.
 
@@ -458,7 +466,7 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen) {
             result = [self validatePing6ResponsePacket:packet sequenceNumber:sequenceNumberPtr];
         } break;
         default: {
-            assert(NO);
+//            assert(NO);
             result = NO;
         } break;
     }
@@ -482,7 +490,10 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen) {
     // here (plus it's what <x-man-page://8/ping> uses).
 
     buffer = malloc(kBufferSize);
-    assert(buffer != NULL);
+//    assert(buffer != NULL);
+    if (buffer == NULL) {
+        return;
+    }
 
     // Actually read the data.  We use recvfrom(), and thus get back the source address,
     // but we don't actually do anything with it.  It would be trivial to pass it to
@@ -503,7 +514,10 @@ static uint16_t in_cksum(const void *buffer, size_t bufferLen) {
         uint16_t sequenceNumber;
 
         packet = [NSMutableData dataWithBytes:buffer length:(NSUInteger)bytesRead];
-        assert(packet != nil);
+//        assert(packet != nil);
+        if (packet == nil) {
+            return;
+        }
 
         // We got some data, pass it up to our client.
 
@@ -572,7 +586,10 @@ static void SocketReadCallback(CFSocketRef s, CFSocketCallBackType type, CFDataR
     int err;
     int fd;
 
-    assert(self.hostAddress != nil);
+//    assert(self.hostAddress != nil);
+    if (self.hostAddress == nil) {
+        return;
+    }
 
     // Open the socket.
 
@@ -721,7 +738,10 @@ static void HostResolveCallback(CFHostRef theHost, CFHostInfoType typeInfo, cons
     assert(self.hostAddress == nil);
 
     self.host = (CFHostRef)CFAutorelease(CFHostCreateWithName(NULL, (__bridge CFStringRef)self.hostName));
-    assert(self.host != NULL);
+//    assert(self.host != NULL);
+    if (self.host == NULL) {
+        return;
+    }
 
     CFHostSetClient(self.host, HostResolveCallback, &context);
 

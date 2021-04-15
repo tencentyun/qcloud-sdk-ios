@@ -39,6 +39,6 @@
 }
 
 + (void)initMTA {
-    [QualityDataUploader startWithAppkey:kQAccount];
+    [QualityDataUploader startWithAppkey:nil];
 }
 @end

@@ -1266,7 +1266,18 @@ static id ModelToJSONObjectRecursive(NSObject *model) {
         if ([NSJSONSerialization isValidJSONObject:model])
             return model;
         NSMutableArray *newArray = [NSMutableArray new];
-        for (id obj in (NSArray *)model) {
+//        for (id obj in (NSArray *)model) {
+//            if ([obj isKindOfClass:[NSString class]] || [obj isKindOfClass:[NSNumber class]]) {
+//                [newArray addObject:obj];
+//            } else {
+//                id jsonObj = ModelToJSONObjectRecursive(obj);
+//                if (jsonObj && jsonObj != (id)kCFNull)
+//                    [newArray addObject:jsonObj];
+//            }
+//        }
+        NSArray * array = (NSArray *)model;
+        for (int i = 0;  i < array.count; i ++ ) {
+            id obj = [array objectAtIndex:i];
             if ([obj isKindOfClass:[NSString class]] || [obj isKindOfClass:[NSNumber class]]) {
                 [newArray addObject:obj];
             } else {

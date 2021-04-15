@@ -245,7 +245,7 @@
     __block NSString *requestURLString = urlRequest.URL.absoluteString;
     [request.signatureProvider signatureWithFields:request.signatureFields
                                            request:request
-                                        urlRequest:urlRequest
+                                        urlRequest:(NSMutableURLRequest *)urlRequest
                                          compelete:^(QCloudSignature *signature, NSError *error) {
                                              NSString *authorizatioinString = signature.signature;
                                              if ([requestURLString hasSuffix:@"&"] || [requestURLString hasSuffix:@"?"]) {

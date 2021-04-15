@@ -95,23 +95,14 @@
 }
 
 - (void)writeCliceDataToFile {
-    NSError *error = nil;
-    NSString *path = QCloudApplicationDirectory();
-    NSDictionary *dic = [[NSFileManager defaultManager] attributesOfFileSystemForPath:path error:&error];
-    if (error) {
-        QCloudLogError(@"write log error :%@", error);
-        return;
-    }
-    if (dic) {
-        NSNumber *free = [dic objectForKey:NSFileSystemFreeSize];
-        if ([free unsignedLongValue] < 1024 * 1024) {
-            QCloudLogError(@"磁盘空间不可用：剩余空间 = %d", [free unsignedLongValue]);
-            return;
-        }
-    }
     if (_sliceData.length) {
-        [_fileHandler writeData:_sliceData];
-        _sliceData = [NSMutableData dataWithCapacity:(NSUInteger)_sliceSize];
+        @try {
+            [_fileHandler writeData:_sliceData];
+            _sliceData = [NSMutableData dataWithCapacity:(NSUInteger)_sliceSize];
+        } @catch (NSException *exception) {
+            QCloudLogError(@"no space left on device");
+        }
+       
     }
 }
 

@@ -175,7 +175,7 @@ static NSString *kQCloudRequestFailureKey = @"Failure";
 }
 
 + (void)trackNormalEventWithKey:(NSString *)key props:(NSDictionary *)props {
-    [self startReportWithEventKey:key paramters:props];
+    [self startReportWithEventKey:key appkey:nil paramters:props];
 }
 
 + (void)internalUploadRequest:(QCloudAbstractRequest *)request event:(NSString *)eventKey withParamter:(NSMutableDictionary *)paramter {
@@ -191,15 +191,18 @@ static NSString *kQCloudRequestFailureKey = @"Failure";
 
 + (void)startReportSDKWithEventKey:(NSString *)eventKey paramters:(NSMutableDictionary *)paramter {
     paramter[kQCloudQualitySDKVersionKey] = QCloudCOSXMLModuleVersion;
-    [self startReportWithEventKey:eventKey paramters:[paramter copy]];
+    [self startReportWithEventKey:eventKey appkey:AppKey paramters:[paramter copy]];
 }
 
-+ (void)startReportWithEventKey:(NSString *)eventKey paramters:(NSDictionary *)paramter {
++ (void)startReportWithEventKey:(NSString *)eventKey appkey:(NSString *)appkey paramters:(NSDictionary *)paramter {
     Class cls = NSClassFromString(@"BeaconReport");
     if (cls) {
         Class eventCls = NSClassFromString(@"BeaconEvent");
         SuppressPerformSelectorLeakWarning(id eventObj = [eventCls performSelector:NSSelectorFromString(@"new")];
-                                           [eventObj performSelector:NSSelectorFromString(@"setAppKey:") withObject:AppKey];
+                                           if(appkey){
+                                                [eventObj performSelector:NSSelectorFromString(@"setAppKey:") withObject:appkey];
+            
+                                            }
                                            [eventObj performSelector:NSSelectorFromString(@"setCode:") withObject:eventKey];
                                            [eventObj performSelector:NSSelectorFromString(@"setParams:") withObject:paramter ? paramter : @{}];
                                            id beaconInstance = [cls performSelector:NSSelectorFromString(@"sharedInstance")];

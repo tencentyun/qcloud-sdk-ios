@@ -13,7 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithLog:(NSArray *)logContent;
 @end
 #endif
-
 /**
  QCloudCOSXML 日志管理类
  */

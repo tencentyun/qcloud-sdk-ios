@@ -362,12 +362,9 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
 
     [self.requestCacheArray addPointer:(__bridge void *_Nullable)(uploadRequet)];
     [self.transferManager.cosService InitiateMultipartUpload:uploadRequet];
-
-    QCloudLogDebug(@"initPart self.transferManager :%@  self.transferManager.cosService :%@", self.transferManager, self.transferManager.cosService);
 }
 
 - (NSArray<QCloudFileOffsetBody *> *)getFileLocalUploadParts {
-    QCloudLogDebug(@"url.relativePath = %@", self.body);
     NSMutableArray *allParts = [NSMutableArray new];
     if (self.canceled) {
         return nil;
@@ -560,6 +557,10 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
 
 - (void)finishUpload:(NSString *)uploadId {
     NSURL *url = (NSURL *)self.body;
+    if(self.canceled){
+        NSLog(@"finishUpload canceled = %d",self.canceled?1:0);
+        return;
+    }
     NSInteger fileSize = QCloudFileSize(url.relativePath);
     if (fileSize != self.dataContentLength || !self.uploadBodyIsCompleted) {
         NSError *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeImCompleteData
