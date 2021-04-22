@@ -10,6 +10,9 @@
 @class QCloudGetRecognitionObjectRequest;
 @class QCloudGetFilePreviewRequest;
 @class QCloudGetGenerateSnapshotRequest;
+@class QCloudCICloudDataOperationsRequest;
+@class QCloudCIPutObjectQRCodeRecognitionRequest;
+@class QCloudQRCodeRecognitionRequest;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface QCloudCOSXMLService (ImageHelper)
@@ -121,6 +124,16 @@ cos iOS SDK 中获取 COS 文档预览方法具体步骤如下：
 - (void)GetFilePreviewObject:(QCloudGetFilePreviewRequest *)request;
 
 - (void)GetGenerateSnapshot:(QCloudGetGenerateSnapshotRequest *)request;
+//云上数据处理
+- (void)CloudDataOperations:(QCloudCICloudDataOperationsRequest *)request;
+/**
+ 上传时识别二维码
+ */
+- (void)PutObjectQRCodeRecognition:(QCloudCIPutObjectQRCodeRecognitionRequest *)request;
+/**
+ 下载时识别二维码
+ */
+- (void)CIQRCodeRecognition:(QCloudQRCodeRecognitionRequest *)request;
 
 @end
 

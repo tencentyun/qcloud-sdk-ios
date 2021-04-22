@@ -11,7 +11,8 @@
 
 #import "QCloudGetFilePreviewRequest.h"
 #import "QCloudGetGenerateSnapshotRequest.h"
-
+#import "QCloudCICloudDataOperationsRequest.h"
+#import "QCloudCIPutObjectQRCodeRecognitionRequest.h"
 @implementation QCloudCOSXMLService (ImageHelper)
 
 - (void)PutWatermarkObject:(QCloudPutObjectWatermarkRequest *)request {
@@ -30,4 +31,15 @@
     [super performRequest:request];
 }
 
+- (void)CloudDataOperations:(QCloudCICloudDataOperationsRequest *)request {
+    [super performRequest:request];
+}
+
+- (void)PutObjectQRCodeRecognition:(QCloudCIPutObjectQRCodeRecognitionRequest *)request {
+    [super performRequest:request];
+}
+
+- (void)CIQRCodeRecognition:(QCloudQRCodeRecognitionRequest *)request{
+    [super performRequest:request];
+}
 @end

@@ -12,6 +12,17 @@ NSString *const kQCloudNetworkDomain = @"com.tencent.qcloud.networking";
 NSString *const kQCloudNetworkErrorObject = @"kQCloudNetworkErrorObject";
 @implementation NSError (QCloudNetworking)
 
++ (NSError *)qcloud_errorWithCode:(int)code message:(NSString *)message infos:(NSDictionary *)infos{
+    message = message ? message : @"未知错误!";
+    NSMutableDictionary *paramaters = [NSMutableDictionary dictionary];
+    paramaters[NSLocalizedDescriptionKey] = message;
+    for (NSString *key in infos.allKeys) {
+        paramaters[key] = infos[key];
+    }
+    NSError *error = [NSError errorWithDomain:kQCloudNetworkDomain code:code userInfo:[paramaters copy]];
+    return error;
+}
+
 + (NSError *)qcloud_errorWithCode:(int)code message:(NSString *)message {
     message = message ? message : @"未知错误!";
     NSError *error = [NSError errorWithDomain:kQCloudNetworkDomain code:code userInfo:@{ NSLocalizedDescriptionKey : message }];
@@ -21,15 +32,23 @@ NSString *const kQCloudNetworkErrorObject = @"kQCloudNetworkErrorObject";
 + (BOOL)isNetworkErrorAndRecoverable:(NSError *)error {
     static NSSet *kQCloudNetworkNotRecoverableCode;
     static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        kQCloudNetworkNotRecoverableCode = [NSSet setWithObjects:@(NSURLErrorCancelled), @(NSURLErrorBadURL),
-
-                                                                 nil];
-    });
-
     if ([error.domain isEqualToString:NSURLErrorDomain]) {
-        if (![kQCloudNetworkNotRecoverableCode containsObject:[NSNumber numberWithLong:error.code]]) {
-            return YES;
+        switch (error.code) {
+            case NSURLErrorCancelled:
+            case NSURLErrorBadURL:
+            case NSURLErrorNotConnectedToInternet:
+            case NSURLErrorSecureConnectionFailed:
+            case NSURLErrorServerCertificateHasBadDate:
+            case NSURLErrorServerCertificateUntrusted:
+            case NSURLErrorServerCertificateHasUnknownRoot:
+            case NSURLErrorServerCertificateNotYetValid:
+            case NSURLErrorClientCertificateRejected:
+            case NSURLErrorClientCertificateRequired:
+            case NSURLErrorCannotLoadFromNetwork:
+                return NO;
+
+            default:
+                return YES;
         }
     }
     if ([error.domain isEqualToString:kQCloudNetworkDomain]) {
@@ -39,10 +58,6 @@ NSString *const kQCloudNetworkErrorObject = @"kQCloudNetworkErrorObject";
                 [serverCode isEqualToString:@"InvalidSHA1Digest"] || [serverCode isEqualToString:@"RequestTimeOut"]) {
                 return YES;
             }
-        }
-
-        if (error.code == QCloudNetworkErrorCodeNotMatch) {
-            return YES;
         }
     }
 

@@ -11,6 +11,7 @@
 NSString *const kTaskTookTime = @"kTaskTookTime";
 NSString *const kCalculateMD5STookTime = @"kCalculateMD5STookTime";
 NSString *const kSignRequestTookTime = @"kSignRequestTookTime";
+NSString *const kTotalSize = @"kTotalSize";
 NSString *const kDnsLookupTookTime = @"kDnsLookupTookTime";
 NSString *const kConnectTookTime = @"kConnectTookTime";
 NSString *const kSecureConnectTookTime = @"kSecureConnectTookTime";

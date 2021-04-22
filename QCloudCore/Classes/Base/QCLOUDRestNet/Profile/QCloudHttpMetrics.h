@@ -11,6 +11,8 @@
 extern NSString *const kTaskTookTime; // kRNBenchmarkRTT;
 extern NSString *const kCalculateMD5STookTime;
 extern NSString *const kSignRequestTookTime;
+
+extern NSString *const kTotalSize;
 extern NSString *const kDnsLookupTookTime;     // kRNBenchmarkDNSLoopupTime
 extern NSString *const kConnectTookTime;       // kRNBenchmarkConnectionTime;
 extern NSString *const kSecureConnectTookTime; // kRNBenchmarkSecureConnectionTime;

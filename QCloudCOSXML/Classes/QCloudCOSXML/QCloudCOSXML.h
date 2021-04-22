@@ -88,6 +88,9 @@
 #import "QCloudCopyObjectResult.h"
 #import "QCloudPutObjectCopyRequest.h"
 //数据万象
+#import "QCloudQRCodeRecognitionRequest.h"
+#import "QCloudCICloudDataOperationsRequest.h"
+#import "QCloudCIPutObjectQRCodeRecognitionRequest.h"
 #import "QCloudGetFilePreviewRequest.h"
 #import "QCloudCOSXMLService+ImageHelper.h"
 #import "QCloudPutObjectWatermarkRequest.h"

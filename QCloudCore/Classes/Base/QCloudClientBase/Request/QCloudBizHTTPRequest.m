@@ -26,6 +26,7 @@ QCloudResponseSerializerBlock QCloudResponseObjectSerilizerBlock(Class modelClas
             if (error != NULL) {
                 *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeResponseDataTypeInvalid
                                                message:[NSString stringWithFormat:@"ServerError:希望获得字典类型数据,但是得到%@", [inputData class]]];
+                
             }
             return (id)nil;
         }
@@ -152,12 +153,13 @@ QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilizerBlock
         return NO;
     } else if (!isSigned) {
         *error = [NSError
-            errorWithDomain:@"com.tencent.qcloud.request"
-                       code:QCloudNetworkErrorCodeCredentialNotReady
-                   userInfo:@{
+                  qcloud_errorWithCode:QCloudNetworkErrorCodeCredentialNotReady
+                  message:nil
+                  infos:@{
                        @"Description" :
                            @"InvalidCredentials：获取签名超时，请检查是否实现签名回调，签名回调是否有调用,并且在最后是否有调用 ContinueBlock 传入签名"
                    }];
+
         return NO;
     } else {
         return YES;

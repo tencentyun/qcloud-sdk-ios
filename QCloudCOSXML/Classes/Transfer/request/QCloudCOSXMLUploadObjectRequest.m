@@ -29,6 +29,7 @@
 #import "QCloudPutObjectRequest+Custom.h"
 #import <QCloudCore/QCloudSupervisoryRecord.h>
 #import <QCloudCore/QCloudHTTPRetryHanlder.h>
+#import "QualityDataUploader.h"
 static NSUInteger kQCloudCOSXMLUploadLengthLimit = 1 * 1024 * 1024;
 static NSUInteger kQCloudCOSXMLUploadSliceLength = 1 * 1024 * 1024;
 static NSUInteger kQCloudCOSXMLMD5Length = 32;
@@ -414,6 +415,7 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
         totalTempBytesSend += body.sliceLength;
     }
     _totalBytesSent = _dataContentLength - totalTempBytesSend;
+    [self.benchMarkMan directSetValue:@(totalTempBytesSend) forKey:kTotalSize];
     //
     __weak typeof(self) weakSelf = self;
     _queueSource = dispatch_source_create(DISPATCH_SOURCE_TYPE_DATA_ADD, 0, 0, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0));
@@ -500,6 +502,7 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
                                 [errorMessageString appendFormat:@", Request id:%@", requestID];
                             }
                             NSError *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeNotMatch message:errorMessageString];
+                    
                             [weakSelf onError:error];
                             [weakSelf cancel];
                             return;
@@ -535,6 +538,7 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     self.uploadId = result.uploadId;
     NSArray *allParts = [self getFileLocalUploadParts];
     [self uploadOffsetBodys:allParts];
+    
 }
 
 - (void)markPartFinish:(QCloudMultipartInfo *)info {

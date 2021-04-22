@@ -20,21 +20,24 @@
 typedef NS_ENUM(int, QCloudNetworkErrorCode) {
     // InvalidArgument 参数错误
     QCloudNetworkErrorCodeParamterInvalid = 10000,
-    // InvalidCredentials 证书无效
+    // InvalidCredentials 获取签名错误
     QCloudNetworkErrorCodeCredentialNotReady = 10001,
     // 10004 UnsupportOperation: 无法支持的操作
     QCloudNetworkErrorUnsupportOperationError = 10004,
-    // ServerError 服务器返回了不合法的数据
-    QCloudNetworkErrorCodeResponseDataTypeInvalid = 20001,
     //数据完整性校验失败
     QCloudNetworkErrorCodeNotMatch = 20004,
-
-    //数据完整性校验失败
+    //文件没有上传完成
     QCloudNetworkErrorCodeImCompleteData = 20005,
     // UserCancelled 用户取消
     QCloudNetworkErrorCodeCanceled = 30000,
     // AlreadyFinished 任务已完成
     QCloudNetworkErrorCodeAlreadyFinish = 30001,
+    
+    /**
+     服务端错误
+     */
+    // ServerError 服务器返回了不合法的数据
+    QCloudNetworkErrorCodeResponseDataTypeInvalid = 40000,
 };
 
 @protocol QCloudNetworkError <NSObject>
@@ -50,6 +53,7 @@ typedef NS_ENUM(int, QCloudNetworkErrorCode) {
 FOUNDATION_EXTERN NSString *const kQCloudNetworkDomain;
 FOUNDATION_EXTERN NSString *const kQCloudNetworkErrorObject;
 @interface NSError (QCloudNetworking)
++ (NSError *)qcloud_errorWithCode:(int)code message:(NSString *)message infos:(NSDictionary *)infos;
 + (NSError *)qcloud_errorWithCode:(int)code message:(NSString *)message;
 + (BOOL)isNetworkErrorAndRecoverable:(NSError *)error;
 @end
