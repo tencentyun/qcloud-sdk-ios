@@ -142,6 +142,9 @@ NSString *const kQCloudQualityErrorCodeClientName = @"Client";
         QCloudLogDebug(@"please pod Beacon");
     }
 }
++ (void)trackNormalEventWithKey:(NSString *)key props:(NSDictionary *)props {
+    [self startReportWithEventKey:key appkey:nil paramters:props];
+}
 
 //上报成功的事件：需要排除掉uploadPart、uploadPartCopy等请求，在其对应的高级接口成功的回调中上报
 + (void)trackSDKRequestSuccessWithRequest:(QCloudAbstractRequest *)request {

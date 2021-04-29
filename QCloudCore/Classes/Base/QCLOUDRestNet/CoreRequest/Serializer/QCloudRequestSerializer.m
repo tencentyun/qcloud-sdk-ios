@@ -111,9 +111,11 @@ NSDictionary *QCloudURLReadQuery(NSURL *url) {
         if (!kv.length) {
             continue;
         }
-        NSArray *vs = [kv componentsSeparatedByString:@"="];
+        NSArray <NSString *>*vs = [kv componentsSeparatedByString:@"="];
         if (vs.count == 2) {
-            queryDic[QCloudStringURLDecode(vs[0], NSUTF8StringEncoding)] = QCloudStringURLDecode(vs[1], NSUTF8StringEncoding);
+            if(vs.lastObject.length>0){
+                queryDic[QCloudStringURLDecode(vs[0], NSUTF8StringEncoding)] = QCloudStringURLDecode(vs[1], NSUTF8StringEncoding);
+            }
         } else if (vs.count == 1) {
             queryDic[QCloudStringURLDecode(vs.firstObject, NSUTF8StringEncoding)] = @"";
         }

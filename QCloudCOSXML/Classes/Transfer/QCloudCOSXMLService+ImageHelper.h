@@ -13,6 +13,7 @@
 @class QCloudCICloudDataOperationsRequest;
 @class QCloudCIPutObjectQRCodeRecognitionRequest;
 @class QCloudQRCodeRecognitionRequest;
+@class QCloudCIPicRecognitionRequest;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface QCloudCOSXMLService (ImageHelper)
@@ -134,7 +135,10 @@ cos iOS SDK 中获取 COS 文档预览方法具体步骤如下：
  下载时识别二维码
  */
 - (void)CIQRCodeRecognition:(QCloudQRCodeRecognitionRequest *)request;
-
+/**
+ 图片标签
+ */
+- (void)CIPicRecognition:(QCloudCIPicRecognitionRequest *)request;
 @end
 
 NS_ASSUME_NONNULL_END

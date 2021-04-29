@@ -130,6 +130,13 @@ NS_ASSUME_NONNULL_BEGIN
     if (self.object)
         [__pathComponents addObject:self.object];
     self.requestData.URIComponents = __pathComponents;
+   
+    if (self.watermarkRule) {
+        [self.requestData setQueryStringParamter:@"" withKey:self.watermarkRule];
+    }
+    
+
+   
     if (![self customBuildRequestData:error])
         return NO;
     for (NSString *key in self.customHeaders.allKeys.copy) {

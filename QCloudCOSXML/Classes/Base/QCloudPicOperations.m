@@ -56,8 +56,8 @@
         QCloudLogError(@"水印类型错误");
         return nil;
     }
-
-    NSMutableString *strRule = [NSMutableString stringWithString:@"watermark/3/type"];
+    
+    NSMutableString *strRule = [NSMutableString stringWithFormat:@"%@", [NSString stringWithFormat:@"watermark/%lu/type",(unsigned long)self.actionType]];
 
     [strRule appendFormat:@"/%ld", _type];
 

@@ -10,31 +10,177 @@
 #import "QCloudGetObjectRequest+Custom.h"
 #import "QCloudCOSTransferMangerService.h"
 #import "QCloudCOSXMLService+Transfer.h"
+#import "QCloudHeadObjectRequest.h"
+#import <QCloudCore/NSMutableData+QCloud_CRC.h>
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
+@interface  QCloudCOSXMLDownloadObjectRequest()
+//存储所有的下载请求
+@property (nonatomic, strong) NSPointerArray *requestCacheArray;
+@property (nonatomic, strong) dispatch_source_t queueSource;
+@end
+  
 @implementation QCloudCOSXMLDownloadObjectRequest
 #pragma clang diagnostic pop
+- (void)dealloc {
+    NSLog(@"QCloudCOSXMLUploadObjectRequest = %@ dealloc", self);
+    if (NULL != _queueSource) {
+        dispatch_source_cancel(_queueSource);
+    }
+}
 - (instancetype)init {
     self = [super init];
     if (!self) {
         return nil;
     }
     _customHeaders = [NSMutableDictionary dictionary];
-
+    _requestCacheArray = [NSPointerArray weakObjectsPointerArray];
     return self;
 }
 - (void)fakeStart {
-    [self startGetObject];
+    if(!self.resumableDownload){
+        [self startGetObject];
+        return;
+    }
+    if(!self.resumableTaskFile){
+        if(!self.downloadingURL){
+            NSError *error =  [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
+                                                                                message:@"InvalidArgument:您输入的downloadingURL不合法，请检查后使用！！"];
+            if(self.finishBlock){
+                self.finishBlock(nil, error);
+                return;
+            }
+        }
+        self.resumableTaskFile = [NSString stringWithFormat:@"%@.cosresumabletask",self.downloadingURL.relativePath];
+      
+    }
+    QCloudHeadObjectRequest *headReq = [QCloudHeadObjectRequest new];
+    headReq.bucket = self.bucket;
+    headReq.regionName = self.regionName;
+    headReq.object = self.object;
+    [headReq setFinishBlock:^(id  _Nullable outputObject, NSError * _Nullable error) {
+        if(error){
+            self.finishBlock(outputObject, error);
+            return;
+
+        }
+        BOOL exist = [[NSFileManager defaultManager] fileExistsAtPath:self.resumableTaskFile];
+        if (!exist) {
+           [[NSFileManager defaultManager] createFileAtPath:self.resumableTaskFile contents:[NSData data] attributes:nil];
+            NSDictionary *dic = @{@"lastModified":outputObject[@"Last-Modified"],
+                                  @"contentLength":outputObject[@"Content-Length"],
+                                  @"etag":outputObject[@"Etag"],
+                                  @"crc64ecma":outputObject[@"x-cos-hash-crc64ecma"],
+            };
+            NSLog(@"file info = %@",dic);
+            NSError *parseError;
+            NSData *info =[NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:&parseError];
+            NSError *writeDataError;
+            [info writeToFile:self.resumableTaskFile options:0 error:&writeDataError];
+        }else{
+            NSData *data = [[NSData alloc] initWithContentsOfFile:self.resumableTaskFile];
+            NSDictionary *dic =  [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+            //如果文件发生改变
+            if(![dic[@"contentLength"] isEqualToString:outputObject[@"Content-Length"]] ||
+                 ![dic[@"lastModified"] isEqualToString:outputObject[@"Last-Modified"]] ||
+                   ![dic[@"etag"] isEqualToString:outputObject[@"Etag"]] ||
+                     ![dic[@"crc64ecma"] isEqualToString:outputObject[@"x-cos-hash-crc64ecma"]]){
+                QCloudRemoveFileByPath(self.resumableTaskFile);
+                [[NSFileManager defaultManager] createFileAtPath:self.resumableTaskFile contents:[NSData data] attributes:nil];
+                 NSDictionary *dic = @{@"lastModified":outputObject[@"Last-Modified"],
+                                       @"contentLength":outputObject[@"Content-Length"],
+                                       @"etag":outputObject[@"Etag"],
+                                       @"crc64ecma":outputObject[@"x-cos-hash-crc64ecma"],
+                 };
+                 NSLog(@"file info = %@",dic);
+                 NSError *parseError;
+                 NSData *info =[NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:&parseError];
+                 NSError *writeDataError;
+                 [info writeToFile:self.resumableTaskFile options:0 error:&writeDataError];
+            }else{
+                NSArray *tasks = dic[@"downloadedBlocks"];
+                self.localCacheDownloadOffset = [(NSString *)tasks.lastObject[@"to"] integerValue];
+            }
+        }
+       
+        [self startGetObject];
+        
+    }];
+    [[QCloudCOSXMLService defaultCOSXML] HeadObject:headReq];
+  
+    
+    
 }
+
+    
 - (void)startGetObject {
+    
     QCloudGetObjectRequest *request = [QCloudGetObjectRequest new];
     request.customHeaders = [self.customHeaders copy];
     request.downloadingURL = self.downloadingURL;
     request.localCacheDownloadOffset = self.localCacheDownloadOffset;
     request.regionName = self.regionName;
     request.enableMD5Verification = self.enableMD5Verification;
-    [request setFinishBlock:self.finishBlock];
-    [request setDownProcessBlock:self.downProcessBlock];
+    __block int64_t currentTotalBytesDownload = 0;
+    __weak typeof(self) weakSelf = self;
+    [request setDownProcessBlock:^(int64_t bytesDownload, int64_t totalBytesDownload, int64_t totalBytesExpectedToDownload) {
+        __strong typeof(weakSelf) strongSelf = self;
+        currentTotalBytesDownload = totalBytesDownload;
+        NSLog(@"🔽🔽🔽🔽🔽downProcess %lld %lld %ld",totalBytesDownload,currentTotalBytesDownload,totalBytesExpectedToDownload);
+        if(strongSelf.downProcessBlock){
+            strongSelf.downProcessBlock(bytesDownload, totalBytesDownload, totalBytesExpectedToDownload);
+        }
+    }];
+    [request setFinishBlock:^(id  _Nullable outputObject, NSError * _Nullable error) {
+        __strong typeof(weakSelf) strongSelf = self;
+        if (!strongSelf.resumableDownload) {
+            if(self.finishBlock){
+                strongSelf.finishBlock(outputObject, error);
+                return;
+            }
+
+        }
+        //如果下载失败了：保存当前的下载长度，便于下次续传
+        NSData *data = [[NSData alloc] initWithContentsOfFile:strongSelf.resumableTaskFile];
+        NSMutableDictionary *dic =  [[NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil] mutableCopy];
+   
+        if(error){
+            NSMutableArray *tasks = [dic[@"downloadedBlocks"] mutableCopy];
+            if(!tasks){
+                tasks = [NSMutableArray array];
+            }
+            NSString *fromStr = [NSString stringWithFormat:@"%lld",strongSelf.localCacheDownloadOffset];
+            NSString *toStr = [NSString stringWithFormat:@"%d",currentTotalBytesDownload];
+            [tasks addObject:@{@"from":fromStr,@"to":toStr}];
+            dic[@"downloadedBlocks"] = [tasks copy];
+            NSError *parseError;
+            NSData *info =[NSJSONSerialization dataWithJSONObject:[dic copy] options:NSJSONWritingPrettyPrinted error:&parseError];
+            NSError *writeDataError;
+            [info writeToFile:strongSelf.resumableTaskFile options:0 error:&writeDataError];
+        }else{
+            //下载完成之后如果没有crc64，删除记录文件
+            if(!dic[@"crc64ecma"]){
+                QCloudRemoveFileByPath(strongSelf.resumableTaskFile);
+                return;
+            }
+            //计算文件的CRC64
+            uint64_t localCrc64 = [[[NSMutableData alloc] initWithContentsOfFile:strongSelf.downloadingURL.relativePath] qcloud_crc64];
+            NSString *localCrc64Str = [NSString stringWithFormat:@"%llu",localCrc64];
+            QCloudRemoveFileByPath(strongSelf.resumableTaskFile);
+            if(![localCrc64Str isEqualToString:dic[@"crc64ecma"]]){
+                //下载完成之后如果crc64不一致，删除记录文件和已经下载的文件，重新开始下载
+                QCloudRemoveFileByPath(strongSelf.downloadingURL.relativePath);
+                [self fakeStart];
+                return;
+            }
+            
+        }
+        if(self.finishBlock){
+            strongSelf.finishBlock(outputObject, error);
+        }
+    }];
+ 
+    
     request.responseContentType = self.responseContentType;
     request.responseContentLanguage = self.responseContentLanguage;
     request.responseContentExpires = self.responseContentExpires;
@@ -49,7 +195,28 @@
     request.object = self.object;
     request.bucket = self.bucket;
     request.enableQuic = self.enableQuic;
+    
     [self.transferManager.cosService GetObject:request];
+    [self.requestCacheArray addPointer:(__bridge void *_Nullable)(request)];
+}
+
+-(void)cancel{
+    [super cancel];
+    [self.requestCacheArray addPointer:(__bridge void *_Nullable)([NSObject new])];
+    [self.requestCacheArray compact];
+    if (NULL != _queueSource) {
+        dispatch_source_cancel(_queueSource);
+    }
+
+    NSMutableArray *cancelledRequestIDs = [NSMutableArray array];
+    NSPointerArray *tmpRequestCacheArray = [self.requestCacheArray copy];
+    for (QCloudHTTPRequest *request in tmpRequestCacheArray) {
+        if (request != nil) {
+            [cancelledRequestIDs addObject:[NSNumber numberWithLongLong:request.requestID]];
+        }
+    }
+
+    [[QCloudHTTPSessionManager shareClient] cancelRequestsWithID:cancelledRequestIDs];
 }
 - (void)setCOSServerSideEncyption {
     self.customHeaders[@"x-cos-server-side-encryption"] = @"AES256";

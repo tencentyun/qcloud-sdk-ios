@@ -108,6 +108,14 @@
  通常情况下，携带特定的额外HTTP头部可以使用某项功能，如果是这类需求，可以通过设置该属性来实现。
  */
 @property (strong, nonatomic) NSMutableDictionary *customHeaders;
+/**
+ 指定是否使用分块及续传下载，默认为 FALSE。
+ */
+@property (assign, nonatomic)BOOL resumableDownload;
+/**
+ 使用分块及续传下载时，指定任务记录文件的路径
+ */
+@property (strong, nonatomic) NSString *resumableTaskFile;
 - (void)setCOSServerSideEncyption;
 - (void)setCOSServerSideEncyptionWithCustomerKey:(NSString *)customerKey;
 

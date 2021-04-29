@@ -31,6 +31,7 @@
 
 #import <Foundation/Foundation.h>
 #import <QCloudCore/QCloudCore.h>
+#import "QCloudPicOperations.h"
 NS_ASSUME_NONNULL_BEGIN
 /**
 
@@ -135,6 +136,10 @@ RFC 2616 中定义的指定文件下载范围，以字节（bytes）为单位
 存储桶名
 */
 @property (strong, nonatomic) NSString *bucket;
+/**
+给图片添加盲水印
+*/
+@property (strong, nonatomic) NSString *watermarkRule;
 
 @end
 NS_ASSUME_NONNULL_END

@@ -16,6 +16,12 @@ typedef NS_ENUM(NSUInteger, QCloudPicOperationRuleEnum) {
     QCloudPicOperationRuleText,     /// 可直接将文字信息添加至图片中 使用场景：终端信息添加
 };
 
+typedef NS_ENUM(NSUInteger, QCloudPicOperationRuleActionEnum) {
+    QCloudPicOperationRuleActionPut = 3, /// 添加盲水印
+    QCloudPicOperationRuleActionExtrac = 4,     /// 提取盲水印
+};
+
+
 /**
  图片添加盲水印接口 参数类
  包含水印规则，水印类型，水印参数
@@ -46,6 +52,10 @@ typedef NS_ENUM(NSUInteger, QCloudPicOperationRuleEnum) {
 
 /// 盲水印类型，有效值：1 半盲；2 全盲；3 文字
 @property (nonatomic, assign) QCloudPicOperationRuleEnum type;
+
+/// 水印操作：提取水印：4，添加水印：3
+@property (nonatomic, assign) QCloudPicOperationRuleActionEnum actionType;
+/// 盲水印类型，有效值：1 半盲；2 全盲；3 文字
 
 /**
  盲水印图片地址，需要经过 URL 安全的 Base64 编码。 当 type 为1或2时必填，type 为3时无效。

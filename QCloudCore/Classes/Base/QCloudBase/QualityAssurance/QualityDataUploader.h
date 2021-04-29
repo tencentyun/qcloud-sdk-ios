@@ -22,4 +22,5 @@ extern  NSString *const kQCloudUploadAppKey;
 + (void)startWithAppkey:(NSString *)appkey;
 + (void)trackSDKRequestSuccessWithRequest:(QCloudAbstractRequest *)request;
 + (void)trackSDKRequestFailWithRequest:(QCloudAbstractRequest *)request error:(NSError *)error;
++ (void)trackNormalEventWithKey:(NSString *)key props:(NSDictionary *)props;
 @end
