@@ -1,4 +1,4 @@
-/* aos_crc64.c -- compute CRC-64
+/* qcloud_aos_crc64.c -- compute CRC-64
  * Copyright (C) 2013 Mark Adler
  * Version 1.4  16 Dec 2013  Mark Adler
  */
@@ -37,7 +37,7 @@
    1.4  16 Dec 2013  Make once variable volatile for limited thread protection
  */
 
-#include "aos_crc64.h"
+#include "QCloudCRC64.h"
 #include <pthread.h>
 
 /* 64-bit CRC polynomial with these coefficients, but reversed:
@@ -201,7 +201,7 @@ static inline uint64_t crc64_big(uint64_t crc, void *buf, size_t len)
    at compile time if it can, and get rid of the unused code and table.  If the
    endianess can be changed at run time, then this code will handle that as
    well, initializing and using two tables, if called upon to do so. */
-uint64_t aos_crc64(uint64_t crc, void *buf, size_t len)
+uint64_t qcloud_aos_crc64(uint64_t crc, void *buf, size_t len)
 {
     uint64_t n = 1;
 
@@ -236,7 +236,7 @@ static void gf2_matrix_square(uint64_t *square, uint64_t *mat)
 /* Return the CRC-64 of two sequential blocks, where crc1 is the CRC-64 of the
    first block, crc2 is the CRC-64 of the second block, and len2 is the length
    of the second block. */
-uint64_t aos_crc64_combine(uint64_t crc1, uint64_t crc2, uintmax_t len2)
+uint64_t qcloud_aos_crc64_combine(uint64_t crc1, uint64_t crc2, uintmax_t len2)
 {
     unsigned n;
     uint64_t row;

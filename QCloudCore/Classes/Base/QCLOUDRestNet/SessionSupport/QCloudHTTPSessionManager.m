@@ -179,7 +179,7 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache() {
     [_operationQueue addOpreation:operation];
     return (int)request.requestID;
 }
-
+#if TARGET_OS_IOS
 // only work at iOS 10 and up
 - (void)URLSession:(NSURLSession *)session
                           task:(NSURLSessionTask *)task
@@ -208,17 +208,13 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache() {
                        forKey:kDnsLookupTookTime];
         }
         if (@available(ios 13.0, *)) {
-            [taskData.httpRequest.benchMarkMan directSetValue:networkMetrics.localAddress forKey:kLocalAddress];
             [taskData.httpRequest.benchMarkMan directSetValue:networkMetrics.localPort forKey:kLocalPort];
             [taskData.httpRequest.benchMarkMan directSetValue:networkMetrics.remoteAddress forKey:kRemoteAddress];
             [taskData.httpRequest.benchMarkMan directSetValue:networkMetrics.remotePort forKey:kRemotePort];
         }
-        //            [taskData.httpRequest.benchMarkMan directSetCost:[networkMetrics.requestEndDate
-        //            timeIntervalSinceDate:networkMetrics.requestStartDate] forKey:@"upload"]; [taskData.httpRequest.benchMarkMan
-        //            directSetCost:[networkMetrics.responseEndDate timeIntervalSinceDate:networkMetrics.responseStartDate] forKey:@"download"];
     }
 }
-
+#endif
 - (void)URLSession:(NSURLSession *)session
               dataTask:(NSURLSessionDataTask *)dataTask
     didReceiveResponse:(NSURLResponse *)response
