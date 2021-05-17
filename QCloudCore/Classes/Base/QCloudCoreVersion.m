@@ -1,5 +1,5 @@
 #import "QCloudCoreVersion.h"
-NSString *const QCloudCoreModuleVersion = @"5.8.7";
+NSString *const QCloudCoreModuleVersion = @"5.8.9";
 NSString *const QCloudCoreModuleName = @"QCloudCore";
 @interface QCloudQCloudCoreLoad : NSObject
 @end

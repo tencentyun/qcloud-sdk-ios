@@ -163,8 +163,11 @@
         NSFileHandle *fileHandler = [NSFileHandle fileHandleForWritingAtPath:self.supervisoryLogFilePath];
         [data appendData:[@"\n#sss884hjksdhfjasdf\n" dataUsingEncoding:NSUTF8StringEncoding]];
         [fileHandler seekToEndOfFile];
-        [fileHandler writeData:data];
-        [fileHandler closeFile];
+        @try {
+            [fileHandler writeData:data];
+        } @catch (NSException *exception) {
+            QCloudLogError(@"no space left on device");
+        }
     }
 }
 

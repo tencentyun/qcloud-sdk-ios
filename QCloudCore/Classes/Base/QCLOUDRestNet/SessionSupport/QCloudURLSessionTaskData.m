@@ -10,7 +10,7 @@
 #import "QCloudHTTPRetryHanlder.h"
 #import <objc/runtime.h>
 #import "QCloudFileUtils.h"
-
+#import "QCloudLogger.h"
 @interface QCloudURLSessionTaskData () {
     NSMutableData *_cacheData;
     NSFileHandle *_writeFileHandler;
@@ -84,7 +84,11 @@
 - (void)appendData:(NSData *)data {
     if (_writeFileHandler && !_forbidenWirteToFile) {
         @synchronized(_writeFileHandler) {
-            [_writeFileHandler writeData:data];
+            @try {
+                [_writeFileHandler writeData:data];
+            } @catch (NSException *exception) {
+                QCloudLogError(@"no space left on device");
+            }
         }
     } else {
         @synchronized(_cacheData) {

@@ -371,15 +371,17 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
         return nil;
     }
     NSURL *url = (NSURL *)self.body;
-    self.dataContentLength = QCloudFileSize(url.relativePath);
+    if([self.body isKindOfClass:NSURL.class]){
+        self.dataContentLength = QCloudFileSize(url.relativePath);
+    }
     int64_t restContentLength = self.dataContentLength - uploadedSize;
     //便宜的起始位置
     int64_t offset = uploadedSize;
     for (int i = startPartNumber;; i++) {
         int64_t slice = 0;
-        NSUInteger maxSlice = ceil(QCloudFileSize(url.relativePath) * 1.0 / (10000));
+        NSUInteger maxSlice = ceil(self.dataContentLength * 1.0 / (10000));
         NSUInteger uploadSliceLength = self.sliceSize > 10 ? self.sliceSize : kQCloudCOSXMLUploadSliceLength;
-        uploadSliceLength = (QCloudFileSize(url.relativePath) * 1.0 / uploadSliceLength) > 10000 ? maxSlice : uploadSliceLength;
+        uploadSliceLength = self.dataContentLength * 1.0 / uploadSliceLength > 10000 ? maxSlice : uploadSliceLength;
         if (restContentLength >= uploadSliceLength) {
             slice = uploadSliceLength;
         } else {
@@ -565,14 +567,12 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
         NSLog(@"finishUpload canceled = %d",self.canceled?1:0);
         return;
     }
-    NSInteger fileSize = QCloudFileSize(url.relativePath);
-    if (fileSize != self.dataContentLength || !self.uploadBodyIsCompleted) {
+    if(!self.uploadBodyIsCompleted){
         NSError *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeImCompleteData
                                                message:@"DataIntegrityError分片:文件大小与原始文件大小不一致，请检查文件在上传的过程中是否发生改变"];
         [self onError:error];
         return;
     }
-
     QCloudCompleteMultipartUploadRequest *complete = [QCloudCompleteMultipartUploadRequest new];
     complete.enableQuic = self.enableQuic;
     complete.object = self.object;
