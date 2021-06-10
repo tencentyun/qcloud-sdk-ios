@@ -23,7 +23,7 @@
 @implementation QCloudCOSXMLDownloadObjectRequest
 #pragma clang diagnostic pop
 - (void)dealloc {
-    NSLog(@"QCloudCOSXMLUploadObjectRequest = %@ dealloc", self);
+    QCloudLogInfo(@"QCloudCOSXMLUploadObjectRequest = %@ dealloc", self);
     if (NULL != _queueSource) {
         dispatch_source_cancel(_queueSource);
     }
@@ -72,7 +72,6 @@
                                   @"etag":outputObject[@"Etag"],
                                   @"crc64ecma":outputObject[@"x-cos-hash-crc64ecma"],
             };
-            NSLog(@"file info = %@",dic);
             NSError *parseError;
             NSData *info =[NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:&parseError];
             NSError *writeDataError;
@@ -92,7 +91,6 @@
                                        @"etag":outputObject[@"Etag"],
                                        @"crc64ecma":outputObject[@"x-cos-hash-crc64ecma"],
                  };
-                 NSLog(@"file info = %@",dic);
                  NSError *parseError;
                  NSData *info =[NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:&parseError];
                  NSError *writeDataError;
@@ -126,7 +124,7 @@
     [request setDownProcessBlock:^(int64_t bytesDownload, int64_t totalBytesDownload, int64_t totalBytesExpectedToDownload) {
         __strong typeof(weakSelf) strongSelf = self;
         currentTotalBytesDownload = totalBytesDownload;
-        NSLog(@"🔽🔽🔽🔽🔽downProcess %lld %lld %ld",totalBytesDownload,currentTotalBytesDownload,totalBytesExpectedToDownload);
+        QCloudLogInfo(@"🔽🔽🔽🔽🔽downProcess %lld %lld %ld",totalBytesDownload,currentTotalBytesDownload,totalBytesExpectedToDownload);
         if(strongSelf.downProcessBlock){
             strongSelf.downProcessBlock(bytesDownload, totalBytesDownload, totalBytesExpectedToDownload);
         }

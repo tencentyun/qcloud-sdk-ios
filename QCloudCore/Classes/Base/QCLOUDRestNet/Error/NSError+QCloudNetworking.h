@@ -52,8 +52,10 @@ typedef NS_ENUM(int, QCloudNetworkErrorCode) {
 
 FOUNDATION_EXTERN NSString *const kQCloudNetworkDomain;
 FOUNDATION_EXTERN NSString *const kQCloudNetworkErrorObject;
+FOUNDATION_EXTERN NSString *const kQCloudErrorDetailCode;
 @interface NSError (QCloudNetworking)
 + (NSError *)qcloud_errorWithCode:(int)code message:(NSString *)message infos:(NSDictionary *)infos;
 + (NSError *)qcloud_errorWithCode:(int)code message:(NSString *)message;
 + (BOOL)isNetworkErrorAndRecoverable:(NSError *)error;
++ (NSString *)qcloud_networkErrorCodeTransferToString:(QCloudNetworkErrorCode)code;
 @end

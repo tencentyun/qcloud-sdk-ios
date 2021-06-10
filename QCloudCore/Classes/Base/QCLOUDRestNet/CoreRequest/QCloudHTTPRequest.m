@@ -32,6 +32,7 @@
 @property (atomic, assign) BOOL isCancel;
 @property (nonatomic, strong, readonly) NSMutableURLRequest *cachedURLRequest;
 @property (nonatomic, strong, readonly) NSError *cachedURLRequestBuildError;
+@property (nonatomic, strong) NSURLRequest *_Nullable urlRequest;
 @end
 
 @implementation QCloudHTTPRequest
@@ -134,6 +135,7 @@
     }
     QCloudLogDebug(@"SendingRequest [%lld]\n%@\n%@ \nrequest content:%@", self.requestID, request, request.allHTTPHeaderFields,
                    [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding]);
+    self.urlRequest = request;
     return request;
 }
 
@@ -141,7 +143,7 @@
     _httpURLResponse = (NSHTTPURLResponse *)response;
     _httpURLError = error;
     if (NSURLErrorCancelled == error.code && [NSURLErrorDomain isEqualToString:error.domain]) {
-        error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeCanceled message:@"UserCancelled:The request is canceled"];
+        error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeCanceled message:@"UserCancelled:The request is canceled" infos:@{kQCloudErrorDetailCode:@(NSURLErrorCancelled)}];
     }
     _httpURLError.__originHTTPURLResponse__ = _httpURLResponse;
     error.__originHTTPURLResponse__ = _httpURLResponse;

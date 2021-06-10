@@ -45,7 +45,10 @@ typedef void (^RequestsMetricArrayBlock)(NSMutableArray *_Nullable requstMetricA
 
  */
 @interface QCloudCOSXMLUploadObjectRequest<BodyType> : QCloudAbstractRequest
+//自定义分片大小
 @property (nonatomic, assign) NSUInteger sliceSize;
+//自定义分片阈值
+@property (nonatomic, assign) NSInteger mutilThreshold;
 @property (nonatomic, assign) QCloudAbstractRequestPriority uploadPriority;
 /**
  上传文件（对象）的文件名，也是对象的key，请注意文件名中不可以含有问号即"?"字符

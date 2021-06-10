@@ -67,7 +67,7 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
 @implementation QCloudCOSXMLUploadObjectRequest
 
 - (void)dealloc {
-    NSLog(@"QCloudCOSXMLUploadObjectRequest = %@ dealloc", self);
+    QCloudLogInfo(@"QCloudCOSXMLUploadObjectRequest = %@ dealloc", self);
     if (NULL != _queueSource) {
         dispatch_source_cancel(_queueSource);
     }
@@ -90,13 +90,14 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     _recursiveLock = [NSRecursiveLock new];
     _progressLock = [NSRecursiveLock new];
     _requstMetricArray = [NSMutableArray array];
-    ;
+    _mutilThreshold = kQCloudCOSXMLUploadLengthLimit;
     _enableMD5Verification = YES;
     _retryHandler = [QCloudHTTPRetryHanlder defaultRetryHandler];
     startPartNumber = -1;
     self.priority = QCloudAbstractRequestPriorityHigh;
     return self;
 }
+
 - (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dictionary {
     NSMutableDictionary *dict = [dictionary mutableCopy];
     if ([dictionary valueForKey:@"body"]) {
@@ -249,7 +250,15 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
             return;
         }
         self.dataContentLength = QCloudFileSize(url.path);
-        if (self.dataContentLength > kQCloudCOSXMLUploadLengthLimit) {
+        if(_mutilThreshold<kQCloudCOSXMLUploadLengthLimit){
+            @throw [NSException
+                exceptionWithName:QCloudErrorDomain
+                           reason:[NSString
+                                      stringWithFormat:
+                                   @"分块接口的阈值不能小于 1MB ，当前阈值为 %ld", (long)_mutilThreshold]
+                         userInfo:nil];
+        }
+        if (self.dataContentLength > _mutilThreshold) {
             //开始分片上传的时候，上传的起始位置是0
             uploadedSize = 0;
             startPartNumber = 0;
@@ -277,8 +286,10 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     request.finishBlock = ^(id outputObject, NSError *error) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         __strong typeof(weakRequest) strongRequst = weakRequest;
-        [strongSelf.requstMetricArray addObject:@{ [NSString stringWithFormat:@"%@", strongRequst] : weakRequest.benchMarkMan.tastMetrics }];
-
+        [weakSelf.requstMetricArray addObject:@{ [NSString stringWithFormat:@"%@", strongRequst] : weakRequest.benchMarkMan.tastMetrics }];
+        if (self.requstsMetricArrayBlock) {
+            self.requstsMetricArrayBlock(weakSelf.requstMetricArray);
+        }
         if (error) {
             [weakSelf onError:error];
             [self cancel];
@@ -564,7 +575,6 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
 - (void)finishUpload:(NSString *)uploadId {
     NSURL *url = (NSURL *)self.body;
     if(self.canceled){
-        NSLog(@"finishUpload canceled = %d",self.canceled?1:0);
         return;
     }
     if(!self.uploadBodyIsCompleted){
@@ -680,7 +690,7 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
 }
 
 - (QCloudCOSXMLUploadObjectResumeData)productingReqsumeData:(NSError *__autoreleasing *)error {
-    if (_dataContentLength <= kQCloudCOSXMLUploadLengthLimit) {
+    if (_dataContentLength <= _mutilThreshold) {
         if (NULL != error) {
             *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorUnsupportOperationError
                                            message:@"UnsupportOperation:无法暂停当前的上传请求，因为使用的是单次上传"];
