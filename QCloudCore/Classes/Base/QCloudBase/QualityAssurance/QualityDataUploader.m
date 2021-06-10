@@ -11,7 +11,6 @@
 #import <QCloudCore/QCloudHttpMetrics.h>
 #import <QCloudCore/QCloudFileUtils.h>
 #import "QCloudCoreVersion.h"
-#import <BeaconAPI_Base/BeaconReport.h>
 #import "NSError+QCloudNetworking.h"
 #define SuppressPerformSelectorLeakWarning(Stuff)                                                                   \
     do {                                                                                                            \
