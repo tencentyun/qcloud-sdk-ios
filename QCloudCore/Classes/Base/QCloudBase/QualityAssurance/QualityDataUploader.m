@@ -28,7 +28,12 @@
     ]
 
 #define kAdvancedEvents @[ @"QCloudCOSXMLUploadObjectRequest", @"QCloudCOSXMLCopyObjectRequest" ]
-NSString *const kQCloudUploadAppKey = @"0AND0VEVB24UBGDU";
+
+
+NSString *const kQCloudUploadAppDebugKey = @"LOGDEBUGKEY00247";
+
+NSString *const kQCloudUploadAppReleaseKey = @"0AND0VEVB24UBGDU";
+
 #pragma mark -commen key
 NSString *const kQCloudQualitySDKVersionKey = @"cossdk_version";
 NSString *const kQCloudQualitySDKVersionCodeKey = @"cossdk_version_code";
@@ -38,6 +43,7 @@ NSString *const kQCloudQualityNetworkTypeKey = @"network_type";
 NSString *const kQCloudQualityResultKey = @"result";
 NSString *const kQCloudQualityTookTimeKey = @"took_time";
 NSString *const kQCloudQualityRegionKey = @"region";
+NSString *const kQCloudQualityAuthSourceKey = @"auth_source";
 NSString *const kQCloudQualityRequestNameKey = @"name";
 NSString *const kQCloudSizeKey = @"size";
 
@@ -175,6 +181,11 @@ NSString *const kQCloudQualityRequestPathKey = @"request_path";
     for (NSString *key in [error toUploadEventParamters].allKeys) {
         [mutableDicParams setObject:[[error toUploadEventParamters] objectForKey:key] forKey:key];
     }
+    if([request isKindOfClass:[QCloudHTTPRequest class]]){
+        QCloudHTTPRequest *httpReq = (QCloudHTTPRequest*)request;
+        mutableDicParams[kQCloudQualityAuthSourceKey] =  httpReq.runOnService.configuration.endpoint.serverURLLiteral? [httpReq.urlRequest.allHTTPHeaderFields valueForKey:@"User-Agent"]:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"];
+     
+    }
     mutableDicParams[kQCloudQualityErrorServiceNameKey] = [self getServiceNameFromClass:request.class];
     mutableDicParams[kQCloudQualityResultKey] = kQCloudRequestFailureKey;
     [self internalUploadRequest:request event:[self qcloud_traceEventTypeFromClass:cls] withParamter:mutableDicParams];
@@ -193,6 +204,7 @@ NSString *const kQCloudQualityRequestPathKey = @"request_path";
         QCloudHTTPRequest *httpReq = (QCloudHTTPRequest*)request;
         paramter[kQCloudQualityRegionKey] =  httpReq.runOnService.configuration.endpoint.regionName;
         paramter[kQCloudQualityRequestPathKey] = httpReq.urlRequest.URL.path;
+
     }
     [self startReportSDKWithEventKey:eventKey paramters:paramter];
 }
@@ -208,8 +220,12 @@ NSString *const kQCloudQualityRequestPathKey = @"request_path";
     paramter[kQCloudQualityAppNameKey] =   [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
     //当前网络状况
     paramter[kQCloudQualityNetworkTypeKey] = QCloudNetworkSituationToString([QCloudNetEnv shareEnv].currentNetStatus);
-    
-    [self startReportWithEventKey:eventKey appkey:kQCloudUploadAppKey paramters:[paramter copy]];
+#if defined(DEBUG) && DEBUG
+    NSLog(@"test karis debug");
+#else
+    NSLog(@"test karis release");
+    [self startReportWithEventKey:eventKey appkey:kQCloudUploadAppReleaseKey paramters:[paramter copy]];
+#endif
 }
 
 + (void)startReportWithEventKey:(NSString *)eventKey appkey:(NSString *)appkey paramters:(NSDictionary *)paramter {

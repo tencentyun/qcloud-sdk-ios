@@ -73,7 +73,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) NSString *contentMD5;
 @property (nonatomic, readonly) NSDictionary<NSString *, NSString *> *requestHeaders;
 @property (nonatomic, readonly) NSDictionary<NSString *, NSString *> *requestParameters;
-
+@property (nonatomic, assign) bool isUseSignature;
 /**
  添加使用预签名请求的头部
 

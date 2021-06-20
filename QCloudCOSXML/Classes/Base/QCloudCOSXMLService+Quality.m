@@ -37,6 +37,9 @@
 }
 
 + (void)initMTA {
-    [QualityDataUploader startWithAppkey:kQCloudUploadAppKey];
+#if defined(DEBUG) && DEBUG
+#else
+    [QualityDataUploader startWithAppkey:kQCloudUploadAppReleaseKey];
+#endif
 }
 @end

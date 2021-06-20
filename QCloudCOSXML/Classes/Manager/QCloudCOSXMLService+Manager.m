@@ -243,6 +243,12 @@
         return;
     }
     __block NSString *requestURLString = urlRequest.URL.absoluteString;
+    if(!request.isUseSignature){
+        QCloudGetPresignedURLResult *result = [[QCloudGetPresignedURLResult alloc] init];
+        result.presienedURL = requestURLString;
+        request.finishBlock(result, nil);
+        return;
+    }
     [request.signatureProvider signatureWithFields:request.signatureFields
                                            request:request
                                         urlRequest:(NSMutableURLRequest *)urlRequest

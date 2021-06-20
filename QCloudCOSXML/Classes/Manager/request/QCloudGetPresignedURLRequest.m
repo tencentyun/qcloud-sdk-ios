@@ -20,6 +20,7 @@
     if (self) {
         self.internalRequestParameters = [NSMutableDictionary dictionary];
         self.internalRequestHeaders = [NSMutableDictionary dictionary];
+        self.isUseSignature = YES;
     }
     return self;
 }
