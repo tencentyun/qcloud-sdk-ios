@@ -23,6 +23,7 @@
 		7F069E0A21DDF7BD005F1AFA /* QCloudSTSPolicyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F069E0921DDF7BC005F1AFA /* QCloudSTSPolicyTests.m */; };
 		7F26A8E7213557200078097B /* QCloudCOSCSPTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F26A8E6213557200078097B /* QCloudCOSCSPTest.m */; };
 		7F2923D52338ADB8008CE707 /* key.json in Resources */ = {isa = PBXBuildFile; fileRef = 7F2923D42338ADB8008CE707 /* key.json */; };
+		7F2AFADD2689D05B006F2A46 /* QCloudTestUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F2AFADC2689D05B006F2A46 /* QCloudTestUtility.m */; };
 		7F41127E2338A97100A3276E /* SecretStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F41127B2338A92200A3276E /* SecretStorage.m */; };
 		7F43AE97213932EA0025DD1B /* QCloudCSPCOSXMLTestUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F43AE96213932EA0025DD1B /* QCloudCSPCOSXMLTestUtility.m */; };
 		A7C6A89E254A6FCB002BF20E /* key.json in Resources */ = {isa = PBXBuildFile; fileRef = 7F2923D42338ADB8008CE707 /* key.json */; platformFilter = ios; };
@@ -95,6 +96,8 @@
 		7F0A723C2488EBDF0063FE1E /* TestCommonDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestCommonDefine.h; sourceTree = "<group>"; };
 		7F26A8E6213557200078097B /* QCloudCOSCSPTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QCloudCOSCSPTest.m; sourceTree = "<group>"; };
 		7F2923D42338ADB8008CE707 /* key.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = key.json; sourceTree = "<group>"; };
+		7F2AFADB2689D05B006F2A46 /* QCloudTestUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QCloudTestUtility.h; sourceTree = "<group>"; };
+		7F2AFADC2689D05B006F2A46 /* QCloudTestUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QCloudTestUtility.m; sourceTree = "<group>"; };
 		7F41127B2338A92200A3276E /* SecretStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecretStorage.m; sourceTree = "<group>"; };
 		7F41127C2338A92200A3276E /* SecretStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecretStorage.h; sourceTree = "<group>"; };
 		7F43AE95213932EA0025DD1B /* QCloudCSPCOSXMLTestUtility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QCloudCSPCOSXMLTestUtility.h; sourceTree = "<group>"; };
@@ -200,6 +203,7 @@
 		1AB143EE1E601E0500830F93 /* QCloudCOSXMLDemo */ = {
 			isa = PBXGroup;
 			children = (
+				7F2AFADA2689D05B006F2A46 /* TestUtility */,
 				D2B7008B247227A000F59994 /* Categroy */,
 				D22FB26F246E8D9600C04C54 /* BucketDetail */,
 				D22FB269246E304700C04C54 /* MyBucket */,
@@ -293,6 +297,15 @@
 				4D40D10FFB554B7B26399262 /* Pods-QCloudCOSXMLDemoTests.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		7F2AFADA2689D05B006F2A46 /* TestUtility */ = {
+			isa = PBXGroup;
+			children = (
+				7F2AFADB2689D05B006F2A46 /* QCloudTestUtility.h */,
+				7F2AFADC2689D05B006F2A46 /* QCloudTestUtility.m */,
+			);
+			path = TestUtility;
 			sourceTree = "<group>";
 		};
 		A808A8971F25CD5100116AAC /* Download */ = {
@@ -511,6 +524,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A89945D22091D21300FEFF28 /* QCloudTaskImformation.m in Sources */,
+				7F2AFADD2689D05B006F2A46 /* QCloudTestUtility.m in Sources */,
 				A89945CF2091CF6A00FEFF28 /* QCloudDownloadFinishViewController.m in Sources */,
 				A801AD42201990DC004D1B9A /* QCloudTestTempVariables.m in Sources */,
 				D22FB26C246E3FBF00C04C54 /* QCCouldMyBucketCell.m in Sources */,
