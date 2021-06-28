@@ -18,6 +18,6 @@
     return instance;
 }
 - (QCloudCOSXMLService *)cosxmlService {
-    return [QCloudCOSXMLService cosxmlServiceForKey:kCSPServiceKey];
+    return [QCloudCOSXMLService cosxmlServiceForKey:@"kCSPServiceKey"];
 }
 @end

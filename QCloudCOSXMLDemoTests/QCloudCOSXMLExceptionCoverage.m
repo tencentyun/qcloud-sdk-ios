@@ -11,6 +11,8 @@
 #import <XCTest/XCTest.h>
 #import <QCloudCOSXML/QCloudCOSXML.h>
 #import <QCloudCOSXML/QCloudCompleteMultipartUploadInfo.h>
+#import "SecretStorage.h"
+#define kTestBucket @"test-12345678"
 @interface QCloudCOSXMLExceptionCoverage : XCTestCase
 
 @end

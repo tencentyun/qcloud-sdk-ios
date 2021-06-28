@@ -12,7 +12,7 @@
 #import <QCloudCOSXML/QCloudCOSXML.h>
 #import "QCloudTestTempVariables.h"
 #import "QCloudCSPCOSXMLTestUtility.h"
-
+#define kCSPServiceKey @"kCSPServiceKey"
 #define testBucketCSP @"karistestbucket"
 #define testCopyBucketCSP @"kariscopytestbucket"
 #define testRegionName @"wh"

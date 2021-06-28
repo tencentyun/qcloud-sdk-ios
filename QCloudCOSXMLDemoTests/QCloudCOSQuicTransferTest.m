@@ -16,7 +16,7 @@
 #define QUIC_BUCKET_REGION @"ap-shanghai"
 
 @interface QCloudCOSQuicTransferTest : XCTestCase <QCloudSignatureProvider>
-
+@property (nonatomic,strong)NSString *appID;
 @end
 
 @implementation QCloudCOSQuicTransferTest
@@ -30,7 +30,7 @@
     credential.secretKey = [SecretStorage.sharedInstance secretKey];
     QCloudAuthentationV5Creator *creator = [[QCloudAuthentationV5Creator alloc] initWithCredential:credential];
     QCloudSignature *signature = [creator signatureForData:urlRequst];
-    //    [urlRequst setValue:[NSString stringWithFormat:@"%@-%@.cos.%@.myqcloud.com", QUIC_BUCKET, kAppID, QUIC_BUCKET_REGION]
+    //    [urlRequst setValue:[NSString stringWithFormat:@"%@-%@.cos.%@.myqcloud.com", QUIC_BUCKET, self.appID, QUIC_BUCKET_REGION]
     //    forHTTPHeaderField:@"Host"];
     continueBlock(signature, nil);
 }
@@ -40,7 +40,7 @@
         return;
     }
     QCloudServiceConfiguration *configuration = [[QCloudServiceConfiguration alloc] init];
-    configuration.appID = kAppID;
+    configuration.appID = self.appID;
     configuration.signatureProvider = self;
     QCloudCOSXMLEndPoint *endpoint = [[QCloudCOSXMLEndPoint alloc] init];
     endpoint.regionName = QUIC_BUCKET_REGION;
@@ -52,10 +52,11 @@
 
 - (void)setUp {
     [super setUp];
+    self.appID = [SecretStorage sharedInstance].appID;
     [self setupSpecialCOSXMLShareService];
 
     [[QCloudHttpDNS shareDNS] setIp:@"**********"
-                          forDomain:[NSString stringWithFormat:@"%@-%@.cos.%@.myqcloud.com", QUIC_BUCKET, kAppID, QUIC_BUCKET_REGION]];
+                          forDomain:[NSString stringWithFormat:@"%@-%@.cos.%@.myqcloud.com", QUIC_BUCKET, self.appID, QUIC_BUCKET_REGION]];
 }
 
 - (NSString *)tempFileWithSize:(int)size {

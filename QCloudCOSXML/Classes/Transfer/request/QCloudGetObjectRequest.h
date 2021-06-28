@@ -31,7 +31,6 @@
 
 #import <Foundation/Foundation.h>
 #import <QCloudCore/QCloudCore.h>
-#import "QCloudPicOperations.h"
 NS_ASSUME_NONNULL_BEGIN
 /**
 

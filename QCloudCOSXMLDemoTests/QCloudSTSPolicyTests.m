@@ -14,7 +14,7 @@
 #import "QCloudTestTempVariables.h"
 #import "QCloudCOSXMLTestUtility.h"
 #define kSTSPolicyServiceKey @"STSPolicyServiceKey"
-#define kTestSTSBucket @"9899-1253653367"
+#define kTestSTSBucket @""
 #define kTestSTSRegion @"ap-beijing-1"
 #define kTestSTSCopyOringeRegion @"ap-beijing-1"
 @interface QCloudSTSPolicyTests : XCTestCase <QCloudSignatureProvider>
@@ -63,7 +63,7 @@
 //    configuration.signatureProvider = self;
 //    QCloudCOSXMLEndPoint* endpoint = [[QCloudCOSXMLEndPoint alloc] init];
 //    endpoint.useHTTPS = YES;
-//    configuration.appID = kAppID;
+//    configuration.appID = self.appID;
 //    endpoint.regionName = kTestSTSRegion;
 //    configuration.endpoint = endpoint;
 //    [QCloudCOSTransferMangerService registerCOSTransferMangerWithConfiguration:configuration withKey:kSTSPolicyServiceKey];
@@ -71,7 +71,7 @@
 //
 //    QCloudServiceConfiguration* configuration1 = [QCloudServiceConfiguration new];
 //    configuration1.signatureProvider = self;
-//    configuration1.appID = kAppID;
+//    configuration1.appID = self.appID;
 //    QCloudCOSXMLEndPoint* endpoint1 = [[QCloudCOSXMLEndPoint alloc] init];
 //    endpoint1.useHTTPS = YES;
 //    endpoint1.regionName = @"ap-guangzhou";
@@ -86,7 +86,7 @@
 //    [self registerSTSPolicyTransferManager];
 //     self.tempFilePathArray   = self.tempFilePathArray = [[NSMutableArray alloc] init];
 //    self.bucket = [[QCloudCOSXMLTestUtility sharedInstance] createTestBucketWithCosSerVice:[QCloudCOSXMLService
-//    cosxmlServiceForKey:kSTSPolicyServiceKey ] withPrefix:@"sts"]; self.appID = kAppID; self.authorizedUIN = @"1131975903"; self.ownerUIN =
+//    cosxmlServiceForKey:kSTSPolicyServiceKey ] withPrefix:@"sts"]; self.appID = self.appID; self.authorizedUIN = @"1131975903"; self.ownerUIN =
 //    @"1278687956";
 //
 //}
@@ -128,7 +128,7 @@
 //    XCTestExpectation* exception = [self expectationWithDescription:@"Delete bucket exception"];
 //    __block NSError* responseError ;
 //    QCloudPutBucketRequest* putBucketRequest = [[QCloudPutBucketRequest alloc] init];
-//    putBucketRequest.bucket = [NSString stringWithFormat:@"bucketcanbedelete%i-%@",arc4random()%1000,kAppID];
+//    putBucketRequest.bucket = [NSString stringWithFormat:@"bucketcanbedelete%i-%@",arc4random()%1000,self.appID];
 //    [putBucketRequest setFinishBlock:^(id outputObject, NSError* error) {
 //        XCTAssertNil(error);
 //
@@ -637,8 +637,8 @@
 //        request.object = @"copy-result-test-sts";
 //        request.sourceBucket =  uploadObjectRequest.bucket;
 //        request.sourceObject = tempFileName;
-//        request.sourceAPPID = kAppID;
-//        request.sourceRegion= kRegion;
+//        request.sourceAPPID = self.appID;
+//        request.sourceRegion= [SecretStorage sharedInstance].region;
 //        [request setFinishBlock:^(QCloudCopyObjectResult* result, NSError* error) {
 //            XCTAssertNil(error);
 //            [uploadExpectation fulfill];

@@ -9,7 +9,7 @@
 #import "QCloudCOSXMLVersion.h"
 
 //#if QCloudCoreModuleVersionNumber >= 502000
-#import <QCloudCore/QCloudTestUtility.h>
+#import "QCloudTestUtility.h"
 #import <QCloudCOSXML/QCloudCOSXML.h>
 @interface QCloudCOSXMLTestUtility : QCloudTestUtility
 @property (nonatomic, strong) QCloudCOSXMLService *cosxmlService;

@@ -12,8 +12,10 @@
 #define kTestBucketPrefix @"btcbd"
 #import "TestCommonDefine.h"
 #import "QCloudTestTempVariables.h"
+#import "SecretStorage.h"
 @interface QCloudCOSXMLTestUtility ()
 @property (nonatomic, strong) dispatch_semaphore_t semaphore;
+@property (nonatomic,strong)NSString *appID;
 @end
 
 @implementation QCloudCOSXMLTestUtility
@@ -28,6 +30,7 @@
     self = [super init];
     if (self) {
         _semaphore = dispatch_semaphore_create(0);
+        self.appID = [SecretStorage sharedInstance].appID;
     }
     return self;
 }
@@ -63,7 +66,7 @@
     [bucketName appendString:[self cNowTimestamp]];
     [bucketName appendFormat:@"%i", arc4random() % 3000];
     [bucketName appendString:@"-"];
-    [bucketName appendString:kAppID];
+    [bucketName appendString:self.appID];
     QCloudPutBucketRequest *putBucket = [[QCloudPutBucketRequest alloc] init];
     putBucket.bucket = bucketName;
     [putBucket setFinishBlock:^(id outputObject, NSError *error) {
@@ -83,6 +86,7 @@
     [bucketName appendString:kTestBucketPrefix];
     [bucketName appendString:[self cNowTimestamp]];
     [bucketName appendFormat:@"%i", arc4random() % 3000];
+    [bucketName appendFormat:@"-%@",self.appID];
     QCloudPutBucketRequest *putBucket = [[QCloudPutBucketRequest alloc] init];
     putBucket.bucket = bucketName;
     [putBucket setFinishBlock:^(id outputObject, NSError *error) {

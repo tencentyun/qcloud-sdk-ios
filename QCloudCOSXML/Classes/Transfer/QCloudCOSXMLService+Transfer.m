@@ -16,8 +16,7 @@
 #import "QCloudHeadObjectRequest.h"
 #import "QCloudUploadPartCopyRequest.h"
 #import "QCloudPutObjectCopyRequest.h"
-#import "QCloudPutObjectWatermarkRequest.h"
-#import "QCloudGetRecognitionObjectRequest.h"
+
 
 @implementation QCloudCOSXMLService (Transfer)
 
