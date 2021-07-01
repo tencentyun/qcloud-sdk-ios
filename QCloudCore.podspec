@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.name             = "QCloudCore"
 
 
-s.version              = "5.9.2"
+s.version              = "5.9.3"
 
 
 

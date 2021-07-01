@@ -135,7 +135,7 @@
         return;
     }
     //    如果剪贴板没有数据则不进行读取，减少ios14 剪贴板弹框次数
-    if (@available(iOS 10.0, *)) {
+    if ([UIDevice currentDevice].systemVersion.floatValue >= 10.0) {
         if (![[UIPasteboard generalPasteboard] hasStrings]) {
             return;
         }

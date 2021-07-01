@@ -109,8 +109,8 @@
     }
     //  默认一个签名为10分钟有效，防止签名时间过长，导致泄露
     NSTimeInterval experationInterVal = nowInterval + 10 * 60;
-    if (self.credential.experationDate) {
-        experationInterVal = [self.credential.experationDate timeIntervalSince1970];
+    if (self.credential.expirationDate) {
+        experationInterVal = [self.credential.expirationDate timeIntervalSince1970];
     }
     NSString *signTime = [NSString stringWithFormat:@"%lld;%lld", (int64_t)nowInterval, (int64_t)experationInterVal];
     NSDictionary *headers = [[urlrequest allHTTPHeaderFields] filteHeaders];

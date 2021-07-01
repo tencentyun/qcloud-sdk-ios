@@ -20,7 +20,7 @@
     QCloudCredential* credential = [QCloudCredential new];
     credential.secretID = kSecretIDCSP;
     credential.secretKey = kSecretKeyCSP;
-    credential.experationDate = [NSDate dateWithTimeIntervalSince1970:1504183628];
+    credential.expirationDate = [NSDate dateWithTimeIntervalSince1970:1504183628];
     QCloudAuthentationV5Creator* creator = [[QCloudAuthentationV5Creator alloc] initWithCredential:credential];
     QCloudSignature* signature =  [creator signatureForData:urlRequst];
 

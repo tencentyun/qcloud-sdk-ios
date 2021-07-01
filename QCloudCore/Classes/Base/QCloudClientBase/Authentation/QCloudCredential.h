@@ -39,7 +39,7 @@
 /**
  签名有效期截止的时间。没有设置的话，默认是起始时间加十分钟。
  */
-@property (nonatomic, strong) NSDate *experationDate;
+@property (nonatomic, strong) NSDate *expirationDate;
 
 /**
  改签名是否有效。

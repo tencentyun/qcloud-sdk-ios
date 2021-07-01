@@ -29,6 +29,10 @@
 #import "QCloudThreadSafeMutableDictionary.h"
 #import "QCloudWeakProxy.h"
 
+#ifndef __IPHONE_13_0
+#define __IPHONE_13_0    130000
+#endif
+
 NSString *TaskDataKey(int64_t identifier) {
     return [NSString stringWithFormat:@"data-%lld", identifier];
 }
@@ -207,11 +211,14 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache() {
                 directSetCost:[networkMetrics.domainLookupEndDate timeIntervalSinceDate:networkMetrics.domainLookupStartDate]
                        forKey:kDnsLookupTookTime];
         }
-        if (@available(ios 13.0, *)) {
+       #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_13_0
+        if ([UIDevice currentDevice].systemVersion.floatValue >= 13.0) {
             [taskData.httpRequest.benchMarkMan directSetValue:networkMetrics.localPort forKey:kLocalPort];
             [taskData.httpRequest.benchMarkMan directSetValue:networkMetrics.remoteAddress forKey:kRemoteAddress];
             [taskData.httpRequest.benchMarkMan directSetValue:networkMetrics.remotePort forKey:kRemotePort];
         }
+        
+       #endif
     }
 }
 #endif

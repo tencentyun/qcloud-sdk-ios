@@ -46,7 +46,7 @@ typedef void (^QCloudCredentailFenceQueueContinue)(QCloudAuthentationCreator *cr
         credential.secretID = @"secretID";
         credential.secretKey = @"secretKey";
          //签名过期时间
-        credential.experationDate = [NSDate dateWithTimeIntervalSince1970:1504183628];
+        credential.expirationDate = [NSDate dateWithTimeIntervalSince1970:1504183628];
         credential.token = @"token";
         QCloudAuthentationV5Creator* creator = [[QCloudAuthentationV5Creator alloc] initWithCredential:credential];
         continueBlock(creator, nil);
