@@ -29,10 +29,10 @@
 
 #define kAdvancedEvents @[ @"QCloudCOSXMLUploadObjectRequest", @"QCloudCOSXMLCopyObjectRequest" ]
 
-
 NSString *const kQCloudUploadAppDebugKey = @"LOGDEBUGKEY00247";
 
 NSString *const kQCloudUploadAppReleaseKey = @"0AND0VEVB24UBGDU";
+
 
 #pragma mark -commen key
 NSString *const kQCloudQualitySDKVersionKey = @"cossdk_version";
@@ -103,7 +103,7 @@ NSString *const kQCloudQualityRequestPathKey = @"request_path";
     }
     
     return
-    @{ kQCloudQualityErrorStatusCodeKey : [NSString stringWithFormat:@"%ld", (long)self.code], kQCloudQualityErrorCodeKey :errorCode ,kQCloudQualityErrorTypeKey:error_name,kQCloudQualityErrorIDKey:requestID,kQCloudQualityErrorMessageKey:errorMsg};
+    @{ kQCloudQualityErrorStatusCodeKey : [NSString stringWithFormat:@"%ld", (long)self.code], kQCloudQualityErrorCodeKey :errorCode ? errorCode : @"" ,kQCloudQualityErrorTypeKey:error_name?error_name : @"",kQCloudQualityErrorIDKey:requestID?requestID : @"",kQCloudQualityErrorMessageKey:errorMsg?errorMsg:@""};
 }
 
 @end
@@ -204,7 +204,7 @@ NSString *const kQCloudQualityRequestPathKey = @"request_path";
         QCloudHTTPRequest *httpReq = (QCloudHTTPRequest*)request;
         paramter[kQCloudQualityRegionKey] =  httpReq.runOnService.configuration.endpoint.regionName;
         paramter[kQCloudQualityRequestPathKey] = httpReq.urlRequest.URL.path;
-
+     
     }
     [self startReportSDKWithEventKey:eventKey paramters:paramter];
 }
@@ -229,6 +229,7 @@ NSString *const kQCloudQualityRequestPathKey = @"request_path";
 }
 
 + (void)startReportWithEventKey:(NSString *)eventKey appkey:(NSString *)appkey paramters:(NSDictionary *)paramter {
+
   QCloudLogInfo(@"beacon paramter = %@",paramter);
   Class cls = NSClassFromString(@"BeaconReport");
     if (cls) {
