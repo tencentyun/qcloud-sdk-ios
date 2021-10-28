@@ -29,7 +29,7 @@
 #import "QCloudPutObjectRequest+Custom.h"
 #import <QCloudCore/QCloudSupervisoryRecord.h>
 #import <QCloudCore/QCloudHTTPRetryHanlder.h>
-#import "QualityDataUploader.h"
+#import <QCloudCore/QualityDataUploader.h>
 static NSUInteger kQCloudCOSXMLUploadLengthLimit = 1 * 1024 * 1024;
 static NSUInteger kQCloudCOSXMLUploadSliceLength = 1 * 1024 * 1024;
 static NSUInteger kQCloudCOSXMLMD5Length = 32;

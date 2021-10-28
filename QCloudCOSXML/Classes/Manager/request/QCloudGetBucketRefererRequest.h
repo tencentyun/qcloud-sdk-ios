@@ -1,6 +1,6 @@
 //
-//  GetGenerateSnapshot.h
-//  GetGenerateSnapshot
+//  QCloudGetBucketRefererRequest.h
+//  QCloudGetBucketRefererRequest
 //
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.
@@ -31,27 +31,37 @@
 
 #import <Foundation/Foundation.h>
 #import <QCloudCore/QCloudCore.h>
-#import "QCloudGenerateSnapshotResult.h"
-
-@class QCloudGenerateSnapshotConfiguration;
+#import "QCloudBucketRefererInfo.h"
 NS_ASSUME_NONNULL_BEGIN
+
 /**
- GenerateSnapshot 接口用于获取媒体文件某个时间的截图，输出的截图统一为 jpeg 格式。
- */
-@interface QCloudGetGenerateSnapshotRequest : QCloudBizHTTPRequest
+### 功能说明
+
+ 用于读取存储桶 Referer 白名单或者黑名单。
+
+ 具体请查看 https://cloud.tencent.com/document/product/436/32493.
+
+### 示例
+
+  @code
+
+    QCloudGetBucketRefererRequest * reqeust = [[QCloudGetBucketRefererRequest alloc]init];
+    reqeust.bucket = @"bucketName";
+
+    reqeust.finishBlock = ^(id outputObject, NSError *error) {
+     NSLog(@"%@",outputObject);
+    };
+
+    [[QCloudCOSXMLService defaultCOSXML] GetBucketReferer:reqeust];
+
+*/
+
+@interface QCloudGetBucketRefererRequest : QCloudBizHTTPRequest
 /**
 存储桶名
 */
 @property (strong, nonatomic) NSString *bucket;
 
-
-/// 视频对象
-@property (strong, nonatomic) NSString *object;
-/**
-说明日志记录配置的状态
-*/
-@property (strong, nonatomic) QCloudGenerateSnapshotConfiguration *generateSnapshotConfiguration;
-
-- (void)setFinishBlock:(void (^)(QCloudGenerateSnapshotResult *result, NSError *error))QCloudRequestFinishBlock;
+- (void)setFinishBlock:(void (^_Nullable)(QCloudBucketRefererInfo *_Nullable result, NSError *_Nullable error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

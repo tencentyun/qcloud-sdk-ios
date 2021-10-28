@@ -40,8 +40,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface QCloudGenerateSnapshotResult : NSObject
 /**
-截图保存的位置信息
+截图data数据
 */
-@property (strong, nonatomic) QCloudGenerateSnapshotOutput *output;
+@property (strong, nonatomic) NSData *data;
 @end
 NS_ASSUME_NONNULL_END

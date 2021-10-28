@@ -1,6 +1,6 @@
 //
-//  GetGenerateSnapshot.h
-//  GetGenerateSnapshot
+//  QCloudBucketRefererInfo.h
+//  QCloudBucketRefererInfo
 //
 //  Created by tencent
 //  Copyright (c) 2015年 tencent. All rights reserved.
@@ -30,28 +30,30 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <QCloudCore/QCloudCore.h>
-#import "QCloudGenerateSnapshotResult.h"
-
-@class QCloudGenerateSnapshotConfiguration;
+#import "QCloudBucketRefererInfo.h"
+@class QCloudBucketRefererDomain;
 NS_ASSUME_NONNULL_BEGIN
 /**
- GenerateSnapshot 接口用于获取媒体文件某个时间的截图，输出的截图统一为 jpeg 格式。
+ 防盗链配置信息
  */
-@interface QCloudGetGenerateSnapshotRequest : QCloudBizHTTPRequest
-/**
-存储桶名
-*/
-@property (strong, nonatomic) NSString *bucket;
+@interface QCloudBucketRefererInfo : NSObject
 
 
-/// 视频对象
-@property (strong, nonatomic) NSString *object;
-/**
-说明日志记录配置的状态
-*/
-@property (strong, nonatomic) QCloudGenerateSnapshotConfiguration *generateSnapshotConfiguration;
+/// 是否开启防盗链，枚举值：Enabled、Disabled
+@property (strong, nonatomic) NSString * Status;
 
-- (void)setFinishBlock:(void (^)(QCloudGenerateSnapshotResult *result, NSError *error))QCloudRequestFinishBlock;
+
+/// 防盗链类型，枚举值：Black-List、White-List
+@property (strong, nonatomic) NSString * RefererType;
+
+
+/// 生效域名列表， 支持多个域名且为前缀匹配， 支持带端口的域名和 IP， 支持通配符*，做二级域名或多级域名的通配 <单条生效域名>
+@property (strong, nonatomic) NSArray <NSString *> * DomainList;
+
+
+/// 是否允许空 Referer 访问，枚举值：Allow、Deny，默认值为 Deny
+@property (strong, nonatomic) NSString * EmptyReferConfiguration;
+
 @end
+
 NS_ASSUME_NONNULL_END

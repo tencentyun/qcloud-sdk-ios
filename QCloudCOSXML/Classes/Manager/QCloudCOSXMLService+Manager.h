@@ -7,6 +7,7 @@
 
 #import "QCloudCOSXML.h"
 #import "QCloudCOSStorageClassEnum.h"
+@class QCloudAppendObjectRequest;
 @class QCloudGetObjectACLRequest;
 @class QCloudPutObjectACLRequest;
 @class QCloudDeleteObjectRequest;
@@ -68,6 +69,8 @@
 
 @class QCloudPutBucketIntelligentTieringRequest;
 @class QCloudGetBucketIntelligentTieringRequest;
+@class QCloudPutBucketRefererRequest;
+@class QCloudGetBucketRefererRequest;
 
 NS_ASSUME_NONNULL_BEGIN
 @interface QCloudCOSXMLService (Manager)
@@ -111,6 +114,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)GetBucketAccelerate:(QCloudGetBucketAccelerateRequest *)request;
 - (void)PutBucketIntelligentTiering:(QCloudPutBucketIntelligentTieringRequest *)request;
 - (void)GetBucketIntelligentTiering:(QCloudGetBucketIntelligentTieringRequest *)request;
+- (void)PutBucketReferer:(QCloudPutBucketRefererRequest *)request;
+- (void)GetBucketReferer:(QCloudGetBucketRefererRequest *)request;
+
 #pragma mark - object
 - (void)GetBucket:(QCloudGetBucketRequest *)request;
 - (void)DeleteObject:(QCloudDeleteObjectRequest *)request;
@@ -123,7 +129,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)PostObjectRestore:(QCloudPostObjectRestoreRequest *)request;
 - (void)ListObjectVersions:(QCloudListObjectVersionsRequest *)request;
 - (void)getPresignedURL:(QCloudGetPresignedURLRequest *)request;
+- (void)AppendObject:(QCloudAppendObjectRequest*)request;
 #pragma mark - Encapsulated Interface
+
+
 
 /**
  查询 Bucket 是否存在。注意该方法是同步方法，会阻塞当前线程直到返回结果，请勿在主线程内调用。

@@ -87,6 +87,11 @@
 #import "QCloudOptionsObjectRequest.h"
 #import "QCloudCopyObjectResult.h"
 #import "QCloudPutObjectCopyRequest.h"
+#import "QCloudAppendObjectRequest.h"
+#import "QCloudGetBucketRefererRequest.h"
+#import "QCloudPutBucketRefererRequest.h"
+
+
 //数据万象
 #import "QCloudCIPicRecognitionRequest.h"
 #import "QCloudQRCodeRecognitionRequest.h"
@@ -101,5 +106,9 @@
 #import "QCloudGetObjectTaggingRequest.h"
 #import "QCloudPutBucketIntelligentTieringRequest.h"
 #import "QCloudGetBucketIntelligentTieringRequest.h"
+#import "QCloudGetVideoRecognitionRequest.h"
+#import "QCloudPostVideoRecognitionRequest.h"
+#import "QCloudGetDescribeMediaBucketsRequest.h"
+#import "QCloudGetMediaInfoRequest.h"
 #endif /* QCloudCOSXML_h */
 

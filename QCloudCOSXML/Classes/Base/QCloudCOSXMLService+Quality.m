@@ -11,7 +11,7 @@
 #import <QCloudCore/QCloudCore.h>
 #import <QCloudCore/QCloudLogger.h>
 #import "QCloudCOSXMLVersion.h"
-#import "QualityDataUploader.h"
+#import <QCloudCore/QualityDataUploader.h>
 
 @implementation QCloudCOSXMLService (Quality)
 

@@ -43,6 +43,12 @@
 #import "QCloudPutObjectTaggingRequest.h"
 #import "QCloudPutBucketIntelligentTieringRequest.h"
 #import "QCloudGetBucketIntelligentTieringRequest.h"
+#import "QCloudPutBucketRefererRequest.h"
+#import "QCloudGetBucketRefererRequest.h"
+#import "QCloudGetVideoRecognitionRequest.h"
+#import "QCloudPostVideoRecognitionRequest.h"
+#import "QCloudAppendObjectRequest.h"
+
 @implementation QCloudCOSXMLService (Manager)
 
 - (void)PutBucketIntelligentTiering:(QCloudPutBucketIntelligentTieringRequest *)request {
@@ -230,6 +236,18 @@
 }
 
 - (void)ListBucketInventory:(QCloudListBucketInventoryConfigurationsRequest *)request {
+    [super performRequest:request];
+}
+
+- (void)GetBucketReferer:(QCloudGetBucketRefererRequest *)request {
+    [super performRequest:request];
+}
+
+- (void)PutBucketReferer:(QCloudPutBucketRefererRequest *)request {
+    [super performRequest:request];
+}
+
+- (void)AppendObject:(QCloudAppendObjectRequest*)request{
     [super performRequest:request];
 }
 

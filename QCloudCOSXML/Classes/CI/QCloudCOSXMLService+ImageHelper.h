@@ -14,6 +14,10 @@
 @class QCloudCIPutObjectQRCodeRecognitionRequest;
 @class QCloudQRCodeRecognitionRequest;
 @class QCloudCIPicRecognitionRequest;
+@class QCloudGetDescribeMediaBucketsRequest;
+@class QCloudGetMediaInfoRequest;
+@class QCloudGetVideoRecognitionRequest;
+@class QCloudPostVideoRecognitionRequest;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface QCloudCOSXMLService (ImageHelper)
@@ -139,6 +143,14 @@ cos iOS SDK 中获取 COS 文档预览方法具体步骤如下：
  图片标签
  */
 - (void)CIPicRecognition:(QCloudCIPicRecognitionRequest *)request;
+
+- (void)CIGetDescribeMediaBuckets:(QCloudGetDescribeMediaBucketsRequest *)request;
+
+- (void)CIGetMediaInfo:(QCloudGetMediaInfoRequest *)request;
+
+- (void)GetVideoRecognition:(QCloudGetVideoRecognitionRequest *)request;
+- (void)PostVideoRecognition:(QCloudPostVideoRecognitionRequest *)request;
+ 
 @end
 
 NS_ASSUME_NONNULL_END

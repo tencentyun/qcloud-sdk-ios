@@ -14,6 +14,10 @@
 #import "QCloudCICloudDataOperationsRequest.h"
 #import "QCloudCIPutObjectQRCodeRecognitionRequest.h"
 #import "QCloudCIPicRecognitionRequest.h"
+#import "QCloudGetDescribeMediaBucketsRequest.h"
+#import "QCloudGetMediaInfoRequest.h"
+#import "QCloudGetVideoRecognitionRequest.h"
+#import "QCloudPostVideoRecognitionRequest.h"
 @implementation QCloudCOSXMLService (ImageHelper)
 
 - (void)PutWatermarkObject:(QCloudPutObjectWatermarkRequest *)request {
@@ -48,4 +52,18 @@
     [super performRequest:request];
 }
 
+- (void)CIGetDescribeMediaBuckets:(QCloudGetDescribeMediaBucketsRequest *)request{
+    [super performRequest:request];
+}
+
+- (void)CIGetMediaInfo:(QCloudGetMediaInfoRequest *)request{
+    [super performRequest:request];
+}
+
+- (void)GetVideoRecognition:(QCloudGetVideoRecognitionRequest *)request{
+    [super performRequest:request];
+}
+- (void)PostVideoRecognition:(QCloudPostVideoRecognitionRequest *)request{
+    [super performRequest:request];
+}
 @end

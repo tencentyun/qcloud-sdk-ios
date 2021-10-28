@@ -55,14 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
  截图的宽。默认为0
  */
 @property (assign, nonatomic) int64_t height;
-/**
- 媒体文件的位置信息
- */
-@property (strong, nonatomic) QCloudGenerateSnapshotInput *input;
-/**
- 截图保存的位置信息
- */
-@property (strong, nonatomic) QCloudGenerateSnapshotOutput *output;
+
 /**
  截帧方式:枚举值
  * GenerateSnapshotModeExactframe：截取指定时间点的帧
