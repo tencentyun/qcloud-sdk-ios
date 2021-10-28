@@ -11,6 +11,7 @@
 @interface QCloudGetPresignedURLRequest ()
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *internalRequestParameters;
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *internalRequestHeaders;
+@property (nonatomic, strong) NSMutableArray *internalUriComponents;
 //@property (nonatomic, copy) void(^finishBlock)(QCloudGetPresignedURLResult* result, NSError* error);
 @end
 
@@ -20,7 +21,9 @@
     if (self) {
         self.internalRequestParameters = [NSMutableDictionary dictionary];
         self.internalRequestHeaders = [NSMutableDictionary dictionary];
+        self.internalUriComponents = [NSMutableArray array];
         self.isUseSignature = YES;
+        self.signHost = YES;
     }
     return self;
 }
@@ -30,6 +33,10 @@
 
 - (NSDictionary<NSString *, NSString *> *)requestParameters {
     return [NSDictionary dictionaryWithDictionary:self.internalRequestParameters];
+}
+
+-(NSMutableArray<NSString *> *)uriComponents{
+    return [NSMutableArray arrayWithArray:self.internalUriComponents];
 }
 - (NSString *)contentType {
     return [self.internalRequestHeaders objectForKey:@"Content-Type"];
@@ -51,6 +58,9 @@
     [self.internalRequestHeaders setValue:value forKey:requestHeader];
 }
 
+- (void)setURICompnent:(NSString *)component{
+    [self.internalUriComponents addObject:component];
+}
 - (void)setValue:(NSString *_Nullable)value forRequestParameter:(NSString *)requestParameter {
     [self.internalRequestParameters setValue:value forKey:requestParameter];
 }
@@ -76,11 +86,22 @@
     if (self.object) {
         [URLString appendFormat:@"/%@", self.object];
     }
-
+    
+    [self.uriComponents enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [URLString appendFormat:@"?%@", obj];
+    }];
+    
+   
+    if(self.signHost){
+        NSURL *url = [NSURL URLWithString:URLString];
+        [self.internalRequestHeaders setValue:url.host forKey:@"host"];
+    }
     [self.requestHeaders enumerateKeysAndObjectsUsingBlock:^(NSString *_Nonnull key, NSString *_Nonnull obj, BOOL *_Nonnull stop) {
         [mutableURLRequest setValue:obj forHTTPHeaderField:key];
     }];
+    
 
+    
     NSString *paramters = QCloudURLEncodeParamters(self.requestParameters, NO, NSUTF8StringEncoding);
     NSString *resultURL;
     if (paramters && paramters.length > 0) {
@@ -117,7 +138,7 @@
 
                                                                   kCFStringEncodingUTF8));
     [mutableURLRequest setURL:[NSURL URLWithString:encodedString]];
-
+ 
     return mutableURLRequest;
 }
 

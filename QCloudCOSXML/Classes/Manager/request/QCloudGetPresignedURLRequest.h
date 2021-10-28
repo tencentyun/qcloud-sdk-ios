@@ -73,7 +73,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) NSString *contentMD5;
 @property (nonatomic, readonly) NSDictionary<NSString *, NSString *> *requestHeaders;
 @property (nonatomic, readonly) NSDictionary<NSString *, NSString *> *requestParameters;
+@property (nonatomic, readonly) NSArray<NSString *> *uriComponents;
 @property (nonatomic, assign) bool isUseSignature;
+//获取预签名函数，默认签入Header Host；您也可以选择不签入Header Host，但可能导致请求失败或安全漏洞
+@property (nonatomic, assign) bool signHost;
 /**
  添加使用预签名请求的头部
 
@@ -89,6 +92,8 @@ NS_ASSUME_NONNULL_BEGIN
  @param requestParameter 参数的key
  */
 - (void)setValue:(NSString *_Nullable)value forRequestParameter:(NSString *_Nullable)requestParameter;
+
+- (void)setURICompnent:(NSString *)component;
 
 /**
  设置完成回调。请求完成后会通过该回调来获取结果，如果没有error，那么可以认为请求成功。

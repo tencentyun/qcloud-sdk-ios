@@ -116,6 +116,8 @@
  使用分块及续传下载时，指定任务记录文件的路径
  */
 @property (strong, nonatomic) NSString *resumableTaskFile;
+//针对本次下载行流量控制的限速值，必须为数字，单位默认为 bit/s。限速值设置范围为819200 - 838860800,即100KB/s - 100MB/s，如果超出该范围将返回400错误
+@property (nonatomic, assign) NSInteger trafficLimit;
 - (void)setCOSServerSideEncyption;
 - (void)setCOSServerSideEncyptionWithCustomerKey:(NSString *)customerKey;
 

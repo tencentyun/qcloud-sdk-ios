@@ -24,12 +24,12 @@
 - (NSDictionary *)filteHeaders;
 {
     NSMutableDictionary *signedHeaders = [[NSMutableDictionary alloc] init];
-    __block const NSArray *shouldSignedHeaderList =
-        @[ @"Content-Length", @"Content-MD5", @"Content-Type", @"Content-Disposition", @"Content-Encoding", @"Transfer-Encoding", @"Range", @"Host" ];
+    __block const NSMutableArray *shouldSignedHeaderList =
+        @[@"Cache-Control", @"Content-Disposition", @"Content-Encoding", @"Content-Length", @"Content-MD5", @"Content-Type", @"Expect", @"Expires", @"If-Match" , @"If-Modified-Since" , @"If-None-Match" , @"If-Unmodified-Since" , @"Origin" , @"Range" , @"response-cache-control" , @"response-content-disposition" , @"response-content-encoding" , @"response-content-language" , @"response-content-type" , @"response-expires" , @"transfer-encoding" , @"versionId",@"Host"];
     [self enumerateKeysAndObjectsUsingBlock:^(id _Nonnull key, id _Nonnull obj, BOOL *_Nonnull stop) {
         //签名的Headers列表：x开头的(x-cos-之类的),content-length,content-MD5
         BOOL shouldSigned = NO;
-        for (NSString *header in shouldSignedHeaderList) {
+        for (NSString *header in [shouldSignedHeaderList copy]) {
             if ([header isEqualToString:((NSString *)key)]) {
                 shouldSigned = YES;
             }
@@ -147,7 +147,7 @@
     NSString *signKey = [NSString qcloudHMACHexsha1:signTime secret:self.credential.secretKey];
     // Step2 构成FormatString
     NSString *headerFormat = QCloudURLEncodeParamters(LowcaseDictionary(headers), YES, NSUTF8StringEncoding);
-    NSString *urlFormat = QCloudURLEncodeParamters(LowcaseDictionary(urlParamters), YES, NSUTF8StringEncoding);
+    NSString *urlFormat = [ QCloudURLEncodeParamters(LowcaseDictionary(urlParamters), YES, NSUTF8StringEncoding) lowercaseString];
 
     NSMutableString *formatString = [NSMutableString new];
 

@@ -271,16 +271,30 @@
                                            request:request
                                         urlRequest:(NSMutableURLRequest *)urlRequest
                                          compelete:^(QCloudSignature *signature, NSError *error) {
-                                             NSString *authorizatioinString = signature.signature;
+                                             NSString *signatureStr = signature.signature;
+                                             NSMutableArray *paramas = [signatureStr componentsSeparatedByString:@"&"];
+                                            [[paramas copy] enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                                                if([obj hasPrefix:@"q-url-param-list"]){
+                                                    NSArray *temp = [obj  componentsSeparatedByString:@"="];
+                                                    NSString *key = temp.firstObject;
+                                                    NSString *value = [QCloudStrigngURLEncode(QCloudStrigngURLEncode(temp.lastObject , NSUTF8StringEncoding), NSUTF8StringEncoding) lowercaseString];
+                                                    paramas[idx] = [NSString stringWithFormat:@"%@=%@",key,value];
+                                                    *stop = YES;
+                                                }
+                                            }];
+        NSString *authorizatioinString = [paramas componentsJoinedByString:@"&"];
                                              if ([requestURLString hasSuffix:@"&"] || [requestURLString hasSuffix:@"?"]) {
                                                  requestURLString = [requestURLString stringByAppendingString:authorizatioinString];
-                                             } else {
+                                             } else if([requestURLString containsString:@"?"] && ![requestURLString hasSuffix:@"&"]){
+                                                 requestURLString = [requestURLString stringByAppendingFormat:@"&%@", authorizatioinString];
+                                             }else {
                                                  requestURLString = [requestURLString stringByAppendingFormat:@"?%@", authorizatioinString];
                                              }
                                              if (signature.token) {
                                                  requestURLString =
                                                      [requestURLString stringByAppendingFormat:@"&x-cos-security-token=%@", signature.token];
                                              }
+        
                                              QCloudGetPresignedURLResult *result = [[QCloudGetPresignedURLResult alloc] init];
                                              result.presienedURL = requestURLString;
                                              if (request.finishBlock) {

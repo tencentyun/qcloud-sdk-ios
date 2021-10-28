@@ -139,6 +139,8 @@ RFC 2616 中定义的指定文件下载范围，以字节（bytes）为单位
 给图片添加盲水印
 */
 @property (strong, nonatomic) NSString *watermarkRule;
+//针对本次下载行流量控制的限速值，必须为数字，单位默认为 bit/s。限速值设置范围为819200 - 838860800,即100KB/s - 100MB/s，如果超出该范围将返回400错误
+@property (nonatomic, assign) NSInteger trafficLimit;
 
 @end
 NS_ASSUME_NONNULL_END
