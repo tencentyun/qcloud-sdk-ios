@@ -44,19 +44,33 @@ NS_ASSUME_NONNULL_BEGIN
 ### 示例
 
   @code
+ 
+         QCloudPutBucketRefererRequest* request = [QCloudPutBucketRefererRequest new];
 
-    QCloudPutBucketRefererRequest * reqeust = [[QCloudPutBucketRefererRequest alloc]init];
-    reqeust.bucket = CURRENT_BUCKET;
-    reqeust.refererType = QCloudBucketRefererTypeBlackList;
-    reqeust.status = QCloudBucketRefererStatusEnabled;
-    reqeust.configuration = QCloudBucketRefererConfigurationDeny;
-    reqeust.domainList = @[@"*.com",@"*.qq.com"];
+         // 防盗链类型，枚举值：Black-List、White-List
+         reqeust.refererType = QCloudBucketRefererTypeBlackList;
 
-    reqeust.finishBlock = ^(id outputObject, NSError *error) {
-     NSLog(@"%@",outputObject);
-    };
+         // 是否开启防盗链，枚举值：Enabled、Disabled
+         reqeust.status = QCloudBucketRefererStatusEnabled;
 
-    [[QCloudCOSXMLService defaultCOSXML] PutBucketReferer:reqeust];
+         // 是否允许空 Referer 访问，枚举值：Allow、Deny，默认值为 Deny
+         reqeust.configuration = QCloudBucketRefererConfigurationDeny;
+
+         // 生效域名列表， 支持多个域名且为前缀匹配， 支持带端口的域名和 IP， 支持通配符*，做二级域名或多级域名的通配
+         reqeust.domainList = @[@"*.com",@"*.qq.com"];
+
+         // 存储桶名称，格式为 BucketName-APPID
+         request.bucket = @"examplebucket-1250000000";
+
+         [request setFinishBlock:^(id outputObject, NSError *error) {
+             if (error){
+                 // 添加防盗链失败
+             }else{
+                 // 添加防盗链失败
+             }
+
+         }];
+         [[QCloudCOSXMLService defaultCOSXML] PutBucketReferer:request];
 
 */
 
@@ -80,11 +94,11 @@ typedef NS_ENUM(NSUInteger, QCloudBucketRefererConfiguration) {
 
 @property (strong, nonatomic) NSString * bucket;
 
-/// 是否开启防盗链，枚举值：Enabled、Disabled
+/// 防盗链类型，枚举值：Black-List、White-List
 @property (assign, nonatomic) QCloudBucketRefererType refererType;
 
 
-/// 防盗链类型，枚举值：Black-List、White-List
+/// 是否开启防盗链，枚举值：Enabled、Disabled
 @property (assign, nonatomic) QCloudBucketRefererStatus status;
 
 

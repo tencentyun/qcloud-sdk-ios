@@ -42,13 +42,19 @@ NS_ASSUME_NONNULL_BEGIN
 
   @code
  
-    QCloudGetVideoRecognitionRequest * reqeust = [[QCloudGetVideoRecognitionRequest alloc]init];
-    reqeust.bucket = @"bucketname";
-    reqeust.jobId = @"jobid";
-    reqeust.finishBlock = ^(id outputObject, NSError *error) {
-     
-    };
-    [[QCloudCOSXMLService defaultCOSXML] GetVideoRecognition:reqeust];
+        QCloudGetVideoRecognitionRequest * reqeust = [[QCloudGetVideoRecognitionRequest alloc]init];
+
+        // 存储桶名称，格式为 BucketName-APPID
+        request.bucket = "examplebucket-1250000000";
+
+        // QCloudPostVideoRecognitionRequest接口返回的jobid
+        reqeust.jobId = "jobid";
+
+        reqeust.finishBlock = ^(QCloudGetVideoRecognitionRequest * outputObject, NSError *error) {
+         // outputObject 审核结果 包含用于查询的job id，详细字段请查看api文档或者SDK源码
+         // QCloudVideoRecognitionResult 类；
+        };
+        [[QCloudCOSXMLService defaultCOSXML] GetVideoRecognition:reqeust];
 
 */
 @interface QCloudGetVideoRecognitionRequest : QCloudBizHTTPRequest

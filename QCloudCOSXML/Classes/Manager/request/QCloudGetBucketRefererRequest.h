@@ -44,15 +44,17 @@ NS_ASSUME_NONNULL_BEGIN
 ### 示例
 
   @code
+ 
+         QCloudGetBucketRefererRequest* request = [QCloudGetBucketRefererRequest new];
 
-    QCloudGetBucketRefererRequest * reqeust = [[QCloudGetBucketRefererRequest alloc]init];
-    reqeust.bucket = @"bucketName";
+         // 存储桶名称，格式为 BucketName-APPID
+         request.bucket = @"examplebucket-1250000000";
 
-    reqeust.finishBlock = ^(id outputObject, NSError *error) {
-     NSLog(@"%@",outputObject);
-    };
-
-    [[QCloudCOSXMLService defaultCOSXML] GetBucketReferer:reqeust];
+         [request setFinishBlock:^(QCloudBucketRefererInfo * outputObject, NSError *error) {
+             // outputObject 请求到的防盗链，详细字段请查看api文档或者SDK源码
+             // QCloudBucketRefererInfo 类；
+         }];
+         [[QCloudCOSXMLService defaultCOSXML] GetBucketReferer:request];
 
 */
 

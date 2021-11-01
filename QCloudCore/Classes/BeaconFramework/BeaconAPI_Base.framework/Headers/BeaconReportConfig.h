@@ -9,11 +9,16 @@
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
-
+/**
+  基础策略配置:通过此配置类可以灯塔基础配置项进行硬编码设置,如果进行云配置可联系对接人.
+ */
 @interface BeaconReportConfig : NSObject
 
 /// 开启或者关闭事件上报功能，默认为YES可进行上报，如果有给用户提供关闭事件上报的接口等情况，可设置为NO
 @property (nonatomic, assign) BOOL eventReportEnabled;
+
+/// 开启或者关闭策略请求功能，默认为YES进行策略请求，如果需要关闭，可设置为NO
+@property (nonatomic, assign) BOOL configQueryEnabled;
 
 /// 本地数据库的最大容量（超过限额不予存储），默认10000条，保护区间是100～100000条，云端优先级高于本地设置
 @property (nonatomic, assign) NSInteger maxDBCount;

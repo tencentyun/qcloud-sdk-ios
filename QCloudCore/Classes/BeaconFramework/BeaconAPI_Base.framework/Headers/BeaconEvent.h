@@ -12,12 +12,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 事件类型
 typedef NS_ENUM(NSInteger, BeaconEventType) {
-    BeaconEventTypeNormal,     // 普通事件
-    BeaconEventTypeRealTime,   // 实时事件
-    BeaconEventTypeDTNormal,   // 普通的大同事件，大同SDK业务专用
-    BeaconEventTypeDTRealTime, // 实时的大同事件，大同SDK业务专用
+    BeaconEventTypeNormal,                      // 普通事件
+    BeaconEventTypeRealTime,                    // 实时事件
+    BeaconEventTypeDTNormal,                    // 普通的大同事件，大同SDK业务专用
+    BeaconEventTypeDTRealTime,                  // 实时的大同事件，大同SDK业务专用
 };
 
+/**
+  事件(model)类:业务方通过BeaconEvent对象封装事件各种参数
+ */
 @interface BeaconEvent : NSObject
 
 /// 事件上报的归属appkey，如果不设置，则默认是start初始化接口设置的appkey
@@ -41,6 +44,7 @@ typedef NS_ENUM(NSInteger, BeaconEventType) {
 /// 标记事件是否是qimei为空的补报事件
 @property (nonatomic, assign) BOOL reportAgainAfterQimeiNotNull;
 
+
 /// 实时事件的构造函数
 /// @param code 事件标识code
 /// @param params 事件的自定义参数
@@ -58,10 +62,10 @@ typedef NS_ENUM(NSInteger, BeaconEventType) {
 /// @param success 事件是否执行成功
 /// @param params 事件的自定义参数
 - (instancetype)initWithAppKey:(nullable NSString *)appKey
-                          code:(NSString *)code
-                          type:(BeaconEventType)type
-                       success:(BOOL)success
-                        params:(nullable NSDictionary *)params;
+                code:(NSString *)code
+                type:(BeaconEventType)type
+             success:(BOOL)success
+              params:(nullable NSDictionary *)params;
 
 @end
 

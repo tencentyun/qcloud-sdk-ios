@@ -42,13 +42,16 @@ NS_ASSUME_NONNULL_BEGIN
 
   @code
  
-    QCloudGetMediaInfoRequest * reqeust = [[QCloudGetMediaInfoRequest alloc]init];
-    reqeust.bucket = @"bucketname";
-    reqeust.object = @"objectName";
-    reqeust.finishBlock = ^(id outputObject, NSError *error) {
-     
-    };
-    [[QCloudCOSXMLService defaultCOSXML] GetMediaInfo:reqeust];
+         QCloudGetMediaInfoRequest * reqeust = [[QCloudGetMediaInfoRequest alloc]init];
+         // 对象键，是对象在 COS 上的完整路径，如果带目录的话，格式为 "dir1/object1"
+         request.object = @"exampleobject";
+         // 存储桶名称，格式为 BucketName-APPID
+         request.bucket = @"examplebucket-1250000000";
+         reqeust.finishBlock = ^(QCloudMediaInfo * outputObject, NSError *error) {
+             // outputObject 请求到的媒体信息，详细字段请查看api文档或者SDK源码
+             // QCloudMediaInfo 类；
+         };
+         [[QCloudCOSXMLService defaultCOSXML] CIGetMediaInfo:reqeust];
 
 */
 @interface QCloudGetMediaInfoRequest : QCloudBizHTTPRequest

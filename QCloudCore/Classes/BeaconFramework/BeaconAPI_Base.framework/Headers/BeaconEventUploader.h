@@ -8,9 +8,11 @@
 
 @class BeaconEventRecord;
 
-/// 事件上报器,内部开启轮询,定时查询本地的事件并上报
+/**
+  事件上报器:内部开启轮询,定时查询本地的事件并上报
+ */
 @interface BeaconEventUploader : NSObject
-
+/// 上报 url
 @property (atomic, retain) NSString *uploadUrl;
 
 /// 默认上报器（主通道），内部会开启定时器轮询上报
