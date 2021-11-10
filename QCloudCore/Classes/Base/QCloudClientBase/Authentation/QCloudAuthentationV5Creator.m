@@ -91,12 +91,20 @@
 @implementation QCloudAuthentationV5Creator
 
 - (QCloudSignature *)signatureForData:(NSMutableURLRequest *)urlrequest {
-    if (!self.credential.secretID) {
+    if (!self.credential.secretID.length) {
         @throw [NSException exceptionWithName:QCloudErrorDomain reason:@"请检查 secretID 是否为空" userInfo:nil];
     }
-    if (!self.credential.secretKey) {
+    if (!self.credential.secretKey.length) {
         @throw [NSException exceptionWithName:QCloudErrorDomain reason:@"请检查 secretKey 是否为空" userInfo:nil];
     }
+
+    if ([self.credential.secretID hasPrefix:@" "] || [self.credential.secretID hasPrefix:@" "] ) {
+        @throw [NSException exceptionWithName:QCloudErrorDomain reason:@"请检查 secretID 是否合法" userInfo:nil];
+    }
+    if ([self.credential.secretKey hasPrefix:@" "] || [self.credential.secretKey hasPrefix:@" "] ) {
+        @throw [NSException exceptionWithName:QCloudErrorDomain reason:@"请检查 secretID 是否合法" userInfo:nil];
+    }
+  
     if (self.credential.token) {
         NSString *tokenHeaderName = self.tokenHeaderName != nil ? self.tokenHeaderName : DEFAULT_TOKEN_HEADER_NAME;
         [urlrequest setValue:self.credential.token forHTTPHeaderField:tokenHeaderName];

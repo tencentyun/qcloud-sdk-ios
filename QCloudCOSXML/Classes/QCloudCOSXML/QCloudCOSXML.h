@@ -104,6 +104,7 @@
 #import "QCloudGetRecognitionObjectResult.h"
 #import "QCloudPutObjectTaggingRequest.h"
 #import "QCloudGetObjectTaggingRequest.h"
+#import "QCloudDeleteObjectTaggingRequest.h"
 #import "QCloudPutBucketIntelligentTieringRequest.h"
 #import "QCloudGetBucketIntelligentTieringRequest.h"
 #import "QCloudGetVideoRecognitionRequest.h"

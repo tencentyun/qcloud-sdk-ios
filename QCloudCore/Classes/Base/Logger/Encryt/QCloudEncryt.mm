@@ -15,11 +15,11 @@
 #include <string>
 
 @interface NSData(MD5Related)
-- (NSString*)MD5String;
+- (NSString*)qcloud_MD5String;
 @end
 
 @implementation NSData(MD5Related)
-- (NSString*) MD5String {
+- (NSString*) qcloud_MD5String {
     if (!self) {
         return nil;
     }
@@ -103,12 +103,12 @@ NSData* _internalEncrytNSDataMD5(NSData* data) {
      if (!md5data) {
          return nil;
      }
-     return [md5data MD5String];
+     return [md5data qcloud_MD5String];
 }
 
  NSString* QCloudEncrytFileMD5(NSString* filePath) {
     NSData* md5data = _internalEncrytFileMD5(filePath);
-     return [md5data MD5String];
+     return [md5data qcloud_MD5String];
 }
 
 
@@ -169,7 +169,7 @@ NSString* QCloudEncrytFileOffsetMD5(NSString* filePath, int64_t offset , int64_t
     if (!md5Data) {
         return nil;
     }
-    return [md5Data MD5String];
+    return [md5Data qcloud_MD5String];
 }
 
 
