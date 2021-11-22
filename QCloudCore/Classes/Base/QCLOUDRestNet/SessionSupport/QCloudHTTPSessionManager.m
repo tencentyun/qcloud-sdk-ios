@@ -178,6 +178,7 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache() {
 }
 
 - (int)performRequest:(QCloudHTTPRequest *)request {
+    
     QCloudHTTPRequestOperation *operation = [[QCloudHTTPRequestOperation alloc] initWithRequest:request];
     operation.sessionManager = self;
     [_operationQueue addOpreation:operation];
@@ -566,6 +567,9 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache() {
         } else {
             dic[@"body"] = [NSNull null];
         }
+        
+        dic[@"port"] = @(httpRequest.runOnService.configuration.port);
+        dic[@"tcp_port"] = @(httpRequest.runOnService.configuration.tcp_port);
         SEL createQuicTaskSelector = NSSelectorFromString(@"quicDataTaskWithRequst:infos:");
         if ([_quicSession respondsToSelector:createQuicTaskSelector]) {
             IMP imp = [_quicSession methodForSelector:createQuicTaskSelector];

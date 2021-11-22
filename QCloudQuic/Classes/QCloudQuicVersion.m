@@ -1,19 +1,23 @@
 #import "QCloudQuicVersion.h"
-NSString *const QCloudQuicModuleVersion = @"0.1.0";
-NSString *const QCloudQuicModuleName = @"QCloudQuic";
+NSString * const QCloudQuicModuleVersion = @"6.0.0";
+NSString * const QCloudQuicModuleName = @"QCloudQuic";
 @interface QCloudQCloudQuicLoad : NSObject
 @end
 
 @implementation QCloudQCloudQuicLoad
-+ (void)load {
++ (void) load
+{
     Class cla = NSClassFromString(@"QCloudSDKModuleManager");
     if (cla) {
-        NSMutableDictionary *module = [@{ @"name" : QCloudQuicModuleName, @"version" : QCloudQuicModuleVersion } mutableCopy];
+        NSMutableDictionary* module = [@{
+                                 @"name" : QCloudQuicModuleName,
+                                 @"version" : QCloudQuicModuleVersion
+                                 } mutableCopy];
 
-        NSString *buglyID = @"";
-        if (buglyID.length > 0) {
-            module[@"crashID"] = buglyID;
-        }
+          NSString* buglyID = @"";
+          if (buglyID.length > 0) {
+              module[@"crashID"] = buglyID;
+          }
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"

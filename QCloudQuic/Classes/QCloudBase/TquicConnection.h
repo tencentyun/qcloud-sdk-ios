@@ -10,6 +10,7 @@
 
 @class TquicRequest;
 @class TquicResponse;
+@class QCloudQuicSession;
 NS_ASSUME_NONNULL_BEGIN
 typedef void (^TquicRequestDidConnectBlock)(BOOL sucessed);
 typedef void (^TquicRequesDidReceiveResponseBlock)(TquicResponse *response);
@@ -21,6 +22,7 @@ typedef void (^TquicRequesDidCompleteWithErrorBlock)(NSError *error);
 
 @property (nonatomic, assign) BOOL connect;
 - (void)tquicConnectWithQuicRequest:(TquicRequest *)quicRequest
+                            session:(QCloudQuicSession *)session
                  didReceiveResponse:(TquicRequesDidReceiveResponseBlock)didReceiveResponse
                      didReceiveData:(TquicRequestDidReceiveDataBlock)didReceiveData
                     didSendBodyData:(TquicRequestDidSendBodyDataBlock)didSendBodyData

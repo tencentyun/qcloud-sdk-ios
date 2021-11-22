@@ -33,7 +33,7 @@
                                                  headerFileds:httpRequest.allHTTPHeaderFields];
         _manager = [TquicConnection new];
         __weak typeof(self) weakSelf = self;
-        [_manager tquicConnectWithQuicRequest:req
+        [_manager tquicConnectWithQuicRequest:req session:quicSession
             didReceiveResponse:^(TquicResponse *_Nonnull response) {
                 __strong typeof(weakSelf) strngSelf = weakSelf;
                 strngSelf.response = [[NSHTTPURLResponse alloc] initWithURL:httpRequest.URL

@@ -2,19 +2,15 @@
 // QCloud Terminal Lab --- service for developers
 //
 #import <Foundation/Foundation.h>
-#import <QCloudCore/QCloudCoreVersion.h>
 
 #ifndef QCloudQuicModuleVersion_h
 #define QCloudQuicModuleVersion_h
-#define QCloudQuicModuleVersionNumber 1000
+#define QCloudQuicModuleVersionNumber 600000
 
-// dependency
-#if QCloudCoreModuleVersionNumber != 506000
-#error "库QCloudQuic依赖QCloudCore最小版本号为5.6.0，当前引入的QCloudCore版本号过低，请及时升级后使用"
-#endif
+//dependency
 
 //
-FOUNDATION_EXTERN NSString *const QCloudQuicModuleVersion;
-FOUNDATION_EXTERN NSString *const QCloudQuicModuleName;
+FOUNDATION_EXTERN NSString * const QCloudQuicModuleVersion;
+FOUNDATION_EXTERN NSString * const QCloudQuicModuleName;
 
 #endif

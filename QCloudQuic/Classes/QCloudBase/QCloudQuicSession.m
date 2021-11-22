@@ -26,7 +26,8 @@ id<NSURLSessionDataDelegate> quicDelegate;
     id body = dic[@"body"];
     NSString *quicHost = dic[@"quicHost"];
     NSString *quicIp = dic[@"quicIP"];
-
+    self.port = [dic[@"port"] integerValue];
+    self.tcp_port = [dic[@"tcp_port"] integerValue];
     QCloudQuicDataTask *quicTask = [[QCloudQuicDataTask alloc] initWithHTTPRequest:httpRequst
                                                                           quicHost:quicHost
                                                                             quicIp:quicIp

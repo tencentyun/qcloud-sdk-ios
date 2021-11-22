@@ -26,7 +26,6 @@
 @class QCloudPutBucketCORSRequest;
 @class QCloudPutBucketLifecycleRequest;
 @class QCloudDeleteBucketRequest;
-@class QCloudDeleteObjectTaggingRequest;
 @class QCloudDeleteBucketCORSRequest;
 @class QCloudDeleteBucketLifeCycleRequest;
 @class QCloudHeadBucketRequest;
@@ -122,7 +121,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)GetBucket:(QCloudGetBucketRequest *)request;
 - (void)DeleteObject:(QCloudDeleteObjectRequest *)request;
 - (void)GetObjectTagging:(QCloudGetObjectTaggingRequest *)request;
-- (void)DeleteObjectTagging:(QCloudDeleteObjectTaggingRequest *)request;
 - (void)PuObjectTagging:(QCloudPutBucketTaggingRequest *)request;
 - (void)GetObjectACL:(QCloudGetObjectACLRequest *)request;
 - (void)PutObjectACL:(QCloudPutObjectACLRequest *)request;

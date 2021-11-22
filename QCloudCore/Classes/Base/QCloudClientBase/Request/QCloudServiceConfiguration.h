@@ -57,4 +57,10 @@
 
 @property (nonatomic, assign) NSTimeInterval timeoutInterval;
 
+@property (nonatomic, assign) NSInteger port;
+
+@property (nonatomic, assign) NSInteger tcp_port;
+
+
+@property (nonatomic, assign) BOOL enableQuic;
 @end

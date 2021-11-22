@@ -16,6 +16,7 @@
 #include <chrono>
 #import "TquicResponse.h"
 #import "TquicRequest.h"
+#import "QCloudQuicSession.h"
 //每次发送的字节数
 static const int64_t sentByte = 32768;
 class TnetAsyncDelegate : public TnetRequestDelegate{
@@ -189,17 +190,20 @@ class TnetAsyncDelegate : public TnetRequestDelegate{
     std::shared_ptr<TnetAsyncDelegate>tquic_delegate_sp;
 }
 @property (nonatomic,strong)TquicRequest *quicReqeust;
+@property (nonatomic,weak)QCloudQuicSession *session;
 @end
 
 
 @implementation TquicConnection
 
--(void)tquicConnectWithQuicRequest:(TquicRequest *)quicRequest  didReceiveResponse:(TquicRequesDidReceiveResponseBlock)didReceiveResponse didReceiveData:(TquicRequestDidReceiveDataBlock)didReceiveData didSendBodyData:(TquicRequestDidSendBodyDataBlock)didSendBodyData RequestDidCompleteWithError:(TquicRequesDidCompleteWithErrorBlock)requestDidCompleteWithError{
-     [self onHandleQuicRequest:quicRequest idReceiveResponse:didReceiveResponse didReceiveData:didReceiveData didSendBodyData:didSendBodyData RequestDidCompleteWithError:requestDidCompleteWithError];
+-(void)tquicConnectWithQuicRequest:(TquicRequest *)quicRequest
+                           session:(QCloudQuicSession *)session
+                        didReceiveResponse:(TquicRequesDidReceiveResponseBlock)didReceiveResponse didReceiveData:(TquicRequestDidReceiveDataBlock)didReceiveData didSendBodyData:(TquicRequestDidSendBodyDataBlock)didSendBodyData RequestDidCompleteWithError:(TquicRequesDidCompleteWithErrorBlock)requestDidCompleteWithError{
+     [self onHandleQuicRequest:quicRequest session:session didReceiveResponse:didReceiveResponse didReceiveData:didReceiveData didSendBodyData:didSendBodyData RequestDidCompleteWithError:requestDidCompleteWithError];
     
 }
 
--(void)onHandleQuicRequest:(TquicRequest *)quicRequest idReceiveResponse:(TquicRequesDidReceiveResponseBlock)didReceiveResponse didReceiveData:(TquicRequestDidReceiveDataBlock)didReceiveData didSendBodyData:(TquicRequestDidSendBodyDataBlock)didSendBodyData RequestDidCompleteWithError:(TquicRequesDidCompleteWithErrorBlock)requestDidCompleteWithError{
+-(void)onHandleQuicRequest:(TquicRequest *)quicRequest   session:(QCloudQuicSession *)session didReceiveResponse:(TquicRequesDidReceiveResponseBlock)didReceiveResponse didReceiveData:(TquicRequestDidReceiveDataBlock)didReceiveData didSendBodyData:(TquicRequestDidSendBodyDataBlock)didSendBodyData RequestDidCompleteWithError:(TquicRequesDidCompleteWithErrorBlock)requestDidCompleteWithError{
     tquic_delegate_sp.reset(new TnetAsyncDelegate (quicRequest, didReceiveResponse,didReceiveData,didSendBodyData,requestDidCompleteWithError));
     TnetConfig config = TnetConfig();
     if (quicRequest.body) {
@@ -210,6 +214,7 @@ class TnetAsyncDelegate : public TnetRequestDelegate{
     request_sp.reset(new TnetQuicRequest(tquic_delegate_sp.get(),config));
     tquic_delegate_sp.get()->request_sp = request_sp;
     self.quicReqeust = quicRequest;
+    self.session = session;
 }
 
 //cancle request
@@ -221,7 +226,7 @@ class TnetAsyncDelegate : public TnetRequestDelegate{
 //sent request
 -(void)startRequest{
     NSLog(@"Tquic startRequest: %@ (%@)", self.quicReqeust.host, self.quicReqeust.ip);
-    request_sp.get()->Connect([self.quicReqeust.host UTF8String] , [self.quicReqeust.ip UTF8String], 443, 80);
+    request_sp.get()->Connect([self.quicReqeust.host UTF8String] , [self.quicReqeust.ip UTF8String],  self.session.port, self.session.tcp_port);
 }
 -(void)dealloc{
     NSLog(@"TquicConnection connect dealloc address = %@",self);
