@@ -15,8 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)quicSessionDelegate:(nullable id<NSURLSessionDataDelegate>)delegate;
 @property (nullable, readonly, retain) id<NSURLSessionDataDelegate> delegate;
-@property (nonatomic)NSInteger port;
-@property (nonatomic)NSInteger tcp_port;
 - (QCloudQuicDataTask *)quicDataTaskWithRequst:(NSMutableURLRequest *)httpRequs infos:(NSDictionary *)dic;
 @end
 

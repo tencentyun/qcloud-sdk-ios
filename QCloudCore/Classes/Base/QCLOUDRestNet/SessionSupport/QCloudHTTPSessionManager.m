@@ -568,8 +568,6 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache() {
             dic[@"body"] = [NSNull null];
         }
         
-        dic[@"port"] = @(httpRequest.runOnService.configuration.port);
-        dic[@"tcp_port"] = @(httpRequest.runOnService.configuration.tcp_port);
         SEL createQuicTaskSelector = NSSelectorFromString(@"quicDataTaskWithRequst:infos:");
         if ([_quicSession respondsToSelector:createQuicTaskSelector]) {
             IMP imp = [_quicSession methodForSelector:createQuicTaskSelector];
