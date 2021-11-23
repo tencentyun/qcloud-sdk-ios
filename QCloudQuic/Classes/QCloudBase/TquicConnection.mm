@@ -16,7 +16,7 @@
 #include <chrono>
 #import "TquicResponse.h"
 #import "TquicRequest.h"
-#import "QCloudQuicSession.h"
+#import "QCloudQuicConfig.h"
 //每次发送的字节数
 static const int64_t sentByte = 32768;
 class TnetAsyncDelegate : public TnetRequestDelegate{
@@ -172,6 +172,7 @@ class TnetAsyncDelegate : public TnetRequestDelegate{
 
     // This request has received all the data and finished.
     void OnRequestFinish(int stream_error) override{
+
         NSError *error = nil;
         if (stream_error != 0) {
             error = [[NSError alloc] initWithDomain:NSURLErrorDomain code:stream_error userInfo:nil];
@@ -190,31 +191,68 @@ class TnetAsyncDelegate : public TnetRequestDelegate{
     std::shared_ptr<TnetAsyncDelegate>tquic_delegate_sp;
 }
 @property (nonatomic,strong)TquicRequest *quicReqeust;
-@property (nonatomic,weak)QCloudQuicSession *session;
+
 @end
 
 
 @implementation TquicConnection
 
 -(void)tquicConnectWithQuicRequest:(TquicRequest *)quicRequest
-                           session:(QCloudQuicSession *)session
+        
                         didReceiveResponse:(TquicRequesDidReceiveResponseBlock)didReceiveResponse didReceiveData:(TquicRequestDidReceiveDataBlock)didReceiveData didSendBodyData:(TquicRequestDidSendBodyDataBlock)didSendBodyData RequestDidCompleteWithError:(TquicRequesDidCompleteWithErrorBlock)requestDidCompleteWithError{
-     [self onHandleQuicRequest:quicRequest session:session didReceiveResponse:didReceiveResponse didReceiveData:didReceiveData didSendBodyData:didSendBodyData RequestDidCompleteWithError:requestDidCompleteWithError];
+     [self onHandleQuicRequest:quicRequest didReceiveResponse:didReceiveResponse didReceiveData:didReceiveData didSendBodyData:didSendBodyData RequestDidCompleteWithError:requestDidCompleteWithError];
     
 }
 
--(void)onHandleQuicRequest:(TquicRequest *)quicRequest   session:(QCloudQuicSession *)session didReceiveResponse:(TquicRequesDidReceiveResponseBlock)didReceiveResponse didReceiveData:(TquicRequestDidReceiveDataBlock)didReceiveData didSendBodyData:(TquicRequestDidSendBodyDataBlock)didSendBodyData RequestDidCompleteWithError:(TquicRequesDidCompleteWithErrorBlock)requestDidCompleteWithError{
+-(void)onHandleQuicRequest:(TquicRequest *)quicRequest  didReceiveResponse:(TquicRequesDidReceiveResponseBlock)didReceiveResponse didReceiveData:(TquicRequestDidReceiveDataBlock)didReceiveData didSendBodyData:(TquicRequestDidSendBodyDataBlock)didSendBodyData RequestDidCompleteWithError:(TquicRequesDidCompleteWithErrorBlock)requestDidCompleteWithError{
     tquic_delegate_sp.reset(new TnetAsyncDelegate (quicRequest, didReceiveResponse,didReceiveData,didSendBodyData,requestDidCompleteWithError));
     TnetConfig config = TnetConfig();
     if (quicRequest.body) {
         config.upload_optimize_ = true;
     }
-    config.congestion_type_ = kBBR;
-    config.race_type = kQUICHTTP;
+    
+    CongestionType congestion_type;
+    switch ([QCloudQuicConfig shareConfig].congestion_type) {
+        case QCloudCongestionTypeCubicBytes:
+            congestion_type = kCubicBytes;
+            break;
+        case QCloudCongestionTypeRenoBytes:
+            congestion_type = kRenoBytes;
+            break;
+        case QCloudCongestionTypeBBR:
+            congestion_type = kBBR;
+            break;
+        case QCloudCongestionTypePCC:
+            congestion_type = kPCC;
+            break;
+        case QCloudCongestionTypeGoogCC:
+            congestion_type = kGoogCC;
+            break;
+        default:
+            break;
+    }
+    config.congestion_type_ = congestion_type;
+    RaceType raceType;
+    switch ( [QCloudQuicConfig shareConfig].race_type) {
+        case QCloudRaceTypeOnlyQUIC:
+            raceType = kOnlyQUIC;
+            break;
+        case QCloudRaceTypeQUICHTTP:
+            raceType = kQUICHTTP;
+            break;
+        case QCloudRaceTypeOnlyHTTP:
+            raceType = kOnlyHTTP;
+            break;
+    }
+    config.race_type = raceType;
+    config.connect_timeout_millisec_ = [QCloudQuicConfig shareConfig].connect_timeout_millisec_;
+      // 设置连接空闲时间，单位为ms，默认值为与服务端协商值，一般为90000ms
+    config.idle_timeout_millisec_ =  [QCloudQuicConfig shareConfig].idle_timeout_millisec_;
+    config.is_custom_ = [QCloudQuicConfig shareConfig].is_custom;
     request_sp.reset(new TnetQuicRequest(tquic_delegate_sp.get(),config));
     tquic_delegate_sp.get()->request_sp = request_sp;
     self.quicReqeust = quicRequest;
-    self.session = session;
+
 }
 
 //cancle request
@@ -226,7 +264,8 @@ class TnetAsyncDelegate : public TnetRequestDelegate{
 //sent request
 -(void)startRequest{
     NSLog(@"Tquic startRequest: %@ (%@)", self.quicReqeust.host, self.quicReqeust.ip);
-    request_sp.get()->Connect([self.quicReqeust.host UTF8String] , [self.quicReqeust.ip UTF8String],  self.session.port, self.session.tcp_port);
+    request_sp.get()->Connect([self.quicReqeust.host UTF8String] , [self.quicReqeust.ip UTF8String],  [QCloudQuicConfig shareConfig].port, [QCloudQuicConfig shareConfig].tcp_port);
+//    request_sp.get()->Connect([@"iacc.stgw.qq.com" UTF8String] , [@"101.89.15.244" UTF8String],  [QCloudQuicConfig shareConfig].port, [QCloudQuicConfig shareConfig].tcp_port);
 }
 -(void)dealloc{
     NSLog(@"TquicConnection connect dealloc address = %@",self);

@@ -21,8 +21,6 @@ static NSString *const QCloudServiceConfigurationUnknown = @"Unknown";
     if (!self) {
         return self;
     }
-    self.port = 443;
-    self.tcp_port = 80;
     return self;
 }
 - (NSString *)userAgent {
@@ -47,8 +45,6 @@ static NSString *const QCloudServiceConfigurationUnknown = @"Unknown";
     config.backgroundEnable = self.backgroundEnable;
     config.isCloseShareLog = self.isCloseShareLog;
     config.timeoutInterval = self.timeoutInterval;
-    config.port = self.port;
-    config.tcp_port = self.tcp_port;
     config.enableQuic = self.enableQuic;
     return config;
 }
