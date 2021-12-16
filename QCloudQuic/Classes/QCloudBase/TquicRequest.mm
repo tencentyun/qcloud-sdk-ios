@@ -31,28 +31,6 @@
         self.httpMethod = httpMethod;
         self.body = body;
         self.quicAllHeaderFields = [headerFileds mutableCopy];
-        NSString *oringeHost = [headerFileds objectForKey:@"Host"];
-//        [self.quicAllHeaderFields setValue:oringeHost forKey:@"vod-forward-cos"];
-        [self.quicAllHeaderFields setValue:host forKey:@":authority"];
-        [self.quicAllHeaderFields setValue:httpMethod forKey:@":method"];
-        [self.quicAllHeaderFields setValue:url.scheme forKey:@":scheme"];
-
-        NSString *path = url.path;
-        
-        if (url.query) {
-            path = [NSString stringWithFormat:@"%@?%@",path,url.query];
-        }
-        if (path.length!=0) {
-            if (![[path substringToIndex:1] isEqualToString:@"/"]) {
-                path = [NSString stringWithFormat:@"/?%@",url.query];
-            }
-        }else{
-            path = @"/";
-        }
-       
-        [self.quicAllHeaderFields setValue:path forKey:@":path"];
-        //移除之前的host
-        [self.quicAllHeaderFields removeObjectForKey:@"Host"];
         
     }
     return self;

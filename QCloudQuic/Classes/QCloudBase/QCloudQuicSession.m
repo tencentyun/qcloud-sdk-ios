@@ -30,8 +30,11 @@ id<NSURLSessionDataDelegate> quicDelegate;
                                                                           quicHost:quicHost
                                                                             quicIp:quicIp
                                                                               body:body
+                                                                           headers:httpRequst.allHTTPHeaderFields
                                                                        quicSession:self];
-    quicTask.delegate = quicDelegate;
+    quicTask.quicDelegate = quicDelegate;
     return quicTask;
 }
+
+
 @end

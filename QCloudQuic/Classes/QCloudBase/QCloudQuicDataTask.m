@@ -17,6 +17,7 @@
                            quicHost:(NSString *)quicHost
                              quicIp:(NSString *)quicIp
                                body:(id)body
+                        headers:(nonnull NSDictionary *)headers
                         quicSession:(QCloudQuicSession *)quicSession {
     if (self = [super init]) {
         id bodyData = nil;
@@ -30,7 +31,7 @@
                                                    httpMethod:httpRequest.HTTPMethod
                                                            ip:quicIp
                                                          body:bodyData
-                                                 headerFileds:httpRequest.allHTTPHeaderFields];
+                                                 headerFileds:headers];
         _manager = [TquicConnection new];
         __weak typeof(self) weakSelf = self;
         [_manager tquicConnectWithQuicRequest:req
@@ -40,20 +41,20 @@
                                                                  statusCode:response.statusCode
                                                                 HTTPVersion:response.httpVersion
                                                                headerFields:[response.allHeaderFields copy]];
-                if ([strngSelf.delegate respondsToSelector:@selector(URLSession:dataTask:didReceiveResponse:completionHandler:)]) {
-                    [strngSelf.delegate URLSession:quicSession dataTask:strngSelf didReceiveResponse:strngSelf.response completionHandler:nil];
+                if ([strngSelf.quicDelegate respondsToSelector:@selector(URLSession:dataTask:didReceiveResponse:completionHandler:)]) {
+                    [strngSelf.quicDelegate URLSession:quicSession dataTask:strngSelf didReceiveResponse:strngSelf.response completionHandler:nil];
                 }
             }
             didReceiveData:^(NSData *_Nonnull data) {
                 __strong typeof(weakSelf) strngSelf = weakSelf;
-                if ([strngSelf.delegate respondsToSelector:@selector(URLSession:dataTask:didReceiveData:)]) {
-                    [strngSelf.delegate URLSession:quicSession dataTask:strngSelf didReceiveData:data];
+                if ([strngSelf.quicDelegate respondsToSelector:@selector(URLSession:dataTask:didReceiveData:)]) {
+                    [strngSelf.quicDelegate URLSession:quicSession dataTask:strngSelf didReceiveData:data];
                 }
             }
             didSendBodyData:^(int64_t bytesSent, int64_t totolSentBytes, int64_t totalBytesExpectedToSend) {
                 __strong typeof(weakSelf) strngSelf = weakSelf;
-                if ([strngSelf.delegate respondsToSelector:@selector(URLSession:task:didSendBodyData:totalBytesSent:totalBytesExpectedToSend:)]) {
-                    [strngSelf.delegate URLSession:quicSession
+                if ([strngSelf.quicDelegate respondsToSelector:@selector(URLSession:task:didSendBodyData:totalBytesSent:totalBytesExpectedToSend:)]) {
+                    [strngSelf.quicDelegate URLSession:quicSession
                                               task:strngSelf
                                    didSendBodyData:bytesSent
                                     totalBytesSent:totolSentBytes
@@ -63,8 +64,8 @@
             RequestDidCompleteWithError:^(NSError *_Nonnull error) {
                 __strong typeof(weakSelf) strngSelf = weakSelf;
                 strngSelf.originalRequest = [[NSURLRequest alloc] initWithURL:httpRequest.URL];
-                if ([strngSelf.delegate respondsToSelector:@selector(URLSession:task:didCompleteWithError:)]) {
-                    [strngSelf.delegate URLSession:quicSession task:strngSelf didCompleteWithError:error];
+                if ([strngSelf.quicDelegate respondsToSelector:@selector(URLSession:task:didCompleteWithError:)]) {
+                    [strngSelf.quicDelegate URLSession:quicSession task:strngSelf didCompleteWithError:error];
                 }
             }];
     }

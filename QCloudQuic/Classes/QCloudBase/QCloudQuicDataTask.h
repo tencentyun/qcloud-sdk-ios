@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface QCloudQuicDataTask<BodyType> : NSURLSessionDataTask
-@property (nonatomic, weak) id<NSURLSessionDataDelegate> delegate;
+@property (nullable, retain) id<NSURLSessionDataDelegate> quicDelegate;
 @property (nullable, readwrite, copy) NSHTTPURLResponse *response;
 @property (nullable, readwrite, copy) NSURLRequest *originalRequest;
 
@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
                            quicHost:(NSString *)quicHost
                              quicIp:(NSString *)quicIp
                                body:(BodyType)body
+                            headers:(NSDictionary *)headers
                         quicSession:(QCloudQuicSession *)quicSession;
 - (void)start;
 @end
