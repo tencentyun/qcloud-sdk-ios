@@ -65,34 +65,40 @@
 
         }
         BOOL exist = [[NSFileManager defaultManager] fileExistsAtPath:self.resumableTaskFile];
+        NSMutableDictionary  *lowercaseStringDic = [NSMutableDictionary dictionary];
+        [(NSDictionary*)outputObject enumerateKeysAndObjectsUsingBlock:^(NSString *key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+            [lowercaseStringDic setValue:obj forKey:key.lowercaseString];
+        }];
         if (!exist) {
            [[NSFileManager defaultManager] createFileAtPath:self.resumableTaskFile contents:[NSData data] attributes:nil];
-            NSDictionary *dic = @{@"lastModified":outputObject[@"Last-Modified"],
-                                  @"contentLength":outputObject[@"Content-Length"],
-                                  @"etag":outputObject[@"Etag"],
-                                  @"crc64ecma":outputObject[@"x-cos-hash-crc64ecma"],
-            };
+            NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+            [dic setValue:lowercaseStringDic[@"Last-Modified"] forKey:@"lastModified"];
+            [dic setValue:lowercaseStringDic[@"Content-Length"] forKey:@"contentLength"];
+            [dic setValue:lowercaseStringDic[@"Etag"] forKey:@"etag"];
+            [dic setValue:lowercaseStringDic[@"x-cos-hash-crc64ecma"] forKey:@"crc64ecma"];
             NSError *parseError;
-            NSData *info =[NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:&parseError];
+            NSData *info =[NSJSONSerialization dataWithJSONObject:[dic copy] options:NSJSONWritingPrettyPrinted error:&parseError];
             NSError *writeDataError;
             [info writeToFile:self.resumableTaskFile options:0 error:&writeDataError];
         }else{
             NSData *data = [[NSData alloc] initWithContentsOfFile:self.resumableTaskFile];
             NSDictionary *dic =  [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+            
             //如果文件发生改变
-            if(![dic[@"contentLength"] isEqualToString:outputObject[@"Content-Length"]] ||
-                 ![dic[@"lastModified"] isEqualToString:outputObject[@"Last-Modified"]] ||
-                   ![dic[@"etag"] isEqualToString:outputObject[@"Etag"]] ||
-                     ![dic[@"crc64ecma"] isEqualToString:outputObject[@"x-cos-hash-crc64ecma"]]){
+            if(![dic[@"contentLength"] isEqualToString:lowercaseStringDic[@"Content-Length"]] ||
+                 ![dic[@"lastModified"] isEqualToString:lowercaseStringDic[@"Last-Modified"]] ||
+                   ![dic[@"etag"] isEqualToString:lowercaseStringDic[@"Etag"]] ||
+                     ![dic[@"crc64ecma"] isEqualToString:lowercaseStringDic[@"x-cos-hash-crc64ecma"]]){
                 QCloudRemoveFileByPath(self.resumableTaskFile);
                 [[NSFileManager defaultManager] createFileAtPath:self.resumableTaskFile contents:[NSData data] attributes:nil];
-                 NSDictionary *dic = @{@"lastModified":outputObject[@"Last-Modified"],
-                                       @"contentLength":outputObject[@"Content-Length"],
-                                       @"etag":outputObject[@"Etag"],
-                                       @"crc64ecma":outputObject[@"x-cos-hash-crc64ecma"],
-                 };
+                NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+                [dic setValue:lowercaseStringDic[@"Last-Modified"] forKey:@"lastModified"];
+                [dic setValue:lowercaseStringDic[@"Content-Length"] forKey:@"contentLength"];
+                [dic setValue:lowercaseStringDic[@"Etag"] forKey:@"etag"];
+                [dic setValue:lowercaseStringDic[@"x-cos-hash-crc64ecma"] forKey:@"crc64ecma"];
+                
                  NSError *parseError;
-                 NSData *info =[NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:&parseError];
+                 NSData *info =[NSJSONSerialization dataWithJSONObject:[dic copy] options:NSJSONWritingPrettyPrinted error:&parseError];
                  NSError *writeDataError;
                  [info writeToFile:self.resumableTaskFile options:0 error:&writeDataError];
             }else{

@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.name             = "QCloudQuic"
 
 
-s.version              = "6.0.1"
+s.version              = "6.0.2"
 
 
   s.summary          = "QCloudQuic 腾讯云iOS-SDK组件"
@@ -36,7 +36,7 @@ s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
   s.source_files = 'QCloudQuic/Classes/QCloudBase/**/*','QCloudQuic/Classes/QuicFramework//*.{h}'
   s.vendored_frameworks = 'QCloudQuic/Classes/QuicFramework/Tquic.framework'
   s.static_framework = true
-  s.dependency "QCloudCOSXML",'6.0.1'
+  s.dependency "QCloudCOSXML",'6.0.2'
   
 
 end
