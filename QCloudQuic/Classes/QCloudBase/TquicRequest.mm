@@ -21,7 +21,6 @@
 @end
 
 
-
 @implementation TquicRequest
 
 - (instancetype)initWithURL:(NSURL *)url host:(NSString *)host httpMethod:(NSString *)httpMethod ip:(NSString *)ip body:(id)body headerFileds:(NSDictionary *)headerFileds{
@@ -31,6 +30,9 @@
         self.httpMethod = httpMethod;
         self.body = body;
         self.quicAllHeaderFields = [headerFileds mutableCopy];
+        if([httpMethod isEqualToString:@"POST"]){
+            [self.quicAllHeaderFields setValue:@(0) forKey:@"content-length"];
+        }
         
     }
     return self;

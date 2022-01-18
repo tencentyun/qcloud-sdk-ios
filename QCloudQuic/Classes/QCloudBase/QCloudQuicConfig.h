@@ -33,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 设置连接超时时间，单位为ms，默认为4000ms
 @property (nonatomic,assign)NSInteger connect_timeout_millisec_;
+@property (nonatomic,assign)NSInteger total_timeout_millisec_;
 //设置连接空闲时间，单位为ms，默认值为与服务端协商值，一般为90000ms
 @property (nonatomic,assign) NSInteger idle_timeout_millisec_;
 @property (nonatomic,assign)QCloudRaceType race_type;

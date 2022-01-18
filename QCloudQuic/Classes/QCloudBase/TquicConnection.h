@@ -11,7 +11,7 @@
 @class TquicRequest;
 @class TquicResponse;
 NS_ASSUME_NONNULL_BEGIN
-typedef void (^TquicRequestDidConnectBlock)(BOOL sucessed);
+typedef void (^TquicRequestDidConnectBlock)(NSError *error);
 typedef void (^TquicRequesDidReceiveResponseBlock)(TquicResponse *response);
 
 typedef void (^TquicRequestDidReceiveDataBlock)(NSData *data);
@@ -21,6 +21,7 @@ typedef void (^TquicRequesDidCompleteWithErrorBlock)(NSError *error);
 
 @property (nonatomic, assign) BOOL connect;
 - (void)tquicConnectWithQuicRequest:(TquicRequest *)quicRequest
+                 didConnect:(TquicRequestDidConnectBlock)didConnect
                  didReceiveResponse:(TquicRequesDidReceiveResponseBlock)didReceiveResponse
                      didReceiveData:(TquicRequestDidReceiveDataBlock)didReceiveData
                     didSendBodyData:(TquicRequestDidSendBodyDataBlock)didSendBodyData

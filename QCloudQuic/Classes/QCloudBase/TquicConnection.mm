@@ -24,7 +24,7 @@ class TnetAsyncDelegate : public TnetRequestDelegate{
     std::shared_ptr<TnetQuicRequest> request_sp;
     
     protected:
-    TquicRequestDidConnectBlock didConnectonSuccessed_;
+    TquicRequestDidConnectBlock didConnectionBlock_;
     TquicRequesDidReceiveResponseBlock didReceiveResponse_;
     TquicRequestDidSendBodyDataBlock didSendBodyData_;
     TquicRequestDidReceiveDataBlock didReceiveData_;
@@ -40,9 +40,10 @@ class TnetAsyncDelegate : public TnetRequestDelegate{
         first_time_ = 1;
     
     }
-    TnetAsyncDelegate(TquicRequest *quicRequest,TquicRequesDidReceiveResponseBlock didReceiveResponse,TquicRequestDidReceiveDataBlock didReceiveData, TquicRequestDidSendBodyDataBlock didSentBodyData,TquicRequesDidCompleteWithErrorBlock  didCompleteWithError){
+    TnetAsyncDelegate(TquicRequest *quicRequest,TquicRequestDidConnectBlock didConnectionBlock,TquicRequesDidReceiveResponseBlock didReceiveResponse,TquicRequestDidReceiveDataBlock didReceiveData, TquicRequestDidSendBodyDataBlock didSentBodyData,TquicRequesDidCompleteWithErrorBlock  didCompleteWithError){
     first_time_ = 1;
     totolSentBytes = 0;
+        this->didConnectionBlock_ =  didConnectionBlock;
     this->didReceiveResponse_ = didReceiveResponse;
     this->didSendBodyData_ = didSentBodyData;
     this->didReceiveData_ = didReceiveData;
@@ -57,15 +58,22 @@ class TnetAsyncDelegate : public TnetRequestDelegate{
 #pragma mark URLRequest::Delegate methods
     //连接建立成功的回调
     void  OnConnect(int error_code) override{
+        if (this->didConnectionBlock_ !=nullptr) {
+             this->didConnectionBlock_(nil);
+        }
         NSLog(@"Tquic connect host success: %@ (%@)", this->quicReqeust_.host, this->quicReqeust_.ip);
         //设置header 头部
         NSArray *allkeys = this->quicReqeust_.quicAllHeaderFields.allKeys;
         NSDictionary *kvs = [NSMutableDictionary new];
         for (NSString *key in allkeys) {
-            const char* value = [[this->quicReqeust_.quicAllHeaderFields objectForKey:key] UTF8String];
+            id value = [this->quicReqeust_.quicAllHeaderFields objectForKey:key];
+            if([value isKindOfClass:[NSNumber class]]){
+                value = [NSString stringWithFormat:@"%@",value];
+            }
+            const char* cValue = [value UTF8String];
             const char* ukey = [[key lowercaseString] UTF8String];
-            request_sp.get()->AddHeaders(ukey, value);
-            [kvs setValue:[[NSString alloc] initWithUTF8String:value] forKey:key];
+            request_sp.get()->AddHeaders(ukey, cValue);
+            [kvs setValue:[[NSString alloc] initWithUTF8String:cValue] forKey:key];
         }
         NSLog(@"Tquic send headers: %@", kvs);
         
@@ -161,26 +169,31 @@ class TnetAsyncDelegate : public TnetRequestDelegate{
 
     // The connection closed with the error_code, need to re-connect.
     void OnConnectionClose(int error_code, const char* error_detail) override{
-        NSError *error = [[NSError alloc] initWithDomain:NSURLErrorDomain code:error_code userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"%s",error_detail]}];
-        NSLog(@"Tquic OnConnectionClose with error: %@",error);
-        if (this->didCompleteWithError_ != nullptr ) {
-            this->didCompleteWithError_(error);//连接建立失败
+            NSError *error;
+            if (error_code != 0 && error_code != 25) {
+                error = [[NSError alloc] initWithDomain:NSURLErrorDomain code:error_code userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"%s",error_detail]}];
+               
+            }
+            if (this->didCompleteWithError_ !=nullptr) {
+                 this->didCompleteWithError_(error);
+            }
+           
         }
-       
-    
-    }
 
     // This request has received all the data and finished.
     void OnRequestFinish(int stream_error) override{
-
-        NSError *error = nil;
-        if (stream_error != 0) {
-            error = [[NSError alloc] initWithDomain:NSURLErrorDomain code:stream_error userInfo:nil];
-        }
-        NSLog(@"Tquic OnRequestCompleted with error: %@", error);
-        if (this->didCompleteWithError_ != nullptr) {
-            this->didCompleteWithError_(error);
-        }
+//        request_sp->CloseConnection();
+//        NSError *error = nil;
+//        if (stream_error != 0) {
+//            error = [[NSError alloc] initWithDomain:NSURLErrorDomain code:stream_error userInfo:nil];
+//        }
+//
+//        NSLog(@"Tquic OnRequestCompleted with error: %@", error);
+//        if (this->didCompleteWithError_ != nullptr) {
+//            this->didCompleteWithError_(error);
+//        }
+   
+        
     }
 };
 
@@ -198,14 +211,15 @@ class TnetAsyncDelegate : public TnetRequestDelegate{
 @implementation TquicConnection
 
 -(void)tquicConnectWithQuicRequest:(TquicRequest *)quicRequest
-        
-                        didReceiveResponse:(TquicRequesDidReceiveResponseBlock)didReceiveResponse didReceiveData:(TquicRequestDidReceiveDataBlock)didReceiveData didSendBodyData:(TquicRequestDidSendBodyDataBlock)didSendBodyData RequestDidCompleteWithError:(TquicRequesDidCompleteWithErrorBlock)requestDidCompleteWithError{
-     [self onHandleQuicRequest:quicRequest didReceiveResponse:didReceiveResponse didReceiveData:didReceiveData didSendBodyData:didSendBodyData RequestDidCompleteWithError:requestDidCompleteWithError];
+                        didConnect:(TquicRequestDidConnectBlock)didConnect
+                        didReceiveResponse:(TquicRequesDidReceiveResponseBlock)didReceiveResponse
+                        didReceiveData:(TquicRequestDidReceiveDataBlock)didReceiveData didSendBodyData:(TquicRequestDidSendBodyDataBlock)didSendBodyData RequestDidCompleteWithError:(TquicRequesDidCompleteWithErrorBlock)requestDidCompleteWithError{
+     [self onHandleQuicRequest:quicRequest didConnect:didConnect didReceiveResponse:didReceiveResponse didReceiveData:didReceiveData didSendBodyData:didSendBodyData RequestDidCompleteWithError:requestDidCompleteWithError];
     
 }
 
--(void)onHandleQuicRequest:(TquicRequest *)quicRequest  didReceiveResponse:(TquicRequesDidReceiveResponseBlock)didReceiveResponse didReceiveData:(TquicRequestDidReceiveDataBlock)didReceiveData didSendBodyData:(TquicRequestDidSendBodyDataBlock)didSendBodyData RequestDidCompleteWithError:(TquicRequesDidCompleteWithErrorBlock)requestDidCompleteWithError{
-    tquic_delegate_sp.reset(new TnetAsyncDelegate (quicRequest, didReceiveResponse,didReceiveData,didSendBodyData,requestDidCompleteWithError));
+-(void)onHandleQuicRequest:(TquicRequest *)quicRequest  didConnect:(TquicRequestDidConnectBlock)didConnect didReceiveResponse:(TquicRequesDidReceiveResponseBlock)didReceiveResponse didReceiveData:(TquicRequestDidReceiveDataBlock)didReceiveData didSendBodyData:(TquicRequestDidSendBodyDataBlock)didSendBodyData RequestDidCompleteWithError:(TquicRequesDidCompleteWithErrorBlock)requestDidCompleteWithError{
+    tquic_delegate_sp.reset(new TnetAsyncDelegate (quicRequest,didConnect, didReceiveResponse,didReceiveData,didSendBodyData,requestDidCompleteWithError));
     TnetConfig config = TnetConfig();
     if (quicRequest.body) {
         config.upload_optimize_ = true;
@@ -245,10 +259,12 @@ class TnetAsyncDelegate : public TnetRequestDelegate{
             break;
     }
     config.race_type = raceType;
+    config.total_timeout_millisec_ =[QCloudQuicConfig shareConfig].total_timeout_millisec_;
     config.connect_timeout_millisec_ = [QCloudQuicConfig shareConfig].connect_timeout_millisec_;
       // 设置连接空闲时间，单位为ms，默认值为与服务端协商值，一般为90000ms
     config.idle_timeout_millisec_ =  [QCloudQuicConfig shareConfig].idle_timeout_millisec_;
     config.is_custom_ = [QCloudQuicConfig shareConfig].is_custom;
+    config.use_session_reuse_ = NO;
     request_sp.reset(new TnetQuicRequest(tquic_delegate_sp.get(),config));
     tquic_delegate_sp.get()->request_sp = request_sp;
     self.quicReqeust = quicRequest;
@@ -259,12 +275,13 @@ class TnetAsyncDelegate : public TnetRequestDelegate{
 -(void)cancleRequest{
     NSLog(@"Tquic cancleRequest: request_sp.use_count = %ld",request_sp.use_count());
     request_sp.get()->CancelRequest();
+
 }
 
 //sent request
 -(void)startRequest{
     NSLog(@"Tquic startRequest: %@ (%@)", self.quicReqeust.host, self.quicReqeust.ip);
-    request_sp.get()->Connect([self.quicReqeust.host UTF8String] , [self.quicReqeust.ip UTF8String],  [QCloudQuicConfig shareConfig].port, [QCloudQuicConfig shareConfig].tcp_port);
+    request_sp->ConnectWithDomain([self.quicReqeust.host UTF8String], [QCloudQuicConfig shareConfig].port);
 //    request_sp.get()->Connect([@"iacc.stgw.qq.com" UTF8String] , [@"101.89.15.244" UTF8String],  [QCloudQuicConfig shareConfig].port, [QCloudQuicConfig shareConfig].tcp_port);
 }
 -(void)dealloc{

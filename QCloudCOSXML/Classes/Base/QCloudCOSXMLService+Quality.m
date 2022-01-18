@@ -12,6 +12,7 @@
 #import <QCloudCore/QCloudLogger.h>
 #import "QCloudCOSXMLVersion.h"
 #import <QCloudCore/QualityDataUploader.h>
+#import <QCloudCore/QCloudServiceConfiguration+Quality.h>
 
 @implementation QCloudCOSXMLService (Quality)
 
@@ -31,8 +32,10 @@
 
 + (QCloudCOSXMLService *)Quality_registerDefaultCOSXMLWithConfiguration:(QCloudServiceConfiguration *)configuration {
     id result = [self Quality_registerDefaultCOSXMLWithConfiguration:configuration];
-
-    [self initMTA];
+    if(!configuration.disableSetupBeacon){
+        [self initMTA];
+    }
+    
     return result;
 }
 

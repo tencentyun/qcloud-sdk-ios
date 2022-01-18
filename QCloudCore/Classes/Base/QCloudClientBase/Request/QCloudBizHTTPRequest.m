@@ -61,6 +61,11 @@ QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilizerBlock
           return (id)(transformData.data);
       };
 
+@interface QCloudBizHTTPRequest ()
+@property (nonatomic,strong,nullable)dispatch_semaphore_t semaphore;
+@end
+
+
 @implementation QCloudBizHTTPRequest
 
 - (instancetype)init {
@@ -108,7 +113,7 @@ QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilizerBlock
 
 - (BOOL)prepareInvokeURLRequest:(NSMutableURLRequest *)urlRequest error:(NSError *__autoreleasing *)error {
     //    NSAssert(self.runOnService, @"RUN ON SERVICE is nil%@", self.runOnService);
-    __block dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    self.semaphore = dispatch_semaphore_create(0);
     __block NSError *localError;
     __block BOOL isSigned;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -141,11 +146,12 @@ QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilizerBlock
                                   // null authorization
                               }
                           }
-                          dispatch_semaphore_signal(semaphore);
+                          dispatch_semaphore_signal(self.semaphore);
+                          self.semaphore = nil;
                       }];
     });
 
-    dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, 15 * NSEC_PER_SEC));
+    dispatch_semaphore_wait(self.semaphore, dispatch_time(DISPATCH_TIME_NOW, 15 * NSEC_PER_SEC));
     if (localError) {
         if (NULL != error) {
             *error = localError;
@@ -177,6 +183,14 @@ NSString *EncrytNSDataMD5Base64(NSData *data) {
     NSData *md5data = [NSData dataWithBytes:result length:CC_MD5_DIGEST_LENGTH];
     return [md5data base64EncodedStringWithOptions:0];
 }
+
+- (void)dealloc{
+    if (self.semaphore) {
+        dispatch_semaphore_signal(self.semaphore);
+        self.semaphore = nil;
+    }
+}
+
 - (void)setCOSServerSideEncyption {
     self.customHeaders[@"x-cos-server-side-encryption"] = @"AES256";
 }

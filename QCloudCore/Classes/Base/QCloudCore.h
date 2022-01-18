@@ -13,6 +13,7 @@
 #import "QCloudLogger.h"
 #import "QCloudBundle.h"
 #import "QCloudServiceConfiguration.h"
+#import "QCloudServiceConfiguration+Quality.h"
 #import "QCloudService.h"
 #import "QCloudFileUtils.h"
 #import "QCloudEndPoint.h"

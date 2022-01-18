@@ -31,7 +31,7 @@ static QCloudQuicConfig*_config;
     self.tcp_port = 80;
     self.race_type = QCloudRaceTypeOnlyQUIC;
     self.congestion_type = QCloudCongestionTypeBBR;
-    self.is_custom = YES;
+    self.is_custom = NO;
     return self;
 }
 @end

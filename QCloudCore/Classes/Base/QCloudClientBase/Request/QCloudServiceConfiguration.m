@@ -8,6 +8,7 @@
 
 #import "QCloudServiceConfiguration.h"
 #import "QCloudServiceConfiguration_Private.h"
+#import "QCloudServiceConfiguration+Quality.h"
 #if TARGET_OS_IOS
 #import <UIKit/UIKit.h>
 #endif
@@ -46,6 +47,7 @@ static NSString *const QCloudServiceConfigurationUnknown = @"Unknown";
     config.isCloseShareLog = self.isCloseShareLog;
     config.timeoutInterval = self.timeoutInterval;
     config.enableQuic = self.enableQuic;
+    config.disableSetupBeacon = self.disableSetupBeacon;
     return config;
 }
 @end

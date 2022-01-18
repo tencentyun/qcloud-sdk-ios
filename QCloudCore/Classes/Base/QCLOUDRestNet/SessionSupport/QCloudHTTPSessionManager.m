@@ -548,7 +548,7 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache() {
             ipAddr = [[QCloudHttpDNS shareDNS] queryIPForHost:host];
         }
         if (!ipAddr) {
-            // 查询 可用的 ip 地址
+            // 查询 可用的 ip 地址tc
             [[QCloudHttpDNS shareDNS] prepareFetchIPListForHost:host port:@"443"];
             ipAddr = [[QCloudHttpDNS shareDNS] findHealthyIpFor:host];
         }
@@ -556,8 +556,9 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache() {
             @throw [NSException exceptionWithName:NSURLErrorDomain reason:@"No Available IP Address for QUIC." userInfo:nil];
         }
 
-        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-
+        NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:transformRequest.allHTTPHeaderFields];
+  
+ 
         dic[@"quicHost"] = host;
         dic[@"quicIP"] = ipAddr;
         if (uploadFileURL) {
