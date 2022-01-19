@@ -62,6 +62,7 @@ QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilizerBlock
       };
 
 @interface QCloudBizHTTPRequest ()
+@property (nonatomic,assign)NSInteger semp_flag;
 @property (nonatomic,strong,nullable)dispatch_semaphore_t semaphore;
 @end
 
@@ -114,6 +115,7 @@ QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilizerBlock
 - (BOOL)prepareInvokeURLRequest:(NSMutableURLRequest *)urlRequest error:(NSError *__autoreleasing *)error {
     //    NSAssert(self.runOnService, @"RUN ON SERVICE is nil%@", self.runOnService);
     self.semaphore = dispatch_semaphore_create(0);
+    self.semp_flag = 1;
     __block NSError *localError;
     __block BOOL isSigned;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
@@ -147,11 +149,14 @@ QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilizerBlock
                               }
                           }
                           dispatch_semaphore_signal(self.semaphore);
-                          self.semaphore = nil;
+                          self.semp_flag = 2;
                       }];
     });
 
-    dispatch_semaphore_wait(self.semaphore, dispatch_time(DISPATCH_TIME_NOW, 15 * NSEC_PER_SEC));
+    if (self.semp_flag == 1) {
+        dispatch_semaphore_wait(self.semaphore, dispatch_time(DISPATCH_TIME_NOW, 15 * NSEC_PER_SEC));
+    }
+    
     if (localError) {
         if (NULL != error) {
             *error = localError;
@@ -185,9 +190,8 @@ NSString *EncrytNSDataMD5Base64(NSData *data) {
 }
 
 - (void)dealloc{
-    if (self.semaphore) {
+    if (self.semp_flag == 1) {
         dispatch_semaphore_signal(self.semaphore);
-        self.semaphore = nil;
     }
 }
 
