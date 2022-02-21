@@ -157,6 +157,7 @@ QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilizerBlock
         dispatch_semaphore_wait(self.semaphore, dispatch_time(DISPATCH_TIME_NOW, 15 * NSEC_PER_SEC));
     }
     
+    
     if (localError) {
         if (NULL != error) {
             *error = localError;

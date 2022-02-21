@@ -41,76 +41,85 @@
     if(!self.resumableDownload){
         [self startGetObject];
         return;
-    }
-    if(!self.resumableTaskFile){
-        if(!self.downloadingURL){
-            NSError *error =  [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
-                                                                                message:@"InvalidArgument:您输入的downloadingURL不合法，请检查后使用！！"];
-            if(self.finishBlock){
-                self.finishBlock(nil, error);
-                return;
+    }else{
+        if(!self.resumableTaskFile){
+            if(!self.downloadingURL){
+                NSError *error =  [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
+                                                                                    message:@"InvalidArgument:您输入的downloadingURL不合法，请检查后使用！！"];
+                if(self.finishBlock){
+                    self.finishBlock(nil, error);
+                    return;
+                }
             }
+            self.resumableTaskFile = [NSString stringWithFormat:@"%@.cosresumabletask",self.downloadingURL.relativePath];
+          
         }
-        self.resumableTaskFile = [NSString stringWithFormat:@"%@.cosresumabletask",self.downloadingURL.relativePath];
-      
-    }
-    QCloudHeadObjectRequest *headReq = [QCloudHeadObjectRequest new];
-    headReq.bucket = self.bucket;
-    headReq.regionName = self.regionName;
-    headReq.object = self.object;
-    [headReq setFinishBlock:^(id  _Nullable outputObject, NSError * _Nullable error) {
-        if(error){
-            self.finishBlock(outputObject, error);
-            return;
-
-        }
-        BOOL exist = [[NSFileManager defaultManager] fileExistsAtPath:self.resumableTaskFile];
-        NSMutableDictionary  *lowercaseStringDic = [NSMutableDictionary dictionary];
-        [(NSDictionary*)outputObject enumerateKeysAndObjectsUsingBlock:^(NSString *key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-            [lowercaseStringDic setValue:obj forKey:key.lowercaseString];
-        }];
-        if (!exist) {
-           [[NSFileManager defaultManager] createFileAtPath:self.resumableTaskFile contents:[NSData data] attributes:nil];
-            NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-            [dic setValue:lowercaseStringDic[@"Last-Modified"] forKey:@"lastModified"];
-            [dic setValue:lowercaseStringDic[@"Content-Length"] forKey:@"contentLength"];
-            [dic setValue:lowercaseStringDic[@"Etag"] forKey:@"etag"];
-            [dic setValue:lowercaseStringDic[@"x-cos-hash-crc64ecma"] forKey:@"crc64ecma"];
-            NSError *parseError;
-            NSData *info =[NSJSONSerialization dataWithJSONObject:[dic copy] options:NSJSONWritingPrettyPrinted error:&parseError];
-            NSError *writeDataError;
-            [info writeToFile:self.resumableTaskFile options:0 error:&writeDataError];
-        }else{
-            NSData *data = [[NSData alloc] initWithContentsOfFile:self.resumableTaskFile];
-            NSDictionary *dic =  [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
-            
-            //如果文件发生改变
-            if(![dic[@"contentLength"] isEqualToString:lowercaseStringDic[@"Content-Length"]] ||
-                 ![dic[@"lastModified"] isEqualToString:lowercaseStringDic[@"Last-Modified"]] ||
-                   ![dic[@"etag"] isEqualToString:lowercaseStringDic[@"Etag"]] ||
-                     ![dic[@"crc64ecma"] isEqualToString:lowercaseStringDic[@"x-cos-hash-crc64ecma"]]){
-                QCloudRemoveFileByPath(self.resumableTaskFile);
-                [[NSFileManager defaultManager] createFileAtPath:self.resumableTaskFile contents:[NSData data] attributes:nil];
+        QCloudHeadObjectRequest *headReq = [QCloudHeadObjectRequest new];
+        headReq.bucket = self.bucket;
+        headReq.regionName = self.regionName;
+        headReq.object = self.object;
+        [headReq setFinishBlock:^(id  _Nullable outputObject, NSError * _Nullable error) {
+            if(error){
+                self.finishBlock(outputObject, error);
+                return;
+                
+            }
+            BOOL exist = [[NSFileManager defaultManager] fileExistsAtPath:self.resumableTaskFile];
+            NSMutableDictionary  *lowercaseStringDic = [NSMutableDictionary dictionary];
+            [(NSDictionary*)outputObject enumerateKeysAndObjectsUsingBlock:^(NSString *key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+                [lowercaseStringDic setValue:obj forKey:key.lowercaseString];
+            }];
+            if (!exist) {
+               [[NSFileManager defaultManager] createFileAtPath:self.resumableTaskFile contents:[NSData data] attributes:nil];
                 NSMutableDictionary *dic = [NSMutableDictionary dictionary];
                 [dic setValue:lowercaseStringDic[@"Last-Modified"] forKey:@"lastModified"];
                 [dic setValue:lowercaseStringDic[@"Content-Length"] forKey:@"contentLength"];
                 [dic setValue:lowercaseStringDic[@"Etag"] forKey:@"etag"];
                 [dic setValue:lowercaseStringDic[@"x-cos-hash-crc64ecma"] forKey:@"crc64ecma"];
-                
-                 NSError *parseError;
-                 NSData *info =[NSJSONSerialization dataWithJSONObject:[dic copy] options:NSJSONWritingPrettyPrinted error:&parseError];
-                 NSError *writeDataError;
-                 [info writeToFile:self.resumableTaskFile options:0 error:&writeDataError];
+                NSError *parseError;
+                if(dic){
+                    NSData *info =[NSJSONSerialization dataWithJSONObject:[dic copy] options:NSJSONWritingPrettyPrinted error:&parseError];
+                    NSError *writeDataError;
+                    [info writeToFile:self.resumableTaskFile options:0 error:&writeDataError];
+                }
+               
             }else{
-                NSArray *tasks = dic[@"downloadedBlocks"];
-                self.localCacheDownloadOffset = [(NSString *)tasks.lastObject[@"to"] integerValue];
+                NSData *jsonData = [[NSData alloc] initWithContentsOfFile:self.resumableTaskFile];
+                if(jsonData){
+                    NSDictionary *dic =  [NSJSONSerialization JSONObjectWithData:jsonData options:kNilOptions error:nil];
+                    
+                    //如果文件发生改变
+                    if(![dic[@"contentLength"] isEqualToString:lowercaseStringDic[@"Content-Length"]] ||
+                         ![dic[@"lastModified"] isEqualToString:lowercaseStringDic[@"Last-Modified"]] ||
+                           ![dic[@"etag"] isEqualToString:lowercaseStringDic[@"Etag"]] ||
+                             ![dic[@"crc64ecma"] isEqualToString:lowercaseStringDic[@"x-cos-hash-crc64ecma"]]){
+                        QCloudRemoveFileByPath(self.resumableTaskFile);
+                        [[NSFileManager defaultManager] createFileAtPath:self.resumableTaskFile contents:[NSData data] attributes:nil];
+                        NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+                        [dic setValue:lowercaseStringDic[@"Last-Modified"] forKey:@"lastModified"];
+                        [dic setValue:lowercaseStringDic[@"Content-Length"] forKey:@"contentLength"];
+                        [dic setValue:lowercaseStringDic[@"Etag"] forKey:@"etag"];
+                        [dic setValue:lowercaseStringDic[@"x-cos-hash-crc64ecma"] forKey:@"crc64ecma"];
+                        
+                         NSError *parseError;
+                         NSData *info =[NSJSONSerialization dataWithJSONObject:[dic copy] options:NSJSONWritingPrettyPrinted error:&parseError];
+                         NSError *writeDataError;
+                         [info writeToFile:self.resumableTaskFile options:0 error:&writeDataError];
+                    } else{
+                        NSArray *tasks = dic[@"downloadedBlocks"];
+                        self.localCacheDownloadOffset = [(NSString *)tasks.lastObject[@"to"] integerValue];
+                    }
+                }
+               
             }
-        }
-       
-        [self startGetObject];
-        
-    }];
-    [[QCloudCOSXMLService defaultCOSXML] HeadObject:headReq];
+           
+            [self startGetObject];
+            
+        }];
+        [[QCloudCOSXMLService defaultCOSXML] HeadObject:headReq];
+      
+    }
+
   
     
     
@@ -138,51 +147,60 @@
     }];
     [request setFinishBlock:^(id  _Nullable outputObject, NSError * _Nullable error) {
         __strong typeof(weakSelf) strongSelf = self;
-        if (!strongSelf.resumableDownload) {
+        if(strongSelf.resumableDownload){
+            //如果下载失败了：保存当前的下载长度，便于下次续传
+            NSData *jsonData = [[NSData alloc] initWithContentsOfFile:self.resumableTaskFile];
+            NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+            if(jsonData){
+                dic = [[NSJSONSerialization JSONObjectWithData:jsonData options:kNilOptions error:nil] mutableCopy];
+            }
+          
+            if(error){
+                NSMutableArray *tasks = [dic[@"downloadedBlocks"] mutableCopy];
+                if(!tasks){
+                    tasks = [NSMutableArray array];
+                }
+                NSString *fromStr = [NSString stringWithFormat:@"%lld",strongSelf.localCacheDownloadOffset];
+                NSString *toStr = [NSString stringWithFormat:@"%lld",currentTotalBytesDownload];
+                [tasks addObject:@{@"from":fromStr,@"to":toStr}];
+                [dic setValue: [tasks copy] forKey:@"downloadedBlocks"];
+                NSError *parseError;
+                NSData *info =[NSJSONSerialization dataWithJSONObject:[dic copy] options:NSJSONWritingPrettyPrinted error:&parseError];
+                NSError *writeDataError;
+                if(info && !parseError){
+                    [info writeToFile:strongSelf.resumableTaskFile options:0 error:&writeDataError];
+                }
+                
+                if(writeDataError){
+                    error = writeDataError;
+                }
+                if(self.finishBlock){
+                    strongSelf.finishBlock(outputObject, error);
+                }
+            }else{
+                //下载完成之后如果没有crc64，删除记录文件
+                if(!dic[@"crc64ecma"]){
+                    QCloudRemoveFileByPath(strongSelf.resumableTaskFile);
+                    return;
+                }
+                //计算文件的CRC64
+                uint64_t localCrc64 = [[[NSMutableData alloc] initWithContentsOfFile:strongSelf.downloadingURL.relativePath] qcloud_crc64];
+                NSString *localCrc64Str = [NSString stringWithFormat:@"%llu",localCrc64];
+                QCloudRemoveFileByPath(strongSelf.resumableTaskFile);
+                if(![localCrc64Str isEqualToString:dic[@"crc64ecma"]]){
+                    //下载完成之后如果crc64不一致，删除记录文件和已经下载的文件，重新开始下载
+                    QCloudRemoveFileByPath(strongSelf.downloadingURL.relativePath);
+                    [self fakeStart];
+                    return;
+                }
+                
+            }
+        }else{
             if(self.finishBlock){
                 strongSelf.finishBlock(outputObject, error);
-                return;
             }
-
         }
-        //如果下载失败了：保存当前的下载长度，便于下次续传
-        NSData *data = [[NSData alloc] initWithContentsOfFile:strongSelf.resumableTaskFile];
-        NSMutableDictionary *dic =  [[NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil] mutableCopy];
-   
-        if(error){
-            NSMutableArray *tasks = [dic[@"downloadedBlocks"] mutableCopy];
-            if(!tasks){
-                tasks = [NSMutableArray array];
-            }
-            NSString *fromStr = [NSString stringWithFormat:@"%lld",strongSelf.localCacheDownloadOffset];
-            NSString *toStr = [NSString stringWithFormat:@"%d",currentTotalBytesDownload];
-            [tasks addObject:@{@"from":fromStr,@"to":toStr}];
-            dic[@"downloadedBlocks"] = [tasks copy];
-            NSError *parseError;
-            NSData *info =[NSJSONSerialization dataWithJSONObject:[dic copy] options:NSJSONWritingPrettyPrinted error:&parseError];
-            NSError *writeDataError;
-            [info writeToFile:strongSelf.resumableTaskFile options:0 error:&writeDataError];
-        }else{
-            //下载完成之后如果没有crc64，删除记录文件
-            if(!dic[@"crc64ecma"]){
-                QCloudRemoveFileByPath(strongSelf.resumableTaskFile);
-                return;
-            }
-            //计算文件的CRC64
-            uint64_t localCrc64 = [[[NSMutableData alloc] initWithContentsOfFile:strongSelf.downloadingURL.relativePath] qcloud_crc64];
-            NSString *localCrc64Str = [NSString stringWithFormat:@"%llu",localCrc64];
-            QCloudRemoveFileByPath(strongSelf.resumableTaskFile);
-            if(![localCrc64Str isEqualToString:dic[@"crc64ecma"]]){
-                //下载完成之后如果crc64不一致，删除记录文件和已经下载的文件，重新开始下载
-                QCloudRemoveFileByPath(strongSelf.downloadingURL.relativePath);
-                [self fakeStart];
-                return;
-            }
-            
-        }
-        if(self.finishBlock){
-            strongSelf.finishBlock(outputObject, error);
-        }
+     
     }];
  
     

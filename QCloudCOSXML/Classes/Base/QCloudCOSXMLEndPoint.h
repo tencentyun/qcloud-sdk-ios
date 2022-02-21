@@ -22,7 +22,7 @@
 @property (nonatomic, copy) QCloudRegion regionName;
 @property (nonatomic, assign) BOOL isPrefixURL;
 /**
- 服务的基础名称, 默认值为: myqcloud.com
+ 服务的基础名称, 默认值为:  myqcloud.com
  */
 @property (nonatomic, copy) QCloudServiceName serviceName;
 
@@ -32,6 +32,11 @@
  指定该参数为testsuffix，该存储桶host为 http://bucketname.testsuffix.****
 */
 @property (nonatomic, copy) NSString *suffix;
+///**
+// 是否切换到旧域名
+// */
+//@property (nonatomic, assign) BOOL enableOldDomain;
+
 @end
 
 #pragma clang diagnostic pop

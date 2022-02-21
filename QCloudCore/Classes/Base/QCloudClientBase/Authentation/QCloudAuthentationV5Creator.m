@@ -151,11 +151,12 @@
         return [aim copy];
     };
 
-    // 第一步生成signKey
+    // 11第一步生成signKey
     NSString *signKey = [NSString qcloudHMACHexsha1:signTime secret:self.credential.secretKey];
     // Step2 构成FormatString
     NSString *headerFormat = QCloudURLEncodeParamters(LowcaseDictionary(headers), YES, NSUTF8StringEncoding);
-    NSString *urlFormat = [ QCloudURLEncodeParamters(LowcaseDictionary(urlParamters), YES, NSUTF8StringEncoding) lowercaseString];
+//    NSString *urlFormat = QCloudURLEncodeParamters(LowcaseDictionary(urlParamters), YES, NSUTF8StringEncoding);
+    NSString *urlFormat = QCloudURLEncodeParamters(LowcaseDictionary(urlParamters), YES, NSUTF8StringEncoding);
 
     NSMutableString *formatString = [NSMutableString new];
 

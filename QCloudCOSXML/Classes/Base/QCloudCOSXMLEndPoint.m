@@ -20,6 +20,15 @@
     return self;
 }
 
+//-(void)setEnableOldDomain:(BOOL)enableOldDomain{
+//    _enableOldDomain = enableOldDomain;
+//    if(_enableOldDomain){
+//        _serviceName = @"myqcloud.com";
+//
+//    }else{
+//        _serviceName = @"tencentcos.cn";
+//    }
+//}
 - (NSString *)formattedBucket:(NSString *)bucket withAPPID:(NSString *)APPID {
     NSInteger subfixLength = APPID.length + 1;
     if (bucket.length <= subfixLength) {
@@ -109,6 +118,7 @@
     endpoint.serviceName = self.serviceName;
     endpoint.isPrefixURL = self.isPrefixURL;
     endpoint.suffix = self.suffix;
+//    endpoint.enableOldDomain = self.enableOldDomain;
     return endpoint;
 }
 @end

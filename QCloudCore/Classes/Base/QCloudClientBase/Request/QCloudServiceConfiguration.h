@@ -43,14 +43,6 @@
  */
 @property (nonatomic, strong) QCloudEndPoint *endpoint;
 /**
- 是否开启了后台传输，默认是NO
- */
-@property (nonatomic, assign) BOOL backgroundEnable;
-/**
- 后台传输的标识
- */
-@property (nonatomic, strong) NSString *backgroundIdentifier;
-/**
  是否关闭分享Log日志的功能
  */
 @property (nonatomic, assign) BOOL isCloseShareLog;

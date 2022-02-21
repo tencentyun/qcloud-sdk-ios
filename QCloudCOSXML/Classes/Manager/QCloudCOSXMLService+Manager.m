@@ -48,6 +48,7 @@
 #import "QCloudGetVideoRecognitionRequest.h"
 #import "QCloudPostVideoRecognitionRequest.h"
 #import "QCloudAppendObjectRequest.h"
+#import "QCloudDeleteObjectTaggingRequest.h"
 
 @implementation QCloudCOSXMLService (Manager)
 
@@ -59,6 +60,10 @@
     [super performRequest:request];
 }
 - (void)GetObjectTagging:(QCloudGetObjectTaggingRequest *)request {
+    [super performRequest:request];
+}
+
+- (void)DeleteObjectTagging:(QCloudDeleteObjectTaggingRequest *)request {
     [super performRequest:request];
 }
 
