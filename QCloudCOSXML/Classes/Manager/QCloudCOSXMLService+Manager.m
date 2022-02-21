@@ -276,18 +276,7 @@
                                            request:request
                                         urlRequest:(NSMutableURLRequest *)urlRequest
                                          compelete:^(QCloudSignature *signature, NSError *error) {
-                                             NSString *signatureStr = signature.signature;
-                                             NSMutableArray *paramas = [signatureStr componentsSeparatedByString:@"&"];
-                                            [[paramas copy] enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                                                if([obj hasPrefix:@"q-url-param-list"]){
-                                                    NSArray *temp = [obj  componentsSeparatedByString:@"="];
-                                                    NSString *key = temp.firstObject;
-                                                    NSString *value = [QCloudStrigngURLEncode(QCloudStrigngURLEncode(temp.lastObject , NSUTF8StringEncoding), NSUTF8StringEncoding) lowercaseString];
-                                                    paramas[idx] = [NSString stringWithFormat:@"%@=%@",key,value];
-                                                    *stop = YES;
-                                                }
-                                            }];
-        NSString *authorizatioinString = [paramas componentsJoinedByString:@"&"];
+                                             NSString *authorizatioinString = signature.signature;
                                              if ([requestURLString hasSuffix:@"&"] || [requestURLString hasSuffix:@"?"]) {
                                                  requestURLString = [requestURLString stringByAppendingString:authorizatioinString];
                                              } else if([requestURLString containsString:@"?"] && ![requestURLString hasSuffix:@"&"]){
