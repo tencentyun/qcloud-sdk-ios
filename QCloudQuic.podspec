@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.name             = "QCloudQuic"
 
 
-s.version              = "6.0.4"
+s.version              = "6.0.5"
 
 
   s.summary          = "QCloudQuic 腾讯云iOS-SDK组件"
@@ -38,11 +38,11 @@ s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
   s.default_subspec = 'Default'
   s.subspec 'Default' do |default|
     default.source_files = 'QCloudQuic/Classes/*', 'QCloudQuic/Classes/QCloudBase/**/*','QCloudQuic/Classes/QuicFramework//*.{h}'
-    default.dependency "QCloudCOSXML",'6.0.4'
+  default.dependency "QCloudCOSXML",'6.0.5'
   end
   s.subspec 'Slim' do |slim|
     slim.source_files = 'QCloudQuic/Classes/*', 'QCloudQuic/Classes/QCloudBase/**/*','QCloudQuic/Classes/QuicFramework//*.{h}'
-    slim.dependency "QCloudCOSXML/Slim",'6.0.4'
+  slim.dependency "QCloudCOSXML/Slim",'6.0.5'
   end
 
   
