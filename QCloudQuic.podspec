@@ -33,10 +33,18 @@ TODO: Add long description of the pod here.aaa
 s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
   s.ios.deployment_target = '8.0'
-  s.source_files = 'QCloudQuic/Classes/QCloudBase/**/*','QCloudQuic/Classes/QuicFramework//*.{h}'
   s.vendored_frameworks = 'QCloudQuic/Classes/QuicFramework/Tquic.framework'
   s.static_framework = true
-  s.dependency "QCloudCOSXML",'6.0.4'
+  s.default_subspec = 'Default'
+  s.subspec 'Default' do |default|
+    default.source_files = 'QCloudQuic/Classes/*', 'QCloudQuic/Classes/QCloudBase/**/*','QCloudQuic/Classes/QuicFramework//*.{h}'
+    default.dependency "QCloudCOSXML",'6.0.4'
+  end
+  s.subspec 'Slim' do |slim|
+    slim.source_files = 'QCloudQuic/Classes/*', 'QCloudQuic/Classes/QCloudBase/**/*','QCloudQuic/Classes/QuicFramework//*.{h}'
+    slim.dependency "QCloudCOSXML/Slim",'6.0.4'
+  end
+
   
 
 end
