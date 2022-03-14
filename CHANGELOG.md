@@ -1,10 +1,12 @@
 # 6.0.6    
-
+修复下载request已知问题
     
 # 6.0.5    
+QCloudQuic 增加 Slim subspec
 
     
 # 6.0.4    
+修复签名
 
     
 # 6.0.3    
