@@ -116,7 +116,7 @@
             [self startGetObject];
             
         }];
-        [[QCloudCOSXMLService defaultCOSXML] HeadObject:headReq];
+        [self.transferManager.cosService HeadObject:headReq];
       
     }
 
