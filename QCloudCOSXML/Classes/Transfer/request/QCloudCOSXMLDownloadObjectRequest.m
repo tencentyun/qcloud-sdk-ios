@@ -72,9 +72,9 @@
             if (!exist) {
                [[NSFileManager defaultManager] createFileAtPath:self.resumableTaskFile contents:[NSData data] attributes:nil];
                 NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-                [dic setValue:lowercaseStringDic[@"Last-Modified"] forKey:@"lastModified"];
-                [dic setValue:lowercaseStringDic[@"Content-Length"] forKey:@"contentLength"];
-                [dic setValue:lowercaseStringDic[@"Etag"] forKey:@"etag"];
+                [dic setValue:lowercaseStringDic[@"last-modified"] forKey:@"lastModified"];
+                [dic setValue:lowercaseStringDic[@"content-length"] forKey:@"contentLength"];
+                [dic setValue:lowercaseStringDic[@"etag"] forKey:@"etag"];
                 [dic setValue:lowercaseStringDic[@"x-cos-hash-crc64ecma"] forKey:@"crc64ecma"];
                 NSError *parseError;
                 if(dic){
@@ -89,16 +89,16 @@
                     NSDictionary *dic =  [NSJSONSerialization JSONObjectWithData:jsonData options:kNilOptions error:nil];
                     
                     //如果文件发生改变
-                    if(![dic[@"contentLength"] isEqualToString:lowercaseStringDic[@"Content-Length"]] ||
-                         ![dic[@"lastModified"] isEqualToString:lowercaseStringDic[@"Last-Modified"]] ||
-                           ![dic[@"etag"] isEqualToString:lowercaseStringDic[@"Etag"]] ||
+                    if(![dic[@"contentLength"] isEqualToString:lowercaseStringDic[@"content-length"]] ||
+                         ![dic[@"lastModified"] isEqualToString:lowercaseStringDic[@"last-modified"]] ||
+                           ![dic[@"etag"] isEqualToString:lowercaseStringDic[@"etag"]] ||
                              ![dic[@"crc64ecma"] isEqualToString:lowercaseStringDic[@"x-cos-hash-crc64ecma"]]){
                         QCloudRemoveFileByPath(self.resumableTaskFile);
                         [[NSFileManager defaultManager] createFileAtPath:self.resumableTaskFile contents:[NSData data] attributes:nil];
                         NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-                        [dic setValue:lowercaseStringDic[@"Last-Modified"] forKey:@"lastModified"];
-                        [dic setValue:lowercaseStringDic[@"Content-Length"] forKey:@"contentLength"];
-                        [dic setValue:lowercaseStringDic[@"Etag"] forKey:@"etag"];
+                        [dic setValue:lowercaseStringDic[@"last-modified"] forKey:@"lastModified"];
+                        [dic setValue:lowercaseStringDic[@"content-length"] forKey:@"contentLength"];
+                        [dic setValue:lowercaseStringDic[@"etag"] forKey:@"etag"];
                         [dic setValue:lowercaseStringDic[@"x-cos-hash-crc64ecma"] forKey:@"crc64ecma"];
                         
                          NSError *parseError;
@@ -120,9 +120,6 @@
       
     }
 
-  
-    
-    
 }
 
     
@@ -174,13 +171,16 @@
                 if(writeDataError){
                     error = writeDataError;
                 }
-                if(self.finishBlock){
+                if(self.finishBlock && error.code != QCloudNetworkErrorCodeCanceled){
                     strongSelf.finishBlock(outputObject, error);
                 }
             }else{
                 //下载完成之后如果没有crc64，删除记录文件
                 if(!dic[@"crc64ecma"]){
                     QCloudRemoveFileByPath(strongSelf.resumableTaskFile);
+                    if(self.finishBlock){
+                        strongSelf.finishBlock(outputObject, error);
+                    }
                     return;
                 }
                 //计算文件的CRC64
@@ -193,7 +193,9 @@
                     [self fakeStart];
                     return;
                 }
-                
+                if(self.finishBlock){
+                    strongSelf.finishBlock(outputObject, error);
+                }
             }
         }else{
             if(self.finishBlock){
@@ -236,6 +238,7 @@
     for (QCloudHTTPRequest *request in tmpRequestCacheArray) {
         if (request != nil) {
             [cancelledRequestIDs addObject:[NSNumber numberWithLongLong:request.requestID]];
+            [request cancel];
         }
     }
 
