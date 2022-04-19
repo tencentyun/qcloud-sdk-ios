@@ -12,6 +12,7 @@
 #import <time.h>
 #import <xlocale.h>
 #import "QCloudFileLogger.h"
+#import "NSDate+QCLOUD.h"
 #if TARGET_OS_IOS
 #import <UIKit/UIKit.h>
 #endif
@@ -205,7 +206,7 @@ NSString *const kQCloudLogExtension = @"log";
     QCloudLogModel * (^CreateLog)(void) = ^(void) {
         QCloudLogModel *log = [QCloudLogModel new];
         log.message = message;
-        log.date = [NSDate date];
+        log.date = [NSDate localDate];
         log.level = level;
         log.funciton = [NSString stringWithCString:cmd encoding:NSUTF8StringEncoding];
         log.file = [NSString stringWithCString:file encoding:NSUTF8StringEncoding];
