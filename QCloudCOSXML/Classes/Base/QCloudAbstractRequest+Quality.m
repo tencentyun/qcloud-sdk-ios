@@ -8,7 +8,7 @@
 #import "QCloudAbstractRequest+Quality.h"
 #import <objc/runtime.h>
 #import <QCloudCore/QualityDataUploader.h>
-
+#import "QCloudCOSXMLVersion.h"
 @implementation QCloudAbstractRequest (Quality)
 + (void)load {
     static dispatch_once_t onceToken;
@@ -30,12 +30,21 @@
 
 - (void)__quality__notifyError:(NSError *)error {
     [self __quality__notifyError:error];
-    [QualityDataUploader trackSDKRequestFailWithRequest:self error:error];
+    [QualityDataUploader trackSDKRequestFailWithRequest:self error:error params:[self commonParams]];
 }
 
 - (void)__quality__notifySuccess:(id)object {
     [self __quality__notifySuccess:object];
-    [QualityDataUploader trackSDKRequestSuccessWithRequest:self];
+    [QualityDataUploader trackSDKRequestSuccessWithRequest:self params:[self commonParams]];
+}
+
+-(NSMutableDictionary *)commonParams{
+    NSMutableDictionary * params = [NSMutableDictionary new];
+    params[kQCloudRequestAppkeyKey] = kQCloudUploadAppReleaseKey;
+    params[@"pName"] = @"cos";
+    params[@"sdkVersion"] = QCloudCOSXMLModuleVersion;
+    params[@"sdkVersionName"] = @(QCloudCOSXMLModuleVersionNumber);
+    return params;
 }
 
 @end

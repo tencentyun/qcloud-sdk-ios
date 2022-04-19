@@ -17,22 +17,32 @@
 #import "QCloudService.h"
 #import <CommonCrypto/CommonDigest.h>
 #import <CommonCrypto/CommonCrypto.h>
-
+#import "NSObject+QCloudModelTool.h"
+#import "QCloudLogger.h"
 NS_ASSUME_NONNULL_BEGIN
 
 QCloudResponseSerializerBlock QCloudResponseObjectSerilizerBlock(Class modelClass) {
     return ^(NSHTTPURLResponse *response, id inputData, NSError *__autoreleasing *error) {
-        if (![inputData isKindOfClass:[NSDictionary class]]) {
-            if (error != NULL) {
-                *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeResponseDataTypeInvalid
-                                               message:[NSString stringWithFormat:@"ServerError:希望获得字典类型数据,但是得到%@", [inputData class]]];
-                
-            }
-            return (id)nil;
+        if([inputData isKindOfClass:[NSDictionary class]]){
+            return [modelClass qcloud_modelWithDictionary:inputData];
         }
-        return [modelClass qcloud_modelWithDictionary:inputData];
+        if([inputData isKindOfClass:[NSArray class]]){
+            id array = [modelClass jsonsToModelsWithJsons:inputData];
+            return array;
+            
+        }
+        
+        if (error != NULL) {
+                *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeResponseDataTypeInvalid
+                                                       message:[NSString stringWithFormat:@"ServerError:希望获得字典类型数据,但是得到%@", [inputData class]]];
+        
+        }
+        return (id)nil;
+        
+        
     };
 }
+
 
 QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilizerBlock
     = ^(NSHTTPURLResponse *response, id inputData, NSError *__autoreleasing *error) {

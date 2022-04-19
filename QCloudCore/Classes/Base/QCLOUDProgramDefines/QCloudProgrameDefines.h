@@ -95,24 +95,4 @@ FOUNDATION_EXTERN void DZEnsureMainThread(void (^mainSafeBlock)());
     ([UIDevice currentDevice].systemVersion.doubleValue >= min) && ([UIDevice currentDevice].systemVersion.doubleValue <= max)
 #define bQCloudSystemVersion8 bQCloudSystemVersion(8.0, 8.999)
 
-#ifndef weakify
-#define weakify(...) qcloud_keywordify metamacro_foreach_cxt(qcloud_weakify_, , __weak, __VA_ARGS__)
-#endif
-#ifndef strongify
-#define strongify(...)                                                                                  \
-    qcloud_keywordify _Pragma("clang diagnostic push") _Pragma("clang diagnostic ignored \"-Wshadow\"") \
-        metamacro_foreach(qcloud_strongify_, , __VA_ARGS__) _Pragma("clang diagnostic pop")
-#endif
-
-#if DEBUG
-#define qcloud_keywordify \
-    autoreleasepool {     \
-    }
-#else
-#define qcloud_keywordify \
-    try {                 \
-    } @catch (...) {      \
-    }
-#endif
-
 #pragma clang diagnostic pop

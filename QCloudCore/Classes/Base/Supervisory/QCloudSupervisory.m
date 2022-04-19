@@ -212,10 +212,10 @@
     if (result == TRUE) {
         addresses = (__bridge NSArray *)CFHostGetAddressing(hostRef, &result);
         NSMutableArray *ips = [NSMutableArray new];
-        [addresses enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        for (NSString *obj in addresses) {
             NSString *strDNS = [NSString stringWithUTF8String:inet_ntoa(*((__bridge struct in_addr *)obj))];
             [ips addObject:strDNS];
-        }];
+        }
         NSArray *dnsips = [[NSSet setWithArray:ips] allObjects];
         _hostIps[host] = dnsips;
         _activeSession.ips = [_hostIps copy];

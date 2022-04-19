@@ -7,7 +7,7 @@
 //
 
 #import "QCloudServiceConfiguration.h"
-#import "QCloudServiceConfiguration_Private.h"
+#import "QCloudConfiguration_Private.h"
 #import "QCloudServiceConfiguration+Quality.h"
 #if TARGET_OS_IOS
 #import <UIKit/UIKit.h>
@@ -16,24 +16,7 @@
 static NSString *const QCloudServiceConfigurationUnknown = @"Unknown";
 
 @implementation QCloudServiceConfiguration
-- (instancetype)init
-{
-    self = [super init];
-    if (!self) {
-        return self;
-    }
-    return self;
-}
-- (NSString *)userAgent {
-    NSString * (^UserAgent)(NSString *productKey) = ^(NSString *productKey) {
-        return [NSString stringWithFormat:@"%@-%@", productKey, self.productVersion];
-    };
-    if (self.userAgentProductKey.length && self.productVersion.length) {
-        return UserAgent(self.userAgentProductKey);
-    } else {
-        return nil;
-    }
-}
+
 
 - (instancetype)copyWithZone:(NSZone *)zone {
     QCloudServiceConfiguration *config = [[QCloudServiceConfiguration allocWithZone:zone] init];

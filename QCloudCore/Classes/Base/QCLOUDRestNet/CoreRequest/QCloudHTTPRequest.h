@@ -28,6 +28,7 @@ typedef void (^QCloudHTTPRequestConfigure)(QCloudRequestSerializer *_Nonnull req
     QCloudRequestSerializer *_requestSerializer;
     QCloudResponseSerializer *_responseSerializer;
     QCloudHTTPRetryHanlder *_retryHandler;
+    NSString *_serverDomain;
 }
 @property (nonatomic, strong, readonly) QCloudRequestSerializer *_Nonnull requestSerializer;
 @property (nonatomic, strong, readonly) QCloudRequestData *_Nonnull requestData;
@@ -38,6 +39,7 @@ typedef void (^QCloudHTTPRequestConfigure)(QCloudRequestSerializer *_Nonnull req
  该任务所处的服务
  */
 @property (nonatomic, weak) QCloudService *_Nullable runOnService;
+
 /**
  如果存在改参数，则数据会下载到改路径指名的地址下面，而不会写入内存中。
  */

@@ -25,6 +25,10 @@
     return _target;
 }
 
+/**
+ 防止crash：因为target是weak，随时会被释放如果target被释放了，又去调用了其他的方法快消息转发就会返回nil，这个时候就会进入慢消息转发，如果慢消息转发没实现，就会crash
+ 
+ */
 - (void)forwardInvocation:(NSInvocation *)invocation {
     void *null = NULL;
     [invocation setReturnValue:&null];

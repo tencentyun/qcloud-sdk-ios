@@ -8,7 +8,7 @@
 
 #import "QCloudService.h"
 #import "QCloudHTTPSessionManager.h"
-#import "QCloudServiceConfiguration_Private.h"
+#import "QCloudConfiguration_Private.h"
 #import "NSError+QCloudNetworking.h"
 #import "QCloudLogger.h"
 #import <QCloudCore/QCloudError.h>
@@ -21,6 +21,17 @@
 @end
 
 @implementation QCloudService
+
+- (instancetype)initWithCommenConfiguration:(QCloudConfiguration *)configuration {
+    self = [super init];
+    if (!self) {
+        return self;
+    }
+    
+    _configuration = configuration;
+    return self;
+}
+
 
 - (instancetype)initWithConfiguration:(QCloudServiceConfiguration *)configuration {
     self = [super init];
@@ -47,6 +58,8 @@
     _writeReadQueue = dispatch_queue_create("com.tencent.qcloud.service.lock", DISPATCH_QUEUE_CONCURRENT);
     return self;
 }
+
+
 
 - (QCloudSignatureFields *)signatureFiledsForRequest:(QCloudBizHTTPRequest *)request {
     QCloudSignatureFields *fileds = [request signatureFields];

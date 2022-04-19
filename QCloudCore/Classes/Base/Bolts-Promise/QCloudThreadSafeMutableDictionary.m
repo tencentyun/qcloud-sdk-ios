@@ -56,6 +56,14 @@
     return allKeys;
 }
 
+- (NSArray *)allValues {
+    __block NSArray *allValues = nil;
+    dispatch_sync(self.dispatchQueue, ^{
+        allValues = [self.dictionary allValues];
+    });
+    return allValues;
+}
+
 - (void)removeObject:(id)object {
     dispatch_sync(self.dispatchQueue, ^{
         for (NSString *key in self.dictionary) {

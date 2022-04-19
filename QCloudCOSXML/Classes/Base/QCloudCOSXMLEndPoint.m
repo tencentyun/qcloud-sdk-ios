@@ -42,9 +42,11 @@
         }
     } else {
         if (!APPID) {
-            @throw [NSException exceptionWithName:kQCloudNetworkDomain
-                                           reason:[NSString stringWithFormat:@"您没有配置AppID就使用了服务%@", self.class]
-                                         userInfo:nil];
+            if (DEBUG) {
+                @throw [NSException exceptionWithName:kQCloudNetworkDomain
+                                               reason:[NSString stringWithFormat:@"您没有配置AppID就使用了服务%@", self.class]
+                                             userInfo:nil];
+            }
         }
     }
 

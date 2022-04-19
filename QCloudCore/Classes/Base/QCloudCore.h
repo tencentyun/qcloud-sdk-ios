@@ -41,6 +41,7 @@
 #import "QCloudThreadSafeMutableDictionary.h"
 #import "QCloudError.h"
 #import "UIDevice+QCloudFCUUID.h"
-
+#import "QCloudGCDTimer.h"
 #import "NSObject+HTTPHeadersContainer.h"
+#import "NSObject+QCloudModelTool.h"
 #endif /* QCloudCore_h */

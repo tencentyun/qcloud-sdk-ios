@@ -32,7 +32,7 @@
 #import "QCloudUploadPartRequest.h"
 #import <QCloudCore/QCloudSignatureFields.h>
 #import <QCloudCore/QCloudCore.h>
-#import <QCloudCore/QCloudServiceConfiguration_Private.h>
+#import <QCloudCore/QCloudConfiguration_Private.h>
 #import "QCloudUploadPartRequest+Custom.h"
 #import "QCloudUploadPartResult.h"
 

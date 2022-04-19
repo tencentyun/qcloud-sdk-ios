@@ -32,7 +32,7 @@
 #import "QCloudGetRecognitionObjectRequest.h"
 #import <QCloudCore/QCloudSignatureFields.h>
 #import <QCloudCore/QCloudCore.h>
-#import <QCloudCore/QCloudServiceConfiguration_Private.h>
+#import <QCloudCore/QCloudConfiguration_Private.h>
 #import "QCloudGetObjectRequest+Custom.h"
 #import "QCloudGetRecognitionObjectResult.h"
 

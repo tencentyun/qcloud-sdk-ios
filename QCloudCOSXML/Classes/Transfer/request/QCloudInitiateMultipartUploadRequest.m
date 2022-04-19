@@ -32,7 +32,7 @@
 #import "QCloudInitiateMultipartUploadRequest.h"
 #import <QCloudCore/QCloudSignatureFields.h>
 #import <QCloudCore/QCloudCore.h>
-#import <QCloudCore/QCloudServiceConfiguration_Private.h>
+#import <QCloudCore/QCloudConfiguration_Private.h>
 #import "QCloudInitiateMultipartUploadResult.h"
 NS_ASSUME_NONNULL_BEGIN
 @implementation QCloudInitiateMultipartUploadRequest

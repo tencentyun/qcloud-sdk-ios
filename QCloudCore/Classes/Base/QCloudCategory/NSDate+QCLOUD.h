@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)qcloud_setTimeDeviation:(NSTimeInterval)timeDeviation;
 + (NSTimeInterval)qcloud_getTimeDeviation;
 + (NSString *)qcloud_stringFromDate:(NSDate *)date;
++ (NSString *)qcloud_stringFromDate_24:(NSDate *)date;
 + (NSDate *)localDate;
 @end
 

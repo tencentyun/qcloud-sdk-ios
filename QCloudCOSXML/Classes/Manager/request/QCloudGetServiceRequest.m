@@ -33,7 +33,7 @@
 #import <QCloudCore/QCloudObjectModel.h>
 #import <QCloudCore/QCloudSignatureFields.h>
 #import <QCloudCore/QCloudCore.h>
-#import <QCloudCore/QCloudServiceConfiguration_Private.h>
+#import <QCloudCore/QCloudConfiguration_Private.h>
 #import "QCloudGetServiceRequest+Custom.h"
 #import "QCloudListAllMyBucketsResult.h"
 

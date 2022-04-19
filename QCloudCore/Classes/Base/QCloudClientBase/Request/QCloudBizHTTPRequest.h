@@ -7,6 +7,7 @@
 //
 
 #import "QCloudHTTPRequest.h"
+#import "QCloudSignatureProvider.h"
 @class QCloudTask;
 @class QCloudSignatureFields;
 @class QCloudSignature;
@@ -26,6 +27,9 @@ extern _Nonnull QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilize
 
 @class QCloudServiceConfiguration;
 @interface QCloudBizHTTPRequest : QCloudHTTPRequest
+
+@property (nonatomic, strong) id<QCloudSignatureProvider> signatureProvider;
+
 
 /*
  在进行HTTP请求的时候，可以通过设置该参数来设置自定义的一些头部信息。

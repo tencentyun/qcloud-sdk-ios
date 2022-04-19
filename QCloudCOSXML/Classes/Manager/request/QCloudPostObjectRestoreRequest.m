@@ -32,7 +32,7 @@
 #import "QCloudPostObjectRestoreRequest.h"
 #import <QCloudCore/QCloudSignatureFields.h>
 #import <QCloudCore/QCloudCore.h>
-#import <QCloudCore/QCloudServiceConfiguration_Private.h>
+#import <QCloudCore/QCloudConfiguration_Private.h>
 #import "QCloudRestoreRequest.h"
 
 NS_ASSUME_NONNULL_BEGIN

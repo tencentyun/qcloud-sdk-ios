@@ -50,7 +50,9 @@ static QCloudCOSXMLService *COSXMLService = nil;
 + (QCloudCOSXMLService *)defaultCOSXML {
     @synchronized(self) {
         if (!COSXMLService) {
-            @throw [NSException exceptionWithName:QCloudErrorDomain reason:@"您没有配置默认的OCR服务配置，请配置之后再调用该方法" userInfo:nil];
+            if (DEBUG) {
+                @throw [NSException exceptionWithName:QCloudErrorDomain reason:@"您没有配置默认的OCR服务配置，请配置之后再调用该方法" userInfo:nil];
+            }
         }
         return COSXMLService;
     }
@@ -59,11 +61,13 @@ static QCloudCOSXMLService *COSXMLService = nil;
 + (QCloudCOSXMLService *)registerDefaultCOSXMLWithConfiguration:(QCloudServiceConfiguration *)configuration {
     @synchronized(self) {
         if (COSXMLService) {
-            @throw [NSException
-                exceptionWithName:QCloudErrorDomain
-                           reason:[NSString stringWithFormat:
-                                                @"默认的COSXMLService已存在，如有新的配置，请通过 registerCOSXMLWithConfiguration:withKey:重新注册"]
-                         userInfo:nil];
+            if (DEBUG) {
+                @throw [NSException
+                        exceptionWithName:QCloudErrorDomain
+                        reason:[NSString stringWithFormat:
+                                @"默认的COSXMLService已存在，如有新的配置，请通过 registerCOSXMLWithConfiguration:withKey:重新注册"]
+                        userInfo:nil];
+            }
         }
         COSXMLService = [[QCloudCOSXMLService alloc] initWithConfiguration:configuration];
         if (!configuration.isCloseShareLog) {
@@ -78,9 +82,11 @@ static QCloudCOSXMLService *COSXMLService = nil;
 + (QCloudCOSXMLService *)cosxmlServiceForKey:(NSString *)key {
     QCloudCOSXMLService *cosxmlService = [QCloudCOSXMLServiceCache() objectForKey:key];
     if (!cosxmlService) {
-        @throw [NSException exceptionWithName:QCloudErrorDomain
-                                       reason:[NSString stringWithFormat:@"您没有配置Key为%@的OCR服务配置，请配置之后再调用该方法", key]
-                                     userInfo:nil];
+        if (DEBUG) {
+            @throw [NSException exceptionWithName:QCloudErrorDomain
+                                           reason:[NSString stringWithFormat:@"您没有配置Key为%@的OCR服务配置，请配置之后再调用该方法", key]
+                                         userInfo:nil];
+        }
     }
     return cosxmlService;
 }
@@ -92,12 +98,14 @@ static QCloudCOSXMLService *COSXMLService = nil;
 + (QCloudCOSXMLService *)registerCOSXMLWithConfiguration:(QCloudServiceConfiguration *)configuration withKey:(NSString *)key;
 {
     if ([self hasServiceForKey:key]) {
-        @throw [NSException
-            exceptionWithName:QCloudErrorDomain
-                       reason:[NSString
-                                  stringWithFormat:
-                                      @"key: %@ COSXMLService已存在，如有新的配置，请通过 registerCOSXMLWithConfiguration:withKey:重新注册", key]
-                     userInfo:nil];
+        if (DEBUG) {        
+            @throw [NSException
+                    exceptionWithName:QCloudErrorDomain
+                    reason:[NSString
+                            stringWithFormat:
+                                @"key: %@ COSXMLService已存在，如有新的配置，请通过 registerCOSXMLWithConfiguration:withKey:重新注册", key]
+                    userInfo:nil];
+        }
     }
     QCloudCOSXMLService *cosxmlService = [[QCloudCOSXMLService alloc] initWithConfiguration:configuration];
     [QCloudCOSXMLServiceCache() setObject:cosxmlService forKey:key];

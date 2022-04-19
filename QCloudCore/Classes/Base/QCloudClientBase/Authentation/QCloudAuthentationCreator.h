@@ -39,7 +39,7 @@
  @param credential 密钥
  @return 签名创建器
  */
-- (instancetype)initWithCredential:(QCloudCredential *_Nullable)credential;
+- (instancetype _Nullable )initWithCredential:(QCloudCredential *_Nullable)credential;
 
 /**
  创建一个网络请求的签名。
@@ -47,5 +47,5 @@
  @param signData 将要签名的网络请求（类型不固定）
  @return 一个合法的签名
  */
-- (QCloudSignature *)signatureForData:(id _Nullable)signData;
+- (QCloudSignature *_Nullable)signatureForData:(id _Nullable)signData;
 @end
