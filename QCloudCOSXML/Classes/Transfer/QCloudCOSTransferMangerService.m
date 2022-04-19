@@ -62,9 +62,7 @@ static QCloudCOSTransferMangerService *COSTransferMangerService = nil;
 + (QCloudCOSTransferMangerService *)defaultCOSTransferManager {
     @synchronized(self) {
         if (!COSTransferMangerService) {
-            if (DEBUG) {
-                @throw [NSException exceptionWithName:QCloudErrorDomain reason:@"您没有配置默认的OCR服务配置，请配置之后再调用该方法" userInfo:nil];
-            }
+            @throw [NSException exceptionWithName:QCloudErrorDomain reason:@"您没有配置默认的OCR服务配置，请配置之后再调用该方法" userInfo:nil];
         }
         return COSTransferMangerService;
     }
@@ -80,11 +78,9 @@ static QCloudCOSTransferMangerService *COSTransferMangerService = nil;
 + (QCloudCOSTransferMangerService *)costransfermangerServiceForKey:(NSString *)key {
     QCloudCOSTransferMangerService *costransfermangerService = [QCloudCOSTransferMangerServiceCache() objectForKey:key];
     if (!costransfermangerService) {
-        if (DEBUG) {        
-            @throw [NSException exceptionWithName:QCloudErrorDomain
-                                           reason:[NSString stringWithFormat:@"您没有配置Key为%@的OCR服务配置，请配置之后再调用该方法", key]
-                                         userInfo:nil];
-        }
+        @throw [NSException exceptionWithName:QCloudErrorDomain
+                                       reason:[NSString stringWithFormat:@"您没有配置Key为%@的OCR服务配置，请配置之后再调用该方法", key]
+                                     userInfo:nil];
     }
     return costransfermangerService;
 }

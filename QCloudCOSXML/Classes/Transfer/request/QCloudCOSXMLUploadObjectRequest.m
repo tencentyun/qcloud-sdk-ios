@@ -251,14 +251,12 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
         }
         self.dataContentLength = QCloudFileSize(url.path);
         if(_mutilThreshold<kQCloudCOSXMLUploadLengthLimit){
-            if (DEBUG) {
-                @throw [NSException
-                        exceptionWithName:QCloudErrorDomain
-                        reason:[NSString
-                                stringWithFormat:
-                                    @"分块接口的阈值不能小于 1MB ，当前阈值为 %ld", (long)_mutilThreshold]
-                        userInfo:nil];
-            }
+            @throw [NSException
+                    exceptionWithName:QCloudErrorDomain
+                    reason:[NSString
+                            stringWithFormat:
+                                @"分块接口的阈值不能小于 1MB ，当前阈值为 %ld", (long)_mutilThreshold]
+                    userInfo:nil];
         }
         if (self.dataContentLength > _mutilThreshold) {
             //开始分片上传的时候，上传的起始位置是0
@@ -269,11 +267,9 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
             [self startSimpleUpload];
         }
     } else {
-        if (DEBUG) {        
-            @throw [NSException exceptionWithName:QCloudErrorDomain
-                                           reason:@"不支持设置该类型的body，支持的类型为NSData、QCloudFileOffsetBody"
-                                         userInfo:@{}];
-        }
+        @throw [NSException exceptionWithName:QCloudErrorDomain
+                                       reason:@"不支持设置该类型的body，支持的类型为NSData、QCloudFileOffsetBody"
+                                     userInfo:@{}];
     }
 }
 - (void)startSimpleUpload {
