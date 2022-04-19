@@ -1,13 +1,15 @@
 # 6.0.7    
-
+优化CORE sdk
     
 # 6.0.6    
 
     
 # 6.0.5    
+QCloudQuic 增加 Slim subspec
 
     
 # 6.0.4    
+修复签名
 
     
 # 6.0.3    
