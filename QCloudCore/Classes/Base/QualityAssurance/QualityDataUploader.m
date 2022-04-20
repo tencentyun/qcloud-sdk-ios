@@ -19,7 +19,7 @@
     } while (0)
 
 #define kUploadEvents \
-    @[ @"QCloudPutObjectRequest", @"QCloudInitiateMultipartUploadRequest", @"QCloudUploadPartRequest", @"QCloudCompleteMultipartUploadRequest" ]
+    @[ @"QCloudPutObjectRequest", @"QCloudInitiateMultipartUploadRequest", @"QCloudUploadPartRequest", @"QCloudCompleteMultipartUploadRequest" ,@"QCloudSMHUploadPartRequest" ,@"QCloudSMHPutObjectRequest",@"QCloudSMHCompleteUploadRequest"]
 #define kDownloadEvents @[ @"QCloudGetObjectRequest" , @"QCloudSMHDownloadFileRequest" ]
 #define kCopyEvents                                                                                             \
     @[                                                                                                          \
@@ -27,7 +27,6 @@
         @"QCloudCompleteMultipartUploadRequest"                                                                 \
     ]
 
-#define kAdvancedEvents @[ @"QCloudCOSSMHUploadObjectRequest",@"QCloudCOSXMLUploadObjectRequest", @"QCloudCOSXMLCopyObjectRequest" ]
 
 NSString *const kQCloudUploadAppDebugKey = @"LOGDEBUGKEY00247";
 
