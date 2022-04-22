@@ -1,50 +1,47 @@
 # 6.0.7    
-优化CORE sdk
+- 优化CORE sdk
     
 # 6.0.6    
-
+- 修改sdkdonwlaodbug
     
 # 6.0.5    
-QCloudQuic 增加 Slim subspec
-
+- QCloudQuic 增加 Slim subspec
     
 # 6.0.4    
-修复签名
+- 修复签名
 
-    
 # 6.0.3    
-
-1.quic修复&&修复beacon被初始化多次导致的crash。2.修改信号量crash。
+- 1.quic修复&&修复beacon被初始化多次导致的crash。2.修改信号量crash。
     
 # 6.0.2    
-
+- 修复下载高级的crash
     
 # 6.0.1    
-
+- quic支持自定义header
     
 # 6.0.0    
-
+- quic开放port配置端口
     
 # 5.9.9    
-
+- 1：新增删除对象标签接口 2：- (NSString*)MD5String方法添加qcloud前缀
     
 # 5.9.8    
-
+- quic支持设置port
     
 # 5.9.7    
-1.修复ios15灯塔socket crash
+- 1.修复ios15灯塔socket crash
     
 # 5.9.6    
-1.签名修复
+- 1.签名修复
     
 # 5.9.4    
-1.修复已知bug
+- 1.修复已知bug
     
 # 5.9.3    
 - XCode10编译修复
     
 # 5.9.2    
--精简版包体积优化
+- 精简版包体积优化
     
 # 5.9.1    
 - 支持获取对象链接\- crash修复
