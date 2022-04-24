@@ -69,6 +69,12 @@ SDK 包含的 COS 接口说明请查看官网的 [iOS 接口文档](https://clou
 默认情况下，SDK内部的日志并不会直接输出到控制台中。在Debug等情况下需要查看日志的话，可以设置对应的环境变量开启。开启的具体方式为：在Xcode左上角选择点击当前的target-Edit Scheme-在Enviriments Variables中填入QCloudLogLevel这个环境变量，如果需要输出所有debug信息，那么将值设置为6。
 ![](http://picturebad-1253653367.coscd.myqcloud.com/134C210F-6682-4BDF-A801-E146263150D0.png)
 
+为了方便排查问题以及查看SDK日志，在app启动时会检测剪贴板字符串是否为“##qcloud-cos-log-ispct##”，如果是（不会对字符串本身进行任何操作），则会弹出日志alert，进行日志查看以及上传；
+也可以手动关闭此功能
+
+```
+[QCloudLogManager sharedInstance].shouldShowLog = NO;
+```
 
 
 ## 代码块 Code Snippet
