@@ -174,14 +174,15 @@ QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilizerBlock
         }
         return NO;
     } else if (!isSigned) {
-        *error = [NSError
-                  qcloud_errorWithCode:QCloudNetworkErrorCodeCredentialNotReady
-                  message:nil
-                  infos:@{
-                       @"Description" :
-                           @"InvalidCredentials：获取签名超时，请检查是否实现签名回调，签名回调是否有调用,并且在最后是否有调用 ContinueBlock 传入签名"
-                   }];
-
+        if (NULL != error) {
+            *error = [NSError
+                      qcloud_errorWithCode:QCloudNetworkErrorCodeCredentialNotReady
+                      message:nil
+                      infos:@{
+                           @"Description" :
+                               @"InvalidCredentials：获取签名超时，请检查是否实现签名回调，签名回调是否有调用,并且在最后是否有调用 ContinueBlock 传入签名"
+                       }];
+        }
         return NO;
     } else {
         return YES;

@@ -25,7 +25,7 @@ dispatch_semaphore_t semaphore_;
     });
 }
 
-+ (NSString*)timerTask:(void(^)(void))task
++ (NSString* _Nullable)timerTask:(void(^)(void))task
                  start:(NSTimeInterval) start
               interval:(NSTimeInterval) interval
                repeats:(BOOL) repeats
@@ -79,7 +79,7 @@ dispatch_semaphore_t semaphore_;
     return timerName;
 }
 
-+ (NSString*)timerTask:(id)target
++ (NSString* _Nullable)timerTask:(id)target
               selector:(SEL)selector
                  start:(NSTimeInterval)start
               interval:(NSTimeInterval)interval

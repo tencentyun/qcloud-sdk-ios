@@ -32,8 +32,6 @@ NSString *const kQCloudErrorDetailCode = @"kQCloudErrorDetailCode";
 }
 
 + (BOOL)isNetworkErrorAndRecoverable:(NSError *)error {
-    static NSSet *kQCloudNetworkNotRecoverableCode;
-    static dispatch_once_t onceToken;
     if ([error.domain isEqualToString:NSURLErrorDomain]) {
         switch (error.code) {
             case NSURLErrorCancelled:
@@ -120,7 +118,7 @@ NSString *const kQCloudErrorDetailCode = @"kQCloudErrorDetailCode";
 
 + (NSError *)toError:(NSDictionary *)userInfo {
     NSNumber *code = [userInfo objectForKey:@"code"];
-    if (!code) {
+    if (code == nil) {
         return [NSError qcloud_errorWithCode:QCloudNetworkErrorUnsupportOperationError message:@"内容错误，无法从返回的错误信息中解析内容"];
     }
     int errorCode = (int)[code intValue];

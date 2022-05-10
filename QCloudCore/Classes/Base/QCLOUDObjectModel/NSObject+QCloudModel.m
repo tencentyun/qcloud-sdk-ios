@@ -134,7 +134,7 @@ static force_inline NSNumber *QCloudNSNumberCreateFromID(__unsafe_unretained id 
         return value;
     if ([value isKindOfClass:[NSString class]]) {
         NSNumber *num = dic[value];
-        if (num) {
+        if (num != nil) {
             if (num == (id)kCFNull)
                 return nil;
             return num;
@@ -715,7 +715,7 @@ static force_inline id QCloudValueForMultiKeys(__unsafe_unretained NSDictionary 
  @param meta  Should not be nil, meta.isCNumber should be YES, meta.getter should not be nil.
  @return A number object, or nil if failed.
  */
-static force_inline NSNumber *ModelCreateNumberFromProperty(__unsafe_unretained id model, __unsafe_unretained _QCloudModelPropertyMeta *meta) {
+static force_inline NSNumber *qcloudModelCreateNumberFromProperty(__unsafe_unretained id model, __unsafe_unretained _QCloudModelPropertyMeta *meta) {
     switch (meta->_type & QCloudEncodingTypeMask) {
         case QCloudEncodingTypeBool: {
             return @(((bool (*)(id, SEL))(void *)objc_msgSend)((id)model, meta->_getter));
@@ -774,7 +774,7 @@ static force_inline NSNumber *ModelCreateNumberFromProperty(__unsafe_unretained 
  @param num   Can be nil.
  @param meta  Should not be nil, meta.isCNumber should be YES, meta.setter should not be nil.
  */
-static force_inline void ModelSetNumberToProperty(__unsafe_unretained id model, __unsafe_unretained NSNumber *num,
+static force_inline void qcloudModelSetNumberToProperty(__unsafe_unretained id model, __unsafe_unretained NSNumber *num,
                                                   __unsafe_unretained _QCloudModelPropertyMeta *meta) {
     switch (meta->_type & QCloudEncodingTypeMask) {
         case QCloudEncodingTypeBool: {
@@ -844,11 +844,11 @@ static force_inline void ModelSetNumberToProperty(__unsafe_unretained id model, 
  @param value Should not be nil, but can be NSNull.
  @param meta  Should not be nil, and meta->_setter should not be nil.
  */
-static void ModelSetValueForProperty(__unsafe_unretained id model, __unsafe_unretained id value, __unsafe_unretained _QCloudModelPropertyMeta *meta) {
+static void qcloudModelSetValueForProperty(__unsafe_unretained id model, __unsafe_unretained id value, __unsafe_unretained _QCloudModelPropertyMeta *meta) {
     if (meta->_isCNumber) {
         NSNumber *num = QCloudNSNumberCreateFromID(value);
-        ModelSetNumberToProperty(model, num, meta);
-        if (num)
+        qcloudModelSetNumberToProperty(model, num, meta);
+        if (num != nil)
             [num class]; // hold the number
     } else if (meta->_nsType) {
         if (value == (id)kCFNull) {
@@ -1176,14 +1176,14 @@ typedef struct {
  @param _value   should not be nil.
  @param _context _context.modelMeta and _context.model should not be nil.
  */
-static void ModelSetWithDictionaryFunction(const void *_key, const void *_value, void *_context) {
+static void qcloudModelSetWithDictionaryFunction(const void *_key, const void *_value, void *_context) {
     ModelSetContext *context = _context;
     __unsafe_unretained _QCloudModelMeta *meta = (__bridge _QCloudModelMeta *)(context->modelMeta);
     __unsafe_unretained _QCloudModelPropertyMeta *propertyMeta = [meta->_mapper objectForKey:(__bridge id)(_key)];
     __unsafe_unretained id model = (__bridge id)(context->model);
     while (propertyMeta) {
         if (propertyMeta->_setter) {
-            ModelSetValueForProperty(model, (__bridge __unsafe_unretained id)_value, propertyMeta);
+            qcloudModelSetValueForProperty(model, (__bridge __unsafe_unretained id)_value, propertyMeta);
         }
         propertyMeta = propertyMeta->_next;
     };
@@ -1195,7 +1195,7 @@ static void ModelSetWithDictionaryFunction(const void *_key, const void *_value,
  @param _propertyMeta should not be nil, _QCloudModelPropertyMeta.
  @param _context      _context.model and _context.dictionary should not be nil.
  */
-static void ModelSetWithPropertyMetaArrayFunction(const void *_propertyMeta, void *_context) {
+static void qcloudModelSetWithPropertyMetaArrayFunction(const void *_propertyMeta, void *_context) {
     ModelSetContext *context = _context;
     __unsafe_unretained NSDictionary *dictionary = (__bridge NSDictionary *)(context->dictionary);
     __unsafe_unretained _QCloudModelPropertyMeta *propertyMeta = (__bridge _QCloudModelPropertyMeta *)(_propertyMeta);
@@ -1213,7 +1213,7 @@ static void ModelSetWithPropertyMetaArrayFunction(const void *_propertyMeta, voi
 
     if (value) {
         __unsafe_unretained id model = (__bridge id)(context->model);
-        ModelSetValueForProperty(model, value, propertyMeta);
+        qcloudModelSetValueForProperty(model, value, propertyMeta);
     }
 }
 
@@ -1224,7 +1224,7 @@ static void ModelSetWithPropertyMetaArrayFunction(const void *_propertyMeta, voi
  @param model Model, can be nil.
  @return JSON object, nil if an error occurs.
  */
-static id ModelToJSONObjectRecursive(NSObject *model) {
+static id qcloud_ModelToJSONObjectRecursive(NSObject *model) {
     if (!model || model == (id)kCFNull)
         return model;
     if ([model isKindOfClass:[NSString class]])
@@ -1239,7 +1239,7 @@ static id ModelToJSONObjectRecursive(NSObject *model) {
             NSString *stringKey = [key isKindOfClass:[NSString class]] ? key : key.description;
             if (!stringKey)
                 return;
-            id jsonObj = ModelToJSONObjectRecursive(obj);
+            id jsonObj = qcloud_ModelToJSONObjectRecursive(obj);
             if (!jsonObj)
                 jsonObj = (id)kCFNull;
             newDic[stringKey] = jsonObj;
@@ -1255,7 +1255,7 @@ static id ModelToJSONObjectRecursive(NSObject *model) {
             if ([obj isKindOfClass:[NSString class]] || [obj isKindOfClass:[NSNumber class]]) {
                 [newArray addObject:obj];
             } else {
-                id jsonObj = ModelToJSONObjectRecursive(obj);
+                id jsonObj = qcloud_ModelToJSONObjectRecursive(obj);
                 if (jsonObj && jsonObj != (id)kCFNull)
                     [newArray addObject:jsonObj];
             }
@@ -1270,7 +1270,7 @@ static id ModelToJSONObjectRecursive(NSObject *model) {
 //            if ([obj isKindOfClass:[NSString class]] || [obj isKindOfClass:[NSNumber class]]) {
 //                [newArray addObject:obj];
 //            } else {
-//                id jsonObj = ModelToJSONObjectRecursive(obj);
+//                id jsonObj = qcloud_ModelToJSONObjectRecursive(obj);
 //                if (jsonObj && jsonObj != (id)kCFNull)
 //                    [newArray addObject:jsonObj];
 //            }
@@ -1281,7 +1281,7 @@ static id ModelToJSONObjectRecursive(NSObject *model) {
             if ([obj isKindOfClass:[NSString class]] || [obj isKindOfClass:[NSNumber class]]) {
                 [newArray addObject:obj];
             } else {
-                id jsonObj = ModelToJSONObjectRecursive(obj);
+                id jsonObj = qcloud_ModelToJSONObjectRecursive(obj);
                 if (jsonObj && jsonObj != (id)kCFNull)
                     [newArray addObject:jsonObj];
             }
@@ -1311,15 +1311,15 @@ static id ModelToJSONObjectRecursive(NSObject *model) {
 
         id value = nil;
         if (propertyMeta->_isCNumber) {
-            value = ModelCreateNumberFromProperty(model, propertyMeta);
+            value = qcloudModelCreateNumberFromProperty(model, propertyMeta);
         } else if (propertyMeta->_nsType) {
             id v = ((id(*)(id, SEL))(void *)objc_msgSend)((id)model, propertyMeta->_getter);
-            value = ModelToJSONObjectRecursive(v);
+            value = qcloud_ModelToJSONObjectRecursive(v);
         } else {
             switch (propertyMeta->_type & QCloudEncodingTypeMask) {
                 case QCloudEncodingTypeObject: {
                     id v = ((id(*)(id, SEL))(void *)objc_msgSend)((id)model, propertyMeta->_getter);
-                    value = ModelToJSONObjectRecursive(v);
+                    value = qcloud_ModelToJSONObjectRecursive(v);
                     if (value == (id)kCFNull)
                         value = nil;
                 } break;
@@ -1380,7 +1380,7 @@ static id ModelToJSONObjectRecursive(NSObject *model) {
 }
 
 /// Add indent to string (exclude first line)
-static NSMutableString *ModelDescriptionAddIndent(NSMutableString *desc, NSUInteger indent) {
+static NSMutableString *qcloudModelDescriptionAddIndent(NSMutableString *desc, NSUInteger indent) {
     for (NSUInteger i = 0, max = desc.length; i < max; i++) {
         unichar c = [desc characterAtIndex:i];
         if (c == '\n') {
@@ -1395,7 +1395,7 @@ static NSMutableString *ModelDescriptionAddIndent(NSMutableString *desc, NSUInte
 }
 
 /// Generaate a description string
-static NSString *ModelDescription(NSObject *model) {
+static NSString *qcloudModelDescription(NSObject *model) {
     static const int kDescMaxLength = 100;
     if (!model)
         return @"<nil>";
@@ -1445,7 +1445,7 @@ static NSString *ModelDescription(NSObject *model) {
                 for (NSUInteger i = 0, max = array.count; i < max; i++) {
                     NSObject *obj = array[i];
                     [desc appendString:@"    "];
-                    [desc appendString:ModelDescriptionAddIndent(ModelDescription(obj).mutableCopy, 1)];
+                    [desc appendString:qcloudModelDescriptionAddIndent(qcloudModelDescription(obj).mutableCopy, 1)];
                     [desc appendString:(i + 1 == max) ? @"\n" : @";\n"];
                 }
                 [desc appendString:@"]"];
@@ -1466,7 +1466,7 @@ static NSString *ModelDescription(NSObject *model) {
                     NSString *key = keys[i];
                     NSObject *value = dic[key];
                     [desc appendString:@"    "];
-                    [desc appendFormat:@"%@ = %@", key, ModelDescriptionAddIndent(ModelDescription(value).mutableCopy, 1)];
+                    [desc appendFormat:@"%@ = %@", key, qcloudModelDescriptionAddIndent(qcloudModelDescription(value).mutableCopy, 1)];
                     [desc appendString:(i + 1 == max) ? @"\n" : @";\n"];
                 }
                 [desc appendString:@"}"];
@@ -1491,13 +1491,13 @@ static NSString *ModelDescription(NSObject *model) {
                 _QCloudModelPropertyMeta *property = properties[i];
                 NSString *propertyDesc;
                 if (property->_isCNumber) {
-                    NSNumber *num = ModelCreateNumberFromProperty(model, property);
+                    NSNumber *num = qcloudModelCreateNumberFromProperty(model, property);
                     propertyDesc = num.stringValue;
                 } else {
                     switch (property->_type & QCloudEncodingTypeMask) {
                         case QCloudEncodingTypeObject: {
                             id v = ((id(*)(id, SEL))(void *)objc_msgSend)((id)model, property->_getter);
-                            propertyDesc = ModelDescription(v);
+                            propertyDesc = qcloudModelDescription(v);
                             if (!propertyDesc)
                                 propertyDesc = @"<nil>";
                         } break;
@@ -1534,7 +1534,7 @@ static NSString *ModelDescription(NSObject *model) {
                     }
                 }
 
-                propertyDesc = ModelDescriptionAddIndent(propertyDesc.mutableCopy, 1);
+                propertyDesc = qcloudModelDescriptionAddIndent(propertyDesc.mutableCopy, 1);
                 [desc appendFormat:@"    %@ = %@", property->_name, propertyDesc];
                 [desc appendString:(i + 1 == max) ? @"\n" : @";\n"];
             }
@@ -1616,20 +1616,20 @@ static NSString *ModelDescription(NSObject *model) {
     context.dictionary = (__bridge void *)(dic);
 
     if (modelMeta->_keyMappedCount >= CFDictionaryGetCount((CFDictionaryRef)dic)) {
-        CFDictionaryApplyFunction((CFDictionaryRef)dic, ModelSetWithDictionaryFunction, &context);
+        CFDictionaryApplyFunction((CFDictionaryRef)dic, qcloudModelSetWithDictionaryFunction, &context);
         if (modelMeta->_keyPathPropertyMetas) {
             CFArrayApplyFunction((CFArrayRef)modelMeta->_keyPathPropertyMetas,
-                                 CFRangeMake(0, CFArrayGetCount((CFArrayRef)modelMeta->_keyPathPropertyMetas)), ModelSetWithPropertyMetaArrayFunction,
+                                 CFRangeMake(0, CFArrayGetCount((CFArrayRef)modelMeta->_keyPathPropertyMetas)), qcloudModelSetWithPropertyMetaArrayFunction,
                                  &context);
         }
         if (modelMeta->_multiKeysPropertyMetas) {
             CFArrayApplyFunction((CFArrayRef)modelMeta->_multiKeysPropertyMetas,
                                  CFRangeMake(0, CFArrayGetCount((CFArrayRef)modelMeta->_multiKeysPropertyMetas)),
-                                 ModelSetWithPropertyMetaArrayFunction, &context);
+                                 qcloudModelSetWithPropertyMetaArrayFunction, &context);
         }
     } else {
         CFArrayApplyFunction((CFArrayRef)modelMeta->_allPropertyMetas, CFRangeMake(0, modelMeta->_keyMappedCount),
-                             ModelSetWithPropertyMetaArrayFunction, &context);
+                             qcloudModelSetWithPropertyMetaArrayFunction, &context);
     }
 
     if (modelMeta->_hasCustomTransformFromDictionary) {
@@ -1646,7 +1646,7 @@ static NSString *ModelDescription(NSObject *model) {
      All dictionary keys are instances of NSString.
      Numbers are not NaN or infinity.
      */
-    id jsonObject = ModelToJSONObjectRecursive(self);
+    id jsonObject = qcloud_ModelToJSONObjectRecursive(self);
     if ([jsonObject isKindOfClass:[NSArray class]])
         return jsonObject;
     if ([jsonObject isKindOfClass:[NSDictionary class]])
@@ -1772,8 +1772,8 @@ static NSString *ModelDescription(NSObject *model) {
             return;
 
         if (propertyMeta->_isCNumber) {
-            NSNumber *value = ModelCreateNumberFromProperty(self, propertyMeta);
-            if (value)
+            NSNumber *value = qcloudModelCreateNumberFromProperty(self, propertyMeta);
+            if (value != nil)
                 [aCoder encodeObject:value forKey:propertyMeta->_name];
         } else {
             switch (propertyMeta->_type & QCloudEncodingTypeMask) {
@@ -1830,7 +1830,7 @@ static NSString *ModelDescription(NSObject *model) {
         if (propertyMeta->_isCNumber) {
             NSNumber *value = [aDecoder decodeObjectForKey:propertyMeta->_name];
             if ([value isKindOfClass:[NSNumber class]]) {
-                ModelSetNumberToProperty(self, value, propertyMeta);
+                qcloudModelSetNumberToProperty(self, value, propertyMeta);
                 [value class];
             }
         } else {
@@ -1914,7 +1914,7 @@ static NSString *ModelDescription(NSObject *model) {
 }
 
 - (NSString *)qcloud_modelDescription {
-    return ModelDescription(self);
+    return qcloudModelDescription(self);
 }
 
 @end

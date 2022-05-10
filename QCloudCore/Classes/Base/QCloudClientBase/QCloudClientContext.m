@@ -106,6 +106,7 @@ static NSString *const QCloudClientContextKeychainInstallationIdKey = @"com.qclo
     NSData *JSONData = [NSJSONSerialization dataWithJSONObject:JSONObject options:kNilOptions error:&error];
     if (!JSONData) {
         QCloudLogError(@"Failed to serialize JSON Data. [%@]", error);
+        return @"";
     }
 
     return [[NSString alloc] initWithData:JSONData encoding:NSUTF8StringEncoding];

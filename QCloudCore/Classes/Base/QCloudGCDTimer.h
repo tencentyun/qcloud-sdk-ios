@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param async 是否子线程
  @return 定时器标识（最终取消定时器是需要根据此标识取消的）
  */
-+ (NSString*)timerTask:(void(^)(void))task
++ (NSString* _Nullable)timerTask:(void(^)(void))task
                  start:(NSTimeInterval) start
               interval:(NSTimeInterval) interval
                repeats:(BOOL) repeats
@@ -38,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param async 是否子线程
  @return 定时其标识（最终取消定时器是需要根据此标识取消的）
  */
-+ (NSString*)timerTask:(id)target
++ (NSString* _Nullable)timerTask:(id)target
               selector:(SEL)selector
                  start:(NSTimeInterval)start
               interval:(NSTimeInterval)interval

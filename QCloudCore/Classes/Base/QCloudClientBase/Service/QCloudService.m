@@ -22,7 +22,7 @@
 
 @implementation QCloudService
 
-- (instancetype)initWithCommenConfiguration:(QCloudConfiguration *)configuration {
+- (instancetype)initWithCommenConfiguration:(QCloudServiceConfiguration *)configuration {
     self = [super init];
     if (!self) {
         return self;

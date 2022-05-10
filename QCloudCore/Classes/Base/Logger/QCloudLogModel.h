@@ -39,6 +39,7 @@ typedef NS_ENUM(uint8_t, QCloudLogLevel) {
      - Informational messages
      - Debug messages
      */
+
     QCloudLogLevelDebug = 5,
     /**
      Log level that if set is going to output the following messages to log:
@@ -49,7 +50,6 @@ typedef NS_ENUM(uint8_t, QCloudLogLevel) {
      - Verbose
      */
     QCloudLogLevelVerbose = 6,
-   
 
 };
 

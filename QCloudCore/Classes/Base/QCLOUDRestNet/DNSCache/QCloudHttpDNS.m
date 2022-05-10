@@ -65,8 +65,10 @@ BOOL QCloudCheckIPVaild(NSString *ip) {
     }
     if (!ip) {
         QCloudLogDebug(@"Cannot resolve domain %@", domain);
-        *error = [NSError qcloud_errorWithCode:kCFURLErrorDNSLookupFailed
-                                       message:[NSString stringWithFormat:@"NetworkException:无法解析域名 %@", domain]];
+        if (NULL != error) {
+            *error = [NSError qcloud_errorWithCode:kCFURLErrorDNSLookupFailed
+                                           message:[NSString stringWithFormat:@"NetworkException:无法解析域名 %@", domain]];
+        }
         return NO;
     }
 
@@ -202,7 +204,7 @@ NSArray *getIPListFromToHost(const char *mHost, const char *mPort) {
     struct addrinfo hints;
     // 返回的地址信息
     struct addrinfo *res;
-    int n, s;
+    int n;
 
     // 置空结构体
     memset(&hints, 0, sizeof(hints));
@@ -220,7 +222,6 @@ NSArray *getIPListFromToHost(const char *mHost, const char *mPort) {
     struct sockaddr_in *addr;
     NSString *NewStr = NULL;
     char ipbuf[32];
-    s = -1;
     for (res = res0; res; res = res->ai_next) {
         if (res->ai_family == AF_INET6) {
             addr6 = (struct sockaddr_in6 *)res->ai_addr;

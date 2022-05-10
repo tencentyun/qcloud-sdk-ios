@@ -19,7 +19,7 @@
     } while (0)
 
 #define kUploadEvents \
-    @[ @"QCloudPutObjectRequest", @"QCloudInitiateMultipartUploadRequest", @"QCloudUploadPartRequest", @"QCloudCompleteMultipartUploadRequest" ,@"QCloudSMHUploadPartRequest" ,@"QCloudSMHPutObjectRequest",@"QCloudSMHCompleteUploadRequest"]
+@[ @"QCloudPutObjectRequest", @"QCloudInitiateMultipartUploadRequest", @"QCloudUploadPartRequest", @"QCloudCompleteMultipartUploadRequest" ,@"QCloudSMHUploadPartRequest" ,@"QCloudSMHPutObjectRequest",@"QCloudSMHCompleteUploadRequest"]
 #define kDownloadEvents @[ @"QCloudGetObjectRequest" , @"QCloudSMHDownloadFileRequest" ]
 #define kCopyEvents                                                                                             \
     @[                                                                                                          \
@@ -27,6 +27,7 @@
         @"QCloudCompleteMultipartUploadRequest"                                                                 \
     ]
 
+#define kAdvancedEvents @[ @"QCloudCOSSMHUploadObjectRequest",@"QCloudCOSXMLUploadObjectRequest", @"QCloudCOSXMLCopyObjectRequest" ]
 
 NSString *const kQCloudUploadAppDebugKey = @"LOGDEBUGKEY00247";
 
@@ -89,7 +90,7 @@ static NSString * appKey = @"";
 
 - (NSDictionary *)toUploadEventParamters {
     NSDictionary *userinfoDic = self.userInfo;
-    NSString *errorCode = [NSError qcloud_networkErrorCodeTransferToString:self.code];
+    NSString *errorCode = [NSError qcloud_networkErrorCodeTransferToString:(QCloudNetworkErrorCode)self.code];
     NSString *requestID = @"";
     NSString *error_name = kQCloudQualityErrorCodeClientName;
     NSString *errorMsg = userinfoDic[NSLocalizedDescriptionKey];
@@ -112,7 +113,11 @@ static NSString * appKey = @"";
     }
     
     return
-    @{ kQCloudQualityErrorStatusCodeKey : [NSString stringWithFormat:@"%ld", (long)self.code], kQCloudQualityErrorCodeKey :errorCode?errorCode:@"" ,kQCloudQualityErrorTypeKey:error_name?error_name:@"",kQCloudQualityErrorIDKey:requestID?requestID:@"",kQCloudQualityErrorMessageKey:errorMsg?errorMsg:@""};
+    @{ kQCloudQualityErrorStatusCodeKey : [NSString stringWithFormat:@"%ld", (long)self.code],
+       kQCloudQualityErrorCodeKey       : errorCode ? errorCode : @"" ,
+       kQCloudQualityErrorTypeKey       : error_name?error_name : @"",
+       kQCloudQualityErrorIDKey         : requestID?requestID : @"",
+       kQCloudQualityErrorMessageKey    : errorMsg?errorMsg:@""};
 }
 
 @end
@@ -197,7 +202,7 @@ static NSString * appKey = @"";
         [commonParams removeObjectForKey:@"sdkVersion"];
     }
     sdkVersionName = commonParams[@"sdkVersionName"];
-    if (sdkVersionName) {
+    if (sdkVersionName != nil) {
         [commonParams removeObjectForKey:@"sdkVersionName"];
     }
     appKey = commonParams[kQCloudRequestAppkeyKey];
@@ -288,16 +293,21 @@ static NSString * appKey = @"";
   Class cls = NSClassFromString(@"BeaconReport");
     if (cls) {
       Class eventCls = NSClassFromString(@"BeaconEvent" );
-       id eventObj = [eventCls performSelector:NSSelectorFromString(@"new")];
-                                           if(appkey){
-                                                [eventObj performSelector:NSSelectorFromString(@"setAppKey:") withObject:appkey];
-            
-                                            }
-                                           [eventObj performSelector:NSSelectorFromString(@"setCode:") withObject:eventKey];
-                                           [eventObj performSelector:NSSelectorFromString(@"setParams:") withObject:paramter ? paramter : @{}];
-                                           id beaconInstance = [cls performSelector:NSSelectorFromString(@"sharedInstance")];
-        
-                                           [beaconInstance performSelector:NSSelectorFromString(@"reportEvent:") withObject:eventObj];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        id eventObj = [eventCls performSelector:NSSelectorFromString(@"new")];
+        if(appkey){
+             [eventObj performSelector:NSSelectorFromString(@"setAppKey:") withObject:appkey];
+
+         }
+        [eventObj performSelector:NSSelectorFromString(@"setCode:") withObject:eventKey];
+        [eventObj performSelector:NSSelectorFromString(@"setParams:") withObject:paramter ? paramter : @{}];
+        id beaconInstance = [cls performSelector:NSSelectorFromString(@"sharedInstance")];
+
+        [beaconInstance performSelector:NSSelectorFromString(@"reportEvent:") withObject:eventObj];
+#pragma clang diagnostic pop
+       
+                                           
     }
 }
 

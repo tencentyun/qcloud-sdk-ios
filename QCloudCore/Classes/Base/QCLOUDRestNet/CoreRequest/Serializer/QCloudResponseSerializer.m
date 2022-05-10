@@ -29,8 +29,6 @@ QCloudResponseSerializerBlock QCloudResponseXMLSerializerBlock = ^(NSHTTPURLResp
     }
 
 #ifdef DEBUG
-    NSString *xmlString = [[NSString alloc] initWithData:inputData encoding:NSUTF8StringEncoding];
-//    QCloudLogDebug(@"XML RESPONSE:%@", xmlString);
 #endif
     QCloudXMLDictionaryParser *parser = [QCloudXMLDictionaryParser new];
 

@@ -45,6 +45,11 @@
             index = i;
         }
     }
+    if (index != NSNotFound) {
+        [_delegates removePointerAtIndex:index];
+    }
+    [_delegates compact];
+
     [_lock unlock];
 }
 

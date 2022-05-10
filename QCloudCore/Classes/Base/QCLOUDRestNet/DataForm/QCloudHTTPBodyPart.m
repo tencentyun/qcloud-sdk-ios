@@ -249,7 +249,7 @@ typedef OBJC_ENUM(NSInteger, QCloudHTTPPartReadStatus) { QCloudHTTPPartReadEncap
         case QCloudHTTPPartReadHeader: {
             [_inputStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
             [_inputStream open];
-            if (_fileOffset) {
+            if (_fileOffset != nil) {
                 [_inputStream setProperty:_fileOffset forKey:NSStreamFileCurrentOffsetKey];
             }
             _readBodyLength = 0;

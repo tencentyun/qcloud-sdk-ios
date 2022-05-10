@@ -43,7 +43,7 @@ NSString *TaskMapKey(NSURLSessionTask *task) {
 NSString *const kQCloudRestNetURLUsageNotification = @"kQCloudRestNetURLUsageNotification";
 
 QCloudThreadSafeMutableDictionary *cloudBackGroundSessionManagersCache;
-QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache() {
+QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         cloudBackGroundSessionManagersCache = [QCloudThreadSafeMutableDictionary new];
@@ -213,7 +213,7 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache() {
                        forKey:kDnsLookupTookTime];
         }
        #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_13_0
-        if ([UIDevice currentDevice].systemVersion.floatValue >= 13.0) {
+        if (@available(iOS 13.0, *)) {
             [taskData.httpRequest.benchMarkMan directSetValue:networkMetrics.localPort forKey:kLocalPort];
             [taskData.httpRequest.benchMarkMan directSetValue:networkMetrics.remoteAddress forKey:kRemoteAddress];
             [taskData.httpRequest.benchMarkMan directSetValue:networkMetrics.remotePort forKey:kRemotePort];

@@ -10,7 +10,7 @@
 #import "QCloudLogger.h"
 #import "QCloudNetEnv.h"
 #import "NSError+QCloudNetworking.h"
-__attribute__((noinline)) void cosWarnBlockingOperationOnMainThread() {
+__attribute__((noinline)) void cosWarnBlockingOperationOnMainThread(void) {
     NSLog(@"Warning: A long-running operation is being executed on the main thread. \n"
            " Break on warnBlockingOperationOnMainThread() to debug.");
 }

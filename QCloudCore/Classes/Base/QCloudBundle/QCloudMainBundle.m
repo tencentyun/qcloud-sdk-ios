@@ -8,7 +8,7 @@
 
 #import "QCloudMainBundle.h"
 
-NSBundle *QCloudMainBundle() {
+NSBundle *QCloudMainBundle(void) {
     static NSBundle *bundle = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{

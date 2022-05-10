@@ -24,7 +24,7 @@ BOOL QCloudFileExist(NSString *path) {
     return [NSShareFileManager fileExistsAtPath:path];
 }
 
-NSString *QCloudApplicationDocumentsPath() {
+NSString *QCloudApplicationDocumentsPath(void) {
     static NSString *documentsPath = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -35,7 +35,7 @@ NSString *QCloudApplicationDocumentsPath() {
     return documentsPath;
 }
 
-NSString *QCloudApplicationLibaryPath() {
+NSString *QCloudApplicationLibaryPath(void) {
     static NSString *documentsPath = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -46,7 +46,7 @@ NSString *QCloudApplicationLibaryPath() {
     return documentsPath;
 }
 
-NSString *QCloudApplicationDirectory() {
+NSString *QCloudApplicationDirectory(void) {
     static NSString *documentsPath = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -57,16 +57,16 @@ NSString *QCloudApplicationDirectory() {
     });
     return documentsPath;
 }
-NSString *QCloudApplicationTempPath() {
+NSString *QCloudApplicationTempPath(void) {
     return NSTemporaryDirectory();
 }
-NSString *QCloudCacheDir() {
+NSString *QCloudCacheDir(void) {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
     NSString *cachePath = [paths objectAtIndex:0];
     return cachePath;
 }
 
-NSString *QCloudDocumentsPath() {
+NSString *QCloudDocumentsPath(void) {
     static NSString *documentsPath = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -79,7 +79,7 @@ NSString *QCloudDocumentsPath() {
     return documentsPath;
 }
 
-NSString *QCloudSettingsFilePath() {
+NSString *QCloudSettingsFilePath(void) {
     return [QCloudDocumentsPath() stringByAppendingPathComponent:@"settings.plist"];
 }
 
@@ -89,11 +89,11 @@ NSString *QCloudAppendPath(NSString *parentPath, NSString *sub) {
     return str;
 }
 
-NSString *QCloudTempDir() {
+NSString *QCloudTempDir(void) {
     return NSTemporaryDirectory();
 }
 
-NSString *QCloudMKTempDirectory() {
+NSString *QCloudMKTempDirectory(void) {
     NSString *path = [[NSUUID UUID] UUIDString];
     return QCloudAppendPath(QCloudTempDir(), path);
 }
@@ -131,7 +131,7 @@ NSString *QCloudTempFilePathWithExtension(NSString *extension) {
     return path;
 }
 
-NSString *QCloudDocumentsTempPath() {
+NSString *QCloudDocumentsTempPath(void) {
     NSString *path = QCloudPathJoin(QCloudDocumentsPath(), @"temp");
     QCloudEnsurePathExist(path);
     return path;
@@ -360,7 +360,6 @@ NSString *detemineFileMemeType(NSURL *filePathURL, NSString *fileName) {
         @"mets" : @"application/mets+xml",
         @"mods" : @"application/mods+xml",
         @"m21" : @"application/mp21",
-        @"mp4" : @"video/mp4",
         @"doc" : @"application/msword",
         @"mxf" : @"application/mxf",
         @"bin" : @"application/octet-stream",

@@ -28,17 +28,17 @@ extern NSString *const HTTPHeaderUserAgent;
 /**
    服务器地址
  */
-@property (strong, nonatomic) NSString *serverURL;
+@property (strong, nonatomic ,nullable) NSString *serverURL;
 
 /**
  * 统一资源标识符，用来标识调用的具体的资源地址
  */
-@property (nonatomic, strong) NSString *URIMethod;
+@property (nonatomic, strong,nullable) NSString *URIMethod;
 
 /**
  如果URIMethod不足以表示所有的命令字的时候，可以在改字段中按照顺序添加URI分片，将会按照顺序组装起来。
  */
-@property (nonatomic, strong) NSArray *URIComponents;
+@property (nonatomic, strong,nullable) NSArray *URIComponents;
 /**
    HTTP headers参数，用来配置Request
  */
@@ -54,13 +54,13 @@ extern NSString *const HTTPHeaderUserAgent;
  */
 @property (nonatomic, strong, readonly, nullable) QCloudHTTPMultiDataStream *multiDataStream;
 
-@property (nonnull, strong) NSString *boundary;
+@property (nullable, strong) NSString *boundary;
 /**
    请求中要使用到的Cookies
  */
-@property (nonatomic, strong, nonnull, readonly) NSArray *cookies;
+@property (nonatomic, strong, nullable, readonly) NSArray *cookies;
 
-@property (nonnull, strong) BodyType directBody;
+@property (nullable, strong) BodyType directBody;
 
 /**
  清除所有参数

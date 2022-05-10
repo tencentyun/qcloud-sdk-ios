@@ -152,20 +152,20 @@
 - (void)onReciveRespone:(NSHTTPURLResponse *)response data:(NSData *)data {
     _responseData = data;
     _httpURLResponse = response;
-    //
-    {
-        NSUInteger headerLength = 0;
-        NSDictionary *allHeaders = nil;
-        if ([response respondsToSelector:@selector(allHeaderFields)]) {
-            allHeaders = [response allHeaderFields];
-        }
-        if (allHeaders) {
-            if (response.allHeaderFields) {
-                NSData *headerData = [NSJSONSerialization dataWithJSONObject:allHeaders options:0 error:0];
-                headerLength = headerData.length;
-            }
-        }
-    }
+//    //
+//    {
+//        NSUInteger headerLength = 0;
+//        NSDictionary *allHeaders = nil;
+//        if ([response respondsToSelector:@selector(allHeaderFields)]) {
+//            allHeaders = [response allHeaderFields];
+//        }
+//        if (allHeaders) {
+//            if (response.allHeaderFields) {
+//                NSData *headerData = [NSJSONSerialization dataWithJSONObject:allHeaders options:0 error:0];
+//                headerLength = headerData.length;
+//            }
+//        }
+//    }
     NSString *dateStr = [[response allHeaderFields] objectForKey:@"Date"];
     NSDate *serverTime = nil;
     NSDate *deviceTime = [NSDate date];
@@ -176,8 +176,11 @@
         // This should not happen.
         QCloudLogError(@"Date header does not exist. Not able to fix the time");
     }
-
-    NSTimeInterval skewTime = [deviceTime timeIntervalSinceDate:serverTime];
+    
+    NSTimeInterval skewTime = 0;
+    if (serverTime) {
+        skewTime = [deviceTime timeIntervalSinceDate:serverTime];
+    }
     // If the time difference between the device and the server is large, fix device time
     QCloudLogDebug(@"skewTime: %f", skewTime);
     if (skewTime >= 1 * 60) {

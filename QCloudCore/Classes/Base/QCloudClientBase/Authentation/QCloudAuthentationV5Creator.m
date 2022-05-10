@@ -24,7 +24,7 @@
 - (NSDictionary *)filteHeaders;
 {
     NSMutableDictionary *signedHeaders = [[NSMutableDictionary alloc] init];
-    __block const NSMutableArray *shouldSignedHeaderList =
+    __block const NSArray *shouldSignedHeaderList =
         @[@"Cache-Control", @"Content-Disposition", @"Content-Encoding", @"Content-Length", @"Content-MD5", @"Content-Type", @"Expect", @"Expires", @"If-Match" , @"If-Modified-Since" , @"If-None-Match" , @"If-Unmodified-Since" , @"Origin" , @"Range" , @"response-cache-control" , @"response-content-disposition" , @"response-content-encoding" , @"response-content-language" , @"response-content-type" , @"response-expires" , @"transfer-encoding" , @"versionId",@"Host"];
     [self enumerateKeysAndObjectsUsingBlock:^(id _Nonnull key, id _Nonnull obj, BOOL *_Nonnull stop) {
         //签名的Headers列表：x开头的(x-cos-之类的),content-length,content-MD5
