@@ -46,15 +46,15 @@ COS 支持查询当前 Bucket 跨域访问配置信息，以确定是否配置�
 
   @code
 
-    QCloudGetBucketCORSRequest* corsReqeust = [QCloudGetBucketCORSRequest new];
-    corsReqeust.bucket = @"testBucket-123456789";
+    QCloudGetBucketCORSRequest* corsrequest = [QCloudGetBucketCORSRequest new];
+    corsrequest.bucket = @"testBucket-123456789";
 
-    [corsReqeust setFinishBlock:^(QCloudCORSConfiguration * _Nonnull result,
+    [corsrequest setFinishBlock:^(QCloudCORSConfiguration * _Nonnull result,
                                             NSError * _Nonnull error) {
     //CORS设置封装在result中。
     }];
 
-    [[QCloudCOSXMLService defaultCOSXML] GetBucketCORS:corsReqeust];
+    [[QCloudCOSXMLService defaultCOSXML] GetBucketCORS:corsrequest];
 
 */
 @interface QCloudGetBucketCORSRequest : QCloudBizHTTPRequest

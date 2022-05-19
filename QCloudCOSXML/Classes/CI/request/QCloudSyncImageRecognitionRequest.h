@@ -1,6 +1,6 @@
 //
-//  QCloudGetRecognitionObjectRequest.h
-//  QCloudGetRecognitionObjectRequest
+//  QCloudSyncImageRecognitionRequest.h
+//  QCloudSyncImageRecognitionRequest
 //
 //  Created by tencent
 //  Copyright (c) 2020年 tencent. All rights reserved.
@@ -31,117 +31,83 @@
 
 #import <Foundation/Foundation.h>
 #import <QCloudCore/QCloudCore.h>
-@class QCloudGetRecognitionObjectResult;
+#import "QCloudRecognitionEnum.h"
+@class QCloudImageRecognitionResult;
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSUInteger, QCloudRecognitionEnum) {
-    QCloudRecognitionPorn = 1 << 0,
-    QCloudRecognitionTerrorist = 1 << 1,
-    QCloudRecognitionPolitics = 1 << 2,
-    QCloudRecognitionAds = 1 << 3,
-};
-
 /**
-COS 对象内容审核的方法.
+ 功能描述：
 
-内容审核的存量扫描功能通过借助数据万象的持久化处理接口，实现对 COS 存量数据的涉黄、涉政、涉暴恐以及广告引导类图片、’
- 视频的扫描。
+ 图片审核功能通过深度学习技术，识别可能令人反感、不安全或不适宜的违规图片内容。该功能为同步请求方式，您可以通过本接口对图片进行内容审核。该接口属于 GET 请求。
+ 该接口支持情况如下：
 
-cos iOS SDK 中获取 COS 对象请求的方法具体步骤如下：
-
-1. 实例化 QCloudGetRecognitionObjectRequest，填入需要的参数。
-
-2. 设置审核的类型 detectType
-
-3. 调用 QCloudCOSXMLService 对象中的 GetRecognitionObject 方法发出请求。
-
-4. 从回调的 finishBlock 中的 outputObject 获取具体内容。
-
-### 示例
+ 支持审核的图片方式：
+ 审核 COS 上的图片文件
+ 审核可访问的图片链接（支持传输协议：HTTP、HTTPS）
+ 支持对 GIF 图进行截帧审核。
+ 支持识别多种违规场景，包括：低俗、违法违规、色情、广告等场景。
+ 支持多种物体检测（实体、广告台标、二维码等）及图片中的文字（即 OCR 文本审核）。
+ 支持根据不同的业务场景 配置自定义审核策略。
+ 支持用户自定义选择图片风险库，打击自定义识别类型的违规图片（目前仅支持黑名单配置）。
+ 具体请查看：https://cloud.tencent.com/document/product/460/37318
 
   @code
-
-   QCloudGetRecognitionObjectRequest* request = [QCloudGetRecognitionObjectRequest new];
-   request.bucket = @"bucketName"; //存储桶名称(cos v5 的 bucket格式为：xxx-appid, 如 test-1253960454)
-   request.object = @"objectName";;
-   request.detectType = QCloudRecognitionPorn|QCloudRecognitionAds; // 支持多种类型同时审核
-   [request setFinishBlock:^(QCloudGetRecognitionObjectResult * _Nullable outputObject,
-                                                        NSError * _Nullable error) {
-   NSLog(@"%@",outputObject);
-   }];
-
-   [[QCloudCOSXMLService defaultCOSXML] GetRecognitionObject:request];
+ 
+     QCloudSyncImageRecognitionRequest * request = [[QCloudSyncImageRecognitionRequest alloc]init];
+ 
+     // 存储桶名称，格式为 BucketName-APPID
+     request.bucket = @"examplebucket-1250000000";
+ 
+     request.regionName = @"regionName";
+     request.object = @"***.jpg";
+     request.detectType = QCloudRecognitionPorn | QCloudRecognitionTerrorist | QCloudRecognitionPolitics | QCloudRecognitionAds;
+     [request setFinishBlock:^(QCloudImageRecognitionResult * _Nullable result, NSError * _Nullable error) {
+     }];
+     [[QCloudCOSXMLService defaultCOSXML] SyncImageRecognition:request];
+        
 
 */
-@interface QCloudGetRecognitionObjectRequest : QCloudBizHTTPRequest
-/**
- 设置响应头部中的 Content-Type参数
- */
-@property (strong, nonatomic) NSString *responseContentType;
-/**
- 设置响应头部中的Content-Language参数
- */
-@property (strong, nonatomic) NSString *responseContentLanguage;
-/**
- 设置响应头部中的Content-Expires参数
- */
-@property (strong, nonatomic) NSString *responseContentExpires;
-/**
- 设置响应头部中的Cache-Control参数
- */
-@property (strong, nonatomic) NSString *responseCacheControl;
-/**
- 设置响应头部中的 Content-Disposition 参数。
- */
-@property (strong, nonatomic) NSString *responseContentDisposition;
-/**
- 设置响应头部中的 Content-Encoding 参数。
- */
-@property (strong, nonatomic) NSString *responseContentEncoding;
-/**
- RFC 2616 中定义的指定文件下载范围，以字节（bytes）为单位
- */
-@property (strong, nonatomic) NSString *range;
-/**
- 如果文件修改时间晚于指定时间，才返回文件内容。否则返回 412 (not modified)
- */
-@property (strong, nonatomic) NSString *ifModifiedSince;
-/**
- 如果文件修改时间早于或等于指定时间，才返回文件内容。否则返回 412 (precondition failed)
- */
-@property (strong, nonatomic) NSString *ifUnmodifiedModifiedSince;
-/**
- 当 ETag 与指定的内容一致，才返回文件。否则返回 412 (precondition failed)
- */
-@property (strong, nonatomic) NSString *ifMatch;
-/**
- 当 ETag 与指定的内容不一致，才返回文件。否则返回 304 (not modified)
- */
-@property (strong, nonatomic) NSString *ifNoneMatch;
-/**
- 指定 Object 的 VersionID (在开启多版本的情况下)
- */
-@property (strong, nonatomic) NSString *versionID;
-/**
- 对象名
- */
+@interface QCloudSyncImageRecognitionRequest : QCloudBizHTTPRequest
+
+
+///  COS 存储桶中的图片文件名称，COS 存储桶由Host指定，
+///  例如在北京的 examplebucket-1250000000存储桶中的目录 test 下的文件 img.jpg，
+///  object填写 test/img.jpg
 @property (strong, nonatomic) NSString *object;
-/**
- 存储桶名
- */
+
+/// 存储桶名
 @property (strong, nonatomic) NSString *bucket;
 
-/// 审核类型，拥有 porn（涉黄识别）、terrorist（涉暴恐识别）、politics（涉政识别）、ads（广告识别）四种，
-/// 用户可选择多种识别类型，例如 detect-type=porn,ads 表示对图片进行涉黄及广告审核
-/// 可以使用或进行组合赋值 如： QCloudRecognitionPorn | QCloudRecognitionTerrorist
+/// 您可以通过填写detectUrl审核任意公网可访问的图片链接
+/// 不填写detectUrl时，后台会默认审核ObjectKey
+/// 填写了detectUrl时，后台会审核detect-url链接，无需再填写ObjectKey
+/// detectUrl示例：http://www.example.com/abc.jpg
+@property (strong, nonatomic) NSString *detectUrl;
+
+/// 审核 GIF 动图时，可使用该参数进行截帧配置，代表截帧的间隔。例如值设为5，则表示从第1帧开始截取，每隔5帧截取一帧，默认值5
+@property (assign, nonatomic) NSInteger interval;
+
+
+/// 针对 GIF 动图审核的最大截帧数量，需大于0。例如值设为5，则表示最大截取5帧，默认值为5
+@property (assign, nonatomic) NSInteger maxFrames;
+
+
+/// 对于超过大小限制的图片，可通过该参数选择是否需要压缩图片后再审核，压缩为后台默认操作，会产生额外的 基础图片处理用量
+/// 取值为：0（不压缩），1（压缩）。默认为0。 注意：最大支持压缩32MB的图片。
+@property (strong, nonatomic) NSString *largeImageDetect;
+
+
+/// 审核类型，拥有 porn（涉黄识别）、ads（广告识别）。用户可选择多种识别类型，例如 detect-type=porn,ads 表示对图片进行涉黄及广告审核
 @property (assign, nonatomic) QCloudRecognitionEnum detectType;
+
+/// 审核策略，不带审核策略时使用默认策略。具体查看 https://cloud.tencent.com/document/product/460/56345
+@property (strong, nonatomic) NSString * bizType;
 
 /**
  设置完成回调。请求完成后会通过该回调来获取结果，如果没有error，那么可以认为请求成功。
-
  @param finishBlock 请求完成回调
  */
-- (void)setFinishBlock:(void (^_Nullable)(QCloudGetRecognitionObjectResult *_Nullable result, NSError *_Nullable error))finishBlock;
+- (void)setFinishBlock:(void (^_Nullable)(QCloudImageRecognitionResult *_Nullable result, NSError *_Nullable error))finishBlock;
 
 @end
 NS_ASSUME_NONNULL_END

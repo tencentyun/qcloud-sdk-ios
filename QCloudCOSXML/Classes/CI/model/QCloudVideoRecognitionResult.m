@@ -10,10 +10,10 @@
 @implementation QCloudVideoRecognitionResult
 + (NSDictionary *)modelContainerPropertyGenericClass {
     return @{
-        @"PornInfo" : [QCloudVideoRecognitionItemInfo class],
-        @"TerrorismInfo" : [QCloudVideoRecognitionItemInfo class],
-        @"PoliticsInfo" : [QCloudVideoRecognitionItemInfo class],
-        @"AdsInfo" : [QCloudVideoRecognitionItemInfo class],
+        @"PornInfo" : [QCloudRecognitionItemInfo class],
+        @"TerrorismInfo" : [QCloudRecognitionItemInfo class],
+        @"PoliticsInfo" : [QCloudRecognitionItemInfo class],
+        @"AdsInfo" : [QCloudRecognitionItemInfo class],
         @"Snapshot" : [QCloudVideoRecognitionSnapshot class],
         @"AudioSection" : [QCloudVideoRecognitionAudioSection class],
     };
@@ -28,13 +28,18 @@
         return nil;
     }
     
-    NSMutableDictionary *transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
-    return transfromDic[@"JobsDetail"];
+    
+    NSMutableDictionary * section = [NSMutableDictionary dictionaryWithDictionary:dic[@"JobsDetail"]];
+    if (section && section[@"Snapshot"] && [section[@"Snapshot"] isKindOfClass:[NSDictionary class]]) {
+        [section setValue:@[section[@"Snapshot"]] forKey:@"Snapshot"];
+    }
+    
+    if (section && section[@"AudioSection"] && [section[@"AudioSection"] isKindOfClass:[NSDictionary class]]) {
+        [section setValue:@[section[@"AudioSection"]] forKey:@"AudioSection"];
+    }
+    
+    return section.copy;
 }
-
-@end
-
-@implementation QCloudVideoRecognitionItemInfo
 
 @end
 
@@ -51,22 +56,41 @@
 @end
 
 @implementation QCloudVideoRecognitionSnapshotItemInfo
++ (NSDictionary *)modelContainerPropertyGenericClass {
+    return @{
+        @"OcrResults": [QCloudRecognitionOcrResults class],
+        @"ObjectResults": [QCloudRecognitionObjectResults class],
+    };
+}
+
+- (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dic {
+    if (!dic) {
+        return dic;
+    }
+    
+    NSMutableDictionary * mdic = [NSMutableDictionary dictionaryWithDictionary:dic];
+    if ([mdic[@"OcrResults"] isKindOfClass:[NSDictionary class]]) {
+        [mdic setValue:@[mdic[@"OcrResults"]] forKey:@"OcrResults"];
+    }
+    
+    if ([mdic[@"ObjectResults"] isKindOfClass:[NSDictionary class]]) {
+        [mdic setValue:@[mdic[@"ObjectResults"]] forKey:@"ObjectResults"];
+    }
+    
+    return mdic.mutableCopy;
+}
 
 @end
 
 @implementation QCloudVideoRecognitionAudioSection
 + (NSDictionary *)modelContainerPropertyGenericClass {
     return @{
-        @"PornInfo": [QCloudVideoRecognitionAudioSectionItemInfo class],
-        @"TerrorismInfo": [QCloudVideoRecognitionAudioSectionItemInfo class],
-        @"PoliticsInfo": [QCloudVideoRecognitionAudioSectionItemInfo class],
-        @"AdsInfo": [QCloudVideoRecognitionAudioSectionItemInfo class],
+        @"PornInfo": [QCloudRecognitionSectionItemInfo class],
+        @"TerrorismInfo": [QCloudRecognitionSectionItemInfo class],
+        @"PoliticsInfo": [QCloudRecognitionSectionItemInfo class],
+        @"AdsInfo": [QCloudRecognitionSectionItemInfo class],
     };
 }
-@end
-
-@implementation QCloudVideoRecognitionAudioSectionItemInfo
-
 @end
 
 @implementation QCloudPostVideoRecognitionResult
@@ -79,9 +103,7 @@
     if (![dic isKindOfClass:[NSDictionary class]]) {
         return nil;
     }
-    
-    NSMutableDictionary *transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
-    return transfromDic[@"JobsDetail"];
+    return dic[@"JobsDetail"];
 }
 
 @end

@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 
   @code
  
-     QCloudGetDescribeMediaBucketsRequest * reqeust = [[QCloudGetDescribeMediaBucketsRequest alloc]init];
+     QCloudGetDescribeMediaBucketsRequest * request = [[QCloudGetDescribeMediaBucketsRequest alloc]init];
 
      // 地域信息，例如 ap-shanghai、ap-beijing，若查询多个地域以“,”分隔字符串，支持中国大陆地域
      request.regions = regions;
@@ -55,11 +55,11 @@ NS_ASSUME_NONNULL_BEGIN
      // 每页个数
      request.pageSize = pageSize;
 
-     reqeust.finishBlock = ^(QCloudDescribeMediaInfo * outputObject, NSError *error) {
+     request.finishBlock = ^(QCloudDescribeMediaInfo * outputObject, NSError *error) {
          // outputObject 请求到的媒体信息，详细字段请查看api文档或者SDK源码
          // QCloudDescribeMediaInfo  类；
      };
-     [[QCloudCOSXMLService defaultCOSXML] CIGetDescribeMediaBuckets:reqeust];
+     [[QCloudCOSXMLService defaultCOSXML] CIGetDescribeMediaBuckets:request];
 
 */
 @interface QCloudGetDescribeMediaBucketsRequest : QCloudBizHTTPRequest

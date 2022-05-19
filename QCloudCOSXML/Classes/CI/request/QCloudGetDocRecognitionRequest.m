@@ -1,9 +1,9 @@
 //
-//  QCloudPutBucketRefererRequest.h
-//  QCloudPutBucketRefererRequest
+//  QCloudGetDocRecognitionRequest.m
+//  QCloudGetDocRecognitionRequest
 //
 //  Created by tencent
-//  Copyright (c) 2015年 tencent. All rights reserved.
+//  Copyright (c) 2020年 tencent. All rights reserved.
 //
 //   ██████╗  ██████╗██╗      ██████╗ ██╗   ██╗██████╗     ████████╗███████╗██████╗ ███╗   ███╗██╗███╗   ██╗ █████╗ ██╗         ██╗      █████╗
 //   ██████╗
@@ -29,87 +29,86 @@
 //   |______|______|______|______|______|______|______|______|                                                                           |_|
 //
 
-#import <Foundation/Foundation.h>
+#import "QCloudGetDocRecognitionRequest.h"
+#import <QCloudCore/QCloudSignatureFields.h>
 #import <QCloudCore/QCloudCore.h>
+#import <QCloudCore/QCloudServiceConfiguration_Private.h>
+#import "QCloudGetObjectRequest+Custom.h"
+
+
 NS_ASSUME_NONNULL_BEGIN
+@implementation QCloudGetDocRecognitionRequest
+- (void)dealloc {
+}
+- (instancetype)init {
+    self = [super init];
+    if (!self) {
+        return nil;
+    }
+    return self;
+}
+- (void)configureReuqestSerializer:(QCloudRequestSerializer *)requestSerializer responseSerializer:(QCloudResponseSerializer *)responseSerializer {
+    NSArray *customRequestSerilizers = @[
+        QCloudURLFuseURIMethodASURLParamters,
+    ];
 
-/**
+    NSArray *responseSerializers = @[
+        QCloudAcceptRespnseCodeBlock([NSSet setWithObjects:@(200), @(201), @(202), @(203), @(204), @(205), @(206), @(207), @(208), @(226), nil], nil),
+        QCloudResponseXMLSerializerBlock,
+        QCloudResponseObjectSerilizerBlock([QCloudDocRecognitionResult class])
+    ];
+    [requestSerializer setSerializerBlocks:customRequestSerilizers];
+    [responseSerializer setSerializerBlocks:responseSerializers];
 
-### 功能说明
+    requestSerializer.HTTPMethod = @"get";
+}
 
- PUT Bucket referer 接口用于为存储桶设置 Referer 白名单或者黑名单。
+- (BOOL)buildRequestData:(NSError *__autoreleasing *)error {
+    if (![super buildRequestData:error]) {
+        return NO;
+    }
 
- 具体请查看https://cloud.tencent.com/document/product/436/32492.
+    if (!self.jobId) {
+        if (error != NULL) {
+            *error = [NSError
+                qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
+                             message:[NSString stringWithFormat:
+                                                   @"InvalidArgument:paramter[jobId] is invalid (nil), it must have some value. please check it"]];
+            return NO;
+        }
+    }
+   
+    
+    NSURL *__serverURL = [self.runOnService.configuration.endpoint serverURLWithBucket:self.bucket
+                                                                                 appID:self.runOnService.configuration.appID
+                                                                            regionName:self.regionName];
+    
+    NSString * serverUrlString = __serverURL.absoluteString;
+    
+    serverUrlString = [serverUrlString stringByReplacingOccurrencesOfString:@".cos." withString:@".ci."];
+    
+    __serverURL = [NSURL URLWithString:serverUrlString];
+    
+    self.requestData.serverURL = __serverURL.absoluteString;
+    [self.requestData setValue:__serverURL.host forHTTPHeaderField:@"Host"];
 
-### 示例
+    NSMutableArray *__pathComponents = [NSMutableArray arrayWithArray:self.requestData.URIComponents];
+    [__pathComponents addObject:@"document/auditing"];
+    [__pathComponents addObject:self.jobId];
+    self.requestData.URIComponents = __pathComponents;
 
-  @code
- 
-         QCloudPutBucketRefererRequest* request = [QCloudPutBucketRefererRequest new];
+    return YES;
+}
 
-         // 防盗链类型，枚举值：Black-List、White-List
-         request.refererType = QCloudBucketRefererTypeBlackList;
+- (void)setFinishBlock:(void (^_Nullable)(QCloudDocRecognitionResult *_Nullable result, NSError *_Nullable error))finishBlock {
+    [super setFinishBlock:finishBlock];
+}
 
-         // 是否开启防盗链，枚举值：Enabled、Disabled
-         request.status = QCloudBucketRefererStatusEnabled;
+- (QCloudSignatureFields *)signatureFields {
+    QCloudSignatureFields *fileds = [QCloudSignatureFields new];
 
-         // 是否允许空 Referer 访问，枚举值：Allow、Deny，默认值为 Deny
-         request.configuration = QCloudBucketRefererConfigurationDeny;
+    return fileds;
+}
 
-         // 生效域名列表， 支持多个域名且为前缀匹配， 支持带端口的域名和 IP， 支持通配符*，做二级域名或多级域名的通配
-         request.domainList = @[@"*.com",@"*.qq.com"];
-
-         // 存储桶名称，格式为 BucketName-APPID
-         request.bucket = @"examplebucket-1250000000";
-
-         [request setFinishBlock:^(id outputObject, NSError *error) {
-             if (error){
-                 // 添加防盗链失败
-             }else{
-                 // 添加防盗链失败
-             }
-
-         }];
-         [[QCloudCOSXMLService defaultCOSXML] PutBucketReferer:request];
-
-*/
-
-typedef NS_ENUM(NSUInteger, QCloudBucketRefererType) {
-    QCloudBucketRefererTypeBlackList = 1,
-    QCloudBucketRefererTypeWhiteList,
-};
-
-typedef NS_ENUM(NSUInteger, QCloudBucketRefererStatus) {
-    QCloudBucketRefererStatusEnabled = 1,
-    QCloudBucketRefererStatusDisabled,
-};
-
-typedef NS_ENUM(NSUInteger, QCloudBucketRefererConfiguration) {
-    QCloudBucketRefererConfigurationDeny = 0,
-    QCloudBucketRefererConfigurationAllow,
-};
-
-@interface QCloudPutBucketRefererRequest : QCloudBizHTTPRequest
-
-
-@property (strong, nonatomic) NSString * bucket;
-
-/// 防盗链类型，枚举值：Black-List、White-List
-@property (assign, nonatomic) QCloudBucketRefererType refererType;
-
-
-/// 是否开启防盗链，枚举值：Enabled、Disabled
-@property (assign, nonatomic) QCloudBucketRefererStatus status;
-
-
-/// 是否允许空 Referer 访问，枚举值：Allow、Deny，默认值为 Deny
-@property (assign, nonatomic) QCloudBucketRefererConfiguration configuration;
-
-
-/// 生效域名列表， 支持多个域名且为前缀匹配， 支持带端口的域名和 IP， 支持通配符*，做二级域名或多级域名的通配
-@property (strong, nonatomic) NSArray * domainList;
-
-
-- (void)setFinishBlock:(void (^_Nullable)(id _Nullable result, NSError *_Nullable error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

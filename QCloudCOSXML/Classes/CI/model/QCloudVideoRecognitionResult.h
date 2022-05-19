@@ -2,14 +2,37 @@
 //  QCloudVideoRecognitionResult.h
 //  QCloudCOSXML
 //
-//  Created by garenwang on 2021/10/26.
+//  Created by tencent
+//  Copyright (c) 2020年 tencent. All rights reserved.
+//
+//   ██████╗  ██████╗██╗      ██████╗ ██╗   ██╗██████╗     ████████╗███████╗██████╗ ███╗   ███╗██╗███╗   ██╗ █████╗ ██╗         ██╗      █████╗
+//   ██████╗
+//  ██╔═══██╗██╔════╝██║     ██╔═══██╗██║   ██║██╔══██╗    ╚══██╔══╝██╔════╝██╔══██╗████╗ ████║██║████╗  ██║██╔══██╗██║         ██║ ██╔══██╗██╔══██╗
+//  ██║   ██║██║     ██║     ██║   ██║██║   ██║██║  ██║       ██║   █████╗  ██████╔╝██╔████╔██║██║██╔██╗ ██║███████║██║         ██║ ███████║██████╔╝
+//  ██║▄▄ ██║██║     ██║     ██║   ██║██║   ██║██║  ██║       ██║   ██╔══╝  ██╔══██╗██║╚██╔╝██║██║██║╚██╗██║██╔══██║██║         ██║ ██╔══██║██╔══██╗
+//  ╚██████╔╝╚██████╗███████╗╚██████╔╝╚██████╔╝██████╔╝       ██║   ███████╗██║  ██║██║ ╚═╝ ██║██║██║ ╚████║██║  ██║███████╗    ███████╗██║
+//  ██║██████╔╝
+//   ╚══▀▀═╝  ╚═════╝╚══════╝ ╚═════╝  ╚═════╝ ╚═════╝        ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝    ╚══════╝╚═╝ ╚═╝╚═════╝
+//
+//
+//                                                                              _             __                 _                _
+//                                                                             (_)           / _|               | |              | |
+//                                                          ___  ___ _ ____   ___  ___ ___  | |_ ___  _ __    __| | _____   _____| | ___  _ __   ___ _
+//                                                          __ ___
+//                                                         / __|/ _ \ '__\ \ / / |/ __/ _ \ |  _/ _ \| '__|  / _` |/ _ \ \ / / _ \ |/ _ \| '_ \ / _ \
+//                                                         '__/ __|
+//                                                         \__ \  __/ |   \ V /| | (_|  __/ | || (_) | |    | (_| |  __/\ V /  __/ | (_) | |_) |  __/
+//                                                         |  \__
+//                                                         |___/\___|_|    \_/ |_|\___\___| |_| \___/|_|     \__,_|\___| \_/ \___|_|\___/| .__/
+//                                                         \___|_|  |___/
+//    ______ ______ ______ ______ ______ ______ ______ ______                                                                            | |
+//   |______|______|______|______|______|______|______|______|                                                                           |_|
 //
 
 #import <Foundation/Foundation.h>
-@class QCloudVideoRecognitionItemInfo;
+#import "QCloudRecognitionModel.h"
 @class QCloudVideoRecognitionSnapshotItemInfo;
 @class QCloudVideoRecognitionSnapshot;
-@class QCloudVideoRecognitionAudioSectionItemInfo;
 @class QCloudVideoRecognitionAudioSection;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -17,11 +40,14 @@ NS_ASSUME_NONNULL_BEGIN
 @interface QCloudVideoRecognitionResult : NSObject
 
 
-/// 错误码，值为0时表示审核成功，非0表示审核失败。
+/// 错误码，只有State为 Failed时返回。详情请查看 错误码列表。
 @property (nonatomic,strong)NSString * Code;
 
-/// 错误描述
+/// 错误描述，只有State为 Failed时返回。
 @property (nonatomic,strong)NSString * Message;
+
+/// 该字段在审核结果中会返回原始内容，长度限制为512字节。您可以使用该字段对待审核的数据进行唯一业务标识。
+@property (nonatomic,strong)NSString * DataId;
 
 /// 视频审核任务的 ID。
 @property (nonatomic,strong)NSString * JobId;
@@ -49,16 +75,16 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong)NSString * Result;
 
 /// 审核场景为涉黄的审核结果信息。
-@property (nonatomic,strong)QCloudVideoRecognitionItemInfo * PornInfo;
+@property (nonatomic,strong)QCloudRecognitionItemInfo * PornInfo;
 
 /// 审核场景为涉暴恐的审核结果信息。
-@property (nonatomic,strong)QCloudVideoRecognitionItemInfo * TerrorismInfo;
+@property (nonatomic,strong)QCloudRecognitionItemInfo * TerrorismInfo;
 
 /// 审核场景为政治敏感的审核结果信息。
-@property (nonatomic,strong)QCloudVideoRecognitionItemInfo * PoliticsInfo;
+@property (nonatomic,strong)QCloudRecognitionItemInfo * PoliticsInfo;
 
 /// 审核场景为广告引导的审核结果信息。
-@property (nonatomic,strong)QCloudVideoRecognitionItemInfo * AdsInfo;
+@property (nonatomic,strong)QCloudRecognitionItemInfo * AdsInfo;
 
 
 /// 该字段用于返回视频中视频画面截图审核的结果。
@@ -67,17 +93,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 该字段用于返回视频中视频声音审核的结果。
 /// 注意：每次查看数据的有效期为2小时，2小时后如还需查看，请重新发起查询请求
-@property (nonatomic,strong)QCloudVideoRecognitionAudioSection * AudioSection;
+@property (nonatomic,strong)NSArray <QCloudVideoRecognitionAudioSection *> * AudioSection;
 
-@property (nonatomic,strong)NSString * NonExistJobIds;
 @end
 
-@interface QCloudVideoRecognitionItemInfo : NSObject
-
-/// 是否命中该审核分类，0表示未命中，1表示命中，2表示疑似。
-@property (nonatomic,strong)NSString * HitFlag;
-@property (nonatomic,strong)NSString * Count;
-@end
 
 @interface QCloudVideoRecognitionSnapshot : NSObject
 
@@ -90,15 +109,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 该字段用于返回当前截图位于视频中的时间，单位为毫秒。例如5000（视频开始后5000毫秒）。
 @property (nonatomic,strong)NSString * SnapshotTime;
-@property (nonatomic,strong)NSString * Result;
-@property (nonatomic,strong)NSString * Label;
 
 @property (nonatomic,strong)QCloudVideoRecognitionSnapshotItemInfo * PornInfo;
 @property (nonatomic,strong)QCloudVideoRecognitionSnapshotItemInfo * TerrorismInfo;
 @property (nonatomic,strong)QCloudVideoRecognitionSnapshotItemInfo * PoliticsInfo;
 @property (nonatomic,strong)QCloudVideoRecognitionSnapshotItemInfo * AdsInfo;
 
-/// <#Description#>
 
 
 @end
@@ -118,6 +134,12 @@ NS_ASSUME_NONNULL_BEGIN
 /// 该字段表示审核命中的具体子标签，例如：Porn 下的 SexBehavior 子标签。
 /// 注意：该字段可能返回空，表示未命中具体的子标签。
 @property (nonatomic,strong)NSString * SubLabel;
+
+
+///  该字段表示 OCR 文本识别的详细检测结果，包括文本识别结果、命中的关键词等信息，有相关违规内容时返回
+@property (nonatomic,strong)NSArray <QCloudRecognitionOcrResults *> *OcrResults;
+
+@property (nonatomic,strong)NSArray <QCloudRecognitionObjectResults *> *ObjectResults;
 
 @end
 
@@ -145,40 +167,29 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /// 审核场景为涉黄的审核结果信息。
-@property (nonatomic,strong)QCloudVideoRecognitionAudioSectionItemInfo * PornInfo;
+@property (nonatomic,strong)QCloudRecognitionSectionItemInfo * PornInfo;
 
 /// 审核场景为涉暴恐的审核结果信息。
-@property (nonatomic,strong)QCloudVideoRecognitionAudioSectionItemInfo * TerrorismInfo;
+@property (nonatomic,strong)QCloudRecognitionSectionItemInfo * TerrorismInfo;
 
 /// 审核场景为政治敏感的审核结果信息。
-@property (nonatomic,strong)QCloudVideoRecognitionAudioSectionItemInfo * PoliticsInfo;
+@property (nonatomic,strong)QCloudRecognitionSectionItemInfo * PoliticsInfo;
 
 /// 审核场景为广告引导的审核结果信息。
-@property (nonatomic,strong)QCloudVideoRecognitionAudioSectionItemInfo * AdsInfo;
+@property (nonatomic,strong)QCloudRecognitionSectionItemInfo * AdsInfo;
 
-@end
-
-@interface QCloudVideoRecognitionAudioSectionItemInfo : NSObject
-
-/// 是否命中该审核分类，0表示未命中，1表示命中，2表示疑似。
-@property (nonatomic,strong)NSString * HitFlag;
-
-/// 该字段表示审核结果命中审核信息的置信度，取值范围：0（置信度最低）-100（置信度最高 ），越高代表该内容越有可能属于当前返回审核信息
-/// 例如：色情 99，则表明该内容非常有可能属于色情内容。
-@property (nonatomic,strong)NSString * Score;
-
-/// 在当前审核场景下命中的关键词。
-@property (nonatomic,strong)NSString * Keywords;
 @end
 
 @interface QCloudPostVideoRecognitionResult : NSObject
+
+/// 请求中添加的唯一业务标识。
+@property (nonatomic,strong)NSString * DataId;
 
 /// 本次视频审核任务的 ID。
 @property (nonatomic,strong)NSString * JobId;
 
 /// 视频审核任务的状态，值为 Submitted（已提交审核）、Snapshoting（视频截帧中）、Success（审核成功）、Failed（审核失败）、Auditing（审核中）其中一个
 @property (nonatomic,strong)NSString * State;
-@property (nonatomic,strong)NSString * Object;
 
 /// 视频审核任务的创建时间
 @property (nonatomic,strong)NSString * CreationTime;

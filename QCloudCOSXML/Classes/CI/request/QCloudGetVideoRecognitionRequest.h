@@ -31,7 +31,7 @@
 
 #import <Foundation/Foundation.h>
 #import <QCloudCore/QCloudCore.h>
-@class QCloudVideoRecognitionResult;
+#import "QCloudVideoRecognitionResult.h"
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -42,19 +42,21 @@ NS_ASSUME_NONNULL_BEGIN
 
   @code
  
-        QCloudGetVideoRecognitionRequest * reqeust = [[QCloudGetVideoRecognitionRequest alloc]init];
+        QCloudGetVideoRecognitionRequest * request = [[QCloudGetVideoRecognitionRequest alloc]init];
 
         // 存储桶名称，格式为 BucketName-APPID
-        request.bucket = "examplebucket-1250000000";
+        request.bucket = @"examplebucket-1250000000";
 
         // QCloudPostVideoRecognitionRequest接口返回的jobid
-        reqeust.jobId = "jobid";
-
-        reqeust.finishBlock = ^(QCloudGetVideoRecognitionRequest * outputObject, NSError *error) {
+        request.jobId = @"jobid";
+ 
+        request.regionName = @"regionName";
+ 
+        request.finishBlock = ^(QCloudGetVideoRecognitionRequest * outputObject, NSError *error) {
          // outputObject 审核结果 包含用于查询的job id，详细字段请查看api文档或者SDK源码
          // QCloudVideoRecognitionResult 类；
         };
-        [[QCloudCOSXMLService defaultCOSXML] GetVideoRecognition:reqeust];
+        [[QCloudCOSXMLService defaultCOSXML] GetVideoRecognition:request];
 
 */
 @interface QCloudGetVideoRecognitionRequest : QCloudBizHTTPRequest

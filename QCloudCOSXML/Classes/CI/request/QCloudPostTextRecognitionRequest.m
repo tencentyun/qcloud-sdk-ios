@@ -1,6 +1,6 @@
 //
-//  QCloudGetRecognitionObjectResult.m
-//  QCloudGetRecognitionObjectResult
+//  QCloudPostTextRecognitionRequest.m
+//  QCloudPostTextRecognitionRequest
 //
 //  Created by tencent
 //  Copyright (c) 2020年 tencent. All rights reserved.
@@ -29,15 +29,14 @@
 //   |______|______|______|______|______|______|______|______|                                                                           |_|
 //
 
-#import "QCloudGetRecognitionObjectRequest.h"
+#import "QCloudPostTextRecognitionRequest.h"
 #import <QCloudCore/QCloudSignatureFields.h>
 #import <QCloudCore/QCloudCore.h>
-#import <QCloudCore/QCloudConfiguration_Private.h>
-#import "QCloudGetObjectRequest+Custom.h"
-#import "QCloudGetRecognitionObjectResult.h"
+#import <QCloudCore/QCloudServiceConfiguration_Private.h>
+
 
 NS_ASSUME_NONNULL_BEGIN
-@implementation QCloudGetRecognitionObjectRequest
+@implementation QCloudPostTextRecognitionRequest
 - (void)dealloc {
 }
 - (instancetype)init {
@@ -50,66 +49,32 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)configureReuqestSerializer:(QCloudRequestSerializer *)requestSerializer responseSerializer:(QCloudResponseSerializer *)responseSerializer {
     NSArray *customRequestSerilizers = @[
         QCloudURLFuseURIMethodASURLParamters,
+        QCloudURLFuseWithXMLParamters,
+        QCloudURLFuseContentMD5Base64StyleHeaders,
     ];
 
     NSArray *responseSerializers = @[
         QCloudAcceptRespnseCodeBlock([NSSet setWithObjects:@(200), @(201), @(202), @(203), @(204), @(205), @(206), @(207), @(208), @(226), nil], nil),
-        QCloudResponseXMLSerializerBlock, QCloudResponseObjectSerilizerBlock([QCloudGetRecognitionObjectResult class])
+        QCloudResponseXMLSerializerBlock,
+        QCloudResponseObjectSerilizerBlock([QCloudPostTextRecognitionResult class])
     ];
     [requestSerializer setSerializerBlocks:customRequestSerilizers];
     [responseSerializer setSerializerBlocks:responseSerializers];
 
-    requestSerializer.HTTPMethod = @"get";
+    requestSerializer.HTTPMethod = @"post";
 }
 
 - (BOOL)buildRequestData:(NSError *__autoreleasing *)error {
     if (![super buildRequestData:error]) {
         return NO;
     }
-    if (self.responseContentType) {
-        [self.requestData setValue:self.responseContentType forHTTPHeaderField:@"response-content-type"];
-    }
-    if (self.responseContentLanguage) {
-        [self.requestData setValue:self.responseContentLanguage forHTTPHeaderField:@"response-content-language"];
-    }
-    if (self.responseContentExpires) {
-        [self.requestData setValue:self.responseContentExpires forHTTPHeaderField:@"response-expires"];
-    }
-    if (self.responseCacheControl) {
-        [self.requestData setValue:self.responseCacheControl forHTTPHeaderField:@"response-cache-control"];
-    }
-    if (self.responseContentDisposition) {
-        [self.requestData setValue:self.responseContentDisposition forHTTPHeaderField:@"response-content-disposition"];
-    }
-    if (self.responseContentEncoding) {
-        [self.requestData setValue:self.responseContentEncoding forHTTPHeaderField:@"response-content-encoding"];
-    }
-    if (self.localCacheDownloadOffset) {
-        self.range = [NSString stringWithFormat:@"bytes=%lld-", self.localCacheDownloadOffset];
-    }
-    if (self.range) {
-        [self.requestData setValue:self.range forHTTPHeaderField:@"Range"];
-    }
-    if (self.ifModifiedSince) {
-        [self.requestData setValue:self.ifModifiedSince forHTTPHeaderField:@"If-Modified-Since"];
-    }
-    if (self.ifUnmodifiedModifiedSince) {
-        [self.requestData setValue:self.ifUnmodifiedModifiedSince forHTTPHeaderField:@"If-Unmodified-Since"];
-    }
-    if (self.ifMatch) {
-        [self.requestData setValue:self.ifMatch forHTTPHeaderField:@"If-Match"];
-    }
-    if (self.ifNoneMatch) {
-        [self.requestData setValue:self.ifNoneMatch forHTTPHeaderField:@"If-None-Match"];
-    }
-    [self.requestData setParameter:self.versionID withKey:@"versionId"];
 
-    if (!self.object || ([self.object isKindOfClass:NSString.class] && ((NSString *)self.object).length == 0)) {
+    if (!self.object && !self.url && !self.content) {
         if (error != NULL) {
             *error = [NSError
                 qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
                              message:[NSString stringWithFormat:
-                                                   @"InvalidArgument:paramter[object] is invalid (nil), it must have some value. please check it"]];
+                                                   @"InvalidArgument:paramter[object and url content] is invalid (nil), it must have some value. please check it"]];
             return NO;
         }
     }
@@ -122,13 +87,30 @@ NS_ASSUME_NONNULL_BEGIN
             return NO;
         }
     }
+    
+    if (self.detectType == 0 ) {
+        if (error != NULL) {
+            *error = [NSError
+                qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
+                             message:[NSString stringWithFormat:
+                                                   @"InvalidArgument:paramter[detectType] is invalid (nil), it must have some value. please check it"]];
+            return NO;
+        }
+    }
+    
     NSURL *__serverURL = [self.runOnService.configuration.endpoint serverURLWithBucket:self.bucket
                                                                                  appID:self.runOnService.configuration.appID
                                                                             regionName:self.regionName];
+    
+    NSString * serverUrlString = __serverURL.absoluteString;
+    
+    serverUrlString = [serverUrlString stringByReplacingOccurrencesOfString:@".cos." withString:@".ci."];
+    
+    __serverURL = [NSURL URLWithString:serverUrlString];
+    
     self.requestData.serverURL = __serverURL.absoluteString;
     [self.requestData setValue:__serverURL.host forHTTPHeaderField:@"Host"];
 
-    [self.requestData setQueryStringParamter:@"sensitive-content-recognition" withKey:@"ci-process"];
 
     if ([self getDetectType].length == 0) {
         if (error != NULL) {
@@ -141,21 +123,42 @@ NS_ASSUME_NONNULL_BEGIN
         }
     }
 
-    [self.requestData setQueryStringParamter:[self getDetectType] withKey:@"detect-type"];
+    
+    NSMutableDictionary * input = NSMutableDictionary.new;
+    if (self.object) {
+        [input setObject:self.object forKey:@"Object"];
+    }else if (self.url) {
+        [input setObject:self.url forKey:@"Url"];
+    }else if(self.content){
+        NSData *data = [self.content dataUsingEncoding:NSUTF8StringEncoding];
+        NSString *base64Content = [data base64EncodedStringWithOptions:0];
+        [input setValue:base64Content forKey:@"Content"];
+    }
+    
+    if (self.dataId) {
+        [input setObject:self.dataId forKey:@"DataId"];
+    }
+    
+    NSDictionary * params =@{
+        @"Input":input,
+        @"Conf":@{
+                @"DetectType":[self getDetectType],
+                @"Callback":self.callback?:@"",
+                @"BizType":self.bizType?:@"",
+                @"CallbackVersion":@"Detail",
+        }
+    };
+    
+    [self.requestData setParameter:params withKey:@"Request"];
 
     NSMutableArray *__pathComponents = [NSMutableArray arrayWithArray:self.requestData.URIComponents];
-    if (self.object)
-        [__pathComponents addObject:self.object];
+    [__pathComponents addObject:@"text/auditing"];
     self.requestData.URIComponents = __pathComponents;
-    if (![self customBuildRequestData:error])
-        return NO;
-    for (NSString *key in self.customHeaders.allKeys.copy) {
-        [self.requestData setValue:self.customHeaders[key] forHTTPHeaderField:key];
-    }
+
     return YES;
 }
 
-- (void)setFinishBlock:(void (^_Nullable)(QCloudGetRecognitionObjectResult *_Nullable result, NSError *_Nullable error))finishBlock {
+- (void)setFinishBlock:(void (^_Nullable)(QCloudPostTextRecognitionResult *_Nullable result, NSError *_Nullable error))finishBlock {
     [super setFinishBlock:finishBlock];
 }
 
@@ -164,40 +167,26 @@ NS_ASSUME_NONNULL_BEGIN
 
     return fileds;
 }
-- (NSArray<NSMutableDictionary *> *)scopesArray {
-    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    NSArray *separatetmpArray = [self.requestData.serverURL componentsSeparatedByString:@"://"];
-    NSString *str = separatetmpArray[1];
-    NSArray *separateArray = [str componentsSeparatedByString:@"."];
-    dic[@"bucket"] = separateArray[0];
-    dic[@"region"] = self.runOnService.configuration.endpoint.regionName;
-    dic[@"prefix"] = self.object;
-    dic[@"action"] = @"name/cos:GetObject";
-    NSMutableArray *array = [NSMutableArray array];
-    [array addObject:dic];
-    return [array copy];
-}
 
 - (NSString *)getDetectType {
     NSMutableArray *detecyTypes = [NSMutableArray arrayWithCapacity:0];
     if (_detectType & QCloudRecognitionPorn) {
-        [detecyTypes addObject:@"porn"];
+        [detecyTypes addObject:@"Porn"];
     }
 
     if (_detectType & QCloudRecognitionTerrorist) {
-        [detecyTypes addObject:@"terrorist"];
+        [detecyTypes addObject:@"Terrorism"];
     }
 
     if (_detectType & QCloudRecognitionPolitics) {
-        [detecyTypes addObject:@"politics"];
+        [detecyTypes addObject:@"Politics"];
     }
 
     if (_detectType & QCloudRecognitionAds) {
-        [detecyTypes addObject:@"ads"];
+        [detecyTypes addObject:@"Ads"];
     }
 
     return [detecyTypes componentsJoinedByString:@","];
 }
-
 @end
 NS_ASSUME_NONNULL_END

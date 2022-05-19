@@ -1,6 +1,6 @@
 //
-//  QCloudGetRecognitionObjectResult.h
-//  QCloudGetRecognitionObjectResult
+//  QCloudGetAudioRecognitionRequest.m
+//  QCloudGetAudioRecognitionRequest
 //
 //  Created by tencent
 //  Copyright (c) 2020年 tencent. All rights reserved.
@@ -29,26 +29,85 @@
 //   |______|______|______|______|______|______|______|______|                                                                           |_|
 //
 
-#import <Foundation/Foundation.h>
-@class QCloudGetRecognitionResultInfo;
+#import "QCloudGetAudioRecognitionRequest.h"
+#import <QCloudCore/QCloudSignatureFields.h>
+#import <QCloudCore/QCloudCore.h>
+#import <QCloudCore/QCloudServiceConfiguration_Private.h>
+
+
 NS_ASSUME_NONNULL_BEGIN
-/**
- 图片审核结果信息
- */
-@interface QCloudGetRecognitionObjectResult : NSObject
+@implementation QCloudGetAudioRecognitionRequest
+- (void)dealloc {
+}
+- (instancetype)init {
+    self = [super init];
+    if (!self) {
+        return nil;
+    }
+    return self;
+}
+- (void)configureReuqestSerializer:(QCloudRequestSerializer *)requestSerializer responseSerializer:(QCloudResponseSerializer *)responseSerializer {
+    NSArray *customRequestSerilizers = @[
+        QCloudURLFuseURIMethodASURLParamters,
+    ];
 
-/// 鉴黄审核信息
-@property (strong, nonatomic) QCloudGetRecognitionResultInfo *pornInfo;
+    NSArray *responseSerializers = @[
+        QCloudAcceptRespnseCodeBlock([NSSet setWithObjects:@(200), @(201), @(202), @(203), @(204), @(205), @(206), @(207), @(208), @(226), nil], nil),
+        QCloudResponseXMLSerializerBlock,
+        QCloudResponseObjectSerilizerBlock([QCloudAudioRecognitionResult class])
+    ];
+    [requestSerializer setSerializerBlocks:customRequestSerilizers];
+    [responseSerializer setSerializerBlocks:responseSerializers];
 
-/// 鉴黄审核信息
-@property (strong, nonatomic) QCloudGetRecognitionResultInfo *terroristInfo;
+    requestSerializer.HTTPMethod = @"get";
+}
 
-/// 鉴政审核信息
-@property (strong, nonatomic) QCloudGetRecognitionResultInfo *politicsInfo;
+- (BOOL)buildRequestData:(NSError *__autoreleasing *)error {
+    if (![super buildRequestData:error]) {
+        return NO;
+    }
 
-/// 广告审核信息
-@property (strong, nonatomic) QCloudGetRecognitionResultInfo *adsInfo;
+    if (!self.jobId) {
+        if (error != NULL) {
+            *error = [NSError
+                qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
+                             message:[NSString stringWithFormat:
+                                                   @"InvalidArgument:paramter[jobId] is invalid (nil), it must have some value. please check it"]];
+            return NO;
+        }
+    }
+   
+    
+    NSURL *__serverURL = [self.runOnService.configuration.endpoint serverURLWithBucket:self.bucket
+                                                                                 appID:self.runOnService.configuration.appID
+                                                                            regionName:self.regionName];
+    
+    NSString * serverUrlString = __serverURL.absoluteString;
+    
+    serverUrlString = [serverUrlString stringByReplacingOccurrencesOfString:@".cos." withString:@".ci."];
+    
+    __serverURL = [NSURL URLWithString:serverUrlString];
+    
+    self.requestData.serverURL = __serverURL.absoluteString;
+    [self.requestData setValue:__serverURL.host forHTTPHeaderField:@"Host"];
+
+    NSMutableArray *__pathComponents = [NSMutableArray arrayWithArray:self.requestData.URIComponents];
+    [__pathComponents addObject:@"audio/auditing"];
+    [__pathComponents addObject:self.jobId];
+    self.requestData.URIComponents = __pathComponents;
+
+    return YES;
+}
+
+- (void)setFinishBlock:(void (^_Nullable)(QCloudAudioRecognitionResult *_Nullable result, NSError *_Nullable error))finishBlock {
+    [super setFinishBlock:finishBlock];
+}
+
+- (QCloudSignatureFields *)signatureFields {
+    QCloudSignatureFields *fileds = [QCloudSignatureFields new];
+
+    return fileds;
+}
 
 @end
-
 NS_ASSUME_NONNULL_END

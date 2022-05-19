@@ -18,7 +18,6 @@
 @class QCloudPutObjectCopyRequest;
 @class QCloudUploadPartCopyRequest;
 @class QCloudPutObjectWatermarkRequest;
-@class QCloudGetRecognitionObjectRequest;
 
 NS_ASSUME_NONNULL_BEGIN
 @interface QCloudCOSXMLService (Transfer)

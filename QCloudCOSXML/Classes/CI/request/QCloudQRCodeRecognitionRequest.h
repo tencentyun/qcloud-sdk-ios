@@ -6,7 +6,7 @@
 //
 
 #import <QCloudCore/QCloudCore.h>
-#import "QCloudPicOperations.h"'
+#import "QCloudPicOperations.h"
 #import "QCloudCIObject.h"
 NS_ASSUME_NONNULL_BEGIN
 

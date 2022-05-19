@@ -47,7 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
   @code
 
     QCloudGetFilePreviewRequest *request = [[QCloudGetFilePreviewRequest alloc]init];
-    request.bucket = @"桶名称";
+    request.bucket = @"examplebucket-1250000000";
     request.object = 文件名;
     request.page = 页码;
     request.regionName = 桶所属区域;

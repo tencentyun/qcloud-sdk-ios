@@ -5,7 +5,7 @@
 
 #ifndef QCloudCOSXMLModuleVersion_h
 #define QCloudCOSXMLModuleVersion_h
-#define QCloudCOSXMLModuleVersionNumber 600008
+#define QCloudCOSXMLModuleVersionNumber 600009
 
 //dependency
 

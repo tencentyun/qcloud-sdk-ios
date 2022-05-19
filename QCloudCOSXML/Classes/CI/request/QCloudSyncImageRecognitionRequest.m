@@ -1,6 +1,6 @@
 //
-//  QCloudPostVideoRecognitionRequest.m
-//  QCloudPostVideoRecognitionRequest
+//  QCloudSyncImageRecognitionRequest.m
+//  QCloudSyncImageRecognitionRequest
 //
 //  Created by tencent
 //  Copyright (c) 2020年 tencent. All rights reserved.
@@ -29,14 +29,14 @@
 //   |______|______|______|______|______|______|______|______|                                                                           |_|
 //
 
-#import "QCloudPostVideoRecognitionRequest.h"
+#import "QCloudSyncImageRecognitionRequest.h"
 #import <QCloudCore/QCloudSignatureFields.h>
 #import <QCloudCore/QCloudCore.h>
+#import "QCloudImageRecognitionResult.h"
 #import <QCloudCore/QCloudConfiguration_Private.h>
-#import "QCloudGetObjectRequest+Custom.h"
 
 NS_ASSUME_NONNULL_BEGIN
-@implementation QCloudPostVideoRecognitionRequest
+@implementation QCloudSyncImageRecognitionRequest
 - (void)dealloc {
 }
 - (instancetype)init {
@@ -49,85 +49,23 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)configureReuqestSerializer:(QCloudRequestSerializer *)requestSerializer responseSerializer:(QCloudResponseSerializer *)responseSerializer {
     NSArray *customRequestSerilizers = @[
         QCloudURLFuseURIMethodASURLParamters,
-        QCloudURLFuseWithXMLParamters,
-        QCloudURLFuseContentMD5Base64StyleHeaders,
     ];
 
     NSArray *responseSerializers = @[
         QCloudAcceptRespnseCodeBlock([NSSet setWithObjects:@(200), @(201), @(202), @(203), @(204), @(205), @(206), @(207), @(208), @(226), nil], nil),
         QCloudResponseXMLSerializerBlock,
-        QCloudResponseObjectSerilizerBlock([QCloudPostVideoRecognitionResult class])
+        QCloudResponseObjectSerilizerBlock([QCloudImageRecognitionResult class])
     ];
     [requestSerializer setSerializerBlocks:customRequestSerilizers];
     [responseSerializer setSerializerBlocks:responseSerializers];
 
-    requestSerializer.HTTPMethod = @"post";
+    requestSerializer.HTTPMethod = @"get";
 }
 
 - (BOOL)buildRequestData:(NSError *__autoreleasing *)error {
     if (![super buildRequestData:error]) {
         return NO;
     }
-
-    if (!self.object && !self.url) {
-        if (error != NULL) {
-            *error = [NSError
-                qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
-                             message:[NSString stringWithFormat:
-                                                   @"InvalidArgument:paramter[object and url] is invalid (nil), it must have some value. please check it"]];
-            return NO;
-        }
-    }
-    if (!self.bucket || ([self.bucket isKindOfClass:NSString.class] && ((NSString *)self.bucket).length == 0)) {
-        if (error != NULL) {
-            *error = [NSError
-                qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
-                             message:[NSString stringWithFormat:
-                                                   @"InvalidArgument:paramter[bucket] is invalid (nil), it must have some value. please check it"]];
-            return NO;
-        }
-    }
-    
-    if (self.detectType == 0 ) {
-        if (error != NULL) {
-            *error = [NSError
-                qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
-                             message:[NSString stringWithFormat:
-                                                   @"InvalidArgument:paramter[detectType] is invalid (nil), it must have some value. please check it"]];
-            return NO;
-        }
-    }
-    
-    if (self.mode == 0 ) {
-        if (error != NULL) {
-            *error = [NSError
-                qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
-                             message:[NSString stringWithFormat:
-                                                   @"InvalidArgument:paramter[mode] is invalid, it must have some value. please check it"]];
-            return NO;
-        }
-    }
-    
-    if (self.mode == QCloudVideoRecognitionModeInterval | self.mode == QCloudVideoRecognitionModeAverage && self.count == 0 ) {
-        if (error != NULL) {
-            *error = [NSError
-                qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
-                             message:[NSString stringWithFormat:
-                                                   @"InvalidArgument:paramter[count] is invalid, it must have some value. please check it"]];
-            return NO;
-        }
-    }
-    
-    if (self.mode == QCloudVideoRecognitionModeFps && (self.count == 0 || self.timeInterval == 0) ) {
-        if (error != NULL) {
-            *error = [NSError
-                qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
-                             message:[NSString stringWithFormat:
-                                                   @"InvalidArgument:paramter[count or timeInterval] is invalid, it must have some value. please check it"]];
-            return NO;
-        }
-    }
-    
     
     NSURL *__serverURL = [self.runOnService.configuration.endpoint serverURLWithBucket:self.bucket
                                                                                  appID:self.runOnService.configuration.appID
@@ -135,13 +73,12 @@ NS_ASSUME_NONNULL_BEGIN
     
     NSString * serverUrlString = __serverURL.absoluteString;
     
-    serverUrlString = [serverUrlString stringByReplacingOccurrencesOfString:@".cos." withString:@".ci."];
-    
     __serverURL = [NSURL URLWithString:serverUrlString];
     
     self.requestData.serverURL = __serverURL.absoluteString;
     [self.requestData setValue:__serverURL.host forHTTPHeaderField:@"Host"];
 
+    [self.requestData setQueryStringParamter:@"sensitive-content-recognition" withKey:@"ci-process"];
 
     if ([self getDetectType].length == 0) {
         if (error != NULL) {
@@ -154,37 +91,50 @@ NS_ASSUME_NONNULL_BEGIN
         }
     }
 
-    NSDictionary * input = self.object ? @{@"Object":self.object} : @{@"Url":self.url?:@""};
-    if (self.dataId) {
-        [input.mutableCopy setObject:self.dataId forKey:@"DataId"];
+    [self.requestData setQueryStringParamter:[self getDetectType] withKey:@"detect-type"];
+
+    if (!self.object && !self.detectUrl) {
+        if (error != NULL) {
+            *error = [NSError
+                qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
+                             message:[NSString
+                                         stringWithFormat:
+                                             @"InvalidArgument:paramter[object or detectUrl] is invalid (nil), it must have some value. please check it"]];
+            return NO;
+        }
     }
     
-    NSDictionary * params =@{
-        @"Input":input,
-        @"Conf":@{
-                @"DetectType":[self getDetectType],
-                @"Snapshot":@{
-                        @"Mode":QCloudVideoRecognitionModeTransferToString(self.mode),
-                        @"TimeInterval":@(self.timeInterval),
-                        @"Count":@(self.count)
-                },
-                @"Callback":self.callback?:@"",
-                @"BizType":self.bizType?:@"",
-                @"CallbackVersion":@"Detail",
-                @"DetectContent":self.detectContent ?@"1":@"0"
-        }
-    };
-    
-    [self.requestData setParameter:params withKey:@"Request"];
-
     NSMutableArray *__pathComponents = [NSMutableArray arrayWithArray:self.requestData.URIComponents];
-    [__pathComponents addObject:@"video/auditing"];
+    if (self.object){
+        [__pathComponents addObject:self.object];
+    }else if (self.detectUrl){
+        [self.requestData setQueryStringParamter:self.detectUrl withKey:@"detect-url"];
+    }
+    
+    if (self.interval) {
+        [self.requestData setQueryStringParamter:[NSString stringWithFormat:@"%ld",self.interval] withKey:@"interval"];
+    }
+    
+    if (self.maxFrames) {
+        [self.requestData setQueryStringParamter:[NSString stringWithFormat:@"%ld",self.maxFrames] withKey:@"max-frames"];
+    }
+    
+    if (self.largeImageDetect) {
+        [self.requestData setQueryStringParamter:self.largeImageDetect withKey:@"large-image-detect"];
+    }
+    
+        
     self.requestData.URIComponents = __pathComponents;
+    if (![self customBuildRequestData:error])
+        return NO;
+    for (NSString *key in self.customHeaders.allKeys.copy) {
+        [self.requestData setValue:self.customHeaders[key] forHTTPHeaderField:key];
+    }
 
     return YES;
 }
 
-- (void)setFinishBlock:(void (^_Nullable)(QCloudPostVideoRecognitionResult *_Nullable result, NSError *_Nullable error))finishBlock {
+- (void)setFinishBlock:(void (^_Nullable)(QCloudImageRecognitionResult *_Nullable result, NSError *_Nullable error))finishBlock {
     [super setFinishBlock:finishBlock];
 }
 
@@ -197,39 +147,22 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString *)getDetectType {
     NSMutableArray *detecyTypes = [NSMutableArray arrayWithCapacity:0];
     if (_detectType & QCloudRecognitionPorn) {
-        [detecyTypes addObject:@"Porn"];
+        [detecyTypes addObject:@"porn"];
     }
 
     if (_detectType & QCloudRecognitionTerrorist) {
-        [detecyTypes addObject:@"Terrorism"];
+        [detecyTypes addObject:@"terrorist"];
     }
 
     if (_detectType & QCloudRecognitionPolitics) {
-        [detecyTypes addObject:@"Politics"];
+        [detecyTypes addObject:@"politics"];
     }
 
     if (_detectType & QCloudRecognitionAds) {
-        [detecyTypes addObject:@"Ads"];
+        [detecyTypes addObject:@"ads"];
     }
 
     return [detecyTypes componentsJoinedByString:@","];
 }
-
-NSString *QCloudVideoRecognitionModeTransferToString(QCloudVideoRecognitionMode type) {
-    switch (type) {
-        case QCloudVideoRecognitionModeInterval: {
-            return @"Interval";
-        }
-        case QCloudVideoRecognitionModeAverage: {
-            return @"Average";
-        }
-        case QCloudVideoRecognitionModeFps: {
-            return @"Fps";
-        }
-        default:
-            return @"";
-    }
-}
-
 @end
 NS_ASSUME_NONNULL_END

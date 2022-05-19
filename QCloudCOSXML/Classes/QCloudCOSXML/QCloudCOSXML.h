@@ -62,7 +62,6 @@
 #import "QCloudPostObjectRestoreRequest.h"
 #import "QCloudRestoreRequest.h"
 #import "QCloudListObjectVersionsRequest.h"
-#import "QCloudGetRecognitionObjectRequest.h"
 #import "QCloudGetObjectACLRequest.h"
 #import "QCloudPutObjectRequest.h"
 #import "QCloudInitiateMultipartUploadRequest.h"
@@ -93,6 +92,7 @@
 
 
 //数据万象
+
 #import "QCloudCIPicRecognitionRequest.h"
 #import "QCloudQRCodeRecognitionRequest.h"
 #import "QCloudCICloudDataOperationsRequest.h"
@@ -101,7 +101,6 @@
 #import "QCloudCOSXMLService+ImageHelper.h"
 #import "QCloudPutObjectWatermarkRequest.h"
 #import "QCloudPutObjectWatermarkResult.h"
-#import "QCloudGetRecognitionObjectResult.h"
 #import "QCloudPutObjectTaggingRequest.h"
 #import "QCloudGetObjectTaggingRequest.h"
 #import "QCloudDeleteObjectTaggingRequest.h"
@@ -111,5 +110,13 @@
 #import "QCloudPostVideoRecognitionRequest.h"
 #import "QCloudGetDescribeMediaBucketsRequest.h"
 #import "QCloudGetMediaInfoRequest.h"
+#import "QCloudGetAudioRecognitionRequest.h"
+#import "QCloudPostAudioRecognitionRequest.h"
+#import "QCloudGetTextRecognitionRequest.h"
+#import "QCloudPostTextRecognitionRequest.h"
+#import "QCloudGetDocRecognitionRequest.h"
+#import "QCloudPostDocRecognitionRequest.h"
+#import "QCloudGetWebRecognitionRequest.h"
+#import "QCloudPostWebRecognitionRequest.h"
 #endif /* QCloudCOSXML_h */
 

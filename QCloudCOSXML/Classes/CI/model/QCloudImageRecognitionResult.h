@@ -1,6 +1,6 @@
 //
-//  QCloudPutObjectWatermarkInfo.h
-//  Pods-QCloudCOSXMLDemo
+//  QCloudImageRecognitionResult.h
+//  QCloudCOSXML
 //
 //  Created by tencent
 //  Copyright (c) 2020年 tencent. All rights reserved.
@@ -30,79 +30,76 @@
 //
 
 #import <Foundation/Foundation.h>
-@class QCloudPicOperationRule;
-
+#import "QCloudRecognitionModel.h"
+@class QCloudImageRecognitionResultInfo;
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSUInteger, QCloudPicOperationRuleEnum) {
-    QCloudPicOperationRuleHalf = 1, /// 抗攻击性强，但提取水印需原图 使用场景：小图（640x640以下）使用
-    QCloudPicOperationRuleFull,     /// 提取方便，提取水印仅需水印图，无需对比原图 使用场景：批量添加，批量校验
-    QCloudPicOperationRuleText,     /// 可直接将文字信息添加至图片中 使用场景：终端信息添加
-};
+@interface QCloudImageRecognitionResult : NSObject
 
-typedef NS_ENUM(NSUInteger, QCloudPicOperationRuleActionEnum) {
-    QCloudPicOperationRuleActionPut = 3, /// 添加盲水印
-    QCloudPicOperationRuleActionExtrac = 4,     /// 提取盲水印
-};
+///  图片审核的任务 ID，您可以通过该 ID 主动查询图片审核结果。
+@property (nonatomic,strong)NSString *JobId;
 
+///  该字段表示本次判定的审核结果，您可以根据该结果，进行后续的操作；建议您按照业务所需，对不同的审核结果进行相应处理。
+///  有效值：0（审核正常），1 （判定为违规敏感文件），2（疑似敏感，建议人工复核）
+@property (nonatomic,assign)NSInteger Result;
 
-/**
- 图片添加盲水印接口 参数类
- 包含水印规则，水印类型，水印参数
- */
-@interface QCloudPicOperations : NSObject
+///  该字段用于返回检测结果中所对应的优先级最高的恶意标签，表示模型推荐的审核结果，建议您按照业务所需，对不同违规类型与建议值进行处理。
+///  返回值：Normal 表示正常，Porn 表示色情，Ads 表示广告，以及其他不安全或不适宜的类型。
+@property (nonatomic,strong)NSString *Label;
 
-/// 是否返回原图信息。0表示不返回原图信息，1表示返回原图信息，默认为0
-@property (nonatomic, assign) BOOL is_pic_info;
+///  该图命中的二级标签结果
+@property (nonatomic,strong)NSString *SubLabel;
 
-/// 处理规则，一条规则对应一个处理结果（目前最多支持五条规则），不填则不进行图片处理
-@property (nonatomic, copy) NSArray<QCloudPicOperationRule *> *rule;
+///  该字段表示审核结果命中审核信息的置信度，取值范围：0（置信度最低）-100（置信度最高 ），越高代表该内容越有可能属于当前返回审核信息
+///  例如：色情 99，则表明该内容非常有可能属于色情内容
+@property (nonatomic,assign)NSInteger Score;
 
-- (NSString *)getPicOperationsJson;
+///  该图里的文字内容（OCR），当审核策略开启文本内容检测时返回
+@property (nonatomic,strong)NSString *Text;
 
+///  审核场景为涉黄的审核结果信息
+@property (nonatomic,strong)QCloudImageRecognitionResultInfo *PornInfo;
+
+///  审核场景为广告引导的审核结果信息
+@property (nonatomic,strong)QCloudImageRecognitionResultInfo *AdsInfo;
+
+///  审核场景为涉暴恐的审核结果信息。
+@property (nonatomic,strong)QCloudImageRecognitionResultInfo *TerrorismInfo;
+
+///  审核场景为政治敏感的审核结果信息。
+@property (nonatomic,strong)QCloudImageRecognitionResultInfo *PoliticsInfo;
+
+///  该参数表示当前图片是否被压缩处理过，
+///  值为 0（未经过压缩处理），1（已经过压缩处理）。
+@property (nonatomic,assign)NSInteger CompressionResult;
 @end
 
-/**
- 给图片添加水印规则
- */
-@interface QCloudPicOperationRule : NSObject
+@interface QCloudImageRecognitionResultInfo : NSObject
 
-/// 处理结果的文件路径名称，如以/开头，则存入指定文件夹中，否则，存入原图文件存储的同目录
-@property (nonatomic, copy) NSString *fileid;
+///  错误码，0为正确，其他数字对应相应错误。详情请参见 错误码
+@property (nonatomic,assign)NSInteger Code;
 
-/// 处理参数，参见数据万象图片处理 API。 若按指定样式处理，则以style/开头，后加样式名，如样式名为“test”，
-/// 则 rule 字段为style/test
-@property (nonatomic, copy) NSString *rule;
+///  具体错误信息，如正常则为 OK
+@property (nonatomic,strong)NSString *Msg;
 
-/// 盲水印类型，有效值：1 半盲；2 全盲；3 文字
-@property (nonatomic, assign) QCloudPicOperationRuleEnum type;
+///  是否命中该审核分类，0表示未命中，1表示命中，2表示疑似
+@property (nonatomic,assign)NSInteger HitFlag;
 
-/// 水印操作：提取水印：4，添加水印：3
-@property (nonatomic, assign) QCloudPicOperationRuleActionEnum actionType;
-/// 盲水印类型，有效值：1 半盲；2 全盲；3 文字
+///  该字段表示审核结果命中审核信息的置信度，取值范围：0（置信度最低）-100（置信度最高），越高代表该内容越有可能属于当前返回审核信息。
+///  其中0 - 60分表示图片正常，61 - 90分表示图片疑似敏感，91 - 100分表示图片确定敏感
+///  例如：色情 99，则表明该内容非常有可能属于色情内容
+@property (nonatomic,assign)NSInteger Score;
 
-/**
- 盲水印图片地址，需要经过 URL 安全的 Base64 编码。 当 type 为1或2时必填，type 为3时无效。
-    指定的水印图片必须同时满足如下 3 个条件：
- 1. 盲水印图片与原图片必须位于同一个对象存储桶下；
- 2. URL 需使用数据万象源站域名（不能使用 CDN 加速、COS 源站域名），例如
-    examplebucket-1250000000.image.myqcloud.com属于 CDN 加速域名，不能在水印 URL 中使用；
- 3. URL 必须以http://开始，不能省略http头，
- 也不能填https头，例如examplebucket-1250000000.picsh.myqcloud.com/shuiyin_2.png，
- https://examplebucket-1250000000.picsh.myqcloud.com/shuiyin_2.png
- 就是非法的水印 URL。
- */
-@property (nonatomic, copy) NSString *imageURL;
+///  该字段表示该截图的综合结果标签（可能为 SubLabel，可能为人物名字等）
+@property (nonatomic,strong)NSString *Label;
 
-/**
- 盲水印文字，需要经过 URL 安全的 Base64 编码。当 type 为3时必填，type 为1或2时无效。
- */
-@property (nonatomic, copy) NSString *text;
+///  该字段表示审核命中的具体子标签，例如：Porn 下的 SexBehavior 子标签。注意：该字段可能返回空，表示未命中具体的子标签
+@property (nonatomic,strong)NSString *SubLabel;
 
-/// 只对全盲水印（type=2）有效。level 的取值范围为{1,2,3}，默认值为1，level
-/// 值越大则图片受影响程度越大、盲水印效果越好。
-@property (nonatomic, assign) NSInteger level;
+///  该字段表示 OCR 文本识别的详细检测结果，包括文本识别结果、命中的关键词等信息，有相关违规内容时返回
+@property (nonatomic,strong)NSArray <QCloudRecognitionOcrResults *> *OcrResults;
 
+@property (nonatomic,strong)NSArray <QCloudRecognitionObjectResults *> *ObjectResults;
 @end
 
 NS_ASSUME_NONNULL_END

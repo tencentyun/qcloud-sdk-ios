@@ -7,7 +7,6 @@
 
 #import "QCloudCOSXMLService+ImageHelper.h"
 #import "QCloudPutObjectWatermarkRequest.h"
-#import "QCloudGetRecognitionObjectRequest.h"
 
 #import "QCloudGetFilePreviewRequest.h"
 #import "QCloudGetGenerateSnapshotRequest.h"
@@ -18,13 +17,17 @@
 #import "QCloudGetMediaInfoRequest.h"
 #import "QCloudGetVideoRecognitionRequest.h"
 #import "QCloudPostVideoRecognitionRequest.h"
+#import "QCloudGetAudioRecognitionRequest.h"
+#import "QCloudPostAudioRecognitionRequest.h"
+#import "QCloudGetTextRecognitionRequest.h"
+#import "QCloudPostTextRecognitionRequest.h"
+#import "QCloudGetDocRecognitionRequest.h"
+#import "QCloudPostDocRecognitionRequest.h"
+#import "QCloudGetWebRecognitionRequest.h"
+#import "QCloudPostWebRecognitionRequest.h"
 @implementation QCloudCOSXMLService (ImageHelper)
 
 - (void)PutWatermarkObject:(QCloudPutObjectWatermarkRequest *)request {
-    [super performRequest:request];
-}
-
-- (void)GetRecognitionObject:(QCloudGetRecognitionObjectRequest *)request {
     [super performRequest:request];
 }
 
@@ -60,10 +63,49 @@
     [super performRequest:request];
 }
 
+- (void)BatchImageRecognition:(QCloudBatchimageRecognitionRequest *)request{
+    [super performRequest:request];
+}
+
+- (void)SyncImageRecognition:(QCloudSyncImageRecognitionRequest *)request{
+    [super performRequest:request];
+}
+
+- (void)GetImageRecognition:(QCloudGetImageRecognitionRequest *)request{
+    [super performRequest:request];
+}
+
 - (void)GetVideoRecognition:(QCloudGetVideoRecognitionRequest *)request{
     [super performRequest:request];
 }
 - (void)PostVideoRecognition:(QCloudPostVideoRecognitionRequest *)request{
+    [super performRequest:request];
+}
+
+- (void)GetAudioRecognition:(QCloudGetAudioRecognitionRequest *)request{
+    [super performRequest:request];
+}
+- (void)PostAudioRecognition:(QCloudPostAudioRecognitionRequest *)request{
+    [super performRequest:request];
+}
+
+- (void)GetDocRecognition:(QCloudGetDocRecognitionRequest *)request{
+    [super performRequest:request];
+}
+- (void)PostDocRecognition:(QCloudPostDocRecognitionRequest *)request{
+    [super performRequest:request];
+}
+
+- (void)GetTextRecognition:(QCloudGetTextRecognitionRequest *)request{
+    [super performRequest:request];
+}
+- (void)PostTextRecognition:(QCloudPostTextRecognitionRequest *)request{
+    [super performRequest:request];
+}
+- (void)GetWebRecognition:(QCloudGetWebRecognitionRequest *)request{
+    [super performRequest:request];
+}
+- (void)PostWebRecognition:(QCloudPostWebRecognitionRequest *)request{
     [super performRequest:request];
 }
 @end
