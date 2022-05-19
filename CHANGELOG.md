@@ -1,6 +1,7 @@
-# 6.0.9    
+# 6.0.9   
 
-    
+1.新增内容审核接口
+
 # 6.0.8    
 
 1.修改sdk与yymodel 方法命名冲突。2.修改一些SDK 内部一些警告
@@ -8,13 +9,14 @@
 # 6.0.7    
 
 优化QCloudCore
-    
+
+# 6.0.6    
+
+修改sdkdonwlaodbug
+       
 # 6.0.5    
 
 修改已知bug
-    
-# 6.0.5    
-
 QCloudQuic 增加 Slim subspec
     
 # 6.0.4    
