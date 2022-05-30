@@ -415,7 +415,9 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
         NSEnumerator *enumertor = [_taskQueue objectEnumerator];
         NSURLSessionTask *task = nil;
         while (task = [enumertor nextObject]) {
-            [task cancel];
+            if ([task respondsToSelector:@selector(cancel)]) {
+                [task cancel];
+            }
         }
         [_taskQueue removeAllObjects];
     }
