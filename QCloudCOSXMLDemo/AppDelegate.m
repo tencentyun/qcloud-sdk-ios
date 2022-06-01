@@ -81,13 +81,20 @@
     [self setupCOSXMLShareService];
     self.credentialFenceQueue = [QCloudCredentailFenceQueue new];
     self.credentialFenceQueue.delegate = self;
-    
+
+    [QCloudCOSXMLConfiguration sharedInstance].currentRegion = kRegion;
+    QCloudServiceConfiguration* configuration = [[QCloudCOSXMLService defaultCOSXML].configuration copy];
+    configuration.endpoint.regionName = kRegion;
+    [QCloudCOSTransferMangerService registerCOSTransferMangerWithConfiguration:configuration withKey:kRegion];
+
+    [QCloudCOSXMLService registerCOSXMLWithConfiguration:configuration withKey:kRegion];
+
     QCloudMyBucketListCtor * bucketList = [[QCloudMyBucketListCtor alloc]init];
     _window = [[UIWindow alloc]initWithFrame:SCREEN_FRAME];
     [_window makeKeyAndVisible];
     UINavigationController * navRoot = [[UINavigationController alloc]initWithRootViewController:bucketList];
     _window.rootViewController = navRoot;
-    
+
     return YES;
 }
 //后台上传要实现该方法
