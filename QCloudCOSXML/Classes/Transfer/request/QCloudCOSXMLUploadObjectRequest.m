@@ -486,7 +486,6 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
             if (!weakSelf) {
                 return;
             }
-
             __strong typeof(weakSelf) strongSelf = weakSelf;
             __strong typeof(weakRequest) strongRequst = weakRequest;
             [strongSelf.requstMetricArray addObject:@ { [NSString stringWithFormat:@"%@", strongRequst] : strongRequst.benchMarkMan.tastMetrics }];
@@ -495,6 +494,10 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
                 NSError *transferError = [weakSelf tranformErrorToResume:error];
                 __strong typeof(weakSelf) strongSelf = weakSelf;
                 [weakSelf onError:transferError];
+                if (!self.canceled) {
+                    [strongSelf cancel];
+                }
+            }else if(error && error.code == QCloudNetworkErrorCodeCanceled){
                 if (!self.canceled) {
                     [strongSelf cancel];
                 }

@@ -55,5 +55,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)CopyObject:(QCloudCOSXMLCopyObjectRequest *)copy;
 - (void)DownloadObject:(QCloudCOSXMLDownloadObjectRequest *)get;
 
+
+/// 是否注册了该key对应的服务
++ (BOOL)hasTransferMangerServiceForKey:(NSString *)key;
+
+/// 删除key对应的服务
++ (void)removeTransferMangerServiceWithKey:(NSString *)key;
 @end
 NS_ASSUME_NONNULL_END

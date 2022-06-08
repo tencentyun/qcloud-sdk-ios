@@ -82,14 +82,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param key 要获取的cosxml服务对应的key
 + (QCloudCOSXMLService *)cosxmlServiceForKey:(NSString *)key;
 #pragma hidden super selectors
-/**
- 检查是否存在key对应的service
-
- @param key key
- @return 存在与否
-
- */
-+ (BOOL)hasServiceForKey:(NSString *)key;
 
 /// 注册默认的cosxml服务
 /// @param configuration cosxml服务对应的配置信息，一旦配置之后无法修改
@@ -100,7 +92,14 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param key 该cosxml对应的key
 + (QCloudCOSXMLService *)registerCOSXMLWithConfiguration:(QCloudServiceConfiguration *)configuration withKey:(NSString *)key;
 
-+ (void)removeCOSXMLWithKey:(NSString *)key;
+/// 检查是否存在key对应的service
++ (BOOL)hasCosxmlServiceForKey:(NSString *)key;
++ (BOOL)hasServiceForKey:(NSString *)key __attribute__((deprecated("该方法过期，请用hasCosxmlServiceForKey:替换")));
+
+/// 删除可以对应的service
++ (void)removeCosxmlServiceWithKey:(NSString *)key;
++ (void)removeCOSXMLWithKey:(NSString *)key __attribute__((deprecated("该方法过期，请用removeCosxmlServiceWithKey:替换")));
+
 
 /**
 根据Bukcet, Object来生成可以直接访问的URL。如果您的Bucket是私有读的话，那么访问的时候需要带上签名，

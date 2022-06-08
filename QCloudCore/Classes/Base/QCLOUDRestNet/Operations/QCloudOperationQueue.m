@@ -164,6 +164,21 @@ static const NSInteger kWeakNetworkConcurrentCount = 1;
     }
 }
 
+-(void)cancelAllOperation{
+    @autoreleasepool {
+        void (^CancelOperation)(NSMutableArray *array) = ^(NSMutableArray *array) {
+            for (QCloudRequestOperation *request in [array copy]) {
+                [request.request cancel];
+            }
+        };
+        CancelOperation(_runningOperationArray);
+        CancelOperation(_highPerfomanceRequest);
+        CancelOperation(_lowPerformanceRequest);
+        CancelOperation(_normalPerformanceRequest);
+        CancelOperation(_backgroundPerformanceRequest);
+    }
+}
+
 - (void)cancelByRequestIDs:(NSArray<NSNumber *> *)requestIDs {
     [_dataLock lock];
     for (NSNumber *requestID in requestIDs) {

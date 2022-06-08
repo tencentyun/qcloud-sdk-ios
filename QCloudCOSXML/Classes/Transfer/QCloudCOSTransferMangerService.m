@@ -124,11 +124,17 @@ static QCloudCOSTransferMangerService *COSTransferMangerService = nil;
     [self.uploadFileQueue addOpreation:operation];
 }
 #pragma mark - UIApplicationDelegate interceptor
-/**
- This method needs to be called in the `- application:handleEventsForBackgroundURLSession:completionHandler:` application delegate.
- @param application       The singleton app object.
- @param identifier        The identifier of the URL session requiring attention.
- @param completionHandler The completion handler to call when you finish processing the events.
- */
+
++ (BOOL)hasTransferMangerServiceForKey:(NSString *)key {
+    if (nil == [QCloudCOSTransferMangerServiceCache() objectForKey:key]) {
+        return NO;
+    } else {
+        return YES;
+    }
+}
+
++ (void)removeTransferMangerServiceWithKey:(NSString *)key {
+    [QCloudCOSTransferMangerServiceCache() removeObjectForKey:key];
+}
 
 @end

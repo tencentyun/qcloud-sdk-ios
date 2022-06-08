@@ -411,16 +411,21 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
 }
 
 - (void)cancelAllRequest {
-    @synchronized(self) {
-        NSEnumerator *enumertor = [_taskQueue objectEnumerator];
-        NSURLSessionTask *task = nil;
-        while (task = [enumertor nextObject]) {
-            if ([task respondsToSelector:@selector(cancel)]) {
-                [task cancel];
-            }
-        }
-        [_taskQueue removeAllObjects];
-    }
+    [self.operationQueue cancelAllOperation];
+//    @synchronized(self) {
+//        NSEnumerator *enumertor = [_taskQueue objectEnumerator];
+//        NSURLSessionTask *task = nil;
+//        while (task = [enumertor nextObject]) {
+//            if ([task respondsToSelector:@selector(cancel)]) {
+//                [task cancel];
+//            }
+//
+//            if ([task isKindOfClass:[NSNumber class]]) {
+//                [self.operationQueue cancelByRequestID:((NSNumber *)task).integerValue];
+//            }
+//        }
+//        [_taskQueue removeAllObjects];
+//    }
 }
 
 - (void)executeRestHTTPReqeust:(QCloudHTTPRequest *)httpRequest {

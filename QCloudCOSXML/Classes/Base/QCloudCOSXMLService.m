@@ -44,7 +44,6 @@ QCloudThreadSafeMutableDictionary *QCloudCOSXMLServiceCache() {
     return CloudcosxmlService;
 }
 @implementation QCloudCOSXMLService
-@synthesize sessionManager = _sessionManager;
 static QCloudCOSXMLService *COSXMLService = nil;
 
 + (QCloudCOSXMLService *)defaultCOSXML {
@@ -58,13 +57,6 @@ static QCloudCOSXMLService *COSXMLService = nil;
 
 + (QCloudCOSXMLService *)registerDefaultCOSXMLWithConfiguration:(QCloudServiceConfiguration *)configuration {
     @synchronized(self) {
-        if (COSXMLService) {
-            @throw [NSException
-                    exceptionWithName:QCloudErrorDomain
-                    reason:[NSString stringWithFormat:
-                            @"默认的COSXMLService已存在，如有新的配置，请通过 registerCOSXMLWithConfiguration:withKey:重新注册"]
-                    userInfo:nil];
-        }
         COSXMLService = [[QCloudCOSXMLService alloc] initWithConfiguration:configuration];
         if (!configuration.isCloseShareLog) {
 #if TARGET_OS_IOS
@@ -85,20 +77,8 @@ static QCloudCOSXMLService *COSXMLService = nil;
     return cosxmlService;
 }
 
-+ (void)removeCOSXMLWithKey:(NSString *)key {
-    [QCloudCOSXMLServiceCache() removeObjectForKey:key];
-}
-
 + (QCloudCOSXMLService *)registerCOSXMLWithConfiguration:(QCloudServiceConfiguration *)configuration withKey:(NSString *)key;
 {
-    if ([self hasServiceForKey:key]) {
-        @throw [NSException
-                exceptionWithName:QCloudErrorDomain
-                reason:[NSString
-                        stringWithFormat:
-                            @"key: %@ COSXMLService已存在，如有新的配置，请通过 registerCOSXMLWithConfiguration:withKey:重新注册", key]
-                userInfo:nil];
-    }
     QCloudCOSXMLService *cosxmlService = [[QCloudCOSXMLService alloc] initWithConfiguration:configuration];
     [QCloudCOSXMLServiceCache() setObject:cosxmlService forKey:key];
     return cosxmlService;
@@ -133,12 +113,22 @@ static QCloudCOSXMLService *COSXMLService = nil;
     return [resultURL copy];
 }
 
-+ (BOOL)hasServiceForKey:(NSString *)key {
++ (BOOL)hasCosxmlServiceForKey:(NSString *)key {
     if (nil == [QCloudCOSXMLServiceCache() objectForKey:key]) {
         return NO;
     } else {
         return YES;
     }
+}
++ (BOOL)hasServiceForKey:(NSString *)key{
+    return [QCloudCOSXMLService hasCosxmlServiceForKey:key];
+}
+
++ (void)removeCosxmlServiceWithKey:(NSString *)key {
+    [QCloudCOSXMLServiceCache() removeObjectForKey:key];
+}
++ (void)removeCOSXMLWithKey:(NSString *)key{
+    [self removeCosxmlServiceWithKey:key];
 }
 
 @end
