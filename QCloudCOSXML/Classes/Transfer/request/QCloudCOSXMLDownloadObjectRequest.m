@@ -137,7 +137,7 @@
     [request setDownProcessBlock:^(int64_t bytesDownload, int64_t totalBytesDownload, int64_t totalBytesExpectedToDownload) {
         __strong typeof(weakSelf) strongSelf = self;
         currentTotalBytesDownload = totalBytesDownload;
-        QCloudLogInfo(@"🔽🔽🔽🔽🔽downProcess %lld %lld %ld",totalBytesDownload,currentTotalBytesDownload,totalBytesExpectedToDownload);
+        QCloudLogInfo(@"🔽🔽🔽🔽🔽downProcess %lld %lld %ld",bytesDownload,totalBytesDownload,totalBytesExpectedToDownload);
         if(strongSelf.downProcessBlock){
             strongSelf.downProcessBlock(bytesDownload, totalBytesDownload, totalBytesExpectedToDownload);
         }

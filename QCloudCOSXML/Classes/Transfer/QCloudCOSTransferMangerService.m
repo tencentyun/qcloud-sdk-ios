@@ -30,7 +30,7 @@
 //
 
 #import "QCloudCOSTransferMangerService.h"
-#import <QCLoudCore/QCloudThreadSafeMutableDictionary.h>
+#import <QCloudCore/QCloudThreadSafeMutableDictionary.h>
 #import <QCloudCore/QCloudError.h>
 
 #import "QCloudPutObjectRequest.h"
@@ -42,7 +42,6 @@
 #import "QCloudCOSXMLUploadObjectRequest_Private.h"
 #import "QCloudCOSXMLDownloadObjectRequest.h"
 #import "QCloudCOSXMLCopyObjectRequest.h"
-#import <QCloudCore/QCloudThreadSafeMutableDictionary.h>
 QCloudThreadSafeMutableDictionary *QCloudCOSTransferMangerServiceCache() {
     static QCloudThreadSafeMutableDictionary *CloudcostransfermangerService = nil;
     static dispatch_once_t onceToken;
