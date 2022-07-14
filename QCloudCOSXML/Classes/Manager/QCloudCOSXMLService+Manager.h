@@ -72,7 +72,7 @@
 @class QCloudGetBucketIntelligentTieringRequest;
 @class QCloudPutBucketRefererRequest;
 @class QCloudGetBucketRefererRequest;
-
+@class QCloudPutObjectTaggingRequest;
 NS_ASSUME_NONNULL_BEGIN
 @interface QCloudCOSXMLService (Manager)
 
@@ -123,7 +123,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)DeleteObject:(QCloudDeleteObjectRequest *)request;
 - (void)GetObjectTagging:(QCloudGetObjectTaggingRequest *)request;
 - (void)DeleteObjectTagging:(QCloudDeleteObjectTaggingRequest *)request;
-- (void)PuObjectTagging:(QCloudPutBucketTaggingRequest *)request;
+- (void)PuObjectTagging:(QCloudPutObjectTaggingRequest *)request;
 - (void)GetObjectACL:(QCloudGetObjectACLRequest *)request;
 - (void)PutObjectACL:(QCloudPutObjectACLRequest *)request;
 - (void)DeleteMultipleObject:(QCloudDeleteMultipleObjectRequest *)request;

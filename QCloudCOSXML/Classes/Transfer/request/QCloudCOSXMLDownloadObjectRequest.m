@@ -56,6 +56,7 @@
         }
         QCloudHeadObjectRequest *headReq = [QCloudHeadObjectRequest new];
         headReq.bucket = self.bucket;
+        headReq.payload = self.payload;
         headReq.regionName = self.regionName;
         headReq.object = self.object;
         [headReq setFinishBlock:^(id  _Nullable outputObject, NSError * _Nullable error) {
@@ -127,6 +128,7 @@
     
     QCloudGetObjectRequest *request = [QCloudGetObjectRequest new];
     request.trafficLimit = self.trafficLimit;
+    request.payload = self.payload;
     request.customHeaders = [self.customHeaders copy];
     request.downloadingURL = self.downloadingURL;
     request.localCacheDownloadOffset = self.localCacheDownloadOffset;

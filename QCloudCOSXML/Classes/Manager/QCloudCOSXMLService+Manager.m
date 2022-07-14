@@ -67,7 +67,7 @@
     [super performRequest:request];
 }
 
-- (void)PuObjectTagging:(QCloudPutBucketTaggingRequest *)request {
+- (void)PuObjectTagging:(QCloudPutObjectTaggingRequest *)request{
     [super performRequest:request];
 }
 

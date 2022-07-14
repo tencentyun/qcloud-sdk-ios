@@ -119,6 +119,10 @@ NS_ASSUME_NONNULL_BEGIN
         [self.requestData setQueryStringParamter:[NSString stringWithFormat:@"%ld",self.maxFrames] withKey:@"max-frames"];
     }
     
+    if (self.bizType) {
+        [self.requestData setQueryStringParamter:self.bizType withKey:@"biz-type"];
+    }
+    
     if (self.largeImageDetect) {
         [self.requestData setQueryStringParamter:self.largeImageDetect withKey:@"large-image-detect"];
     }
