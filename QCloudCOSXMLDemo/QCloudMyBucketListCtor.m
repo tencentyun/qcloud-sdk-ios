@@ -111,7 +111,7 @@ NSInteger const RowHeight = 80;
     QCloudServiceConfiguration* configuration = [[QCloudCOSXMLService defaultCOSXML].configuration copy];
     configuration.endpoint.regionName = regionName;
     [QCloudCOSTransferMangerService registerCOSTransferMangerWithConfiguration:configuration withKey:regionName];
-    if ([QCloudCOSXMLService hasServiceForKey:regionName]) {
+    if (![QCloudCOSXMLService hasServiceForKey:regionName]) {
         [QCloudCOSXMLService registerCOSXMLWithConfiguration:configuration withKey:regionName];
     }
     [self.navigationController pushViewController:[QCloudFileListCtor new] animated:YES];
