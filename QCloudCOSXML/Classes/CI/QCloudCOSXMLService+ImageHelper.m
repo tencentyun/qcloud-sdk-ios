@@ -25,6 +25,14 @@
 #import "QCloudPostDocRecognitionRequest.h"
 #import "QCloudGetWebRecognitionRequest.h"
 #import "QCloudPostWebRecognitionRequest.h"
+
+#import "QCloudUpdateAudioDiscernTaskQueueRequest.h"
+#import "QCloudGetAudioDiscernTaskQueueRequest.h"
+#import "QCloudBatchGetAudioDiscernTaskRequest.h"
+#import "QCloudGetAudioDiscernTaskRequest.h"
+#import "QCloudPostAudioDiscernTaskRequest.h"
+#import "QCloudGetAudioDiscernOpenBucketListRequest.h"
+
 @implementation QCloudCOSXMLService (ImageHelper)
 
 - (void)PutWatermarkObject:(QCloudPutObjectWatermarkRequest *)request {
@@ -108,4 +116,30 @@
 - (void)PostWebRecognition:(QCloudPostWebRecognitionRequest *)request{
     [super performRequest:request];
 }
+
+-(void)UpdateAudioDiscernTaskQueue:(QCloudUpdateAudioDiscernTaskQueueRequest *)request{
+    [super performRequest:request];
+}
+
+-(void)GetAudioDiscernTaskQueue:(QCloudGetAudioDiscernTaskQueueRequest *)request{
+    [super performRequest:request];
+}
+
+-(void)BatchGetAudioDiscernTask:(QCloudBatchGetAudioDiscernTaskRequest *)request{
+    [super performRequest:request];
+}
+
+-(void)GetAudioDiscernTask:(QCloudGetAudioDiscernTaskRequest *)request{
+    [super performRequest:request];
+}
+
+-(void)PostAudioDiscernTask:(QCloudPostAudioDiscernTaskRequest *)request{
+    [super performRequest:request];
+}
+
+-(void)GetAudioDiscernOpenBucketList:(QCloudGetAudioDiscernOpenBucketListRequest *)request{
+    [super performRequest:request];
+}
+
+
 @end

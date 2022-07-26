@@ -28,6 +28,12 @@
 @class QCloudBatchimageRecognitionRequest;
 @class QCloudSyncImageRecognitionRequest;
 @class QCloudGetImageRecognitionRequest;
+@class QCloudUpdateAudioDiscernTaskQueueRequest;
+@class QCloudGetAudioDiscernTaskQueueRequest;
+@class QCloudBatchGetAudioDiscernTaskRequest;
+@class QCloudGetAudioDiscernTaskRequest;
+@class QCloudPostAudioDiscernTaskRequest;
+@class QCloudGetAudioDiscernOpenBucketListRequest;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -87,7 +93,23 @@ COS 文档预览方法.
 - (void)GetWebRecognition:(QCloudGetWebRecognitionRequest *)request;
 - (void)PostWebRecognition:(QCloudPostWebRecognitionRequest *)request;
 
+/// 更新语音识别队列
+-(void)UpdateAudioDiscernTaskQueue:(QCloudUpdateAudioDiscernTaskQueueRequest *)request;
 
+/// 查询语音识别队列
+-(void)GetAudioDiscernTaskQueue:(QCloudGetAudioDiscernTaskQueueRequest *)request;
+
+/// 批量拉取语音识别任务
+-(void)BatchGetAudioDiscernTask:(QCloudBatchGetAudioDiscernTaskRequest *)request;
+
+/// 查询指定的语音识别任务
+-(void)GetAudioDiscernTask:(QCloudGetAudioDiscernTaskRequest *)request;
+
+/// 提交语音识别任务
+-(void)PostAudioDiscernTask:(QCloudPostAudioDiscernTaskRequest *)request;
+
+/// 查询存储桶是否已开通语音识别功能。
+-(void)GetAudioDiscernOpenBucketList:(QCloudGetAudioDiscernOpenBucketListRequest *)request;
 @end
 
 NS_ASSUME_NONNULL_END

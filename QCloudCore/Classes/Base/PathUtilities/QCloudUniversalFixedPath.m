@@ -9,6 +9,10 @@
 
 @implementation QCloudUniversalFixedPath
 - (NSURL *)fileURL {
-    return [NSURL fileURLWithPath:self.originURL];
+    if ([self.originURL hasPrefix:@"file:///"]) {
+        return [NSURL URLWithString:self.originURL];
+    }else{
+        return [NSURL fileURLWithPath:self.originURL];
+    }
 }
 @end
