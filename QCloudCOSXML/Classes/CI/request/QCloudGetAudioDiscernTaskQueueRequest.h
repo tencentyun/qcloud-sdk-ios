@@ -55,9 +55,9 @@ NS_ASSUME_NONNULL_BEGIN
         // 2. Paused 表示队列暂停，作业不再会被语音识别服务调度执行，队列内的所有作业状态维持在暂停状态，已经处于识别中的任务将继续执行，不受影响
         request.state = 1;
  
-        request.finishBlock = ^(QCloudAudioRecognitionResult * outputObject, NSError *error) {
+        request.finishBlock = ^(QCloudAudioAsrqueueResult * outputObject, NSError *error) {
          // outputObject 审核结果 包含用于查询的job id，详细字段请查看api文档或者SDK源码
-         // QCloudAudioRecognitionResult 类；
+         // QCloudAudioAsrqueueResult 类；
         };
         [[QCloudCOSXMLService defaultCOSXML] GetAudioDiscernTaskQueue:request];
 
