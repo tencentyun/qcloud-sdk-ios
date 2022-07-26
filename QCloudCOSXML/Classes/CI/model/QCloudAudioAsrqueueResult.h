@@ -9,6 +9,7 @@
 
 @class QCloudAudioAsrqueueQueueListItem;
 @class QCloudAudioAsrqueueNotifyConfig;
+@class QCloudAudioAsrqueueResultNonExistPIDs;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface QCloudAudioAsrqueueResult : NSObject
@@ -28,7 +29,18 @@ NS_ASSUME_NONNULL_BEGIN
 /// 队列数组
 @property (nonatomic,strong)NSArray <QCloudAudioAsrqueueQueueListItem *> *QueueList;
 
+/// 队列 ID
+@property (nonatomic,strong)QCloudAudioAsrqueueResultNonExistPIDs * NonExistPIDs;
+
 @end
+
+
+/// 不存在的队列 ID 列表
+@interface QCloudAudioAsrqueueResultNonExistPIDs : NSObject
+
+@property (nonatomic,strong)NSString *QueueID;
+@end
+
 
 @interface QCloudAudioAsrqueueQueueListItem : NSObject
 

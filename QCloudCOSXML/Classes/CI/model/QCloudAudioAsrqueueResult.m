@@ -10,7 +10,8 @@
 @implementation QCloudAudioAsrqueueResult
 + (NSDictionary *)modelContainerPropertyGenericClass {
     return @{
-        @"QueueList": [QCloudAudioAsrqueueQueueListItem class]
+        @"QueueList": [QCloudAudioAsrqueueQueueListItem class],
+        @"NonExistPIDs": [QCloudAudioAsrqueueResultNonExistPIDs class]
     };
 }
 
@@ -26,6 +27,9 @@
     return mdic.mutableCopy;
 }
 
+@end
+
+@implementation QCloudAudioAsrqueueResultNonExistPIDs
 @end
 
 @implementation QCloudAudioAsrqueueQueueListItem

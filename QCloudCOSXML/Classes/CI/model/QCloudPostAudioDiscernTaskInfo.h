@@ -17,6 +17,10 @@
 @class QCloudPostAudioDiscernTaskJobsOperation;
 
 @class QCloudPostAudioDiscernTaskResultInput;
+@class QCloudPostAudioDiscernTaskInfoSpeechRecognitionResult;
+
+@class QCloudPostAudioDiscernTaskInfoSpeechWords;
+@class QCloudPostAudioDiscernTaskInfoSpeechResultDetail;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface QCloudPostAudioDiscernTaskInfo : NSObject
@@ -124,6 +128,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic,strong)NSString *EndTime;
 
+
+@property (nonatomic,strong)NSString *StartTime;
+
 /// 任务所属的队列 ID
 @property (nonatomic,strong)NSString *QueueId;
 
@@ -156,6 +163,63 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong)QCloudPostAudioDiscernTaskInfoOutput *Output;
 
 @property (nonatomic,strong)QCloudPostAudioDiscernTaskInfoSpeechRecognition *SpeechRecognition;
+
+@property (nonatomic,strong)QCloudPostAudioDiscernTaskInfoSpeechRecognitionResult *SpeechRecognitionResult;
 @end
+
+@interface QCloudPostAudioDiscernTaskInfoSpeechRecognitionResult : NSObject
+
+/// 语音时长
+@property (nonatomic,strong)NSString *AudioTime;
+
+/// 识别结果
+@property (nonatomic,strong)NSString *Result;
+
+/// 结果详情
+@property (nonatomic,strong)NSArray <QCloudPostAudioDiscernTaskInfoSpeechResultDetail *> *ResultDetail;
+@end
+
+@interface QCloudPostAudioDiscernTaskInfoSpeechResultDetail : NSObject
+
+/// 单句结束时间（毫秒）
+@property (nonatomic,strong)NSString * EndMs;
+
+/// 单句最终识别结果
+@property (nonatomic,strong)NSString * FinalSentence;
+
+/// 单句中间识别结果，使用空格拆分为多个词
+@property (nonatomic,strong)NSString * SliceSentence;
+
+/// 声道或说话人 Id（请求中如果设置了 speaker_diarization或者ChannelNum为双声道，可区分说话人或声道）
+@property (nonatomic,strong)NSString * SpeakerId;
+
+/// 单句语速，单位：字数/秒
+@property (nonatomic,strong)NSString * SpeechSpeed;
+
+/// 单句开始时间（毫秒）
+@property (nonatomic,strong)NSString * StartMs;
+
+/// 单句中词详情
+@property (nonatomic,strong)NSArray <QCloudPostAudioDiscernTaskInfoSpeechWords *> * Words;
+
+/// 单句中词个数
+@property (nonatomic,strong)NSString * WordsNum;
+@end
+
+@interface QCloudPostAudioDiscernTaskInfoSpeechWords : NSObject
+
+
+/// 在句子中的结束时间偏移量
+@property (nonatomic,strong)NSString * OffsetEndMs;
+
+/// 在句子中的开始时间偏移量
+@property (nonatomic,strong)NSString * OffsetStartMs;
+@property (nonatomic,strong)NSString * VoiceType;
+
+/// 词文本
+@property (nonatomic,strong)NSString * Word;
+
+@end
+
 
 NS_ASSUME_NONNULL_END

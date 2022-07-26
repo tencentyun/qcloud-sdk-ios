@@ -7,7 +7,6 @@
 
 #import <Foundation/Foundation.h>
 #import "QCloudPostAudioDiscernTaskInfo.h"
-@class QCloudGetAudioDiscernTaskSpeechRecognitionResult;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface QCloudGetAudioDiscernTaskResult : NSObject
@@ -19,18 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong)NSString *NonExistJobIds;
 
 /// 在 job 的类型为 SpeechRecognition 且 job 状态为 success 时，返回语音识别的识别结果详情。
-@property (nonatomic,strong)QCloudGetAudioDiscernTaskSpeechRecognitionResult *SpeechRecognitionResult;
-@end
-
-
-@interface QCloudGetAudioDiscernTaskSpeechRecognitionResult : NSObject
-/// 识别结果
-@property (nonatomic,strong)NSString *Result;
-/// Response.SpeechRecognition.ResultDetail    识别结果详情，包含每个句子中的词时间偏移，一般用于生成字幕的场景。(识别请求中ResTextFormat=1时该字段不为空)
-/// 注意：此字段可能返回 null，表示取不到有效值。
-@property (nonatomic,strong)NSString *ResultDetail;
-/// 语音时长
-@property (nonatomic,assign)CGFloat AudioTime;
+@property (nonatomic,strong)QCloudPostAudioDiscernTaskInfoSpeechRecognitionResult *SpeechRecognitionResult;
 @end
 
 

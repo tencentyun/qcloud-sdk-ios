@@ -75,7 +75,8 @@
 + (NSDictionary *)modelContainerPropertyGenericClass {
     return @{
         @"Output": [QCloudPostAudioDiscernTaskInfoOutput class],
-        @"SpeechRecognition":[QCloudPostAudioDiscernTaskInfoSpeechRecognition class]
+        @"SpeechRecognition":[QCloudPostAudioDiscernTaskInfoSpeechRecognition class],
+        @"SpeechRecognitionResult":[QCloudPostAudioDiscernTaskInfoSpeechRecognitionResult class]
     };
 }
 
@@ -84,3 +85,49 @@
 @implementation QCloudPostAudioDiscernTaskResultInput
 
 @end
+
+@implementation QCloudPostAudioDiscernTaskInfoSpeechRecognitionResult
++ (NSDictionary *)modelContainerPropertyGenericClass {
+    return @{
+        @"ResultDetail": [QCloudPostAudioDiscernTaskInfoSpeechResultDetail class]
+    };
+}
+
+- (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dic {
+    if (!dic) {
+        return dic;
+    }
+    
+    NSMutableDictionary * mdic = [NSMutableDictionary dictionaryWithDictionary:dic];
+    if ([mdic[@"ResultDetail"] isKindOfClass:[NSDictionary class]]) {
+        [mdic setValue:@[mdic[@"ResultDetail"]] forKey:@"ResultDetail"];
+    }
+    return mdic.mutableCopy;
+}
+@end
+
+
+@implementation QCloudPostAudioDiscernTaskInfoSpeechResultDetail
++ (NSDictionary *)modelContainerPropertyGenericClass {
+    return @{
+        @"Words": [QCloudPostAudioDiscernTaskInfoSpeechWords class]
+    };
+}
+
+- (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dic {
+    if (!dic) {
+        return dic;
+    }
+    
+    NSMutableDictionary * mdic = [NSMutableDictionary dictionaryWithDictionary:dic];
+    if ([mdic[@"Words"] isKindOfClass:[NSDictionary class]]) {
+        [mdic setValue:@[mdic[@"Words"]] forKey:@"Words"];
+    }
+    return mdic.mutableCopy;
+}
+@end
+
+@implementation QCloudPostAudioDiscernTaskInfoSpeechWords
+
+@end
+
