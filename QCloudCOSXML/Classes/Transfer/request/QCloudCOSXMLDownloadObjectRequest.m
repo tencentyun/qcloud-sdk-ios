@@ -151,7 +151,11 @@
             NSData *jsonData = [[NSData alloc] initWithContentsOfFile:self.resumableTaskFile];
             NSMutableDictionary *dic = [NSMutableDictionary dictionary];
             if(jsonData){
-                dic = [[NSJSONSerialization JSONObjectWithData:jsonData options:kNilOptions error:nil] mutableCopy];
+                id jsonObject = [[NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil] mutableCopy];
+                if (jsonObject)
+                {
+                    dic = jsonObject;
+                }
             }
           
             if(error){
