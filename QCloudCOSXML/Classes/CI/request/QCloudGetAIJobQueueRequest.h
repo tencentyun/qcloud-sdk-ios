@@ -1,6 +1,6 @@
 //
-//  QCloudGetWebRecognitionRequest.h
-//  QCloudGetWebRecognitionRequest
+//  QCloudGetAIJobQueueRequest.h
+//  QCloudGetAIJobQueueRequest
 //
 //  Created by tencent
 //  Copyright (c) 2020年 tencent. All rights reserved.
@@ -31,41 +31,45 @@
 
 #import <Foundation/Foundation.h>
 #import <QCloudCore/QCloudCore.h>
-#import "QCloudWebRecognitionResult.h"
+#import "QCloudAIJobQueueResult.h"
 NS_ASSUME_NONNULL_BEGIN
 
 /**
  功能描述：
 
- 本接口用于查询指定的文档审核任务结果。
- 具体请查看：https://cloud.tencent.com/document/product/460/63970
+ 接口用于查询分词队列。
+ 具体请查看：https://cloud.tencent.com/document/product/460/79394
 
   @code
  
-        QCloudGetWebRecognitionRequest * request = [[QCloudGetWebRecognitionRequest alloc]init];
-
+        QCloudGetAIJobQueueRequest * request = [[QCloudGetAIJobQueueRequest alloc]init];
         // 存储桶名称，格式为 BucketName-APPID
         request.bucket = @"examplebucket-1250000000";
-
-        // QCloudPostWebRecognitionRequest接口返回的jobid
-        request.jobId = @"jobid";
-
+        // 设置地域名
         request.regionName = @"regionName";
-
-        request.finishBlock = ^(QCloudWebRecognitionResult * outputObject, NSError *error) {
-             // outputObject 审核结果 包含用于查询的job id，详细字段请查看api文档或者SDK源码
-             // QCloudWebRecognitionResult 类；
-        };
-        [[QCloudCOSXMLService defaultCOSXML] GetWebRecognition:request];
+        request.state = 1;
+        [request setFinishBlock:^(QCloudAIJobQueueResult * _Nullable result, NSError * _Nullable error) {
+            // outputObject 详细字段请查看api文档或者SDK源码
+            // QCloudAIJobQueueResult 类；
+        }];
+        [[QCloudCOSXMLService defaultCOSXML] GetWordsGeneralizeQueue:request];
 
 */
-@interface QCloudGetWebRecognitionRequest : QCloudBizHTTPRequest
+@interface QCloudGetAIJobQueueRequest : QCloudBizHTTPRequest
 
-/**
- 对象名
- */
-@property (strong, nonatomic) NSString *jobId;
 
+/// 队列 ID，以“,”符号分割字符串
+@property (strong, nonatomic) NSString *queueId;
+
+/// 1. Active 表示队列内的作业会被语音识别服务调度执行
+/// 2. Paused 表示队列暂停，作业不再会被语音识别服务调度执行，队列内的所有作业状态维持在暂停状态，已经处于识别中的任务将继续执行，不受影响
+@property (assign, nonatomic) NSInteger state;
+
+/// 第几页
+@property (assign, nonatomic) NSInteger pageNumber;
+
+/// 每页个数
+@property (assign, nonatomic) NSInteger pageSize;
 
 /// 桶名
 @property (strong, nonatomic) NSString *bucket;
@@ -74,7 +78,7 @@ NS_ASSUME_NONNULL_BEGIN
  设置完成回调。请求完成后会通过该回调来获取结果，如果没有error，那么可以认为请求成功。
  @param finishBlock 请求完成回调
  */
-- (void)setFinishBlock:(void (^_Nullable)(QCloudWebRecognitionResult *_Nullable result, NSError *_Nullable error))finishBlock;
+- (void)setFinishBlock:(void (^_Nullable)(QCloudAIJobQueueResult *_Nullable result, NSError *_Nullable error))finishBlock;
 
 @end
 NS_ASSUME_NONNULL_END

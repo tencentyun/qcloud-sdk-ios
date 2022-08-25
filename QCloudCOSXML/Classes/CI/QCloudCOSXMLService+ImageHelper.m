@@ -32,6 +32,8 @@
 #import "QCloudGetAudioDiscernTaskRequest.h"
 #import "QCloudPostAudioDiscernTaskRequest.h"
 #import "QCloudGetAudioDiscernOpenBucketListRequest.h"
+#import "QCloudOpenAIBucketRequest.h"
+#import "QCloudGetAIJobQueueRequest.h"
 
 @implementation QCloudCOSXMLService (ImageHelper)
 
@@ -138,6 +140,21 @@
 }
 
 -(void)GetAudioDiscernOpenBucketList:(QCloudGetAudioDiscernOpenBucketListRequest *)request{
+    [super performRequest:request];
+}
+
+-(void)OpenAIBucket:(QCloudOpenAIBucketRequest *)request{
+    [super performRequest:request];
+}
+
+-(void)GetAIJobQueue:(QCloudGetAIJobQueueRequest *)request{
+    [super performRequest:request];
+}
+
+-(void)PostWordsGeneralizeTask:(QCloudPostWordsGeneralizeTaskRequest *)request{
+    [super performRequest:request];
+}
+-(void)GetWordsGeneralizeTask:(QCloudGetWordsGeneralizeTaskRequest *)request{
     [super performRequest:request];
 }
 

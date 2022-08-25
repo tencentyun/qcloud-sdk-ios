@@ -1,6 +1,6 @@
 //
-//  QCloudGetWebRecognitionRequest.h
-//  QCloudGetWebRecognitionRequest
+//  QCloudOpenAIBucketRequest.m
+//  QCloudOpenAIBucketRequest
 //
 //  Created by tencent
 //  Copyright (c) 2020年 tencent. All rights reserved.
@@ -29,52 +29,71 @@
 //   |______|______|______|______|______|______|______|______|                                                                           |_|
 //
 
-#import <Foundation/Foundation.h>
+#import "QCloudOpenAIBucketRequest.h"
+#import <QCloudCore/QCloudSignatureFields.h>
 #import <QCloudCore/QCloudCore.h>
-#import "QCloudWebRecognitionResult.h"
+
 NS_ASSUME_NONNULL_BEGIN
+@implementation QCloudOpenAIBucketRequest
+- (void)dealloc {
+}
+- (instancetype)init {
+    self = [super init];
+    if (!self) {
+        return nil;
+    }
+    return self;
+}
+- (void)configureReuqestSerializer:(QCloudRequestSerializer *)requestSerializer responseSerializer:(QCloudResponseSerializer *)responseSerializer {
+    NSArray *customRequestSerilizers = @[
+        QCloudURLFuseURIMethodASURLParamters,
+    ];
 
-/**
- 功能描述：
+    NSArray *responseSerializers = @[
+        QCloudAcceptRespnseCodeBlock([NSSet setWithObjects:@(200), @(201), @(202), @(203), @(204), @(205), @(206), @(207), @(208), @(226), nil], nil),
+        QCloudResponseXMLSerializerBlock,
+        QCloudResponseObjectSerilizerBlock([QCloudOpenAIBucketResult class])
+    ];
+    [requestSerializer setSerializerBlocks:customRequestSerilizers];
+    [responseSerializer setSerializerBlocks:responseSerializers];
 
- 本接口用于查询指定的文档审核任务结果。
- 具体请查看：https://cloud.tencent.com/document/product/460/63970
+    requestSerializer.HTTPMethod = @"post";
+}
 
-  @code
- 
-        QCloudGetWebRecognitionRequest * request = [[QCloudGetWebRecognitionRequest alloc]init];
+- (BOOL)buildRequestData:(NSError *__autoreleasing *)error {
+    if (![super buildRequestData:error]) {
+        return NO;
+    }
 
-        // 存储桶名称，格式为 BucketName-APPID
-        request.bucket = @"examplebucket-1250000000";
+   
+    NSURL *__serverURL = [self.runOnService.configuration.endpoint serverURLWithBucket:self.bucket
+                                                                                 appID:self.runOnService.configuration.appID
+                                                                            regionName:self.regionName];
+    
+    NSString * serverUrlString = __serverURL.absoluteString;
+    
+    serverUrlString = [serverUrlString stringByReplacingOccurrencesOfString:@".cos." withString:@".ci."];
+    
+    __serverURL = [NSURL URLWithString:serverUrlString];
+    self.requestData.serverURL = __serverURL.absoluteString;
+    [self.requestData setValue:__serverURL.host forHTTPHeaderField:@"Host"];
 
-        // QCloudPostWebRecognitionRequest接口返回的jobid
-        request.jobId = @"jobid";
+    NSMutableArray *__pathComponents = [NSMutableArray arrayWithArray:self.requestData.URIComponents];
+    [__pathComponents addObject:@"ai_bucket"];
+    self.requestData.URIComponents = __pathComponents;
+    
+    return YES;
+}
 
-        request.regionName = @"regionName";
+- (void)setFinishBlock:(void (^_Nullable)(QCloudOpenAIBucketResult * _Nullable result, NSError *_Nullable error))finishBlock {
+    [super setFinishBlock:finishBlock];
+}
 
-        request.finishBlock = ^(QCloudWebRecognitionResult * outputObject, NSError *error) {
-             // outputObject 审核结果 包含用于查询的job id，详细字段请查看api文档或者SDK源码
-             // QCloudWebRecognitionResult 类；
-        };
-        [[QCloudCOSXMLService defaultCOSXML] GetWebRecognition:request];
+- (QCloudSignatureFields *)signatureFields {
+    QCloudSignatureFields *fileds = [QCloudSignatureFields new];
 
-*/
-@interface QCloudGetWebRecognitionRequest : QCloudBizHTTPRequest
-
-/**
- 对象名
- */
-@property (strong, nonatomic) NSString *jobId;
-
-
-/// 桶名
-@property (strong, nonatomic) NSString *bucket;
-
-/**
- 设置完成回调。请求完成后会通过该回调来获取结果，如果没有error，那么可以认为请求成功。
- @param finishBlock 请求完成回调
- */
-- (void)setFinishBlock:(void (^_Nullable)(QCloudWebRecognitionResult *_Nullable result, NSError *_Nullable error))finishBlock;
+    return fileds;
+}
 
 @end
 NS_ASSUME_NONNULL_END

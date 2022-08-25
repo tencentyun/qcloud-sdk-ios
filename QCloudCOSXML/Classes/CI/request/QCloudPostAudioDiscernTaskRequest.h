@@ -81,7 +81,7 @@ NS_ASSUME_NONNULL_BEGIN
          
          [request setFinishBlock:^(QCloudPostAudioDiscernTaskResult * _Nullable result, NSError * _Nullable error) {
              // outputObject 提交审核反馈信息 包含用于查询的job id，详细字段请查看api文档或者SDK源码
-             // QCloudPostAudioRecognitionResult 类；
+             // QCloudPostAudioDiscernTaskResult 类；
          }];
          [[QCloudCOSXMLService defaultCOSXML] PostAudioDiscernTask:request];
  

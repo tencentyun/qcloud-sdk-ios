@@ -34,6 +34,10 @@
 @class QCloudGetAudioDiscernTaskRequest;
 @class QCloudPostAudioDiscernTaskRequest;
 @class QCloudGetAudioDiscernOpenBucketListRequest;
+@class QCloudOpenAIBucketRequest;
+@class QCloudGetAIJobQueueRequest;
+@class QCloudPostWordsGeneralizeTaskRequest;
+@class QCloudGetWordsGeneralizeTaskRequest;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -110,6 +114,19 @@ COS 文档预览方法.
 
 /// 查询存储桶是否已开通语音识别功能。
 -(void)GetAudioDiscernOpenBucketList:(QCloudGetAudioDiscernOpenBucketListRequest *)request;
+
+/// 开通AI 内容识别服务并生成队列
+-(void)OpenAIBucket:(QCloudOpenAIBucketRequest *)request;
+
+/// 搜索AI 内容识别队列。
+-(void)GetAIJobQueue:(QCloudGetAIJobQueueRequest *)request;
+
+/// 提交一个分词任务。
+-(void)PostWordsGeneralizeTask:(QCloudPostWordsGeneralizeTaskRequest *)request;
+
+/// 查询分词任务的状态或结果。。
+-(void)GetWordsGeneralizeTask:(QCloudGetWordsGeneralizeTaskRequest *)request;
+
 @end
 
 NS_ASSUME_NONNULL_END
