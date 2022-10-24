@@ -89,7 +89,9 @@
 @implementation QCloudPostAudioDiscernTaskInfoSpeechRecognitionResult
 + (NSDictionary *)modelContainerPropertyGenericClass {
     return @{
-        @"ResultDetail": [QCloudPostAudioDiscernTaskInfoSpeechResultDetail class]
+        @"ResultDetail": [QCloudPostAudioDiscernTaskInfoSpeechResultDetail class],
+        @"FlashResult": [QCloudPostAudioDiscernTaskInfoSpeechFlashResult class],
+        @"WordsGeneralizeResult":[QCloudWordsGeneralizeResultGeneralize class]
     };
 }
 
@@ -101,6 +103,10 @@
     NSMutableDictionary * mdic = [NSMutableDictionary dictionaryWithDictionary:dic];
     if ([mdic[@"ResultDetail"] isKindOfClass:[NSDictionary class]]) {
         [mdic setValue:@[mdic[@"ResultDetail"]] forKey:@"ResultDetail"];
+    }
+    
+    if ([mdic[@"FlashResult"] isKindOfClass:[NSDictionary class]]) {
+        [mdic setValue:@[mdic[@"FlashResult"]] forKey:@"FlashResult"];
     }
     return mdic.mutableCopy;
 }
@@ -129,5 +135,49 @@
 
 @implementation QCloudPostAudioDiscernTaskInfoSpeechWords
 
+@end
+
+
+@implementation QCloudPostAudioDiscernTaskInfoSpeechFlashResult
++ (NSDictionary *)modelContainerPropertyGenericClass {
+    return @{
+        @"sentence_list": [QCloudPostAudioDiscernTaskInfoSpeechFlashResultSentenceList class]
+    };
+}
+
+- (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dic {
+    if (!dic) {
+        return dic;
+    }
+    
+    NSMutableDictionary * mdic = [NSMutableDictionary dictionaryWithDictionary:dic];
+    if ([mdic[@"sentence_list"] isKindOfClass:[NSDictionary class]]) {
+        [mdic setValue:@[mdic[@"sentence_list"]] forKey:@"sentence_list"];
+    }
+    return mdic.mutableCopy;
+}
+@end
+
+@implementation QCloudPostAudioDiscernTaskInfoSpeechFlashResultSentenceList
++ (NSDictionary *)modelContainerPropertyGenericClass {
+    return @{
+        @"word_list": [QCloudPostAudioDiscernTaskInfoSpeechFlashResultWordList class]
+    };
+}
+
+- (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dic {
+    if (!dic) {
+        return dic;
+    }
+    
+    NSMutableDictionary * mdic = [NSMutableDictionary dictionaryWithDictionary:dic];
+    if ([mdic[@"word_list"] isKindOfClass:[NSDictionary class]]) {
+        [mdic setValue:@[mdic[@"word_list"]] forKey:@"word_list"];
+    }
+    return mdic.mutableCopy;
+}
+@end
+
+@implementation QCloudPostAudioDiscernTaskInfoSpeechFlashResultWordList
 @end
 

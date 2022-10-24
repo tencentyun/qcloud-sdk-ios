@@ -50,10 +50,10 @@ NS_ASSUME_NONNULL_BEGIN
      request.regionName = @"regionName";
 
      [request setFinishBlock:^(QCloudOpenAIBucketResult *  _Nullable result, NSError * _Nullable error) {
-         // result 详细字段请查看api文档或者SDK源码
+         // outputObject 详细字段请查看api文档或者SDK源码
          // QCloudOpenAIBucketResult 类；
      }];
-     [[QCloudCOSXMLService defaultCOSXML] OpenAIBucket:request];
+     [[QCloudCOSXMLService defaultCOSXML] OpenWordsGeneralize:request];
 
 */
 @interface QCloudOpenAIBucketRequest : QCloudBizHTTPRequest
