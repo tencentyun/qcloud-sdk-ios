@@ -34,7 +34,7 @@
 #import "QCloudOpenAIBucketResult.h"
 NS_ASSUME_NONNULL_BEGIN
 
-/**
+/** 
  功能描述：
 
  开通AI 内容识别服务并生成队列
