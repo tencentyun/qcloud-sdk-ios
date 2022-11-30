@@ -166,7 +166,7 @@ NS_ASSUME_NONNULL_BEGIN
     }
     return YES;
 }
-- (void) setFinishBlock:(void (^)(QCloudCIQRCodeRecognitionResults* result, NSError * error))QCloudRequestFinishBlock
+- (void) setFinishBlock:(void (^_Nullable)(QCloudCIQRCodeRecognitionResults*_Nullable result, NSError *_Nullable error))QCloudRequestFinishBlock
 {
     [super setFinishBlock:QCloudRequestFinishBlock];
 }

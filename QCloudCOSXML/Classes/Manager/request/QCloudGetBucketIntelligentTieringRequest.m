@@ -83,7 +83,7 @@ NS_ASSUME_NONNULL_BEGIN
     self.requestData.URIMethod = @"intelligenttiering";
     return YES;
 }
-- (void)setFinishBlock:(void (^)(QCloudIntelligentTieringConfiguration *result, NSError *error))QCloudRequestFinishBlock {
+- (void)setFinishBlock:(void (^_Nullable )(QCloudIntelligentTieringConfiguration * _Nullable result, NSError *_Nullable error))QCloudRequestFinishBlock {
     [super setFinishBlock:QCloudRequestFinishBlock];
 }
 

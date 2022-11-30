@@ -52,6 +52,6 @@ NS_ASSUME_NONNULL_BEGIN
 */
 @property (strong, nonatomic) QCloudGenerateSnapshotConfiguration *generateSnapshotConfiguration;
 
-- (void)setFinishBlock:(void (^)(QCloudGenerateSnapshotResult *result, NSError *error))QCloudRequestFinishBlock;
+- (void)setFinishBlock:(void (^_Nullable )(QCloudGenerateSnapshotResult * _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

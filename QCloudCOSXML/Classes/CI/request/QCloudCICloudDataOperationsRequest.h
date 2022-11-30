@@ -97,8 +97,6 @@ cos iOS SDK 盲水印上传请求的方法具体步骤如下：
 
 /**
 设置完成回调。请求完成后会通过该回调来获取结果，如果没有error，那么可以认为请求成功。
-
-@param finishBlock 请求完成回调
 */
 - (void)setFinishBlock:(void (^_Nullable)(QCloudPutObjectWatermarkResult *_Nullable result, NSError *_Nullable error))QCloudRequestFinishBlock;
 

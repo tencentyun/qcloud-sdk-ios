@@ -39,6 +39,6 @@ NS_ASSUME_NONNULL_BEGIN
 */
 @property (strong, nonatomic) NSString *bucket;
 
-- (void)setFinishBlock:(void (^)(QCloudIntelligentTieringConfiguration *result, NSError *error))QCloudRequestFinishBlock;
+- (void)setFinishBlock:(void (^_Nullable )(QCloudIntelligentTieringConfiguration * _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

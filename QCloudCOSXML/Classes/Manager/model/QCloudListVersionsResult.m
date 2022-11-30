@@ -57,8 +57,6 @@ NS_ASSUME_NONNULL_BEGIN
         @"isTruncated" : @"IsTruncated",
         @"deleteMarker" : @"DeleteMarker",
         @"versionContent" : @"Version",
-        @"commonPrefixes" : @"CommonPrefixes"
-
     };
 }
 

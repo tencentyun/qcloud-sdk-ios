@@ -98,16 +98,10 @@ RFC 2616 中定义的过期时间，将作为 Object 元数据保存
 //针对本次上传进行流量控制的限速值，必须为数字，单位默认为 bit/s。限速值设置范围为819200 - 838860800,即100KB/s - 100MB/s，如果超出该范围将返回400错误
 @property (nonatomic, assign) NSInteger trafficLimit;
 
-
-/*
-在进行HTTP请求的时候，可以通过设置该参数来设置自定义的一些头部信息。
-通常情况下，携带特定的额外HTTP头部可以使用某项功能，如果是这类需求，可以通过设置该属性来实现。
-*/
-@property (strong, nonatomic) NSDictionary* customHeaders;
 /**
 二维码识别参数
 */
 @property (strong, nonatomic) QCloudPicOperations *picOperations;
-- (void) setFinishBlock:(void (^)(QCloudCIQRCodeRecognitionResults* result, NSError * error))QCloudRequestFinishBlock;
+- (void) setFinishBlock:(void (^_Nullable)(QCloudCIQRCodeRecognitionResults*_Nullable result, NSError *_Nullable error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

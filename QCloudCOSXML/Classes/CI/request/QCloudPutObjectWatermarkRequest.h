@@ -140,10 +140,8 @@ RFC 2616 中定义的过期时间，将作为 Object 元数据保存
 
 /**
 设置完成回调。请求完成后会通过该回调来获取结果，如果没有error，那么可以认为请求成功。
-
-@param finishBlock 请求完成回调
 */
-- (void)setFinishBlock:(void (^_Nullable)(QCloudPutObjectWatermarkResult *_Nullable result, NSError *_Nullable error))QCloudRequestFinishBlock;
+- (void)setFinishBlock:(void (^_Nullable)(QCloudPutObjectWatermarkResult *_Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock;
 
 @end
 NS_ASSUME_NONNULL_END

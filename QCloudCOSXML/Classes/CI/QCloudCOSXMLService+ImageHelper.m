@@ -74,15 +74,15 @@
 }
 
 - (void)BatchImageRecognition:(QCloudBatchimageRecognitionRequest *)request{
-    [super performRequest:request];
+    [super performRequest:(QCloudBizHTTPRequest *)request];
 }
 
 - (void)SyncImageRecognition:(QCloudSyncImageRecognitionRequest *)request{
-    [super performRequest:request];
+    [super performRequest:(QCloudBizHTTPRequest *)request];
 }
 
 - (void)GetImageRecognition:(QCloudGetImageRecognitionRequest *)request{
-    [super performRequest:request];
+    [super performRequest:(QCloudBizHTTPRequest *)request];
 }
 
 - (void)GetVideoRecognition:(QCloudGetVideoRecognitionRequest *)request{
@@ -152,10 +152,10 @@
 }
 
 -(void)PostWordsGeneralizeTask:(QCloudPostWordsGeneralizeTaskRequest *)request{
-    [super performRequest:request];
+    [super performRequest:(QCloudBizHTTPRequest *)request];
 }
 -(void)GetWordsGeneralizeTask:(QCloudGetWordsGeneralizeTaskRequest *)request{
-    [super performRequest:request];
+    [super performRequest:(QCloudBizHTTPRequest *)request];
 }
 
 

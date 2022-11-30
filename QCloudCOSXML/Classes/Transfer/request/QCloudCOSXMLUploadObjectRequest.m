@@ -286,7 +286,6 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     request.timeoutInterval = self.timeoutInterval;
     request.contentType = self.contentType;
     request.finishBlock = ^(id outputObject, NSError *error) {
-        __strong typeof(weakSelf) strongSelf = weakSelf;
         __strong typeof(weakRequest) strongRequst = weakRequest;
         [weakSelf.requstMetricArray addObject:@{ [NSString stringWithFormat:@"%@", strongRequst] : weakRequest.benchMarkMan.tastMetrics }];
         if (self.requstsMetricArrayBlock) {
