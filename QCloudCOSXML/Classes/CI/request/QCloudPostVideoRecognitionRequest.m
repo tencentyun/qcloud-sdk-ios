@@ -158,6 +158,7 @@ NS_ASSUME_NONNULL_BEGIN
     if (self.dataId) {
         NSMutableDictionary * minput = input.mutableCopy;
         [minput setObject:self.dataId forKey:@"DataId"];
+        input = minput.copy;
     }
     
     NSDictionary * params =@{

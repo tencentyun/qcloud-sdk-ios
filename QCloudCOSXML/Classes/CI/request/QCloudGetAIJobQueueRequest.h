@@ -49,10 +49,10 @@ NS_ASSUME_NONNULL_BEGIN
         request.regionName = @"regionName";
         request.state = 1;
         [request setFinishBlock:^(QCloudAIJobQueueResult * _Nullable result, NSError * _Nullable error) {
-            // outputObject 详细字段请查看api文档或者SDK源码
+            // result 详细字段请查看api文档或者SDK源码
             // QCloudAIJobQueueResult 类；
         }];
-        [[QCloudCOSXMLService defaultCOSXML] GetWordsGeneralizeQueue:request];
+        [[QCloudCOSXMLService defaultCOSXML] GetAIJobQueue:request];
 
 */
 @interface QCloudGetAIJobQueueRequest : QCloudBizHTTPRequest
