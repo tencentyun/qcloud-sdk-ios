@@ -42,6 +42,6 @@ NS_ASSUME_NONNULL_BEGIN
 */
 @property (strong, nonatomic) NSString *object;
 
-- (void) setFinishBlock:(void (^_Nullable)(QCloudCIPicRecognitionResults* _Nullable result, NSError * _Nullable error))QCloudRequestFinishBlock;
+- (void) setFinishBlock:(void (^_Nullable)(QCloudCIPicRecognitionResults*_Nullable result, NSError *_Nullable error))QCloudRequestFinishBlock;
 @end
 NS_ASSUME_NONNULL_END

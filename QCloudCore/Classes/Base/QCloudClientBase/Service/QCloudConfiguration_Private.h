@@ -13,4 +13,5 @@
 @property (nonatomic, strong, readonly) NSString *userAgent;
 @property (nonatomic, strong) NSString *userAgentProductKey;
 @property (nonatomic, strong) NSString *productVersion;
+@property (nonatomic, strong) NSString *bridge;
 @end

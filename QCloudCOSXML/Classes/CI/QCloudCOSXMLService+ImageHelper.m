@@ -34,7 +34,10 @@
 #import "QCloudGetAudioDiscernOpenBucketListRequest.h"
 #import "QCloudOpenAIBucketRequest.h"
 #import "QCloudGetAIJobQueueRequest.h"
-
+#import "QCloudCIImageRepairRequest.h"
+#import "QCloudPostLiveVideoRecognitionRequest.h"
+#import "QCloudCancelLiveVideoRecognitionRequest.h"
+#import "QCloudGetLiveVideoRecognitionRequest.h"
 @implementation QCloudCOSXMLService (ImageHelper)
 
 - (void)PutWatermarkObject:(QCloudPutObjectWatermarkRequest *)request {
@@ -58,7 +61,7 @@
 }
 
 - (void)CIQRCodeRecognition:(QCloudQRCodeRecognitionRequest *)request{
-    [super performRequest:request];
+    [super performRequest:(QCloudBizHTTPRequest *)request];
 }
 
 - (void)CIPicRecognition:(QCloudCIPicRecognitionRequest *)request{
@@ -157,6 +160,82 @@
 -(void)GetWordsGeneralizeTask:(QCloudGetWordsGeneralizeTaskRequest *)request{
     [super performRequest:(QCloudBizHTTPRequest *)request];
 }
+-(void)ImageRepair:(QCloudCIImageRepairRequest *)request{
+    [self buildRequestUrl:request];
+}
 
+
+-(void)DetectCar:(QCloudCIDetectCarRequest *)request{
+    [super performRequest:(QCloudBizHTTPRequest *)request];
+}
+-(void)OCR:(QCloudCIOCRRequest *)request{
+    [super performRequest:(QCloudBizHTTPRequest *)request];
+}
+-(void)BodyRecognition:(QCloudCIBodyRecognitionRequest *)request{
+    [super performRequest:(QCloudBizHTTPRequest *)request];
+}
+-(void)AutoTranslation:(QCloudCIAutoTranslationRequest *)request{
+    [super performRequest:(QCloudBizHTTPRequest *)request];
+}
+-(void)FaceEffect:(QCloudCIFaceEffectRequest *)request{
+    [super performRequest:(QCloudBizHTTPRequest *)request];
+}
+-(void)DetectFace:(QCloudCIDetectFaceRequest *)request{
+    [super performRequest:(QCloudBizHTTPRequest *)request];
+}
+-(void)RecognizeLogo:(QCloudCIRecognizeLogoRequest *)request{
+    [super performRequest:(QCloudBizHTTPRequest *)request];
+}
+-(void)PostGoodsMatting:(QCloudCIPostGoodsMattingRequest *)request{
+    [super performRequest:(QCloudBizHTTPRequest *)request];
+}
+-(void)GetGoodsMatting:(QCloudCIGetGoodsMattingRequest *)request{
+    [self buildRequestUrl:(QCloudBizHTTPRequest *)request];
+}
+
+
+-(void)buildRequestUrl:(QCloudBizHTTPRequest *)request{
+    request.runOnService = self;
+    request.signatureProvider = self.configuration.signatureProvider;
+    NSError *error;
+    NSURLRequest *urlRequest = [request buildURLRequest:&error];
+    if (nil != error) {
+        [request onError:error];
+        return;
+    }
+    __block NSString *requestURLString = urlRequest.URL.absoluteString;
+    [request.signatureProvider signatureWithFields:request.signatureFields
+                                           request:request
+                                        urlRequest:(NSMutableURLRequest *)urlRequest
+                                         compelete:^(QCloudSignature *signature, NSError *error) {
+                                             NSString *authorizatioinString = signature.signature;
+                                             if ([requestURLString hasSuffix:@"&"] || [requestURLString hasSuffix:@"?"]) {
+                                                 requestURLString = [requestURLString stringByAppendingString:authorizatioinString];
+                                             } else if([requestURLString containsString:@"?"] && ![requestURLString hasSuffix:@"&"]){
+                                                 requestURLString = [requestURLString stringByAppendingFormat:@"&%@", authorizatioinString];
+                                             }else {
+                                                 requestURLString = [requestURLString stringByAppendingFormat:@"?%@", authorizatioinString];
+                                             }
+                                             if (signature.token) {
+                                                 requestURLString =
+                                                     [requestURLString stringByAppendingFormat:@"&x-cos-security-token=%@", signature.token];
+                                             }
+    
+                                             if (request.finishBlock) {
+                                                 request.finishBlock(requestURLString, nil);
+                                             }
+                                         }];
+
+}
+
+-(void)PostLiveVideoRecognition:(QCloudPostLiveVideoRecognitionRequest *)request{
+    [super performRequest:(QCloudBizHTTPRequest *)request];
+}
+-(void)CancelLiveVideoRecognition:(QCloudCancelLiveVideoRecognitionRequest *)request{
+    [super performRequest:(QCloudBizHTTPRequest *)request];
+}
+-(void)GetLiveVideoRecognition:(QCloudGetLiveVideoRecognitionRequest *)request{
+    [super performRequest:(QCloudBizHTTPRequest *)request];
+}
 
 @end

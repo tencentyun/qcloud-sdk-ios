@@ -45,6 +45,14 @@
 @end
 
 @implementation QCloudRecognitionSectionItemInfo
++ (NSDictionary *)modelContainerPropertyGenericClass {
+    return @{
+        @"LibResults": [QCloudRecognitionSectionItemLibResults class],
+    };
+}
+@end
+
+@implementation QCloudRecognitionSectionItemLibResults
 
 @end
 
@@ -55,5 +63,3 @@
 @implementation QCloudRecognitionItemInfo
 
 @end
-
-

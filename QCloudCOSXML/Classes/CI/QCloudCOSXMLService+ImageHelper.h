@@ -38,7 +38,20 @@
 @class QCloudGetAIJobQueueRequest;
 @class QCloudPostWordsGeneralizeTaskRequest;
 @class QCloudGetWordsGeneralizeTaskRequest;
-
+@class QCloudCIImageRepairRequest;
+@class QCloudCIDetectCarRequest;
+@class QCloudCIOCRRequest;
+@class QCloudCIBodyRecognitionRequest;
+@class QCloudCIAutoTranslationRequest;
+@class QCloudCIFaceEffectRequest;
+@class QCloudCIDetectFaceRequest;
+@class QCloudCIRecognizeLogoRequest;
+@class QCloudCIPostGoodsMattingRequest;
+@class QCloudCIGetGoodsMattingRequest;
+@class QCloudCIImageRepairRequest;
+@class QCloudPostLiveVideoRecognitionRequest;
+@class QCloudCancelLiveVideoRecognitionRequest;
+@class QCloudGetLiveVideoRecognitionRequest;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface QCloudCOSXMLService (ImageHelper)
@@ -127,6 +140,44 @@ COS 文档预览方法.
 /// 查询分词任务的状态或结果。。
 -(void)GetWordsGeneralizeTask:(QCloudGetWordsGeneralizeTaskRequest *)request;
 
+/// 图像修复
+-(void)ImageRepair:(QCloudCIImageRepairRequest *)request;
+
+/// 车辆车牌检测
+-(void)DetectCar:(QCloudCIDetectCarRequest *)request;
+
+/// 通用文字识别
+-(void)OCR:(QCloudCIOCRRequest *)request;
+
+/// 人体识别
+-(void)BodyRecognition:(QCloudCIBodyRecognitionRequest *)request;
+
+/// 实时文字翻译
+-(void)AutoTranslation:(QCloudCIAutoTranslationRequest *)request;
+
+/// 人脸特效
+-(void)FaceEffect:(QCloudCIFaceEffectRequest *)request;
+
+/// 人脸检测
+-(void)DetectFace:(QCloudCIDetectFaceRequest *)request;
+
+/// Logo 识别
+-(void)RecognizeLogo:(QCloudCIRecognizeLogoRequest *)request;
+
+/// 商品抠图  云上数据处理
+-(void)PostGoodsMatting:(QCloudCIPostGoodsMattingRequest *)request;
+
+/// 商品抠图 1. 下载时处理
+-(void)GetGoodsMatting:(QCloudCIGetGoodsMattingRequest *)request;
+
+/// 提交直播审核任务
+-(void)PostLiveVideoRecognition:(QCloudPostLiveVideoRecognitionRequest *)request;
+
+/// 取消直播审核任务
+-(void)CancelLiveVideoRecognition:(QCloudCancelLiveVideoRecognitionRequest *)request;
+
+/// 查询直播审核任务结果
+-(void)GetLiveVideoRecognition:(QCloudGetLiveVideoRecognitionRequest *)request;
 @end
 
 NS_ASSUME_NONNULL_END

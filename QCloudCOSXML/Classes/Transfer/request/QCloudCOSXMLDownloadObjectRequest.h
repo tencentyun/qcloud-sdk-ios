@@ -94,6 +94,11 @@
 @property (assign, nonatomic) BOOL enableMD5Verification;
 
 /**
+指定 Object 的 VersionID (在开启多版本的情况下)
+*/
+@property (strong, nonatomic) NSString *versionID;
+
+/**
  如果存在改参数，则数据会下载到改路径指名的地址下面，而不会写入内存中。
  */
 @property (nonatomic, strong) NSURL *downloadingURL;

@@ -29,6 +29,7 @@ static NSString *const QCloudServiceConfigurationUnknown = @"Unknown";
     config.timeoutInterval = self.timeoutInterval;
     config.enableQuic = self.enableQuic;
     config.disableSetupBeacon = self.disableSetupBeacon;
+    config.bridge = self.bridge;
     return config;
 }
 @end

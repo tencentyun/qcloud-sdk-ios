@@ -10,6 +10,7 @@
 @class QCloudRecognitionObjectResults;
 @class QCloudRecognitionLocationInfo;
 @class QCloudRecognitionLabelsItem;
+@class QCloudRecognitionSectionItemLibResults;
 NS_ASSUME_NONNULL_BEGIN
 
 
@@ -111,8 +112,24 @@ NS_ASSUME_NONNULL_BEGIN
 /// 在当前审核场景下命中的关键词。
 @property (nonatomic,strong)NSArray * Keywords;
 
+/// 表示命中的具体审核类别。例如 Sexy，表示色情标签中的性感类别。该字段可能为空，表示未命中或暂无相关的类别。
+@property (nonatomic,strong)NSString * Category;
+
+@property (nonatomic,strong)NSArray<QCloudRecognitionSectionItemLibResults *> * LibResults;
+
 @end
 
+@interface QCloudRecognitionSectionItemLibResults : NSObject
+
+/// 命中的风险库类型，取值为1（预设风险库）和2（自定义风险库）。
+@property (nonatomic,strong)NSString * LibType;
+
+/// 命中的风险库名称。
+@property (nonatomic,strong)NSString * LibName;
+
+/// 命中的库中关键词。该参数可能会有多个返回值，代表命中的多个关键词。
+@property (nonatomic,strong)NSArray * Keywords;
+@end
 
 @interface QCloudRecognitionItemInfo : NSObject
 

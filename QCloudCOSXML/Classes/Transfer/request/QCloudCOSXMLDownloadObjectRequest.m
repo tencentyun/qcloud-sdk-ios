@@ -134,6 +134,7 @@
     request.localCacheDownloadOffset = self.localCacheDownloadOffset;
     request.regionName = self.regionName;
     request.enableMD5Verification = self.enableMD5Verification;
+    request.versionID = self.versionID;
     __block int64_t currentTotalBytesDownload = 0;
     __weak typeof(self) weakSelf = self;
     [request setDownProcessBlock:^(int64_t bytesDownload, int64_t totalBytesDownload, int64_t totalBytesExpectedToDownload) {

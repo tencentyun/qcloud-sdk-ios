@@ -34,6 +34,7 @@
 @class QCloudVideoRecognitionSnapshotItemInfo;
 @class QCloudVideoRecognitionSnapshot;
 @class QCloudVideoRecognitionAudioSection;
+@class QCloudRecognitionObjectLibResult;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -115,7 +116,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong)QCloudVideoRecognitionSnapshotItemInfo * PoliticsInfo;
 @property (nonatomic,strong)QCloudVideoRecognitionSnapshotItemInfo * AdsInfo;
 
+/**直播审核有下面字段********************/
+/// 该字段用于返回检测结果中所对应的优先级最高的恶意标签，表示模型推荐的审核结果，建议您按照业务所需，对不同违规类型与建议值进行处理。 返回值：Normal：正常，Porn：色情，Ads：广告，以及其他不安全或不适宜的类型。
+@property (nonatomic,strong)NSString * Label;
 
+/// 该字段表示本次判定的审核结果，您可以根据该结果，进行后续的操作；建议您按照业务所需，对不同的审核结果进行相应处理。
+/// 有效值：0（审核正常），1 （判定为违规敏感内容），2（疑似敏感内容，建议人工复核）。
+@property (nonatomic,strong)NSString * Result;
 
 @end
 
@@ -141,7 +148,31 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic,strong)NSArray <QCloudRecognitionObjectResults *> *ObjectResults;
 
+/**
+ 表示命中的具体审核类别。例如 Sexy，表示色情标签中的性感类别。该字段可能为空，表示未命中或暂无相关的类别。
+ */
+@property (nonatomic,strong)NSString * Category;
+
+/**
+ 该字段用于返回基于风险库识别的结果。
+ 注意：未命中风险库中样本时，此字段不返回。
+ */
+@property (nonatomic,strong)NSArray <QCloudRecognitionObjectLibResult *> *LibResults;
+
 @end
+
+@interface QCloudRecognitionObjectLibResult : NSObject
+/**
+ 该字段表示命中的风险库中的图片样本 ID。
+ */
+@property (nonatomic,strong)NSString * ImageId;
+/**
+ 该字段用于返回当前标签下的置信度，
+ 取值范围：0（置信度最低）-100（置信度最高 ），越高代表当前的图片越有可能命中库中的样本；如：色情 99，则表明该数据非常有可能命中库中的色情样本。
+ */
+@property (nonatomic,assign)NSInteger Score;
+@end
+
 
 @interface QCloudVideoRecognitionAudioSection : NSObject
 
@@ -157,14 +188,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 该字段用于返回当前视频声音的 ASR 文本识别的检测结果（仅在审核策略开启文本内容检测时返回），识别上限为5小时。
 @property (nonatomic,strong)NSString * Text;
-
-/// 该字段用于返回检测结果中所对应的优先级最高的恶意标签，表示模型推荐的审核结果，建议您按照业务所需，对不同违规类型与建议值进行处理。 返回值：Normal：正常，Porn：色情，Ads：广告，Politics：涉政，Terrorism：暴恐。
-@property (nonatomic,strong)NSString * Label;
-
-/// 该字段表示本次判定的审核结果，您可以根据该结果，进行后续的操作；建议您按照业务所需，对不同的审核结果进行相应处理。
-///            有效值：0（审核正常），1 （判定为违规敏感文件），2（疑似敏感，建议人工复核）。
-@property (nonatomic,strong)NSString * Result;
-
 
 /// 审核场景为涉黄的审核结果信息。
 @property (nonatomic,strong)QCloudRecognitionSectionItemInfo * PornInfo;

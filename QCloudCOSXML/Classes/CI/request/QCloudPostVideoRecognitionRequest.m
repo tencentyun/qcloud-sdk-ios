@@ -156,7 +156,8 @@ NS_ASSUME_NONNULL_BEGIN
 
     NSDictionary * input = self.object ? @{@"Object":self.object} : @{@"Url":self.url?:@""};
     if (self.dataId) {
-        [input.mutableCopy setObject:self.dataId forKey:@"DataId"];
+        NSMutableDictionary * minput = input.mutableCopy;
+        [minput setObject:self.dataId forKey:@"DataId"];
     }
     
     NSDictionary * params =@{

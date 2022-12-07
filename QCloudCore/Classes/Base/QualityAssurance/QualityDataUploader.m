@@ -12,6 +12,7 @@
 #import <QCloudCore/QCloudFileUtils.h>
 #import "QCloudCoreVersion.h"
 #import "NSError+QCloudNetworking.h"
+#import "QCloudConfiguration_Private.h"
 #define SuppressPerformSelectorLeakWarning(Stuff)                                                                   \
     do {                                                                                                            \
         _Pragma("clang diagnostic push") _Pragma("clang diagnostic ignored \"-Warc-performSelector-leaks\"") Stuff; \
@@ -230,12 +231,18 @@ static NSString * appKey = @"";
         @try {
             QCloudHTTPRequest *httpReq = (QCloudHTTPRequest*)request;
             mutableDicParams[kQCloudQualityAuthSourceKey] =  httpReq.runOnService.configuration.endpoint.serverURLLiteral? [httpReq.urlRequest.allHTTPHeaderFields valueForKey:@"User-Agent"]:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"];
+            
+            mutableDicParams[@"user_agent"] =  httpReq.runOnService.configuration.endpoint.serverURLLiteral? [httpReq.urlRequest.allHTTPHeaderFields valueForKey:@"User-Agent"]:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"];
+                
+            if(httpReq.runOnService.configuration.bridge != nil){
+                mutableDicParams[@"bridge"] = httpReq.runOnService.configuration.bridge;
+            }
         } @catch (NSException *exception) {
             return;
         } @finally {
             
         }
-       
+        
      
     }
     mutableDicParams[kQCloudQualityErrorServiceNameKey] = [self getServiceNameFromClass:request.class];
@@ -257,6 +264,14 @@ static NSString * appKey = @"";
             QCloudHTTPRequest *httpReq = (QCloudHTTPRequest*)request;
             paramter[kQCloudQualityRegionKey] =  httpReq.runOnService.configuration.endpoint.regionName;
             paramter[kQCloudQualityRequestPathKey] = httpReq.urlRequest.URL.path;
+            
+            paramter[kQCloudQualityAuthSourceKey] =  httpReq.runOnService.configuration.endpoint.serverURLLiteral? [httpReq.urlRequest.allHTTPHeaderFields valueForKey:@"User-Agent"]:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"];
+            
+            paramter[@"user_agent"] =  httpReq.runOnService.configuration.endpoint.serverURLLiteral? [httpReq.urlRequest.allHTTPHeaderFields valueForKey:@"User-Agent"]:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"];
+                
+            if(httpReq.runOnService.configuration.bridge != nil){
+                paramter[@"bridge"] = httpReq.runOnService.configuration.bridge;
+            }
         } @catch (NSException *exception) {
             return;
         } @finally {
