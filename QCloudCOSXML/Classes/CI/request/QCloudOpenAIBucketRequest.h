@@ -34,7 +34,7 @@
 #import "QCloudOpenAIBucketResult.h"
 NS_ASSUME_NONNULL_BEGIN
 
-/** 
+/**
  功能描述：
 
  开通AI 内容识别服务并生成队列
@@ -50,10 +50,11 @@ NS_ASSUME_NONNULL_BEGIN
      request.regionName = @"regionName";
 
      [request setFinishBlock:^(QCloudOpenAIBucketResult *  _Nullable result, NSError * _Nullable error) {
+         // outputObject 详细字段请查看api文档或者SDK源码
          // result 详细字段请查看api文档或者SDK源码
-         // QCloudOpenAIBucketResult 类；
      }];
      [[QCloudCOSXMLService defaultCOSXML] OpenAIBucket:request];
+
 
 */
 @interface QCloudOpenAIBucketRequest : QCloudBizHTTPRequest

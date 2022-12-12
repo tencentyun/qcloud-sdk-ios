@@ -161,7 +161,7 @@
                     tasks = [NSMutableArray array];
                 }
                 NSString *fromStr = [NSString stringWithFormat:@"%lld",strongSelf.localCacheDownloadOffset];
-                NSString *toStr = [NSString stringWithFormat:@"%lld",currentTotalBytesDownload];
+                NSString *toStr = [NSString stringWithFormat:@"%lld",currentTotalBytesDownload + strongSelf.localCacheDownloadOffset];
                 [tasks addObject:@{@"from":fromStr,@"to":toStr}];
                 [dic setValue: [tasks copy] forKey:@"downloadedBlocks"];
                 NSError *parseError;

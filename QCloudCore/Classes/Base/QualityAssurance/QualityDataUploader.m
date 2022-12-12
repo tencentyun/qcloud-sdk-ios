@@ -277,13 +277,17 @@ static NSString * appKey = @"";
         } @finally {
             
         }
-        
-      
-     
+    }else if ([request respondsToSelector:@selector(transferManager)]){
+        NSObject * service = [request performSelector:@selector(transferManager)];
+        if([service respondsToSelector:@selector(configuration)]){
+            QCloudServiceConfiguration * config = [service performSelector:@selector(configuration)];
+            if(config.bridge != nil){
+                paramter[@"bridge"] = config.bridge;
+            }
+        }
     }
     [self startReportSDKWithEventKey:eventKey paramters:paramter];
 }
-
 
 + (void)startReportSDKWithEventKey:(NSString *)eventKey paramters:(NSMutableDictionary *)paramter {
     // sdk版本
@@ -321,8 +325,6 @@ static NSString * appKey = @"";
 
         [beaconInstance performSelector:NSSelectorFromString(@"reportEvent:") withObject:eventObj];
 #pragma clang diagnostic pop
-       
-                                           
     }
 }
 
