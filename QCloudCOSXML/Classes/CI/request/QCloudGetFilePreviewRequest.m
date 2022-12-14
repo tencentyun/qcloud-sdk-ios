@@ -66,42 +66,6 @@ NS_ASSUME_NONNULL_BEGIN
     if (![super buildRequestData:error]) {
         return NO;
     }
-    if (self.responseContentType) {
-        [self.requestData setValue:self.responseContentType forHTTPHeaderField:@"response-content-type"];
-    }
-    if (self.responseContentLanguage) {
-        [self.requestData setValue:self.responseContentLanguage forHTTPHeaderField:@"response-content-language"];
-    }
-    if (self.responseContentExpires) {
-        [self.requestData setValue:self.responseContentExpires forHTTPHeaderField:@"response-expires"];
-    }
-    if (self.responseCacheControl) {
-        [self.requestData setValue:self.responseCacheControl forHTTPHeaderField:@"response-cache-control"];
-    }
-    if (self.responseContentDisposition) {
-        [self.requestData setValue:self.responseContentDisposition forHTTPHeaderField:@"response-content-disposition"];
-    }
-    if (self.responseContentEncoding) {
-        [self.requestData setValue:self.responseContentEncoding forHTTPHeaderField:@"response-content-encoding"];
-    }
-    if (self.localCacheDownloadOffset) {
-        self.range = [NSString stringWithFormat:@"bytes=%lld-", self.localCacheDownloadOffset];
-    }
-    if (self.range) {
-        [self.requestData setValue:self.range forHTTPHeaderField:@"Range"];
-    }
-    if (self.ifModifiedSince) {
-        [self.requestData setValue:self.ifModifiedSince forHTTPHeaderField:@"If-Modified-Since"];
-    }
-    if (self.ifUnmodifiedModifiedSince) {
-        [self.requestData setValue:self.ifUnmodifiedModifiedSince forHTTPHeaderField:@"If-Unmodified-Since"];
-    }
-    if (self.ifMatch) {
-        [self.requestData setValue:self.ifMatch forHTTPHeaderField:@"If-Match"];
-    }
-    if (self.ifNoneMatch) {
-        [self.requestData setValue:self.ifNoneMatch forHTTPHeaderField:@"If-None-Match"];
-    }
     [self.requestData setParameter:self.versionID withKey:@"versionId"];
 
     if (!self.object || ([self.object isKindOfClass:NSString.class] && ((NSString *)self.object).length == 0)) {
@@ -117,7 +81,51 @@ NS_ASSUME_NONNULL_BEGIN
     [self.requestData setQueryStringParamter:@"doc-preview" withKey:@"ci-process"];
 
     [self.requestData setQueryStringParamter:[NSString stringWithFormat:@"%ld", self.page == 0 ? 1 : self.page] withKey:@"page"];
+    if(self.dstType){
+        [self.requestData setQueryStringParamter:self.dstType withKey:@"dstType"];
+    }
+    
+    if(self.password){
+        [self.requestData setQueryStringParamter:self.password withKey:@"password"];
+    }
+    
+    if(self.comment){
+        [self.requestData setQueryStringParamter:self.comment withKey:@"comment"];
+    }
+    
+    if(self.sheet){
+        [self.requestData setQueryStringParamter:self.sheet withKey:@"sheet"];
+    }
 
+    if(self.excelPaperDirection){
+        [self.requestData setQueryStringParamter:self.excelPaperDirection withKey:@"excelPaperDirection"];
+    }
+    
+    if(self.excelPaperDirection){
+        [self.requestData setQueryStringParamter:self.excelPaperDirection withKey:@"excelPaperDirection"];
+    }
+
+    if(self.excelPaperSize){
+        [self.requestData setQueryStringParamter:self.excelPaperSize withKey:@"excelPaperSize"];
+    }
+    
+    if(self.ImageParams){
+        [self.requestData setQueryStringParamter:self.ImageParams withKey:@"ImageParams"];
+    }
+
+    
+    if(self.quality){
+        [self.requestData setQueryStringParamter:self.quality withKey:@"quality"];
+    }
+    
+    if(self.scale){
+        [self.requestData setQueryStringParamter:self.scale withKey:@"scale"];
+    }
+    
+    if(self.imageDpi){
+        [self.requestData setQueryStringParamter:self.imageDpi withKey:@"imageDpi"];
+    }
+    
     if (self.srcType != nil) {
         [self.requestData setQueryStringParamter:self.srcType withKey:@"srcType"];
     }

@@ -59,50 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
 */
 
 @interface QCloudGetFilePreviewRequest : QCloudBizHTTPRequest
-/**
- 设置响应头部中的 Content-Type参数
- */
-@property (strong, nonatomic) NSString *responseContentType;
-/**
- 设置响应头部中的Content-Language参数
- */
-@property (strong, nonatomic) NSString *responseContentLanguage;
-/**
- 设置响应头部中的Content-Expires参数
- */
-@property (strong, nonatomic) NSString *responseContentExpires;
-/**
- 设置响应头部中的Cache-Control参数
- */
-@property (strong, nonatomic) NSString *responseCacheControl;
-/**
- 设置响应头部中的 Content-Disposition 参数。
- */
-@property (strong, nonatomic) NSString *responseContentDisposition;
-/**
- 设置响应头部中的 Content-Encoding 参数。
- */
-@property (strong, nonatomic) NSString *responseContentEncoding;
-/**
- RFC 2616 中定义的指定文件下载范围，以字节（bytes）为单位
- */
-@property (strong, nonatomic) NSString *range;
-/**
- 如果文件修改时间晚于指定时间，才返回文件内容。否则返回 412 (not modified)
- */
-@property (strong, nonatomic) NSString *ifModifiedSince;
-/**
- 如果文件修改时间早于或等于指定时间，才返回文件内容。否则返回 412 (precondition failed)
- */
-@property (strong, nonatomic) NSString *ifUnmodifiedModifiedSince;
-/**
- 当 ETag 与指定的内容一致，才返回文件。否则返回 412 (precondition failed)
- */
-@property (strong, nonatomic) NSString *ifMatch;
-/**
- 当 ETag 与指定的内容不一致，才返回文件。否则返回 304 (not modified)
- */
-@property (strong, nonatomic) NSString *ifNoneMatch;
+
 /**
  指定 Object 的 VersionID (在开启多版本的情况下)
  */
@@ -121,8 +78,69 @@ NS_ASSUME_NONNULL_BEGIN
 /// 可以设置该值
 @property (copy, nonatomic) NSString *srcType;
 
+/**
+ 转换输出目标文件类型：
+ png，转成 png 格式的图片文件
+ jpg，转成 jpg 格式的图片文件
+ pdf，转成 pdf 格式文件。 无法选择页码，page 参数不生效
+ 如果传入的格式未能识别，默认使用 jpg 格式
+ */
+@property (copy, nonatomic) NSString *dstType;
+
+/**
+ Office 文档的打开密码，如果需要转换有密码的文档，请设置该字段
+ */
+@property (copy, nonatomic) NSString *password;
+
 /// 需转换的文档页码，从1开始计数
 @property (assign, nonatomic) NSInteger page;
+
+/**
+ 是否隐藏批注和应用修订，默认为0
+ 0：隐藏批注，应用修订
+ 1：显示批注和修订
+ */
+@property (copy, nonatomic) NSString * comment;
+
+/****适用于表格文件（Excel）的参数***/
+
+/**
+ 表格文件参数，转换第 X 个表，默认为1
+ */
+@property (copy, nonatomic) NSString * sheet;
+
+/**
+ 表格文件转换纸张方向，0代表垂直方向，非0代表水平方向，默认为0
+ */
+@property (copy, nonatomic) NSString * excelPaperDirection;
+
+/**
+ 设置纸张（画布）大小，对应信息为： 0 → A4 、 1 → A2 、 2 → A0 ，默认 A4 纸张 （需配合 excelRow 或 excelCol 一起使用）
+ */
+@property (copy, nonatomic) NSString * excelPaperSize;
+
+
+/****适用于转码成 png/jpg 图片的参数***/
+
+/**
+ 转换后的图片处理参数，支持 基础图片处理 所有处理参数，多个处理参数可通过 管道操作符 分隔，从而实现在一次访问中按顺序对图片进行不同处理
+ */
+@property (copy, nonatomic) NSString *ImageParams;
+
+/**
+ 生成预览图的图片质量，取值范围为 [1, 100]，默认值100。 例如取值为100，代表生成图片质量为100%
+ */
+@property (copy, nonatomic) NSString * quality;
+
+/**
+ 预览图片的缩放参数，取值范围为 [10, 200]， 默认值100。 例如取值为200，代表图片缩放比例为200% 即放大两倍
+ */
+@property (copy, nonatomic) NSString * scale;
+
+/**
+ 按指定 dpi 渲染图片，该参数与 scale 共同作用，取值范围 96-600 ，默认值为 96 。转码后的图片单边宽度需小于65500像素
+ */
+@property (copy, nonatomic) NSString * imageDpi;
 
 /**
 
