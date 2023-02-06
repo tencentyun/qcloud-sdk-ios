@@ -45,12 +45,12 @@
                                      userInfo:nil];
     }
 
-    if (![configuration.signatureProvider conformsToProtocol:NSProtocolFromString(@"QCloudSignatureProvider")]) {
-        @throw
-            [NSException exceptionWithName:QCloudErrorDomain
-                                    reason:[NSString stringWithFormat:@"您没有配置signatureProvider或者没有实现对应的方法就使用了服务%@", self.class]
-                                  userInfo:nil];
-    }
+//    if (![configuration.signatureProvider conformsToProtocol:NSProtocolFromString(@"QCloudSignatureProvider")]) {
+//        @throw
+//            [NSException exceptionWithName:QCloudErrorDomain
+//                                    reason:[NSString stringWithFormat:@"您没有配置signatureProvider或者没有实现对应的方法就使用了服务%@", self.class]
+//                                  userInfo:nil];
+//    }
 
     _configuration = configuration;
     _signatureCache = [NSMutableDictionary new];

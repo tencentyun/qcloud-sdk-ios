@@ -49,6 +49,9 @@
 #import "QCloudPostVideoRecognitionRequest.h"
 #import "QCloudAppendObjectRequest.h"
 #import "QCloudDeleteObjectTaggingRequest.h"
+#import "QCloudGetBucketPolicyRequest.h"
+#import "QCloudPutBucketPolicyRequest.h"
+#import "QCloudDeleteBucketPolicyRequest.h"
 
 @implementation QCloudCOSXMLService (Manager)
 
@@ -253,6 +256,18 @@
 }
 
 - (void)AppendObject:(QCloudAppendObjectRequest*)request{
+    [super performRequest:request];
+}
+
+-(void)GetBucketPolicy:(QCloudGetBucketPolicyRequest *)request{
+    [super performRequest:request];
+}
+
+-(void)PutBucketPolicy:(QCloudPutBucketPolicyRequest *)request{
+    [super performRequest:request];
+}
+
+-(void)DeleteBucketPolicy:(QCloudDeleteBucketPolicyRequest *)request{
     [super performRequest:request];
 }
 

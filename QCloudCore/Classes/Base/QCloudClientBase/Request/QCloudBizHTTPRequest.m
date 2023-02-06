@@ -123,6 +123,11 @@ QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilizerBlock
 }
 
 - (BOOL)prepareInvokeURLRequest:(NSMutableURLRequest *)urlRequest error:(NSError *__autoreleasing *)error {
+    
+    if(!self.signatureProvider){
+        return YES;
+    }
+    
     //    NSAssert(self.runOnService, @"RUN ON SERVICE is nil%@", self.runOnService);
     self.semaphore = dispatch_semaphore_create(0);
     self.semp_flag = 1;

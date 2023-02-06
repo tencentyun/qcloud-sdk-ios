@@ -89,7 +89,10 @@
 #import "QCloudAppendObjectRequest.h"
 #import "QCloudGetBucketRefererRequest.h"
 #import "QCloudPutBucketRefererRequest.h"
-
+#import "QCloudGetBucketPolicyRequest.h"
+#import "QCloudPutBucketPolicyRequest.h"
+#import "QCloudDeleteBucketPolicyRequest.h"
+#import "QCloudBucketPolicyResult.h"
 
 //数据万象
 
