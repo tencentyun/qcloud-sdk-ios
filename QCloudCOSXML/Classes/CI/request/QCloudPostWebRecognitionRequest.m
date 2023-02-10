@@ -89,16 +89,6 @@ NS_ASSUME_NONNULL_BEGIN
         }
     }
     
-    if (self.detectType == 0 ) {
-        if (error != NULL) {
-            *error = [NSError
-                qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
-                             message:[NSString stringWithFormat:
-                                                   @"InvalidArgument:paramter[detectType] is invalid (nil), it must have some value. please check it"]];
-            return NO;
-        }
-    }
-    
     NSURL *__serverURL = [self.runOnService.configuration.endpoint serverURLWithBucket:self.bucket
                                                                                  appID:self.runOnService.configuration.appID
                                                                             regionName:self.regionName];
@@ -111,19 +101,6 @@ NS_ASSUME_NONNULL_BEGIN
     
     self.requestData.serverURL = __serverURL.absoluteString;
     [self.requestData setValue:__serverURL.host forHTTPHeaderField:@"Host"];
-
-
-    if ([self getDetectType].length == 0) {
-        if (error != NULL) {
-            *error = [NSError
-                qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
-                             message:[NSString
-                                         stringWithFormat:
-                                             @"InvalidArgument:paramter[detect-type] is invalid (nil), it must have some value. please check it"]];
-            return NO;
-        }
-    }
-
     
     NSMutableDictionary * input = NSMutableDictionary.new;
     [input setObject:self.url forKey:@"Url"];
@@ -175,6 +152,10 @@ NS_ASSUME_NONNULL_BEGIN
         [detecyTypes addObject:@"Ads"];
     }
 
+    if(detecyTypes.count == 0){
+        return @"";
+    }
+    
     return [detecyTypes componentsJoinedByString:@","];
 }
 @end

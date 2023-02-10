@@ -14,6 +14,8 @@ typedef NS_ENUM(NSUInteger, QCloudRecognitionEnum) {
     QCloudRecognitionTerrorist  = 1 << 1,
     QCloudRecognitionPolitics   = 1 << 2,
     QCloudRecognitionAds        = 1 << 3,
+    QCloudRecognitionIllegal    = 1 << 4,
+    QCloudRecognitionAbuse      = 1 << 5,
 };
 
 //拉取该状态的任务，以,分割，支持多状态：All、Submitted、Running、Success、Failed、Pause、Cancel。默认为 All。

@@ -80,17 +80,6 @@ NS_ASSUME_NONNULL_BEGIN
 
     [self.requestData setQueryStringParamter:@"sensitive-content-recognition" withKey:@"ci-process"];
 
-    if ([self getDetectType].length == 0) {
-        if (error != NULL) {
-            *error = [NSError
-                qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
-                             message:[NSString
-                                         stringWithFormat:
-                                             @"InvalidArgument:paramter[detect-type] is invalid (nil), it must have some value. please check it"]];
-            return NO;
-        }
-    }
-
     [self.requestData setQueryStringParamter:[self getDetectType] withKey:@"detect-type"];
 
     if (!self.object && !self.detectUrl) {
@@ -164,6 +153,10 @@ NS_ASSUME_NONNULL_BEGIN
 
     if (_detectType & QCloudRecognitionAds) {
         [detecyTypes addObject:@"ads"];
+    }
+    
+    if(detecyTypes.count == 0){
+        return @"";
     }
 
     return [detecyTypes componentsJoinedByString:@","];
