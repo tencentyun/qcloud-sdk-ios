@@ -26,6 +26,7 @@ static NSString *const QCloudServiceConfigurationUnknown = @"Unknown";
     config.endpoint = [self.endpoint copy];
     config.productVersion = self.productVersion;
     config.isCloseShareLog = self.isCloseShareLog;
+    config.disableUploadZeroData = self.disableUploadZeroData;
     config.timeoutInterval = self.timeoutInterval;
     config.enableQuic = self.enableQuic;
     config.disableSetupBeacon = self.disableSetupBeacon;

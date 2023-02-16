@@ -33,6 +33,7 @@
 @property (nonatomic, strong, readonly) NSMutableURLRequest *cachedURLRequest;
 @property (nonatomic, strong, readonly) NSError *cachedURLRequestBuildError;
 @property (nonatomic, strong) NSURLRequest *_Nullable urlRequest;
+
 @end
 
 @implementation QCloudHTTPRequest

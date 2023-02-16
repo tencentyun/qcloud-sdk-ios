@@ -344,6 +344,7 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
                         if (QCloudFileExist(httpRequset.downloadingURL.path)) {
                             httpRequset.localCacheDownloadOffset = QCloudFileSize(httpRequset.downloadingURL.path);
                         }
+                        [httpRequset setValue:@(YES) forKey:@"isRetry"];
                         [weakSelf executeRestHTTPReqeust:httpRequset];
                     }
                         whenError:error]) {
@@ -478,6 +479,10 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
             NSData *data = (NSData *)body;
             [mutableRequest setHTTPBody:data];
             [mutableRequest setValue:[@([data length]) stringValue] forHTTPHeaderField:@"Content-Length"];
+            if(data.length == 0 && httpRequest.runOnService.configuration.disableUploadZeroData){
+                directError = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
+                                                    message:[NSString stringWithFormat:@"InvalidArgument:您输入的body（Data）为空并且不允许上传空文件，是否为SDK内部重试：%@",httpRequest.isRetry ? @"是" : @"否"]];
+            }
         } else if ([body isKindOfClass:[NSURL class]]) {
             NSURL *fileURL = (NSURL *)body;
             if (![fileURL isFileURL]) {
@@ -487,6 +492,10 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
             NSUInteger fileSize = QCloudFileSize(fileURL.path);
             [mutableRequest setValue:[@(fileSize) stringValue] forHTTPHeaderField:@"Content-Length"];
             uploadFileURL = fileURL;
+            if(directError == nil && fileSize == 0 && httpRequest.runOnService.configuration.disableUploadZeroData){
+                directError = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
+                                                    message:[NSString stringWithFormat:@"InvalidArgument:您输入的body（NSURL:%@）为空并且不允许上传空文件，是否为SDK内部重试：%@",fileURL, httpRequest.isRetry ? @"是" : @"否"]];
+            }
         } else if ([body isKindOfClass:[QCloudFileOffsetBody class]]) {
             QCloudFileOffsetBody *fileBody = (QCloudFileOffsetBody *)body;
             if (![fileBody.fileURL isFileURL]) {

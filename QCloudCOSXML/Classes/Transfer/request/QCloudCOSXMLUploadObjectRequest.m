@@ -241,6 +241,14 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     self.totalBytesSent = 0;
 
     if ([self.body isKindOfClass:[NSData class]]) {
+        NSData * body = self.body;
+        if(body.length == 0 && self.transferManager.cosService.configuration.disableUploadZeroData){
+            NSError *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
+                                                   message:@"QCloudCOSXMLUploadObjectRequest:InvalidArgument:您输入的body（Data）为空并且不允许上传空文件"];
+            [self onError:error];
+            [self cancel];
+            return;
+        }
         [self startSimpleUpload];
     } else if ([self.body isKindOfClass:[NSURL class]]) {
         NSURL *url = (NSURL *)self.body;
@@ -265,6 +273,13 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
             startPartNumber = 0;
             [self startMultiUpload];
         } else {
+            if(self.dataContentLength == 0 && self.transferManager.cosService.configuration.disableUploadZeroData){
+                NSError *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
+                                                       message:[NSString stringWithFormat:@"QCloudCOSXMLUploadObjectRequest:InvalidArgument:您输入的body（NSURL:%@）为空并且不允许上传空文件",self.body]];
+                [self onError:error];
+                [self cancel];
+                return;
+            }
             [self startSimpleUpload];
         }
     } else {

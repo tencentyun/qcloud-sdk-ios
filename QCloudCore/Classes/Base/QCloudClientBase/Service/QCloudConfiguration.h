@@ -20,6 +20,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSTimeInterval timeoutInterval;
 
 @property (nonatomic, assign) BOOL enableQuic;
+
+/// 是否禁止上传空文件  NO 不禁止。YES 禁止
+@property (nonatomic, assign) BOOL disableUploadZeroData;
 @end
 
 NS_ASSUME_NONNULL_END

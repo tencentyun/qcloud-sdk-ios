@@ -35,6 +35,9 @@ typedef void (^QCloudHTTPRequestConfigure)(QCloudRequestSerializer *_Nonnull req
 @property (nonatomic, strong, readonly) QCloudResponseSerializer *_Nonnull responseSerializer;
 @property (nonatomic, strong, readonly) NSURLRequest *_Nullable urlRequest;
 
+/// sdk内部管理，业务测无需设置。
+@property (nonatomic, assign, readonly) BOOL isRetry;
+
 /**
  该任务所处的服务
  */
