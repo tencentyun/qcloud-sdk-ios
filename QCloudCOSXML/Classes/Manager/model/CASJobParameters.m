@@ -41,9 +41,9 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic {
-    NSNumber *CASTierenumValue = dic[@"Tier"];
-    if (CASTierenumValue) {
-        NSString *value = QCloudCASTierTransferToString([CASTierenumValue intValue]);
+    NSNumber *tier = dic[@"Tier"];
+    if (tier) {
+        NSString *value = QCloudCASTierTransferToString([tier intValue]);
         if (value) {
             dic[@"Tier"] = value;
         }
@@ -58,9 +58,9 @@ NS_ASSUME_NONNULL_BEGIN
     }
     NSMutableDictionary *transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
 
-    NSString *CASTierenumValue = transfromDic[@"Tier"];
-    if (CASTierenumValue && [CASTierenumValue isKindOfClass:[NSString class]] && CASTierenumValue.length > 0) {
-        NSInteger value = QCloudCASTierDumpFromString(CASTierenumValue);
+    NSString *tier = transfromDic[@"Tier"];
+    if (tier && [tier isKindOfClass:[NSString class]] && tier.length > 0) {
+        NSInteger value = QCloudCASTierDumpFromString(tier);
         transfromDic[@"Tier"] = @(value);
     }
     return transfromDic;

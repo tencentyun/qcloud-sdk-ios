@@ -44,9 +44,9 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic {
-    NSNumber *IntelligentTieringStatusenumValue = dic[@"Status"];
-    if (IntelligentTieringStatusenumValue) {
-        NSString *value = QCloudIntelligentTieringStatusTransferToString([IntelligentTieringStatusenumValue intValue]);
+    NSNumber *status = dic[@"Status"];
+    if (status) {
+        NSString *value = QCloudIntelligentTieringStatusTransferToString([status intValue]);
         if (value) {
             dic[@"Status"] = value;
         }
@@ -61,10 +61,10 @@ NS_ASSUME_NONNULL_BEGIN
     }
     NSMutableDictionary *transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
 
-    NSString *IntelligentTieringStatusenumValue = transfromDic[@"Status"];
-    if (IntelligentTieringStatusenumValue && [IntelligentTieringStatusenumValue isKindOfClass:[NSString class]]
-        && IntelligentTieringStatusenumValue.length > 0) {
-        int value = QCloudIntelligentTieringStatusDumpFromString(IntelligentTieringStatusenumValue);
+    NSString *status = transfromDic[@"Status"];
+    if (status && [status isKindOfClass:[NSString class]]
+        && status.length > 0) {
+        int value = QCloudIntelligentTieringStatusDumpFromString(status);
         transfromDic[@"Status"] = @(value);
     }
     return transfromDic;

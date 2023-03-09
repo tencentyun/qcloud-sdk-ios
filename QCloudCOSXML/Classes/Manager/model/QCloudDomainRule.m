@@ -44,23 +44,23 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic {
-    NSNumber *DomainStatueenumValue = dic[@"Status"];
-    if (DomainStatueenumValue) {
-        NSString *value = QCloudDomainStatueTransferToString([DomainStatueenumValue intValue]);
+    NSNumber *status = dic[@"Status"];
+    if (status) {
+        NSString *value = QCloudDomainStatueTransferToString([status intValue]);
         if (value) {
             dic[@"Status"] = value;
         }
     }
-    NSNumber *COSDomainTypeenumValue = dic[@"Type"];
-    if (COSDomainTypeenumValue) {
-        NSString *value = QCloudCOSDomainTypeTransferToString([COSDomainTypeenumValue intValue]);
+    NSNumber *type = dic[@"Type"];
+    if (type) {
+        NSString *value = QCloudCOSDomainTypeTransferToString([type intValue]);
         if (value) {
             dic[@"Type"] = value;
         }
     }
-    NSNumber *COSDomainReplaceTypeenumValue = dic[@"Replace"];
-    if (COSDomainReplaceTypeenumValue) {
-        NSString *value = QCloudCOSDomainReplaceTypeTransferToString([COSDomainReplaceTypeenumValue intValue]);
+    NSNumber *replace = dic[@"Replace"];
+    if (replace) {
+        NSString *value = QCloudCOSDomainReplaceTypeTransferToString([replace intValue]);
         if (value) {
             dic[@"Replace"] = value;
         }
@@ -75,19 +75,19 @@ NS_ASSUME_NONNULL_BEGIN
     }
     NSMutableDictionary *transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
 
-    NSString *DomainStatueenumValue = transfromDic[@"Status"];
-    if (DomainStatueenumValue && [DomainStatueenumValue isKindOfClass:[NSString class]] && DomainStatueenumValue.length > 0) {
-        NSInteger value = QCloudDomainStatueDumpFromString(DomainStatueenumValue);
+    NSString *status = transfromDic[@"Status"];
+    if (status && [status isKindOfClass:[NSString class]] && status.length > 0) {
+        NSInteger value = QCloudDomainStatueDumpFromString(status);
         transfromDic[@"Status"] = @(value);
     }
-    NSString *COSDomainTypeenumValue = transfromDic[@"Type"];
-    if (COSDomainTypeenumValue && [COSDomainTypeenumValue isKindOfClass:[NSString class]] && COSDomainTypeenumValue.length > 0) {
-        NSInteger value = QCloudCOSDomainTypeDumpFromString(COSDomainTypeenumValue);
+    NSString *type = transfromDic[@"Type"];
+    if (type && [type isKindOfClass:[NSString class]] && type.length > 0) {
+        NSInteger value = QCloudCOSDomainTypeDumpFromString(type);
         transfromDic[@"Type"] = @(value);
     }
-    NSString *COSDomainReplaceTypeenumValue = transfromDic[@"Replace"];
-    if (COSDomainReplaceTypeenumValue && [COSDomainReplaceTypeenumValue isKindOfClass:[NSString class]] && COSDomainReplaceTypeenumValue.length > 0) {
-        NSInteger value = QCloudCOSDomainReplaceTypeDumpFromString(COSDomainReplaceTypeenumValue);
+    NSString *replace = transfromDic[@"Replace"];
+    if (replace && [replace isKindOfClass:[NSString class]] && replace.length > 0) {
+        NSInteger value = QCloudCOSDomainReplaceTypeDumpFromString(replace);
         transfromDic[@"Replace"] = @(value);
     }
     return transfromDic;

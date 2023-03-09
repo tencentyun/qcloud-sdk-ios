@@ -32,8 +32,7 @@ __attribute__((noinline)) void cosWarnBlockingOperationOnMainThread(void) {
     _benchMarkMan = [QCloudHttpMetrics new];
     _priority = QCloudAbstractRequestPriorityHigh;
     static int64_t requestID = 3333;
-    _requestID = requestID + 1;
-    requestID++;
+    _requestID = (++ requestID) * 1000 + arc4random_uniform(1000);
     _finished = NO;
 
     return self;

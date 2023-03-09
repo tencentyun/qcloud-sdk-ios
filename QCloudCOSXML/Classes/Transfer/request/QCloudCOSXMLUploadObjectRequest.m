@@ -506,8 +506,7 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
             }
             __strong typeof(weakSelf) strongSelf = weakSelf;
             __strong typeof(weakRequest) strongRequst = weakRequest;
-            [strongSelf.requstMetricArray addObject:@ { [NSString stringWithFormat:@"%@", strongRequst] : strongRequst.benchMarkMan.tastMetrics }];
-
+            [weakSelf.requstMetricArray addObject:@{ [NSString stringWithFormat:@"%@", weakRequest] : weakRequest.benchMarkMan.tastMetrics }];
             if (error && error.code != QCloudNetworkErrorCodeCanceled) {
                 NSError *transferError = [weakSelf tranformErrorToResume:error];
                 __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -669,7 +668,7 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
 }
 
 - (void)cancel {
-    [super cancel];
+    
     [self.requestCacheArray addPointer:(__bridge void *_Nullable)([NSObject new])];
     [self.requestCacheArray compact];
     if (NULL != _queueSource) {
@@ -685,6 +684,7 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     }
 
     [[QCloudHTTPSessionManager shareClient] cancelRequestsWithID:cancelledRequestIDs];
+    [super cancel];
 }
 
 - (QCloudCOSXMLUploadObjectResumeData)cancelByProductingResumeData:(NSError *__autoreleasing *)error {

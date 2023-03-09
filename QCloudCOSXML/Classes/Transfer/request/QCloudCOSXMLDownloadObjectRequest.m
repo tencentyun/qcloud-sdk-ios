@@ -229,7 +229,6 @@
 }
 
 -(void)cancel{
-    [super cancel];
     [self.requestCacheArray addPointer:(__bridge void *_Nullable)([NSObject new])];
     [self.requestCacheArray compact];
     if (NULL != _queueSource) {
@@ -246,6 +245,7 @@
     }
 
     [[QCloudHTTPSessionManager shareClient] cancelRequestsWithID:cancelledRequestIDs];
+    [super cancel];
 }
 - (void)setCOSServerSideEncyption {
     self.customHeaders[@"x-cos-server-side-encryption"] = @"AES256";

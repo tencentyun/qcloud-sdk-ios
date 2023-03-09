@@ -62,9 +62,9 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic {
-    NSNumber *COSStorageClassenumValue = dic[@"StorageClass"];
-    if (COSStorageClassenumValue) {
-        NSString *value = QCloudCOSStorageClassTransferToString([COSStorageClassenumValue intValue]);
+    NSNumber *storageClass = dic[@"StorageClass"];
+    if (storageClass) {
+        NSString *value = QCloudCOSStorageClassTransferToString([storageClass intValue]);
         if (value) {
             dic[@"StorageClass"] = value;
         }
@@ -95,9 +95,9 @@ NS_ASSUME_NONNULL_BEGIN
         }
     }
 
-    NSString *COSStorageClassenumValue = transfromDic[@"StorageClass"];
-    if (COSStorageClassenumValue && [COSStorageClassenumValue isKindOfClass:[NSString class]] && COSStorageClassenumValue.length > 0) {
-        NSInteger value = QCloudCOSStorageClassDumpFromString(COSStorageClassenumValue);
+    NSString *storageClass = transfromDic[@"StorageClass"];
+    if (storageClass && [storageClass isKindOfClass:[NSString class]] && storageClass.length > 0) {
+        NSInteger value = QCloudCOSStorageClassDumpFromString(storageClass);
         transfromDic[@"StorageClass"] = @(value);
     }
     return transfromDic;

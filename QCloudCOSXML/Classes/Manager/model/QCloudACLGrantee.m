@@ -46,9 +46,9 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic {
-    NSNumber *COSAccountTypeenumValue = dic[@"_type"];
-    if (COSAccountTypeenumValue) {
-        NSString *value = QCloudCOSAccountTypeTransferToString([COSAccountTypeenumValue intValue]);
+    NSNumber *type = dic[@"_type"];
+    if (type) {
+        NSString *value = QCloudCOSAccountTypeTransferToString([type intValue]);
         if (value) {
             dic[@"_type"] = value;
         }
@@ -63,9 +63,9 @@ NS_ASSUME_NONNULL_BEGIN
     }
     NSMutableDictionary *transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
 
-    NSString *COSAccountTypeenumValue = transfromDic[@"_type"];
-    if (COSAccountTypeenumValue && [COSAccountTypeenumValue isKindOfClass:[NSString class]] && COSAccountTypeenumValue.length > 0) {
-        NSInteger value = QCloudCOSAccountTypeDumpFromString(COSAccountTypeenumValue);
+    NSString *type = transfromDic[@"_type"];
+    if (type && [type isKindOfClass:[NSString class]] && type.length > 0) {
+        NSInteger value = QCloudCOSAccountTypeDumpFromString(type);
         transfromDic[@"_type"] = @(value);
     }
     return transfromDic;

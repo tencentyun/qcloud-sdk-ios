@@ -48,16 +48,16 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic {
-    NSNumber *InputFileHeaderInfoenumValue = dic[@"FileHeaderInfo"];
-    if (InputFileHeaderInfoenumValue) {
-        NSString *value = QCloudInputFileHeaderInfoTransferToString([InputFileHeaderInfoenumValue intValue]);
+    NSNumber *fileHeaderInfo = dic[@"FileHeaderInfo"];
+    if (fileHeaderInfo) {
+        NSString *value = QCloudInputFileHeaderInfoTransferToString([fileHeaderInfo intValue]);
         if (value) {
             dic[@"FileHeaderInfo"] = value;
         }
     }
-    NSNumber *OutputQuoteFieldsenumValue = dic[@"QuoteFields"];
-    if (OutputQuoteFieldsenumValue) {
-        NSString *value = QCloudOutputQuoteFieldsTransferToString([OutputQuoteFieldsenumValue intValue]);
+    NSNumber *quoteFields = dic[@"QuoteFields"];
+    if (quoteFields) {
+        NSString *value = QCloudOutputQuoteFieldsTransferToString([quoteFields intValue]);
         if (value) {
             dic[@"QuoteFields"] = value;
         }
@@ -72,14 +72,14 @@ NS_ASSUME_NONNULL_BEGIN
     }
     NSMutableDictionary *transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
 
-    NSString *InputFileHeaderInfoenumValue = transfromDic[@"FileHeaderInfo"];
-    if (InputFileHeaderInfoenumValue && [InputFileHeaderInfoenumValue isKindOfClass:[NSString class]] && InputFileHeaderInfoenumValue.length > 0) {
-        NSInteger value = QCloudInputFileHeaderInfoDumpFromString(InputFileHeaderInfoenumValue);
+    NSString *fileHeaderInfo = transfromDic[@"FileHeaderInfo"];
+    if (fileHeaderInfo && [fileHeaderInfo isKindOfClass:[NSString class]] && fileHeaderInfo.length > 0) {
+        NSInteger value = QCloudInputFileHeaderInfoDumpFromString(fileHeaderInfo);
         transfromDic[@"FileHeaderInfo"] = @(value);
     }
-    NSString *OutputQuoteFieldsenumValue = transfromDic[@"QuoteFields"];
-    if (OutputQuoteFieldsenumValue && [OutputQuoteFieldsenumValue isKindOfClass:[NSString class]] && OutputQuoteFieldsenumValue.length > 0) {
-        NSInteger value = QCloudOutputQuoteFieldsDumpFromString(OutputQuoteFieldsenumValue);
+    NSString *quoteFields = transfromDic[@"QuoteFields"];
+    if (quoteFields && [quoteFields isKindOfClass:[NSString class]] && quoteFields.length > 0) {
+        NSInteger value = QCloudOutputQuoteFieldsDumpFromString(quoteFields);
         transfromDic[@"QuoteFields"] = @(value);
     }
     return transfromDic;

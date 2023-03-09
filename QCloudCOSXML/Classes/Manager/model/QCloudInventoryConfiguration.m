@@ -52,9 +52,9 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic {
-    NSNumber *COSIncludedObjectVersionsenumValue = dic[@"IncludedObjectVersions"];
-    if (COSIncludedObjectVersionsenumValue) {
-        NSString *value = QCloudCOSIncludedObjectVersionsTransferToString([COSIncludedObjectVersionsenumValue intValue]);
+    NSNumber *includedObjectVersions = dic[@"IncludedObjectVersions"];
+    if (includedObjectVersions) {
+        NSString *value = QCloudCOSIncludedObjectVersionsTransferToString([includedObjectVersions intValue]);
         if (value) {
             dic[@"IncludedObjectVersions"] = value;
         }
@@ -69,10 +69,10 @@ NS_ASSUME_NONNULL_BEGIN
     }
     NSMutableDictionary *transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
 
-    NSString *COSIncludedObjectVersionsenumValue = transfromDic[@"IncludedObjectVersions"];
-    if (COSIncludedObjectVersionsenumValue && [COSIncludedObjectVersionsenumValue isKindOfClass:[NSString class]]
-        && COSIncludedObjectVersionsenumValue.length > 0) {
-        NSInteger value = QCloudCOSIncludedObjectVersionsDumpFromString(COSIncludedObjectVersionsenumValue);
+    NSString *includedObjectVersions = transfromDic[@"IncludedObjectVersions"];
+    if (includedObjectVersions && [includedObjectVersions isKindOfClass:[NSString class]]
+        && includedObjectVersions.length > 0) {
+        NSInteger value = QCloudCOSIncludedObjectVersionsDumpFromString(includedObjectVersions);
         transfromDic[@"IncludedObjectVersions"] = @(value);
     }
     return transfromDic;

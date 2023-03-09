@@ -42,9 +42,9 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic {
-    NSNumber *InputJSONFileTypeenumValue = dic[@"OutoutJSONFileType"];
-    if (InputJSONFileTypeenumValue) {
-        NSString *value = QCloudInputJSONFileTypeTransferToString([InputJSONFileTypeenumValue intValue]);
+    NSNumber *outoutJSONFileType = dic[@"OutoutJSONFileType"];
+    if (outoutJSONFileType) {
+        NSString *value = QCloudInputJSONFileTypeTransferToString([outoutJSONFileType intValue]);
         if (value) {
             dic[@"OutoutJSONFileType"] = value;
         }
@@ -59,9 +59,9 @@ NS_ASSUME_NONNULL_BEGIN
     }
     NSMutableDictionary *transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
 
-    NSString *InputJSONFileTypeenumValue = transfromDic[@"OutoutJSONFileType"];
-    if (InputJSONFileTypeenumValue && [InputJSONFileTypeenumValue isKindOfClass:[NSString class]] && InputJSONFileTypeenumValue.length > 0) {
-        NSInteger value = QCloudInputJSONFileTypeDumpFromString(InputJSONFileTypeenumValue);
+    NSString *outoutJSONFileType = transfromDic[@"OutoutJSONFileType"];
+    if (outoutJSONFileType && [outoutJSONFileType isKindOfClass:[NSString class]] && outoutJSONFileType.length > 0) {
+        NSInteger value = QCloudInputJSONFileTypeDumpFromString(outoutJSONFileType);
         transfromDic[@"OutoutJSONFileType"] = @(value);
     }
     return transfromDic;

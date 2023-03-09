@@ -44,9 +44,9 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic {
-    NSNumber *COSPermissionenumValue = dic[@"Permission"];
-    if (COSPermissionenumValue) {
-        NSString *value = QCloudCOSPermissionTransferToString([COSPermissionenumValue intValue]);
+    NSNumber *permission = dic[@"Permission"];
+    if (permission) {
+        NSString *value = QCloudCOSPermissionTransferToString([permission intValue]);
         if (value) {
             dic[@"Permission"] = value;
         }
@@ -61,9 +61,9 @@ NS_ASSUME_NONNULL_BEGIN
     }
     NSMutableDictionary *transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
 
-    NSString *COSPermissionenumValue = transfromDic[@"Permission"];
-    if (COSPermissionenumValue && [COSPermissionenumValue isKindOfClass:[NSString class]] && COSPermissionenumValue.length > 0) {
-        NSInteger value = QCloudCOSPermissionDumpFromString(COSPermissionenumValue);
+    NSString *permission = transfromDic[@"Permission"];
+    if (permission && [permission isKindOfClass:[NSString class]] && permission.length > 0) {
+        NSInteger value = QCloudCOSPermissionDumpFromString(permission);
         transfromDic[@"Permission"] = @(value);
     }
     return transfromDic;

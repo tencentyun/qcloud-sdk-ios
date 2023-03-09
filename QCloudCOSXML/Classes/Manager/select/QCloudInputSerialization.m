@@ -46,9 +46,9 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic {
-    NSNumber *COSXMLCompressionTypeenumValue = dic[@"CompressionType"];
-    if (COSXMLCompressionTypeenumValue) {
-        NSString *value = QCloudCOSXMLCompressionTypeTransferToString([COSXMLCompressionTypeenumValue intValue]);
+    NSNumber *compressionType = dic[@"CompressionType"];
+    if (compressionType) {
+        NSString *value = QCloudCOSXMLCompressionTypeTransferToString([compressionType intValue]);
         if (value) {
             dic[@"CompressionType"] = value;
         }
@@ -63,10 +63,10 @@ NS_ASSUME_NONNULL_BEGIN
     }
     NSMutableDictionary *transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
 
-    NSString *COSXMLCompressionTypeenumValue = transfromDic[@"CompressionType"];
-    if (COSXMLCompressionTypeenumValue && [COSXMLCompressionTypeenumValue isKindOfClass:[NSString class]]
-        && COSXMLCompressionTypeenumValue.length > 0) {
-        NSInteger value = QCloudCOSXMLCompressionTypeDumpFromString(COSXMLCompressionTypeenumValue);
+    NSString *compressionType = transfromDic[@"CompressionType"];
+    if (compressionType && [compressionType isKindOfClass:[NSString class]]
+        && compressionType.length > 0) {
+        NSInteger value = QCloudCOSXMLCompressionTypeDumpFromString(compressionType);
         transfromDic[@"CompressionType"] = @(value);
     }
     return transfromDic;

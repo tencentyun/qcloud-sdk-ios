@@ -21,7 +21,7 @@
 
 #define QCloudLogDebug(frmt, ...) QCloudLog(QCloudLogLevelDebug, (frmt), ##__VA_ARGS__)
 
-#define QCloudLogVerbose(frmt, ...) QCloudLog(QCloudLogLevelInfo, (frmt), ##__VA_ARGS__)
+#define QCloudLogVerbose(frmt, ...) QCloudLog(QCloudLogLevelVerbose, (frmt), ##__VA_ARGS__)
 
 #define QCloudLogException(exception)                                                \
     QCloudLogError(@"Caught \"%@\" with reason \"%@\"%@", exception.name, exception, \

@@ -48,9 +48,9 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic {
-    NSNumber *ExpressionTypeenumValue = dic[@"ExpressionType"];
-    if (ExpressionTypeenumValue) {
-        NSString *value = QCloudExpressionTypeTransferToString([ExpressionTypeenumValue intValue]);
+    NSNumber *expressionType = dic[@"ExpressionType"];
+    if (expressionType) {
+        NSString *value = QCloudExpressionTypeTransferToString([expressionType intValue]);
         if (value) {
             dic[@"ExpressionType"] = value;
         }
@@ -65,9 +65,9 @@ NS_ASSUME_NONNULL_BEGIN
     }
     NSMutableDictionary *transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
 
-    NSString *ExpressionTypeenumValue = transfromDic[@"ExpressionType"];
-    if (ExpressionTypeenumValue && [ExpressionTypeenumValue isKindOfClass:[NSString class]] && ExpressionTypeenumValue.length > 0) {
-        NSInteger value = QCloudExpressionTypeDumpFromString(ExpressionTypeenumValue);
+    NSString *expressionType = transfromDic[@"ExpressionType"];
+    if (expressionType && [expressionType isKindOfClass:[NSString class]] && expressionType.length > 0) {
+        NSInteger value = QCloudExpressionTypeDumpFromString(expressionType);
         transfromDic[@"ExpressionType"] = @(value);
     }
     return transfromDic;

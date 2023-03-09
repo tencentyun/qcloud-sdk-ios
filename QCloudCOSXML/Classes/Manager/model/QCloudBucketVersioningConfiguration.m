@@ -41,9 +41,9 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic {
-    NSNumber *COSBucketVersioningStatusenumValue = dic[@"Status"];
-    if (COSBucketVersioningStatusenumValue) {
-        NSString *value = QCloudCOSBucketVersioningStatusTransferToString([COSBucketVersioningStatusenumValue intValue]);
+    NSNumber *status = dic[@"Status"];
+    if (status) {
+        NSString *value = QCloudCOSBucketVersioningStatusTransferToString([status intValue]);
         if (value) {
             dic[@"Status"] = value;
         }
@@ -58,10 +58,10 @@ NS_ASSUME_NONNULL_BEGIN
     }
     NSMutableDictionary *transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
 
-    NSString *COSBucketVersioningStatusenumValue = transfromDic[@"Status"];
-    if (COSBucketVersioningStatusenumValue && [COSBucketVersioningStatusenumValue isKindOfClass:[NSString class]]
-        && COSBucketVersioningStatusenumValue.length > 0) {
-        NSInteger value = QCloudCOSBucketVersioningStatusDumpFromString(COSBucketVersioningStatusenumValue);
+    NSString *status = transfromDic[@"Status"];
+    if (status && [status isKindOfClass:[NSString class]]
+        && status.length > 0) {
+        NSInteger value = QCloudCOSBucketVersioningStatusDumpFromString(status);
         transfromDic[@"Status"] = @(value);
     }
     return transfromDic;

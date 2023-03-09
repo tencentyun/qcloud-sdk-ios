@@ -50,23 +50,23 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic {
-    NSNumber *GenerateSnapshotModeenumValue = dic[@"Mode"];
-    if (GenerateSnapshotModeenumValue) {
-        NSString *value = QCloudGenerateSnapshotModeTransferToString([GenerateSnapshotModeenumValue intValue]);
+    NSNumber *mode = dic[@"Mode"];
+    if (mode) {
+        NSString *value = QCloudGenerateSnapshotModeTransferToString([mode intValue]);
         if (value) {
             dic[@"Mode"] = value;
         }
     }
-    NSNumber *GenerateSnapshotRotateTypeenumValue = dic[@"Rotate"];
-    if (GenerateSnapshotRotateTypeenumValue) {
-        NSString *value = QCloudGenerateSnapshotRotateTypeTransferToString([GenerateSnapshotRotateTypeenumValue intValue]);
+    NSNumber *rotate = dic[@"Rotate"];
+    if (rotate) {
+        NSString *value = QCloudGenerateSnapshotRotateTypeTransferToString([rotate intValue]);
         if (value) {
             dic[@"Rotate"] = value;
         }
     }
-    NSNumber *GenerateSnapshotFormatenumValue = dic[@"Format"];
-    if (GenerateSnapshotFormatenumValue) {
-        NSString *value = QCloudGenerateSnapshotFormatTransferToString([GenerateSnapshotFormatenumValue intValue]);
+    NSNumber *format = dic[@"Format"];
+    if (format) {
+        NSString *value = QCloudGenerateSnapshotFormatTransferToString([format intValue]);
         if (value) {
             dic[@"Format"] = value;
         }
@@ -81,21 +81,21 @@ NS_ASSUME_NONNULL_BEGIN
     }
     NSMutableDictionary *transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
 
-    NSString *GenerateSnapshotModeenumValue = transfromDic[@"Mode"];
-    if (GenerateSnapshotModeenumValue && [GenerateSnapshotModeenumValue isKindOfClass:[NSString class]] && GenerateSnapshotModeenumValue.length > 0) {
-        NSUInteger value = QCloudGenerateSnapshotModeDumpFromString(GenerateSnapshotModeenumValue);
+    NSString *mode = transfromDic[@"Mode"];
+    if (mode && [mode isKindOfClass:[NSString class]] && mode.length > 0) {
+        NSUInteger value = QCloudGenerateSnapshotModeDumpFromString(mode);
         transfromDic[@"Mode"] = @(value);
     }
-    NSString *GenerateSnapshotRotateTypeenumValue = transfromDic[@"Rotate"];
-    if (GenerateSnapshotRotateTypeenumValue && [GenerateSnapshotRotateTypeenumValue isKindOfClass:[NSString class]]
-        && GenerateSnapshotRotateTypeenumValue.length > 0) {
-        NSUInteger value = QCloudGenerateSnapshotRotateTypeDumpFromString(GenerateSnapshotRotateTypeenumValue);
+    NSString *rotate = transfromDic[@"Rotate"];
+    if (rotate && [rotate isKindOfClass:[NSString class]]
+        && rotate.length > 0) {
+        NSUInteger value = QCloudGenerateSnapshotRotateTypeDumpFromString(rotate);
         transfromDic[@"Rotate"] = @(value);
     }
-    NSString *GenerateSnapshotFormatenumValue = transfromDic[@"Format"];
-    if (GenerateSnapshotFormatenumValue && [GenerateSnapshotFormatenumValue isKindOfClass:[NSString class]]
-        && GenerateSnapshotFormatenumValue.length > 0) {
-        NSUInteger value = QCloudGenerateSnapshotFormatDumpFromString(GenerateSnapshotFormatenumValue);
+    NSString *format = transfromDic[@"Format"];
+    if (format && [format isKindOfClass:[NSString class]]
+        && format.length > 0) {
+        NSUInteger value = QCloudGenerateSnapshotFormatDumpFromString(format);
         transfromDic[@"Format"] = @(value);
     }
     return transfromDic;

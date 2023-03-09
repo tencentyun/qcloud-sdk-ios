@@ -55,9 +55,9 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic {
-    NSNumber *LifecycleStatueenumValue = dic[@"Status"];
-    if (LifecycleStatueenumValue) {
-        NSString *value = QCloudLifecycleStatueTransferToString([LifecycleStatueenumValue intValue]);
+    NSNumber *status = dic[@"Status"];
+    if (status) {
+        NSString *value = QCloudLifecycleStatueTransferToString([status intValue]);
         if (value) {
             dic[@"Status"] = value;
         }
@@ -72,9 +72,9 @@ NS_ASSUME_NONNULL_BEGIN
     }
     NSMutableDictionary *transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
 
-    NSString *LifecycleStatueenumValue = transfromDic[@"Status"];
-    if (LifecycleStatueenumValue && [LifecycleStatueenumValue isKindOfClass:[NSString class]] && LifecycleStatueenumValue.length > 0) {
-        NSInteger value = QCloudLifecycleStatueDumpFromString(LifecycleStatueenumValue);
+    NSString *status = transfromDic[@"Status"];
+    if (status && [status isKindOfClass:[NSString class]] && status.length > 0) {
+        NSInteger value = QCloudLifecycleStatueDumpFromString(status);
         transfromDic[@"Status"] = @(value);
     }
     return transfromDic;
