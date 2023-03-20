@@ -1,5 +1,5 @@
 #import "QCloudCOSXMLVersion.h"
-NSString * const QCloudCOSXMLModuleVersion = @"6.2.1";
+NSString * const QCloudCOSXMLModuleVersion = @"6.2.2";
 NSString * const QCloudCOSXMLModuleName = @"QCloudCOSXML";
 @interface QCloudQCloudCOSXMLLoad : NSObject
 @end

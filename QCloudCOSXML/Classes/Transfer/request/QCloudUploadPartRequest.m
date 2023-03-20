@@ -112,7 +112,7 @@ NS_ASSUME_NONNULL_BEGIN
         [self.requestData setValue:self.expect forHTTPHeaderField:@"Expect"];
     }
     if (self.trafficLimit) {
-        [self.requestData setValue:@(self.trafficLimit) forHTTPHeaderField:@"x-cos-traffic-limit"];
+        [self.requestData setValue:@(self.trafficLimit).stringValue forHTTPHeaderField:@"x-cos-traffic-limit"];
     }
     NSMutableArray *__pathComponents = [NSMutableArray arrayWithArray:self.requestData.URIComponents];
     if (self.object)
