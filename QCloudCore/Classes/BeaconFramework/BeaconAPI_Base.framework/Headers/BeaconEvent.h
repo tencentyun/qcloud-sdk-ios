@@ -16,6 +16,7 @@ typedef NS_ENUM(NSInteger, BeaconEventType) {
     BeaconEventTypeRealTime,                    // 实时事件
     BeaconEventTypeDTNormal,                    // 普通的大同事件，大同SDK业务专用
     BeaconEventTypeDTRealTime,                  // 实时的大同事件，大同SDK业务专用
+    BeaconEventTypeImmediate,                   // 立即上报的事件，相对于实时事件有更高的上报及时性
 };
 
 /**
@@ -38,22 +39,36 @@ typedef NS_ENUM(NSInteger, BeaconEventType) {
 @property (nonatomic, assign) BOOL success DEPRECATED_MSG_ATTRIBUTE("在4.0+版本已废弃，可不设置");
 
 /// 事件的自定义参数，key和value类型要求是NSString或者NSNumber类型，使用其他类型的事件不会上报
-/// 单个value的长度最大为10k，超出10k部分会被截断后上报，所有value长度之和最大为45k，超过45k不会上报此条事件
+/// 单个value的长度最大为20K，超出20K部分会被截断后上报，所有value长度之和最大为45k，超过45k不会上报此条事件
 @property (nonatomic, strong, nullable) NSDictionary *params;
 
-/// 标记事件是否是qimei为空的补报事件
-@property (nonatomic, assign) BOOL reportAgainAfterQimeiNotNull;
 
+
+/// 标记事件是否是Q16和Q36都为空的补报事件
+@property (nonatomic, assign) BOOL reportAgainAfterQimeiNotNull;
 
 /// 实时事件的构造函数
 /// @param code 事件标识code
 /// @param params 事件的自定义参数
-+ (instancetype)realTimeEventWithCode:(NSString *)code params:(nullable NSDictionary *)params;
++ (instancetype)realTimeEventWithCode:(NSString *)code params:(nullable NSDictionary *)params DEPRECATED_MSG_ATTRIBUTE("在4.2.73+版本已废弃，请使用realTimeEventWithCode:appKey:params:");
+
+/// 实时事件的构造函数
+/// @param code 事件标识code
+/// @param params 事件的自定义参数
+/// @param appKey 事件所上报的appkey
++ (instancetype)realTimeEventWithCode:(NSString *)code appKey:(NSString *)appKey params:(nullable NSDictionary *)params;
+
 
 /// 普通事件的构造函数
 /// @param code 事件标识code
 /// @param params 事件的自定义参数
-+ (instancetype)normalEventWithCode:(NSString *)code params:(nullable NSDictionary *)params;
++ (instancetype)normalEventWithCode:(NSString *)code params:(nullable NSDictionary *)params DEPRECATED_MSG_ATTRIBUTE("在4.2.73+版本已废弃，请使用normalEventWithCode:appKey:params:");
+
+/// 普通事件的构造函数
+/// @param code 事件标识code
+/// @param params 事件的自定义参数
+/// @param appKey 事件所上报的appkey
++ (instancetype)normalEventWithCode:(NSString *)code appKey:(NSString *)appKey params:(nullable NSDictionary *)params;
 
 /// 构造函数，兼容老版本的事件初始化
 /// @param appKey 各业务在灯塔平台申请的业务唯一标识

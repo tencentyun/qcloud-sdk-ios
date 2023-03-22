@@ -10,13 +10,38 @@
 #import "BeaconResult.h"
 #import "BeaconEvent.h"
 #import "BeaconBaseInfoModel.h"
-#import <QimeiSDK/QimeiSDK.h>
+#import <QimeiSDK/QimeiSDK.h> 
 #import "BeaconReportConfig.h"
-
+#import "BeaconWnsTransferArgs.h"
+#import "BeaconMsfSendArgs.h"
+#import "BeaconCallBackManager.h"
 NS_ASSUME_NONNULL_BEGIN
+
+
+typedef void (^BeaconWnsTransferCallback)(BeaconWnsTransferArgs *beaconArgs, BeaconWnsTransferResult *beaconResult);
+typedef void (^BeaconMsfSendCallback)(BeaconMsfSendResult *beaconResult);
+/**
+  长连接网络数据传输的适配协议(可选):当业务对灯塔上报数据实时性有要求时,可开启长连接上报功能.
+  开启此功能需要业务集成维纳斯SDK. 初始化维纳斯SDK并实现维纳斯SDK数据传输的代理接口.
+ */
+@protocol BeaconTransferProtocal <NSObject>
+@optional
+/// 维纳斯SDK数据传输的代理接口
+- (void)transferArgs:(BeaconWnsTransferArgs *)beaconArgs
+            delegate:(BeaconWnsTransferCallback)beaconCallBack;
+
+/**
+ * MSFSDK数据传输的代理接口
+ * callbackManager: 回调管理类. 收到msf回调后,接入层可以通过BeaconCallBackManager单例对象,直接调用callBackSendResult回传结果.4.1.36版本msfSDK 是通过代理回调结果,为了简化接入层逻辑,所以这里构建了BeaconCallBackManager中间层.
+ * return: sequenceId. 接入层需要保证sequenceId合法,非法id(如:0,nil,NULL)灯塔会拦截走原通道, 非法情况下继续调 MSF,有可能造成数据重复.
+ */
+- (NSInteger)sendArgs:(BeaconMsfSendArgs *)beaconArgs callback:(BeaconCallBackManager *)callbackManager;
+
+
+@end
+
 /// BeaconMttProtocal穿上甲日志协议
 @protocol BeaconMttProtocal <NSObject>
-/// 适配穿山甲日志
 - (void)mttLog:(NSString *)message
           file:(const char *)file
       function:(const char *)function
@@ -48,13 +73,17 @@ extern BOOL BeaconHasStarted;
 @property (nonatomic, assign) int logLevel;
 
 /// 是否采集WiFiMac地址，参数为NO时不采集，默认采集，如果需要关闭则需要在初始化前设置为NO
-@property (assign) BOOL collectMacEnable;
+@property (assign) BOOL collectMacEnable DEPRECATED_MSG_ATTRIBUTE("4.2.74以后不再采集,如需使用请自行采集后通过[BeaconReport.sharedInstance setWifiName:/setWifiMac:]填充");
 
 /// 是否采集idfa,参数为NO时不采集，默认采集，如果需要关闭则需要在初始化前设置为NO
-@property (assign) BOOL collectIdfaEnable;
+@property (assign) BOOL collectIdfaEnable DEPRECATED_MSG_ATTRIBUTE("4.2.74以后不再采集,如需使用请自行采集后通过[BeaconReport.sharedInstance setIDFA:]填充");
 
-/// 是否采集idfv，默认采集
-@property (nonatomic, assign) BOOL collectIdfvEnable;
+
+/// 是否采集idfv，默认采集。无特殊情况不要关闭 ! 若关闭后务必在授权后填充IDFV(setIDFV:)
+@property (assign) BOOL collectIdfvEnable;
+
+/// 网络数据传输通道代理
+@property (nonatomic, weak) id<BeaconTransferProtocal> transferDelegate;
 
 /// 穿山甲日志代理
 @property (nonatomic, weak) id<BeaconMttProtocal> mttDelegate;
@@ -62,10 +91,18 @@ extern BOOL BeaconHasStarted;
 
 + (BeaconReport *)sharedInstance;
 
-/// 初始化接口，开启灯塔服务，会向服务器查询策略，初始化各个模块的默认数据上传器等
-/// 此接口一般在主APP（主通道）初始化时调用，多次调用的话，只有首次的调用才有效
-/// @param appKey 各业务在灯塔平台申请的业务唯一标识
-/// @param config 全局配置，可配置一些开关和策略等
+/**
+ * 初始化接口，开启灯塔服务，会向服务器查询策略，初始化各个模块的默认数据上传器等
+ * 1.宿主(应用)集成灯塔时:
+ *     a:建议在didFinishLaunchingWithOptions中最早位置调用灯塔,避免其他组件SDK提前初始化灯塔而引起数据错误问题.
+ *     b:应用中多份组件SDK同时使用灯塔,强烈建议配置BeaconInfo.plist文件记录beacon_main_appkey,
+ *       配置后灯塔初始化以配置文件为准,所以务必确保配置文件appkey正确!! 非必要情况不要修改配置文件!!
+ * 2.二方(中台,组件)SDK集成灯塔:
+ *     a:使用公版灯塔(和宿主共用)情况下, 禁止调用此方法!!!
+ *     b:使用前缀版本灯塔情况下,需要调用此方法. 通常一个二方SDK业务对应一份前缀版本灯塔,彼此是相互隔离.
+ * @param appKey 各业务在灯塔平台申请的业务唯一标识
+ * @param config 全局配置，可配置一些开关和策略等
+ */
 - (void)startWithAppkey:(NSString *)appKey config:(nullable BeaconReportConfig *)config;
 
 /// 上报事件
@@ -91,23 +128,25 @@ extern BOOL BeaconHasStarted;
 - (void)setOpenId:(NSString *)openId forAppKey:(NSString *)appKey;
 
 
-
-/// 同步获取qimei，只查询本地存储的qimei，不会触发网络请求
-/// 未初始化灯塔前获取的qimei为空
-/// @return 如果设备第一次安装集成了灯塔SDK的APP,第一次启动时有可能获取不到，返回空
-- (nullable QimeiContent *)getQimei DEPRECATED_MSG_ATTRIBUTE("在4.2+版本已废弃，请使用getQimeiForAppKey:");
-
 /// 同步获取对应appkey的qimei,可以在未初始化灯塔前调用
 - (nullable QimeiContent *)getQimeiForAppKey:(NSString *)appKey;
-
-/// 异步获取qimei，如果本地没有, 则等待网络请求的回调，针对的是APP首次安装本地没有qimei的场景。
-/// ！！！建议在APP启动阶段调用一次本异步接口，其余阶段使用同步接口获取qimei
-/// 未初始化灯塔前获取的qimei为空
-/// @param block 异步回调的block
-- (void)getQimeiWithBlock:(void (^)(QimeiContent * _Nullable qimei))block DEPRECATED_MSG_ATTRIBUTE("在4.2+版本已废弃，请使用getQimeigetQimeiWithBlock:ForAppKey:");
  
 /// 异步获取对应appkey的qimei，可以在未初始化灯塔前调用
 - (void)getQimeiWithBlock:(void (^)(QimeiContent * _Nullable qimei))block forAppKey:(NSString *)appkey;
+
+
+/// 默认不采集idfa,由需采集idfa的应用宿主填充.
+- (void)setIDFA:(NSString *)idfa;
+
+/// 默认采集IDFV,业务如有关闭IDFV,用户同意隐私采集后,需填充给灯塔
+- (void)setIDFV:(NSString *)idfv;
+
+/// 设置wifiName. 用户授权隐私数据采集后,可统一采集后填充到灯塔
+- (void)setWifiName:(NSString *)wifiName;
+
+/// 设置wifiMac. 用户授权隐私数据采集后,可统一采集后填充到灯塔
+- (void)setWifiMac:(NSString *)wifiMac;
+
 
 /// 获取所有灯塔已默认采集的公参
 - (BeaconBaseInfoModel *)getCommonParams;
@@ -119,5 +158,4 @@ extern BOOL BeaconHasStarted;
 
 NS_ASSUME_NONNULL_END
 
-
-#define BEACON_SDK_VERSION @"4.2.64"
+#define BEACON_SDK_VERSION @"4.2.76.20"

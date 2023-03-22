@@ -66,18 +66,6 @@ Beacon_CLASS_DEPRECATED_APP(1.0.0, 3.2.0, "推荐使用BeaconReport类")
 //更换用户时设置userId
 + (void)setUserId:(NSString *)userId;
 
-//当第一次安装 ,第一次启动时有可能获取不到,返回A3
-+ (NSString *)getQIMEI;
-
-//当第一次安装 ,第一次启动时有可能获取不到,返回A153
-+ (NSString *)getQimeiNew;
-
-//当第一次安装 ,第一次启动时有可能获取不到, 按key返回（可能为空）
-+ (NSString *)getQimeiWithKey:(NSString *)key;
-
-//如果本地没有缓存, 则请求网络获取,同getQIMEI,由于接口设计问题请不要重复调用,回调时间取决于网络请求时间
-+ (void)getQIMEIwithBlock:(void (^)(NSString * qimei)) block;
-
 //打开海外版本,需要在初始化之前设置,默认关闭
 + (void)enableAbroad:(BOOL)enalbe;
 

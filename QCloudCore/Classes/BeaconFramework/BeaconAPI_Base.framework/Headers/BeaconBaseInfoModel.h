@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <QimeiSDK/QimeiSDK.h>
+#import "BeaconOStarContent.h"
 #import "BeaconReportConfig.h"
 
 
@@ -40,8 +40,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// 缓存各appKet的的openId，以通道的appKey作为key进行缓存
 @property (copy) NSMutableDictionary<NSString *, NSString *> *openIdDict;
 
-/// Qimei对象
-@property (nonatomic, strong, readonly) QimeiContent *qimei;
+
+/// QimeiCont对象, ostar等同于QimeiContent.为了屏蔽敏感而做的替换
+@property (nonatomic, strong) QimeiContent *qimei;
+
 
 /// bundle相关
 @property (copy, readonly) NSString *bundleId;
@@ -60,9 +62,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// openuuid 自建
 @property (copy, readonly) NSString *openUdid;
 /// idfv
-@property (copy, readonly) NSString *idfv;
+@property (copy) NSString *idfv;
 /// idfa
-@property (copy, readonly) NSString *idfa;
+@property (copy) NSString *idfa;
 /// 是否越狱
 @property (assign, readonly) BOOL isReet;
 /// 主通道的channelId
@@ -116,7 +118,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 启动来源
 @property (copy) NSString *launchSource;
 /// 设备名
-@property (copy, readonly) NSString *deviceName;
+@property (copy, readonly) NSString *deviceName DEPRECATED_MSG_ATTRIBUTE("安全合规建设,4.2.75以后不再采集");
 /// 设备型号
 @property (copy, readonly) NSString *deviceModel;
 /// 设备类型
@@ -126,9 +128,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// aesKey
 @property (copy) NSString *aesKey;
 /// 加密 key
-@property (copy, readonly) NSString *aesKeyEncrypt;
-/// 与服务器进行时钟同步的时间差
-@property (nonatomic, assign) long serverTimeDelta;
+@property (nonatomic, copy) NSString *aesKeyEncrypt;
+/// 与服务器进行时钟同步的时间差(单位毫秒)
+@property (assign) NSTimeInterval serverTimeDelta;
 /// app安装时间
 @property (assign, readonly) long long appInstallTime;
 

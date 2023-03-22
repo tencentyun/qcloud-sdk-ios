@@ -14,11 +14,17 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface BeaconReportConfig : NSObject
 
-/// 开启或者关闭事件上报功能，默认为YES可进行上报，如果有给用户提供关闭事件上报的接口等情况，可设置为NO
+/// 开启或者关闭事件上报功能，默认为YES可进行上报，如果有给用户提供关闭事件上报的接口等情况，可设置为NO. 关闭后事件不作任何处理
 @property (nonatomic, assign) BOOL eventReportEnabled;
+
+/// 开启或关闭内置事件上报， 默认为YES开启。 如果需要关闭， 可设置为NO， 关闭后拦截内置事件:[rqd_applaunched, rqd_appresumed, rqd_appexited, rqd_heartbeat]
+@property (nonatomic, assign) BOOL internalEventEnabled;
 
 /// 开启或者关闭策略请求功能，默认为YES进行策略请求，如果需要关闭，可设置为NO
 @property (nonatomic, assign) BOOL configQueryEnabled;
+
+/// 事件轮询上传开关,默认打开. 关闭后业务生成的事件会入库,但不上传到服务端,达到DB上限后丢弃剩余事件.
+@property (nonatomic, assign) BOOL eventUploadEnabled;
 
 /// 本地数据库的最大容量（超过限额不予存储），默认10000条，保护区间是100～100000条，云端优先级高于本地设置
 @property (nonatomic, assign) NSInteger maxDBCount;

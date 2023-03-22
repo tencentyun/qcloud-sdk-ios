@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSInteger, BeaconResultType) {
@@ -38,7 +37,39 @@ typedef NS_ENUM(NSInteger, BeaconResultType) {
   BeaconReportResult:上报事件结果类
  */
 @interface BeaconReportResult : BeaconBaseResult
+@end
+
+/**
+ BeaconWnsTransferResult:msf回调灯塔的参数对象
+ */
+@interface BeaconWnsTransferResult : NSObject
+
+/// 客户端层返回码
+@property(nonatomic, assign)  NSInteger     sdkCode;
+/// 后台返回码
+@property(nonatomic, assign)  NSInteger     wnsCode;
+/// 业务层返回码
+@property(nonatomic, assign)  NSInteger     bizCode;
+/// 业务层返回数据
+@property(nonatomic, strong)  NSData*       bizBuffer;
+/// 异常错误信息
+@property(nonatomic, strong)  NSString*     bizMsg;
 
 @end
+
+/**
+  MSFSDK 发送数据结果回调: 0 代表成功 非零则是对应错误码
+ */
+@interface BeaconMsfSendResult : NSObject
+/// sequenceId
+@property(nonatomic, assign)  NSInteger sequenceId;
+/// 发送状态码
+@property(nonatomic, assign)  NSInteger sendCode;
+/// 发送错误信息
+@property(nonatomic, assign)  NSString  *sendMsg;
+
+@end
+
+
 
 NS_ASSUME_NONNULL_END
