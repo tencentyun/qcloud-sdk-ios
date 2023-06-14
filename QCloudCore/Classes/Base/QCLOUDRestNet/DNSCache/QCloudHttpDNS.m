@@ -226,6 +226,9 @@ NSArray *getIPListFromToHost(const char *mHost, const char *mPort) {
         if (res->ai_family == AF_INET6) {
             addr6 = (struct sockaddr_in6 *)res->ai_addr;
             newChar = inet_ntop(AF_INET6, &addr6->sin6_addr, ipbuf, sizeof(ipbuf));
+            if(newChar == NULL){
+                continue;
+            }
             NSString *TempA = [[NSString alloc] initWithCString:(const char *)newChar encoding:NSASCIIStringEncoding];
             NSString *TempB = [NSString stringWithUTF8String:IP_ADDR_IPv6.UTF8String];
 
@@ -234,6 +237,9 @@ NSArray *getIPListFromToHost(const char *mHost, const char *mPort) {
         } else {
             addr = (struct sockaddr_in *)res->ai_addr;
             newChar = inet_ntop(AF_INET, &addr->sin_addr, ipbuf, sizeof(ipbuf));
+            if(newChar == NULL){
+                continue;
+            }
             NSString *TempA = [[NSString alloc] initWithCString:(const char *)newChar encoding:NSASCIIStringEncoding];
             NSString *TempB = [NSString stringWithUTF8String:IP_ADDR_IPv4.UTF8String];
 
@@ -244,8 +250,9 @@ NSArray *getIPListFromToHost(const char *mHost, const char *mPort) {
         QCloudLogInfo(@"host[%s] ipList:%@", mHost, ipList);
     }
 
-    freeaddrinfo(res0);
-
+    if(res0 != NULL){
+        freeaddrinfo(res0);
+    }
     return ipList;
 }
 @end
