@@ -32,6 +32,7 @@
 #import <Foundation/Foundation.h>
 #import <QCloudCore/QCloudCore.h>
 #import "QCloudGetFilePreviewHtmlResult.h"
+#import <UIKit/UIKit.h>
 NS_ASSUME_NONNULL_BEGIN
 
 /**
