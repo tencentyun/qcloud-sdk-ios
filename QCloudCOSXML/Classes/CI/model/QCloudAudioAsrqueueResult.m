@@ -44,7 +44,7 @@
 
 @end
 
-@implementation QCloudAudioAsrqueueUpdateResult
+@implementation QCloudQueueItemModel
 + (NSDictionary *)modelContainerPropertyGenericClass {
     return @{
         @"Queue": [QCloudAudioAsrqueueQueueListItem class]

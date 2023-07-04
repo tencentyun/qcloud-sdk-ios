@@ -80,8 +80,6 @@ NS_ASSUME_NONNULL_BEGIN
 
     [self.requestData setQueryStringParamter:@"sensitive-content-recognition" withKey:@"ci-process"];
 
-    [self.requestData setQueryStringParamter:[self getDetectType] withKey:@"detect-type"];
-
     if (!self.object && !self.detectUrl) {
         if (error != NULL) {
             *error = [NSError
@@ -113,9 +111,14 @@ NS_ASSUME_NONNULL_BEGIN
     }
     
     if (self.largeImageDetect) {
-        [self.requestData setQueryStringParamter:self.largeImageDetect withKey:@"large-image-detect"];
+        [self.requestData setQueryStringParamter:@(self.largeImageDetect).stringValue withKey:@"large-image-detect"];
     }
     
+    if(self.callback){
+        [self.requestData setQueryStringParamter:self.callback withKey:@"callback"];
+    }
+    
+    [self.requestData setQueryStringParamter:@(self.async).stringValue withKey:@"async"];
         
     self.requestData.URIComponents = __pathComponents;
     if (![self customBuildRequestData:error])
@@ -137,29 +140,5 @@ NS_ASSUME_NONNULL_BEGIN
     return fileds;
 }
 
-- (NSString *)getDetectType {
-    NSMutableArray *detecyTypes = [NSMutableArray arrayWithCapacity:0];
-    if (_detectType & QCloudRecognitionPorn) {
-        [detecyTypes addObject:@"porn"];
-    }
-
-    if (_detectType & QCloudRecognitionTerrorist) {
-        [detecyTypes addObject:@"terrorist"];
-    }
-
-    if (_detectType & QCloudRecognitionPolitics) {
-        [detecyTypes addObject:@"politics"];
-    }
-
-    if (_detectType & QCloudRecognitionAds) {
-        [detecyTypes addObject:@"ads"];
-    }
-    
-    if(detecyTypes.count == 0){
-        return @"";
-    }
-
-    return [detecyTypes componentsJoinedByString:@","];
-}
 @end
 NS_ASSUME_NONNULL_END

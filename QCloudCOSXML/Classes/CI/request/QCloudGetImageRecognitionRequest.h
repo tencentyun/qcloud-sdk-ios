@@ -31,7 +31,7 @@
 
 #import <Foundation/Foundation.h>
 #import <QCloudCore/QCloudCore.h>
-#import "QCloudImageRecognitionResult.h"
+#import "QCloudBatchImageRecognitionResult.h"
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -72,7 +72,7 @@ NS_ASSUME_NONNULL_BEGIN
  设置完成回调。请求完成后会通过该回调来获取结果，如果没有error，那么可以认为请求成功。
  @param finishBlock 请求完成回调
  */
-- (void)setFinishBlock:(void (^_Nullable)(QCloudImageRecognitionResult *_Nullable result, NSError *_Nullable error))finishBlock;
+- (void)setFinishBlock:(void (^_Nullable)(QCloudBatchImageRecognitionResultItem *_Nullable result, NSError *_Nullable error))finishBlock;
 
 @end
 NS_ASSUME_NONNULL_END

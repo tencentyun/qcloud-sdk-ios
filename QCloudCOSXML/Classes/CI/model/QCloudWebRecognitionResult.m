@@ -14,6 +14,7 @@
         @"Labels" : [QCloudRecognitionLabels class],
         @"ImageResults" : [QCloudWebRecognitionImageResults class],
         @"TextResults" : [QCloudWebRecognitionTextResults class],
+        @"UserInfo" : [QCloudBatchRecognitionUserInfo class],
     };
 }
 

@@ -91,7 +91,11 @@ NS_ASSUME_NONNULL_BEGIN
     
     self.requestData.serverURL = __serverURL.absoluteString;
     [self.requestData setValue:__serverURL.host forHTTPHeaderField:@"Host"];
-    [self.requestData setParameter:self.taskInfo.qcloud_modelToJSONObject withKey:@"Request"];
+    
+    NSMutableDictionary * params = [[self.taskInfo qcloud_modelToJSONObject] mutableCopy];
+    [params setObject:@"WordsGeneralize" forKey:@"Tag"];
+    [self.requestData setParameter:params withKey:@"Request"];
+    
     NSMutableArray *__pathComponents = [NSMutableArray arrayWithArray:self.requestData.URIComponents];
     [__pathComponents addObject:@"ai_jobs"];
     self.requestData.URIComponents = __pathComponents;

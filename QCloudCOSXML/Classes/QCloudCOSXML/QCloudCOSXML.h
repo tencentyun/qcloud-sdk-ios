@@ -101,6 +101,7 @@
 #import "QCloudCICloudDataOperationsRequest.h"
 #import "QCloudCIPutObjectQRCodeRecognitionRequest.h"
 #import "QCloudGetFilePreviewRequest.h"
+#import "QCloudGetFilePreviewHtmlRequest.h"
 #import "QCloudCOSXMLService+ImageHelper.h"
 #import "QCloudPutObjectWatermarkRequest.h"
 #import "QCloudPutObjectWatermarkResult.h"
@@ -113,6 +114,7 @@
 #import "QCloudPostVideoRecognitionRequest.h"
 #import "QCloudGetDescribeMediaBucketsRequest.h"
 #import "QCloudGetMediaInfoRequest.h"
+#import "QCloudPostObjectProcessRequest.h"
 #import "QCloudGetAudioRecognitionRequest.h"
 #import "QCloudPostAudioRecognitionRequest.h"
 #import "QCloudGetTextRecognitionRequest.h"
@@ -121,5 +123,6 @@
 #import "QCloudPostDocRecognitionRequest.h"
 #import "QCloudGetWebRecognitionRequest.h"
 #import "QCloudPostWebRecognitionRequest.h"
+
 #endif /* QCloudCOSXML_h */
 

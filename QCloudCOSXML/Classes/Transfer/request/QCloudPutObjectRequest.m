@@ -146,6 +146,11 @@ NS_ASSUME_NONNULL_BEGIN
     return YES;
 }
 
+- (BOOL)prepareInvokeURLRequest:(NSMutableURLRequest *)urlRequest error:(NSError *__autoreleasing  _Nullable *)error{
+    NSLog(@"%@",urlRequest.URL);
+    return [super prepareInvokeURLRequest:urlRequest error:error];
+}
+
 - (QCloudSignatureFields *)signatureFields {
     QCloudSignatureFields *fileds = [QCloudSignatureFields new];
 

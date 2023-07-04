@@ -33,6 +33,7 @@
 #import <QCloudCore/QCloudCore.h>
 #import "QCloudRecognitionEnum.h"
 #import "QCloudWebRecognitionResult.h"
+#import "QCloudBatchRecognitionUserInfo.h"
 NS_ASSUME_NONNULL_BEGIN
 /**
  功能描述：
@@ -56,7 +57,6 @@ NS_ASSUME_NONNULL_BEGIN
         // 审核类型，拥有 porn（涉黄识别）、terrorist（涉暴恐识别）、politics（涉政识别）、ads（广告识别）四种，
         // 用户可选择多种识别类型，例如 detect-type=porn,ads 表示对图片进行涉黄及广告审核
         // 可以使用或进行组合赋值 如： QCloudRecognitionPorn | QCloudRecognitionTerrorist
-        request.detectType = QCloudRecognitionPorn | QCloudRecognitionAds | QCloudRecognitionPolitics | QCloudRecognitionTerrorist;
 
         // 审核策略，不带审核策略时使用默认策略。具体查看 https://cloud.tencent.com/document/product/460/56345
         request.bizType = BizType;
@@ -79,19 +79,23 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (strong, nonatomic) NSString *bucket;
 
-/// 审核类型，拥有 porn（涉黄识别）、terrorist（涉暴恐识别）、politics（涉政识别）、ads（广告识别）四种，
-/// 用户可选择多种识别类型，例如 detect-type=porn,ads 表示对图片进行涉黄及广告审核
-/// 可以使用或进行组合赋值 如： QCloudRecognitionPorn | QCloudRecognitionTerrorist
-@property (assign, nonatomic) QCloudRecognitionEnum detectType;
-
-
 /// 审核策略，不带审核策略时使用默认策略。具体查看 https://cloud.tencent.com/document/product/460/56345
 @property (strong, nonatomic) NSString * bizType;
 
+/// 该字段在审核结果中会返回原始内容，长度限制为512字节。您可以使用该字段对待审核的数据进行唯一业务标识。
+@property (strong, nonatomic) NSString * dataId;
 
 /// 回调地址，以http://或者https://开头的地址。
 @property (strong, nonatomic) NSString * callback;
 
+/// 回调片段类型，有效值：1（回调全部截帧和音频片段）、2（仅回调违规截帧和音频片段）。默认为 1。
+@property (assign, nonatomic) NSInteger callbackType;
+
+/// 用户业务字段。
+@property (strong, nonatomic) QCloudBatchRecognitionUserInfo * userInfo;
+
+/// 指定是否需要高亮展示网页内的违规文本，查询及回调结果时会根据此参数决定是否返回高亮展示的 html 内容。取值为 true 或者 false，默认为 false。
+@property (assign, nonatomic) BOOL returnHighlightHtml;
 
 /**
  设置完成回调。请求完成后会通过该回调来获取结果，如果没有error，那么可以认为请求成功。

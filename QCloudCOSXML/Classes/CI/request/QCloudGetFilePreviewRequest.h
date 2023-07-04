@@ -143,7 +143,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (copy, nonatomic) NSString * imageDpi;
 
 /**
-
  @param QCloudRequestFinishBlock 返回图片回调
  */
 - (void)setFinishBlock:(void (^_Nullable)(QCloudGetFilePreviewResult *_Nullable result, NSError *_Nullable error))QCloudRequestFinishBlock;

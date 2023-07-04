@@ -38,6 +38,7 @@
     return @{
         @"OcrResults": [QCloudRecognitionOcrResults class],
         @"ObjectResults": [QCloudRecognitionObjectResults class],
+        @"LibResults":[QCloudImageRecognitionLibResults class]
     };
 }
 
@@ -55,8 +56,17 @@
         [mdic setValue:@[mdic[@"ObjectResults"]] forKey:@"ObjectResults"];
     }
     
+    if ([mdic[@"LibResults"] isKindOfClass:[NSDictionary class]]) {
+        [mdic setValue:@[mdic[@"LibResults"]] forKey:@"LibResults"];
+    }
+    
     return mdic.mutableCopy;
 }
+
+@end
+
+@implementation QCloudImageRecognitionLibResults
+
 
 @end
 

@@ -1,5 +1,5 @@
 //
-//  QCloudPutObjectWatermarkResult.h
+//  QCloudPutObjectWatermarkResult.h 
 //  QCloudPutObjectWatermarkResult
 //
 //  Created by tencent
@@ -105,6 +105,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 图片大小
 @property (nonatomic, assign) NSInteger Size;
+
+/// 处理结果图 ETag 信息
+@property (nonatomic, copy) NSString *ETag;
+
+/// 图片的帧数。静态图为1，动图为对应的帧数.
+@property (nonatomic, assign) NSInteger FrameCount;
 
 @end
 

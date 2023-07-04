@@ -33,6 +33,7 @@
 #import <QCloudCore/QCloudCore.h>
 #import "QCloudRecognitionEnum.h"
 #import "QCloudAudioRecognitionResult.h"
+#import "QCloudBatchRecognitionUserInfo.h"
 @class QCloudPostAudioRecognitionResult;
 NS_ASSUME_NONNULL_BEGIN
 /**
@@ -52,8 +53,6 @@ NS_ASSUME_NONNULL_BEGIN
         request.object = @"exampleobject";
         // 存储桶名称，格式为 BucketName-APPID
         request.bucket = @"examplebucket-1250000000";
-
-        request.detectType = QCloudRecognitionPorn | QCloudRecognitionAds;
 
         request.bizType = BizType;
  
@@ -85,11 +84,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// 该字段在审核结果中会返回原始内容，长度限制为512字节。您可以使用该字段对待审核的数据进行唯一业务标识。
 @property (strong, nonatomic) NSString *dataId;
 
-/// 审核的场景类型，有效值：Porn（涉黄）、Ads（广告），可以传入多种类型，不同类型以逗号分隔，例如：Porn,Ads。
-/// 用户可选择多种识别类型，例如 detect-type=porn,ads 表示对图片进行涉黄及广告审核
-/// 可以使用或进行组合赋值 如： QCloudRecognitionPorn | QCloudRecognitionAds
-@property (assign, nonatomic) QCloudRecognitionEnum detectType;
-
 /// 审核策略，不带审核策略时使用默认策略。具体查看 https://cloud.tencent.com/document/product/460/56345
 @property (strong, nonatomic) NSString * bizType;
 
@@ -97,6 +91,24 @@ NS_ASSUME_NONNULL_BEGIN
 /// 回调地址，以http://或者https://开头的地址。
 @property (strong, nonatomic) NSString * callback;
 
+/// 回调片段类型，有效值：1（回调全部音频片段）、2（回调违规音频片段）。默认为 1。
+@property (assign, nonatomic) NSInteger callbackType;
+
+/// 取值为[0,100]，表示当色情审核结果大于或等于该分数时，自动进行冻结操作。不填写则表示不自动冻结，默认值为空。
+@property (assign, nonatomic) NSInteger pornScore;
+
+/// 取值为[0,100]，表示当广告审核结果大于或等于该分数时，自动进行冻结操作。不填写则表示不自动冻结，默认值为空。
+@property (assign, nonatomic) NSInteger adsScore;
+
+/// 取值为[0,100]，表示当恐怖审核结果大于或等于该分数时，自动进行冻结操作。不填写则表示不自动冻结，默认值为空。
+@property (assign, nonatomic) NSInteger terrorismScore;
+
+/// 取值为[0,100]，表示当涉政审核结果大于或等于该分数时，自动进行冻结操作。不填写则表示不自动冻结，默认值为空。
+@property (assign, nonatomic) NSInteger politicsScore;
+
+
+/// 用户业务字段。
+@property (strong, nonatomic) QCloudBatchRecognitionUserInfo * userInfo;
 
 /**
  设置完成回调。请求完成后会通过该回调来获取结果，如果没有error，那么可以认为请求成功。

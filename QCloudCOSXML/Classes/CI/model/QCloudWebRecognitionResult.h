@@ -31,6 +31,7 @@
 
 #import <Foundation/Foundation.h>
 #import "QCloudRecognitionModel.h"
+#import "QCloudBatchRecognitionUserInfo.h"
 @class QCloudWebRecognitionLabels;
 @class QCloudWebRecognitionLabelsItem;
 @class QCloudWebRecognitionImageResults;
@@ -52,6 +53,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 ///  网页审核任务的 ID。    String
 @property (nonatomic,strong)NSString *JobId;
+
+/// 提交任务时设置了 DataId 参数时返回，返回原始内容，长度限制为512字节。您可以使用该字段对待审核的数据进行唯一业务标识。
+@property (nonatomic,strong)NSString *DataId;
 
 ///  网页审核任务的状态，值为 Submitted（已提交审核）、Success（审核成功）、Failed（审核失败）、Auditing（审核中）其中一个。    String
 @property (nonatomic,strong)NSString *State;
@@ -84,6 +88,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 ///  对违规关键字高亮处理的Html网页内容，请求内容指定ReturnHighlightHtml时返回。    String
 @property (nonatomic,strong)NSString *HighlightHtml;
+
+@property (strong,nonatomic)QCloudBatchRecognitionUserInfo * UserInfo;
 
 @end
 
@@ -141,6 +147,9 @@ NS_ASSUME_NONNULL_BEGIN
 ///  该字段表示审核命中的具体子标签，
 ///  例如：Porn 下的 SexBehavior 子标签注意：该字段可能返回空，表示未命中具体的子标签
 @property (nonatomic,strong)NSString *SubLabel;
+
+/// 该字段为Label的子集，表示审核命中的具体审核类别。例如 Sexy，表示色情标签中的性感类别。
+@property (nonatomic,strong)NSString *Category;
 
 ///  该字段表示审核结果命中审核信息的置信度，
 ///  取值范围：0（置信度最低）-100（置信度最高 ），越高代表该内容越有可能属于当前返回审核信息

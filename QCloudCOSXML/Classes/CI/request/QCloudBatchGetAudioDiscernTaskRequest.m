@@ -67,27 +67,17 @@ NS_ASSUME_NONNULL_BEGIN
     if (![super buildRequestData:error]) {
         return NO;
     }
-
-    if (!self.queueId) {
-        if (error != NULL) {
-            *error = [NSError
-                qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
-                             message:[NSString stringWithFormat:
-                                                   @"InvalidArgument:paramter[queueId] is invalid (nil), it must have some value. please check it"]];
-            return NO;
-        }
-    }
     
     if (!self.tag) {
         if (error != NULL) {
             *error = [NSError
-                qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
-                             message:[NSString stringWithFormat:
-                                                   @"InvalidArgument:paramter[tag] is invalid (nil), it must have some value. please check it"]];
+                      qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
+                      message:[NSString stringWithFormat:
+                               @"InvalidArgument:paramter[tag] is invalid (nil), it must have some value. please check it"]];
             return NO;
         }
     }
-   
+    
     
     NSURL *__serverURL = [self.runOnService.configuration.endpoint serverURLWithBucket:self.bucket
                                                                                  appID:self.runOnService.configuration.appID
@@ -101,13 +91,14 @@ NS_ASSUME_NONNULL_BEGIN
     
     self.requestData.serverURL = __serverURL.absoluteString;
     [self.requestData setValue:__serverURL.host forHTTPHeaderField:@"Host"];
-
+    
     NSMutableArray *__pathComponents = [NSMutableArray arrayWithArray:self.requestData.URIComponents];
     [__pathComponents addObject:@"asr_jobs"];
     self.requestData.URIComponents = __pathComponents;
-    
-    [self.requestData setQueryStringParamter:self.queueId withKey:@"queueId"];
-    
+    if(self.queueId){
+        [self.requestData setQueryStringParamter:self.queueId withKey:@"queueId"];
+    }
+
     [self.requestData setQueryStringParamter:self.tag withKey:@"tag"];
     
     [self.requestData setQueryStringParamter:(self.orderByTime == 0 ? @"Desc" : @"Asc") withKey:@"orderByTime"];
@@ -127,7 +118,7 @@ NS_ASSUME_NONNULL_BEGIN
     }
     
     if (self.endCreationTime) {
-        [self.requestData setQueryStringParamter:self.endCreationTime withKey:@"startCreationTime"];
+        [self.requestData setQueryStringParamter:self.endCreationTime withKey:@"endCreationTime"];
     }
     
     return YES;

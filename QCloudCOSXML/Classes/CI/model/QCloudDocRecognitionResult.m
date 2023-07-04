@@ -12,6 +12,8 @@
     return @{
         @"Labels" : [QCloudRecognitionLabels class],
         @"PageSegment" : [QCloudDocRecognitionPageSegment class],
+        @"UserInfo":[QCloudBatchRecognitionUserInfo class],
+        @"ListInfo":[QCloudBatchRecognitionListInfo class]
     };
 }
 

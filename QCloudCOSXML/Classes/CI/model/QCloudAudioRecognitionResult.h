@@ -7,8 +7,12 @@
 
 #import <Foundation/Foundation.h>
 #import "QCloudRecognitionModel.h"
+#import "QCloudBatchImageRecognitionResult.h"
+#import "QCloudBatchRecognitionUserInfo.h"
+#import "QCloudRecognitionModel.h"
 @class QCloudAudioRecognitionSection;
 @class QCloudAudioRecognitionItemInfo;
+
 NS_ASSUME_NONNULL_BEGIN
 
 
@@ -60,8 +64,17 @@ NS_ASSUME_NONNULL_BEGIN
 /// 审核场景为政治敏感的审核结果信息。
 @property (nonatomic,strong)QCloudAudioRecognitionItemInfo * PoliticsInfo;
 
+@property (nonatomic,strong)QCloudAudioRecognitionItemInfo * TeenagerInfo;
+
 /// 当音频过长时，会对音频进行分段，该字段用于返回音频片段的审核结果，主要包括开始时间和音频审核的相应结果。
 @property (nonatomic,strong)NSArray <QCloudAudioRecognitionSection *> * Section;
+
+@property (nonatomic,strong)QCloudBatchRecognitionUserInfo *UserInfo;
+
+@property (nonatomic,strong)QCloudBatchRecognitionListInfo *ListInfo;
+
+/// 若您在请求时设置了自动冻结，该字段表示图片的冻结状态。0：未冻结，1：已被冻结。
+@property (nonatomic,assign)NSInteger ForbidState;
 
 @end
 
@@ -77,6 +90,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 本次审核的结果标签，如果命中了敏感的关键词，该字段返回对应的关键词。
 @property (nonatomic,strong)NSString * Label;
+
+/// 该字段表示审核命中的具体子标签。注意：该字段可能返回空。
+@property (nonatomic,strong)NSString * SubLabel;
+
+/// 该字段表示审核命中的具体审核类别。注意：该字段可能返回空。
+@property (nonatomic,strong)NSString * Category;
 
 @end
 
@@ -98,6 +117,12 @@ NS_ASSUME_NONNULL_BEGIN
 /// 该字段用于返回检测结果中所对应的优先级最高的恶意标签，表示模型推荐的审核结果，建议您按照业务所需，对不同违规类型与建议值进行处理。 返回值：Normal：正常，Porn：色情，Ads：广告，Politics：涉政，Terrorism：暴恐。
 @property (nonatomic,strong)NSString * Label;
 
+/// 该字段表示审核命中的具体子标签。注意：该字段可能返回空。
+@property (nonatomic,strong)NSString * SubLabel;
+
+/// 该字段表示本次判定的审核结果，您可以根据该结果，进行后续的操作；建议您按照业务所需，对不同的审核结果进行相应处理。有效值：0（审核正常），1 （判定为违规敏感文件），2（疑似敏感，建议人工复核）。
+@property (nonatomic,assign)NSInteger Result;
+
 /// 审核场景为涉黄的审核结果信息。
 @property (nonatomic,strong)QCloudRecognitionResultsItemInfo * PornInfo;
 
@@ -109,6 +134,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 审核场景为政治敏感的审核结果信息。
 @property (nonatomic,strong)QCloudRecognitionResultsItemInfo * PoliticsInfo;
+
+@property (nonatomic,strong)QCloudRecognitionResultsItemInfo * TeenagerInfo;
+
+@property (nonatomic,strong)NSArray <QCloudRecognitionResultsItem *> * LanguageResults;
 @end
 
 

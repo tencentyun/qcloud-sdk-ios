@@ -26,6 +26,31 @@
 @end
 
 @implementation QCloudRecognitionResultsItemInfo
++ (NSDictionary *)modelContainerPropertyGenericClass {
+    return @{
+        @"LibResults": [QCloudRecognitionSectionItemLibResults class],
+        @"SpeakerResults": [QCloudRecognitionResultsItem class],
+        @"RecognitionResults": [QCloudRecognitionResultsItem class],
+    };
+}
+
+- (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dic {
+    if (!dic) {
+        return dic;
+    }
+    NSMutableDictionary * mdic = dic.mutableCopy;
+    if ([mdic[@"LibResults"] isKindOfClass:[NSDictionary class]]) {
+        [mdic setValue:@[mdic[@"LibResults"]] forKey:@"LibResults"];
+    }
+    if ([mdic[@"SpeakerResults"] isKindOfClass:[NSDictionary class]]) {
+        [mdic setValue:@[mdic[@"SpeakerResults"]] forKey:@"SpeakerResults"];
+    }
+    if ([mdic[@"RecognitionResults"] isKindOfClass:[NSDictionary class]]) {
+        [mdic setValue:@[mdic[@"RecognitionResults"]] forKey:@"RecognitionResults"];
+    }
+    
+    return mdic.mutableCopy;
+}
 
 @end
 
@@ -36,7 +61,20 @@
         @"AdsInfo": [QCloudRecognitionLabels class],
         @"TerrorismInfo": [QCloudRecognitionLabels class],
         @"PoliticsInfo": [QCloudRecognitionLabels class],
+        @"LibResults": [QCloudRecognitionSectionItemLibResults class],
     };
+}
+
+- (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dic {
+    if (!dic) {
+        return dic;
+    }
+    NSMutableDictionary * mdic = dic.mutableCopy;
+    if ([mdic[@"LibResults"] isKindOfClass:[NSDictionary class]]) {
+        [mdic setValue:@[mdic[@"LibResults"]] forKey:@"LibResults"];
+    }
+    
+    return mdic.mutableCopy;
 }
 @end
 
@@ -50,6 +88,17 @@
         @"LibResults": [QCloudRecognitionSectionItemLibResults class],
     };
 }
+- (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dic {
+    if (!dic) {
+        return dic;
+    }
+    NSMutableDictionary * mdic = dic.mutableCopy;
+    if ([mdic[@"LibResults"] isKindOfClass:[NSDictionary class]]) {
+        [mdic setValue:@[mdic[@"LibResults"]] forKey:@"LibResults"];
+    }
+    
+    return mdic.mutableCopy;
+}
 @end
 
 @implementation QCloudRecognitionSectionItemLibResults
@@ -61,5 +110,14 @@
 @end
 
 @implementation QCloudRecognitionItemInfo
+
+@end
+
+@implementation QCloudRecognitionResultsItem
+
+@end
+
+
+@implementation QCloudBatchRecognitionEncryption
 
 @end

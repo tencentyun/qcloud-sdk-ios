@@ -9,12 +9,10 @@
 @class QCloudWordsGeneralizeInputObject;
 @class QCloudWordsGeneralizeInputOperation;
 @class QCloudWordsGeneralizeInputGeneralize;
+@class QCloudCallBackMqConfig;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface QCloudWordsGeneralizeInput : NSObject
-
-/// 创建任务的 Tag：WordsGeneralize 必选
-@property (nonatomic,strong)NSString *Tag;
 
 /// 待操作的对象信息 必选
 @property (nonatomic,strong)QCloudWordsGeneralizeInputObject *Input;
@@ -28,8 +26,14 @@ NS_ASSUME_NONNULL_BEGIN
 /// 任务回调地址，优先级高于队列的回调地址。设置为 no 时，表示队列的回调地址不产生回调 可选
 @property (nonatomic,strong)NSString *CallBack;
 
+/// 任务回调类型，Url 或 TDMQ，默认 Url，优先级高于队列的回调类型
+@property (nonatomic,strong)NSString *CallBackType;
+
 /// 任务回调格式，JSON 或 XML，默认 XML，优先级高于队列的回调格式 可选
 @property (nonatomic,strong)NSString *CallBackFormat;
+
+/// 任务回调TDMQ配置，当 CallBackType 为 TDMQ 时必填。
+@property (nonatomic,strong)QCloudCallBackMqConfig *CallBackMqConfig;
 @end
 
 @interface QCloudWordsGeneralizeInputObject : NSObject

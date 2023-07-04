@@ -32,12 +32,30 @@
 #import <Foundation/Foundation.h>
 #import "QCloudRecognitionModel.h"
 @class QCloudImageRecognitionResultInfo;
+@class QCloudImageRecognitionLibResults;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface QCloudImageRecognitionResult : NSObject
 
+
+/// 图片标识，审核结果会返回原始内容，长度限制为512字节。
+@property (nonatomic,strong)NSString *DataId;
+
 ///  图片审核的任务 ID，您可以通过该 ID 主动查询图片审核结果。
 @property (nonatomic,strong)NSString *JobId;
+
+/// 审核任务的状态，值为Submitted（已提交审核）。
+@property (nonatomic,strong)NSString * State;
+
+/// 存储在 COS 桶中的图片名称，创建任务使用 ObjectKey 时返回。
+@property (nonatomic,strong)NSString * Object;
+
+/// 图片文件的链接地址，创建任务使用 detect-url 时返回
+@property (nonatomic,strong)NSString * Url;
+
+///  该参数表示当前图片是否被压缩处理过，
+///  值为 0（未经过压缩处理），1（已经过压缩处理）。
+@property (nonatomic,assign)NSInteger CompressionResult;
 
 ///  该字段表示本次判定的审核结果，您可以根据该结果，进行后续的操作；建议您按照业务所需，对不同的审核结果进行相应处理。
 ///  有效值：0（审核正常），1 （判定为违规敏感文件），2（疑似敏感，建议人工复核）
@@ -46,6 +64,9 @@ NS_ASSUME_NONNULL_BEGIN
 ///  该字段用于返回检测结果中所对应的优先级最高的恶意标签，表示模型推荐的审核结果，建议您按照业务所需，对不同违规类型与建议值进行处理。
 ///  返回值：Normal 表示正常，Porn 表示色情，Ads 表示广告，以及其他不安全或不适宜的类型。
 @property (nonatomic,strong)NSString *Label;
+
+/// 该字段为 Label 的子集，表示审核命中的具体审核类别。例如 Sexy，表示色情标签中的性感类别。
+@property (nonatomic,strong)NSString *Category;
 
 ///  该图命中的二级标签结果
 @property (nonatomic,strong)NSString *SubLabel;
@@ -69,9 +90,7 @@ NS_ASSUME_NONNULL_BEGIN
 ///  审核场景为政治敏感的审核结果信息。
 @property (nonatomic,strong)QCloudImageRecognitionResultInfo *PoliticsInfo;
 
-///  该参数表示当前图片是否被压缩处理过，
-///  值为 0（未经过压缩处理），1（已经过压缩处理）。
-@property (nonatomic,assign)NSInteger CompressionResult;
+
 @end
 
 @interface QCloudImageRecognitionResultInfo : NSObject
@@ -93,13 +112,27 @@ NS_ASSUME_NONNULL_BEGIN
 ///  该字段表示该截图的综合结果标签（可能为 SubLabel，可能为人物名字等）
 @property (nonatomic,strong)NSString *Label;
 
+/// 该字段为 Label 的子集，表示审核命中的具体审核类别。例如 Sexy，表示色情标签中的性感类别。
+@property (nonatomic,strong)NSString *Category;
+
 ///  该字段表示审核命中的具体子标签，例如：Porn 下的 SexBehavior 子标签。注意：该字段可能返回空，表示未命中具体的子标签
 @property (nonatomic,strong)NSString *SubLabel;
 
 ///  该字段表示 OCR 文本识别的详细检测结果，包括文本识别结果、命中的关键词等信息，有相关违规内容时返回
 @property (nonatomic,strong)NSArray <QCloudRecognitionOcrResults *> *OcrResults;
 
+@property (nonatomic,strong)NSArray <QCloudImageRecognitionLibResults *> *LibResults;
+
 @property (nonatomic,strong)NSArray <QCloudRecognitionObjectResults *> *ObjectResults;
+@end
+
+@interface QCloudImageRecognitionLibResults : NSObject
+
+/// 该字段表示命中的风险库中的图片样本 ID。
+@property (nonatomic,strong)NSString *ImageId;
+
+/// 该字段用于返回当前标签下的置信度，取值范围：0（置信度最低）-100（置信度最高 ），越高代表当前的图片越有可能命中库中的样本。例如：色情 99，表明该数据非常有可能命中库中的色情样本。
+@property (nonatomic,assign)NSInteger Score;
 @end
 
 NS_ASSUME_NONNULL_END

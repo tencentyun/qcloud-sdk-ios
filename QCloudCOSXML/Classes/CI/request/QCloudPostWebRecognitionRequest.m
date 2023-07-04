@@ -103,15 +103,27 @@ NS_ASSUME_NONNULL_BEGIN
     [self.requestData setValue:__serverURL.host forHTTPHeaderField:@"Host"];
     
     NSMutableDictionary * input = NSMutableDictionary.new;
-    [input setObject:self.url forKey:@"Url"];
+    
+    if(self.url){
+        [input setObject:self.url forKey:@"Url"];
+    }
+    
+    if(self.dataId){
+        [input setObject:self.dataId forKey:@"DataId"];
+    }
+    
+    if(self.userInfo){
+        [input setObject:self.userInfo.qcloud_modelToJSONObject forKey:@"UserInfo"];
+    }
     
     NSDictionary * params =@{
         @"Input":input,
         @"Conf":@{
-                @"DetectType":[self getDetectType],
                 @"Callback":self.callback?:@"",
                 @"BizType":self.bizType?:@"",
                 @"CallbackVersion":@"Detail",
+                @"ReturnHighlightHtml":@(self.returnHighlightHtml),
+                @"CallbackType":@(self.callbackType).stringValue
         }
     };
     
@@ -134,29 +146,5 @@ NS_ASSUME_NONNULL_BEGIN
     return fileds;
 }
 
-- (NSString *)getDetectType {
-    NSMutableArray *detecyTypes = [NSMutableArray arrayWithCapacity:0];
-    if (_detectType & QCloudRecognitionPorn) {
-        [detecyTypes addObject:@"Porn"];
-    }
-
-    if (_detectType & QCloudRecognitionTerrorist) {
-        [detecyTypes addObject:@"Terrorism"];
-    }
-
-    if (_detectType & QCloudRecognitionPolitics) {
-        [detecyTypes addObject:@"Politics"];
-    }
-
-    if (_detectType & QCloudRecognitionAds) {
-        [detecyTypes addObject:@"Ads"];
-    }
-
-    if(detecyTypes.count == 0){
-        return @"";
-    }
-    
-    return [detecyTypes componentsJoinedByString:@","];
-}
 @end
 NS_ASSUME_NONNULL_END

@@ -9,7 +9,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class QCloudGetWordsGeneralizeInputObject;
-@class QCloudGetWordsGeneralizeResultOperation;
+@class QCloudGetWordsGeneralizeOperation;
 @class QCloudGetWordsGeneralizeOutput;
 @class QCloudGetWordsGeneralizeTranslation;
 
@@ -46,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong)QCloudGetWordsGeneralizeInputObject *Input;
 
 ///   该任务的规则    Container
-@property (nonatomic,strong)QCloudGetWordsGeneralizeResultOperation *Operation;
+@property (nonatomic,strong)QCloudGetWordsGeneralizeOperation *Operation;
 @end
 
 @interface QCloudGetWordsGeneralizeInputObject : NSObject
@@ -59,7 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface QCloudGetWordsGeneralizeResultOperation : NSObject
+@interface QCloudGetWordsGeneralizeOperation : NSObject
 
 ///  透传用户信息    String
 @property (nonatomic,strong)NSString *UserData;

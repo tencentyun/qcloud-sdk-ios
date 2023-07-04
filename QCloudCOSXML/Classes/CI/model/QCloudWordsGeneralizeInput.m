@@ -6,12 +6,14 @@
 //
 
 #import "QCloudWordsGeneralizeInput.h"
+#import "QCloudCICommonModel.h"
 
 @implementation QCloudWordsGeneralizeInput
 + (NSDictionary *)modelContainerPropertyGenericClass {
     return @{
         @"Input": [QCloudWordsGeneralizeInputObject class],
         @"Operation": [QCloudWordsGeneralizeInputOperation class],
+        @"CallBackMqConfig":[QCloudCallBackMqConfig class]
     };
 }
 @end

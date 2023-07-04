@@ -11,7 +11,7 @@
 + (NSDictionary *)modelContainerPropertyGenericClass {
     return @{
         @"Input": [QCloudPostAudioDiscernTaskInfoInput class],
-        @"Operation": [QCloudPostAudioDiscernTaskInfoOperation class],
+        @"Operation": [QCloudPostAudioDiscernOperation class],
     };
 }
 @end
@@ -20,16 +20,16 @@
 
 @end
 
-@implementation QCloudPostAudioDiscernTaskInfoOperation
+@implementation QCloudPostAudioDiscernOperation
 + (NSDictionary *)modelContainerPropertyGenericClass {
     return @{
-        @"SpeechRecognition": [QCloudPostAudioDiscernTaskInfoSpeechRecognition class],
+        @"SpeechRecognition": [QCloudPostAudioDiscernRecognition class],
         @"Output": [QCloudPostAudioDiscernTaskInfoOutput class],
     };
 }
 @end
 
-@implementation QCloudPostAudioDiscernTaskInfoSpeechRecognition
+@implementation QCloudPostAudioDiscernRecognition
 @end
 
 @implementation QCloudPostAudioDiscernTaskInfoOutput
@@ -75,8 +75,8 @@
 + (NSDictionary *)modelContainerPropertyGenericClass {
     return @{
         @"Output": [QCloudPostAudioDiscernTaskInfoOutput class],
-        @"SpeechRecognition":[QCloudPostAudioDiscernTaskInfoSpeechRecognition class],
-        @"SpeechRecognitionResult":[QCloudPostAudioDiscernTaskInfoSpeechRecognitionResult class]
+        @"SpeechRecognition":[QCloudPostAudioDiscernRecognition class],
+        @"SpeechRecognitionResult":[QCloudPostAudioDiscernRecognitionResult class]
     };
 }
 
@@ -86,11 +86,11 @@
 
 @end
 
-@implementation QCloudPostAudioDiscernTaskInfoSpeechRecognitionResult
+@implementation QCloudPostAudioDiscernRecognitionResult
 + (NSDictionary *)modelContainerPropertyGenericClass {
     return @{
-        @"ResultDetail": [QCloudPostAudioDiscernTaskInfoSpeechResultDetail class],
-        @"FlashResult": [QCloudPostAudioDiscernTaskInfoSpeechFlashResult class],
+        @"ResultDetail": [QCloudPostAudioDiscernResultDetail class],
+        @"FlashResult": [QCloudPostAudioDiscernFlashResult class],
         @"WordsGeneralizeResult":[QCloudWordsGeneralizeResultGeneralize class]
     };
 }
@@ -113,10 +113,10 @@
 @end
 
 
-@implementation QCloudPostAudioDiscernTaskInfoSpeechResultDetail
+@implementation QCloudPostAudioDiscernResultDetail
 + (NSDictionary *)modelContainerPropertyGenericClass {
     return @{
-        @"Words": [QCloudPostAudioDiscernTaskInfoSpeechWords class]
+        @"Words": [QCloudPostAudioDiscernSpeechWords class]
     };
 }
 
@@ -133,15 +133,15 @@
 }
 @end
 
-@implementation QCloudPostAudioDiscernTaskInfoSpeechWords
+@implementation QCloudPostAudioDiscernSpeechWords
 
 @end
 
 
-@implementation QCloudPostAudioDiscernTaskInfoSpeechFlashResult
+@implementation QCloudPostAudioDiscernFlashResult
 + (NSDictionary *)modelContainerPropertyGenericClass {
     return @{
-        @"sentence_list": [QCloudPostAudioDiscernTaskInfoSpeechFlashResultSentenceList class]
+        @"sentence_list": [QCloudPostAudioDiscernSentenceList class]
     };
 }
 
@@ -158,10 +158,10 @@
 }
 @end
 
-@implementation QCloudPostAudioDiscernTaskInfoSpeechFlashResultSentenceList
+@implementation QCloudPostAudioDiscernSentenceList
 + (NSDictionary *)modelContainerPropertyGenericClass {
     return @{
-        @"word_list": [QCloudPostAudioDiscernTaskInfoSpeechFlashResultWordList class]
+        @"word_list": [QCloudPostAudioDiscernResultWordList class]
     };
 }
 
@@ -178,6 +178,6 @@
 }
 @end
 
-@implementation QCloudPostAudioDiscernTaskInfoSpeechFlashResultWordList
+@implementation QCloudPostAudioDiscernResultWordList
 @end
 

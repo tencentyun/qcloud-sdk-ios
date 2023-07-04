@@ -33,6 +33,7 @@
 #import <QCloudCore/QCloudCore.h>
 #import "QCloudRecognitionEnum.h"
 #import "QCloudBatchImageRecognitionResult.h"
+#import "QCloudBatchRecognitionUserInfo.h"
 
 @class QCloudBatchRecognitionImageInfo;
 @class QCloudBatchImageRecognitionResult;
@@ -64,7 +65,6 @@ NS_ASSUME_NONNULL_BEGIN
      [input addObject:input2];
      
      request.input = input;
-     request.detectType = QCloudRecognitionPorn | QCloudRecognitionTerrorist | QCloudRecognitionPolitics | QCloudRecognitionAds;
      [request setFinishBlock:^(QCloudBatchImageRecognitionResult * _Nullable result, NSError * _Nullable error) {
 
      }];
@@ -82,15 +82,30 @@ NS_ASSUME_NONNULL_BEGIN
 /// 需要审核的内容，如有多个图片，请传入多个 Input 结构。
 @property (nonatomic,strong)NSArray <QCloudBatchRecognitionImageInfo *> * input;
 
-/// 审核类型，拥有 porn（涉黄识别）、terrorist（涉暴恐识别）、politics（涉政识别）、ads（广告识别）四种，
-/// 用户可选择多种识别类型，例如 detect-type=porn,ads 表示对图片进行涉黄及广告审核
-/// 可以使用或进行组合赋值 如： QCloudRecognitionPorn | QCloudRecognitionTerrorist
-@property (assign, nonatomic) QCloudRecognitionEnum detectType;
-
-
 /// 审核策略，不带审核策略时使用默认策略。具体查看 https://cloud.tencent.com/document/product/460/56345
 @property (strong, nonatomic) NSString * bizType;
 
+
+/// 是否异步进行审核，取值 0：同步返回结果，1：异步进行审核，默认为0。
+@property (assign,nonatomic)BOOL async;
+
+/// 审核结果（Detail版本）以回调形式发送至您的回调地址，异步审核时生效，支持以 http:// 或者 https:// 开头的地址，例如： http://www.callback.com。
+@property (strong, nonatomic) NSString * callback;
+
+/// 回调片段类型，有效值：1（回调全部音频片段）、2（回调违规音频片段）。默认为 1。
+@property (assign, nonatomic) NSInteger callbackType;
+
+/// 取值为[0,100]，表示当色情审核结果大于或等于该分数时，自动进行冻结操作。不填写则表示不自动冻结，默认值为空。
+@property (assign, nonatomic) NSInteger pornScore;
+
+/// 取值为[0,100]，表示当广告审核结果大于或等于该分数时，自动进行冻结操作。不填写则表示不自动冻结，默认值为空。
+@property (assign, nonatomic) NSInteger adsScore;
+
+/// 取值为[0,100]，表示当恐怖审核结果大于或等于该分数时，自动进行冻结操作。不填写则表示不自动冻结，默认值为空。
+@property (assign, nonatomic) NSInteger terrorismScore;
+
+/// 取值为[0,100]，表示当涉政审核结果大于或等于该分数时，自动进行冻结操作。不填写则表示不自动冻结，默认值为空。
+@property (assign, nonatomic) NSInteger politicsScore;
 
 /**
  设置完成回调。请求完成后会通过该回调来获取结果，如果没有error，那么可以认为请求成功。

@@ -9,22 +9,22 @@
 #import "QCloudRecognitionEnum.h"
 #import "QCloudWordsGeneralizeResult.h"
 @class QCloudPostAudioDiscernTaskInfoInput;
-@class QCloudPostAudioDiscernTaskInfoOperation;
+@class QCloudPostAudioDiscernOperation;
 
-@class QCloudPostAudioDiscernTaskInfoSpeechRecognition;
+@class QCloudPostAudioDiscernRecognition;
 @class QCloudPostAudioDiscernTaskInfoOutput;
 
 @class QCloudPostAudioDiscernTaskJobsDetail;
 @class QCloudPostAudioDiscernTaskJobsOperation;
 
 @class QCloudPostAudioDiscernTaskResultInput;
-@class QCloudPostAudioDiscernTaskInfoSpeechRecognitionResult;
+@class QCloudPostAudioDiscernRecognitionResult;
 
-@class QCloudPostAudioDiscernTaskInfoSpeechWords;
-@class QCloudPostAudioDiscernTaskInfoSpeechResultDetail;
-@class QCloudPostAudioDiscernTaskInfoSpeechFlashResult;
-@class QCloudPostAudioDiscernTaskInfoSpeechFlashResultSentenceList;
-@class QCloudPostAudioDiscernTaskInfoSpeechFlashResultWordList;
+@class QCloudPostAudioDiscernSpeechWords;
+@class QCloudPostAudioDiscernResultDetail;
+@class QCloudPostAudioDiscernFlashResult;
+@class QCloudPostAudioDiscernSentenceList;
+@class QCloudPostAudioDiscernResultWordList;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface QCloudPostAudioDiscernTaskInfo : NSObject
@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong)QCloudPostAudioDiscernTaskInfoInput *Input;
 
 /// 操作规则
-@property (nonatomic,strong)QCloudPostAudioDiscernTaskInfoOperation *Operation;
+@property (nonatomic,strong)QCloudPostAudioDiscernOperation *Operation;
 
 /// 任务所在的队列 ID
 @property (nonatomic,strong)NSString *QueueId;
@@ -54,7 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface QCloudPostAudioDiscernTaskInfoOperation : NSObject
+@interface QCloudPostAudioDiscernOperation : NSObject
 
 /// 透传用户信息, 可打印的 ASCII 码, 长度不超过1024
 @property (nonatomic,strong)NSString *UserData;
@@ -63,14 +63,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong)NSString *JobLevel;
 
 /// 当 Tag 为 SpeechRecognition 时有效，指定该任务的参数
-@property (nonatomic,strong)QCloudPostAudioDiscernTaskInfoSpeechRecognition *SpeechRecognition;
+@property (nonatomic,strong)QCloudPostAudioDiscernRecognition *SpeechRecognition;
 
 /// 结果输出地址
 @property (nonatomic,strong)QCloudPostAudioDiscernTaskInfoOutput *Output;
 
 @end
 
-@interface QCloudPostAudioDiscernTaskInfoSpeechRecognition : NSObject
+@interface QCloudPostAudioDiscernRecognition : NSObject
 /**
  引擎模型类型。
  电话场景：
@@ -218,12 +218,12 @@ NS_ASSUME_NONNULL_BEGIN
 /// 文件的输出地址
 @property (nonatomic,strong)QCloudPostAudioDiscernTaskInfoOutput *Output;
 
-@property (nonatomic,strong)QCloudPostAudioDiscernTaskInfoSpeechRecognition *SpeechRecognition;
+@property (nonatomic,strong)QCloudPostAudioDiscernRecognition *SpeechRecognition;
 
-@property (nonatomic,strong)QCloudPostAudioDiscernTaskInfoSpeechRecognitionResult *SpeechRecognitionResult;
+@property (nonatomic,strong)QCloudPostAudioDiscernRecognitionResult *SpeechRecognitionResult;
 @end
 
-@interface QCloudPostAudioDiscernTaskInfoSpeechRecognitionResult : NSObject
+@interface QCloudPostAudioDiscernRecognitionResult : NSObject
 
 /// 语音时长
 @property (nonatomic,strong)NSString *AudioTime;
@@ -232,15 +232,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong)NSString *Result;
 
 /// 极速语音识别结果
-@property (nonatomic,strong)NSArray <QCloudPostAudioDiscernTaskInfoSpeechFlashResult *> *FlashResult;
+@property (nonatomic,strong)NSArray <QCloudPostAudioDiscernFlashResult *> *FlashResult;
 
 /// 结果详情
-@property (nonatomic,strong)NSArray <QCloudPostAudioDiscernTaskInfoSpeechResultDetail *> *ResultDetail;
+@property (nonatomic,strong)NSArray <QCloudPostAudioDiscernResultDetail *> *ResultDetail;
 
 @property (nonatomic,strong)QCloudWordsGeneralizeResultGeneralize *WordsGeneralizeResult;
 @end
 
-@interface QCloudPostAudioDiscernTaskInfoSpeechFlashResult : NSObject
+@interface QCloudPostAudioDiscernFlashResult : NSObject
 
 /// 声道标识，从0开始，对应音频声道数
 @property (nonatomic,assign)NSInteger channel_id;
@@ -249,10 +249,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong)NSString *text;
 
 /// 句子/段落级别的识别结果列表
-@property (nonatomic,strong)NSArray <QCloudPostAudioDiscernTaskInfoSpeechFlashResultSentenceList *> *sentence_list;
+@property (nonatomic,strong)NSArray <QCloudPostAudioDiscernSentenceList *> *sentence_list;
 
 @end
-@interface QCloudPostAudioDiscernTaskInfoSpeechFlashResultSentenceList : NSObject
+@interface QCloudPostAudioDiscernSentenceList : NSObject
 
 /// 句子/段落级别文本
 @property (nonatomic,strong)NSString *text;
@@ -267,11 +267,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,assign)NSInteger speaker_id;
 
 /// 词级别的识别结果列表
-@property (nonatomic,strong)NSArray <QCloudPostAudioDiscernTaskInfoSpeechFlashResultWordList *> *word_list;
+@property (nonatomic,strong)NSArray <QCloudPostAudioDiscernResultWordList *> *word_list;
 
 @end
 
-@interface QCloudPostAudioDiscernTaskInfoSpeechFlashResultWordList : NSObject
+@interface QCloudPostAudioDiscernResultWordList : NSObject
 
 /// 词级别文本
 @property (nonatomic,strong)NSString *word;
@@ -285,7 +285,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-@interface QCloudPostAudioDiscernTaskInfoSpeechResultDetail : NSObject
+@interface QCloudPostAudioDiscernResultDetail : NSObject
 
 /// 单句结束时间（毫秒）
 @property (nonatomic,strong)NSString * EndMs;
@@ -306,13 +306,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong)NSString * StartMs;
 
 /// 单句中词详情
-@property (nonatomic,strong)NSArray <QCloudPostAudioDiscernTaskInfoSpeechWords *> * Words;
+@property (nonatomic,strong)NSArray <QCloudPostAudioDiscernSpeechWords *> * Words;
 
 /// 单句中词个数
 @property (nonatomic,strong)NSString * WordsNum;
 @end
 
-@interface QCloudPostAudioDiscernTaskInfoSpeechWords : NSObject
+@interface QCloudPostAudioDiscernSpeechWords : NSObject
 
 
 /// 在句子中的结束时间偏移量

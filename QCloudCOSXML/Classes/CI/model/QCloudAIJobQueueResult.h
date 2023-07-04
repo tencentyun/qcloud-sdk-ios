@@ -93,6 +93,17 @@ NS_ASSUME_NONNULL_BEGIN
 /// 返回数据格式
 @property (nonatomic,strong)NSString *ResultFormat;
 
+/// equest.NotifyConfig    TDMQ 使用模式    String    当 State=On, 且 Type=TDMQ 时,
+/// 必选    Queue    主题订阅：Topic 队列服务: Queue
+@property (nonatomic,strong)NSString *MqMode;
+
+/// Request.NotifyConfig    TDMQ 所属园区    String    当 State=On, 且 Type=TDMQ 时,
+/// 必选    无    目前支持园区 sh（上海）、bj（北京）、gz（广州）、cd（成都）、hk（中国香港）
+@property (nonatomic,strong)NSString *MqRegion;
+
+/// Request.NotifyConfig    TDMQ 主题名称    String    当 State=On, 且 Type=TDMQ 时, 必选    无    无
+@property (nonatomic,strong)NSString *MqName;
+
 @end
 
 @interface QCloudAIJobQueueResultUpdateResult : NSObject

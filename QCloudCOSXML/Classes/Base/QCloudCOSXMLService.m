@@ -57,11 +57,13 @@ static QCloudCOSXMLService *COSXMLService = nil;
 
 + (QCloudCOSXMLService *)registerDefaultCOSXMLWithConfiguration:(QCloudServiceConfiguration *)configuration {
     @synchronized(self) {
-        COSXMLService = [[QCloudCOSXMLService alloc] initWithConfiguration:configuration];
-        if (!configuration.isCloseShareLog) {
-#if TARGET_OS_IOS
-            [QCloudLogManager sharedInstance];
-#endif
+        if(!COSXMLService){
+            COSXMLService = [[QCloudCOSXMLService alloc] initWithConfiguration:configuration];
+            if (!configuration.isCloseShareLog) {
+    #if TARGET_OS_IOS
+                [QCloudLogManager sharedInstance];
+    #endif
+            }
         }
     }
     return COSXMLService;
@@ -79,8 +81,11 @@ static QCloudCOSXMLService *COSXMLService = nil;
 
 + (QCloudCOSXMLService *)registerCOSXMLWithConfiguration:(QCloudServiceConfiguration *)configuration withKey:(NSString *)key;
 {
-    QCloudCOSXMLService *cosxmlService = [[QCloudCOSXMLService alloc] initWithConfiguration:configuration];
-    [QCloudCOSXMLServiceCache() setObject:cosxmlService forKey:key];
+    QCloudCOSXMLService *cosxmlService = [QCloudCOSXMLServiceCache() objectForKey:key];
+    if(!cosxmlService){
+        cosxmlService = [[QCloudCOSXMLService alloc] initWithConfiguration:configuration];
+        [QCloudCOSXMLServiceCache() setObject:cosxmlService forKey:key];
+    }
     return cosxmlService;
 }
 - (NSString *)getURLWithBucket:(NSString *)bucket

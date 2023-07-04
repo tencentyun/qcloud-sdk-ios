@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong)NSString *NonExistJobIds;
 
 /// 在 job 的类型为 SpeechRecognition 且 job 状态为 success 时，返回语音识别的识别结果详情。
-@property (nonatomic,strong)QCloudPostAudioDiscernTaskInfoSpeechRecognitionResult *SpeechRecognitionResult;
+@property (nonatomic,strong)QCloudPostAudioDiscernRecognitionResult *SpeechRecognitionResult;
 @end
 
 

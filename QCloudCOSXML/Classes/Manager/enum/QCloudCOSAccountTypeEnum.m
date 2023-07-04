@@ -29,3 +29,25 @@ NSString *QCloudCOSAccountTypeTransferToString(QCloudCOSAccountType type) {
             return nil;
     }
 }
+
+QCloudCOSAccountXSIType QCloudCOSAccountXSITypeDumpFromString(NSString *key) {
+    if (NO) {
+    } else if ([key isEqualToString:@"RootAccount"]) {
+        return QCloudCOSAccountXSITypeGroup;
+    } else if ([key isEqualToString:@"SubAccount"]) {
+        return QCloudCOSAccountXSITypeCanonicalUser;
+    }
+    return 0;
+}
+NSString *QCloudCOSAccountXSITypeTransferToString(QCloudCOSAccountXSIType type) {
+    switch (type) {
+        case QCloudCOSAccountXSITypeGroup: {
+            return @"Group";
+        }
+        case QCloudCOSAccountXSITypeCanonicalUser: {
+            return @"CanonicalUser";
+        }
+        default:
+            return nil;
+    }
+}

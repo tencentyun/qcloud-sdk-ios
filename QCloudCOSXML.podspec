@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
   s.name             = "QCloudCOSXML"
 
 
-s.version              = "6.2.4"
+s.version              = "6.2.5"
 
 
   s.summary          = "QCloudCOSXML 腾讯云iOS-SDK组件"
@@ -22,15 +22,15 @@ s.version              = "6.2.4"
   s.subspec 'Default' do |default|
   default.source_files = 'QCloudCOSXML/Classes/**/*','QCloudCOSXML/Classes/QCloudCOSXML/*'
 
-  default.dependency "QCloudCore",'6.2.4'
+  default.dependency "QCloudCore",'6.2.5'
     end
   s.subspec 'Slim' do |slim|
   slim.source_files = 'QCloudCOSXML/Classes/**/*','QCloudCOSXML/Classes/QCloudCOSXML/*'
-  slim.dependency "QCloudCore/WithoutMTA",'6.2.4'
+  slim.dependency "QCloudCore/WithoutMTA",'6.2.5'
   end
   s.subspec 'Transfer' do |transfer|
   transfer.source_files = 'QCloudCOSXML/Classes/*','QCloudCOSXML/Classes/Transfer/**/*','QCloudCOSXML/Classes/Base/**/*'
-  transfer.dependency "QCloudCore/WithoutMTA",'6.2.4'
+  transfer.dependency "QCloudCore/WithoutMTA",'6.2.5'
 
   end
 

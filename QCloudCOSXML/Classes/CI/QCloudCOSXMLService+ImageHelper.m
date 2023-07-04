@@ -17,6 +17,9 @@
 #import "QCloudGetMediaInfoRequest.h"
 #import "QCloudGetVideoRecognitionRequest.h"
 #import "QCloudPostVideoRecognitionRequest.h"
+#import "QCloudGetFilePreviewHtmlRequest.h"
+#import "QCloudPostObjectProcessRequest.h"
+
 #import "QCloudGetAudioRecognitionRequest.h"
 #import "QCloudPostAudioRecognitionRequest.h"
 #import "QCloudGetTextRecognitionRequest.h"
@@ -38,6 +41,31 @@
 #import "QCloudPostLiveVideoRecognitionRequest.h"
 #import "QCloudCancelLiveVideoRecognitionRequest.h"
 #import "QCloudGetLiveVideoRecognitionRequest.h"
+#import "QCloudGetPrivateM3U8Request.h"
+#import "QCloudGetMediaJobQueueRequest.h"
+#import "QCloudUpdateMediaQueueRequest.h"
+#import "QCloudGetDiscernMediaJobsRequest.h"
+#import "QCloudGetWorkflowDetailRequest.h"
+#import "QCloudGetListWorkflowRequest.h"
+#import "QCloudPostTriggerWorkflowRequest.h"
+#import "QCloudPostMediaJobsRequest.h"
+#import "QCloudPostAudioTransferJobsRequest.h"
+#import "QCloudPostVideoTagRequest.h"
+#import "QCloudVideoMontageRequest.h"
+#import "QCloudVideoSnapshotRequest.h"
+#import "QCloudPostTranscodeRequest.h"
+#import "QCloudPostAnimationRequest.h"
+#import "QCloudPostConcatRequest.h"
+#import "QCloudPostSmartCoverRequest.h"
+#import "QCloudPostVoiceSeparateRequest.h"
+#import "QCloudPostNumMarkRequest.h"
+#import "QCloudExtractNumMarkRequest.h"
+#import "QCloudPostImageProcessRequest.h"
+#import "QCloudGetMediaJobRequest.h"
+#import "QCloudGetMediaJobListRequest.h"
+#import "QCloudCreateMediaJobRequest.h"
+#import "QCloudPostImageAuditReportRequest.h"
+#import "QCloudPostTextAuditReportRequest.h"
 @implementation QCloudCOSXMLService (ImageHelper)
 
 - (void)PutWatermarkObject:(QCloudPutObjectWatermarkRequest *)request {
@@ -45,6 +73,10 @@
 }
 
 - (void)GetFilePreviewObject:(QCloudGetFilePreviewRequest *)request {
+    [super performRequest:request];
+}
+
+- (void)GetFilePreviewHtmlObject:(QCloudGetFilePreviewHtmlRequest *)request{
     [super performRequest:request];
 }
 
@@ -95,6 +127,10 @@
     [super performRequest:request];
 }
 
+- (void)PostObjectProcess:(QCloudPostObjectProcessRequest *)request{
+    [super performRequest:request];
+}
+
 - (void)GetAudioRecognition:(QCloudGetAudioRecognitionRequest *)request{
     [super performRequest:request];
 }
@@ -126,6 +162,14 @@
     [super performRequest:request];
 }
 
+-(void)GetDiscernMediaJobs:(QCloudGetDiscernMediaJobsRequest *)request{
+    [super performRequest:request];
+}
+
+-(void)UpdateMediaJobQueue:(QCloudUpdateMediaQueueRequest *)request{
+    [super performRequest:request];
+}
+
 -(void)GetAudioDiscernTaskQueue:(QCloudGetAudioDiscernTaskQueueRequest *)request{
     [super performRequest:request];
 }
@@ -151,6 +195,10 @@
 }
 
 -(void)GetAIJobQueue:(QCloudGetAIJobQueueRequest *)request{
+    [super performRequest:request];
+}
+
+-(void)GetMediaJobQueue:(QCloudGetMediaJobQueueRequest *)request{
     [super performRequest:request];
 }
 
@@ -238,4 +286,95 @@
     [super performRequest:(QCloudBizHTTPRequest *)request];
 }
 
+-(void)RecognitionBadCase:(QCloudRecognitionBadCaseRequest *)request{
+    [super performRequest:(QCloudBizHTTPRequest *)request];
+}
+
+-(void)GetPrivateM3U8:(QCloudGetPrivateM3U8Request *)request{
+    [self buildRequestUrl:(QCloudBizHTTPRequest *)request];
+}
+
+-(void)GetWorkflowDetail:(QCloudGetWorkflowDetailRequest *)request{
+    [super performRequest:(QCloudGetWorkflowDetailRequest *)request];
+}
+
+-(void)GetListWorkflow:(QCloudGetListWorkflowRequest *)request{
+    [super performRequest:(QCloudGetListWorkflowRequest *)request];
+}
+
+-(void)PostTriggerWorkflow:(QCloudPostTriggerWorkflowRequest *)request{
+    [super performRequest:(QCloudPostTriggerWorkflowRequest *)request];
+}
+
+-(void)PostMediaJobs:(QCloudPostMediaJobsRequest *)request{
+    [super performRequest:(QCloudPostMediaJobsRequest *)request];
+}
+
+-(void)PostAudioTransferJobs:(QCloudPostAudioTransferJobsRequest *)request{
+    [super performRequest:(QCloudPostAudioTransferJobsRequest *)request];
+}
+
+-(void)PostVideoTag:(QCloudPostVideoTagRequest *)request{
+    [super performRequest:(QCloudPostVideoTagRequest *)request];
+}
+
+-(void)PostVideoMontage:(QCloudVideoMontageRequest *)request{
+    [super performRequest:(QCloudVideoMontageRequest *)request];
+}
+
+-(void)PostVideoSnapshot:(QCloudVideoSnapshotRequest *)request{
+    [super performRequest:(QCloudVideoSnapshotRequest *)request];
+}
+
+-(void)PostTranscode:(QCloudPostTranscodeRequest *)request{
+    [super performRequest:(QCloudPostTranscodeRequest *)request];
+}
+
+-(void)PostAnimation:(QCloudPostAnimationRequest *)request{
+    [super performRequest:(QCloudPostAnimationRequest *)request];
+}
+
+-(void)PostConcat:(QCloudPostConcatRequest *)request{
+    [super performRequest:(QCloudPostConcatRequest *)request];
+}
+
+-(void)PostSmartCover:(QCloudPostSmartCoverRequest *)request{
+    [super performRequest:(QCloudPostSmartCoverRequest *)request];
+}
+
+-(void)PostVoiceSeparate:(QCloudPostVoiceSeparateRequest *)request{
+    [super performRequest:(QCloudPostVoiceSeparateRequest *)request];
+}
+
+-(void)PostNumMark:(QCloudPostNumMarkRequest *)request{
+    [super performRequest:(QCloudPostNumMarkRequest *)request];
+}
+
+-(void)ExtractNumMark:(QCloudExtractNumMarkRequest *)request{
+    [super performRequest:(QCloudExtractNumMarkRequest *)request];
+}
+
+-(void)PostImageProcess:(QCloudPostImageProcessRequest *)request{
+    [super performRequest:(QCloudPostImageProcessRequest *)request];
+}
+
+-(void)GetMediaJob:(QCloudGetMediaJobRequest *)request{
+    [super performRequest:(QCloudGetMediaJobRequest *)request];
+}
+
+-(void)CreateMediaJob:(QCloudCreateMediaJobRequest *)request{
+    [super performRequest:(QCloudCreateMediaJobRequest *)request];
+}
+
+-(void)GetMediaJobList:(QCloudGetMediaJobListRequest *)request{
+    [super performRequest:(QCloudGetMediaJobListRequest *)request];
+}
+
+-(void)PostTextAuditReport:(QCloudPostTextAuditReportRequest *)request{
+    [super performRequest:(QCloudPostTextAuditReportRequest *)request];
+}
+
+-(void)PostImageAuditReport:(QCloudPostImageAuditReportRequest *)request{
+    [super performRequest:(QCloudPostImageAuditReportRequest *)request];
+}
 @end

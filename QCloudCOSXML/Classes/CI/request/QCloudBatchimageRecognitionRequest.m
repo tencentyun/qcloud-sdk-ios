@@ -44,6 +44,11 @@ NS_ASSUME_NONNULL_BEGIN
     if (!self) {
         return nil;
     }
+    self.callbackType = 1;
+    self.politicsScore = -1;
+    self.terrorismScore = -1;
+    self.adsScore = -1;
+    self.pornScore = -1;
     return self;
 }
 - (void)configureReuqestSerializer:(QCloudRequestSerializer *)requestSerializer responseSerializer:(QCloudResponseSerializer *)responseSerializer {
@@ -70,12 +75,12 @@ NS_ASSUME_NONNULL_BEGIN
     }
 
     for (QCloudBatchRecognitionImageInfo * info in self.input) {
-        if (!info.Object && !info.Url ) {
+        if (!info.Object && !info.Url && !info.Content ) {
             if (error != NULL) {
                 *error = [NSError
                     qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
                                  message:[NSString stringWithFormat:
-                                                       @"InvalidArgument:paramter[object and url] is invalid (nil), it must have some value. please check it"]];
+                                                       @"InvalidArgument:paramter[object,url or Content] is invalid (nil), it must have some value. please check it"]];
                 return NO;
             }
         }
@@ -104,12 +109,82 @@ NS_ASSUME_NONNULL_BEGIN
     self.requestData.serverURL = __serverURL.absoluteString;
     [self.requestData setValue:__serverURL.host forHTTPHeaderField:@"Host"];
     
-    NSDictionary * params =@{
-        @"Input":[self.input qcloud_modelToJSONObject],
-        @"Conf":@{
-                @"DetectType":[self getDetectType],
-                @"BizType":self.bizType?:@"",
+    NSMutableArray * inputs = [NSMutableArray new];
+    for (QCloudBatchRecognitionImageInfo * info in self.input) {
+        NSMutableDictionary * infoDic = [NSMutableDictionary new];
+        if(info.Url){
+            [infoDic setObject:info.Url forKey:@"Url"];
         }
+        
+        if(info.Content){
+            [infoDic setObject:info.Content forKey:@"Content"];
+        }
+        
+        if(info.Interval > 0){
+            [infoDic setObject:@(info.Interval) forKey:@"Interval"];
+        }
+        
+        if(info.MaxFrames > 0){
+            [infoDic setObject:@(info.MaxFrames) forKey:@"MaxFrames"];
+        }
+        
+        if(info.LargeImageDetect > 0){
+            [infoDic setObject:@(info.LargeImageDetect) forKey:@"LargeImageDetect"];
+        }
+        
+        if(info.DataId){
+            [infoDic setObject:info.DataId forKey:@"DataId"];
+        }
+        
+        if(info.UserInfo > 0){
+            [infoDic setObject:[info.UserInfo qcloud_modelToJSONObject] forKey:@"UserInfo"];
+        }
+        
+        if(info.Encryption > 0){
+            [infoDic setObject:[info.Encryption qcloud_modelToJSONObject] forKey:@"Encryption"];
+        }
+        [inputs addObject:infoDic];
+    }
+    
+    
+    NSMutableDictionary * conf = NSMutableDictionary.new;
+    if(self.bizType){
+        [conf addEntriesFromDictionary:@{@"BizType":self.bizType}];
+    }
+    [conf addEntriesFromDictionary:@{@"Async":@(self.async).stringValue}];
+    
+    if(self.callback){
+        [conf addEntriesFromDictionary:@{@"Callback":self.callback}];
+    }
+    
+    [conf addEntriesFromDictionary:@{@"CallbackVersion":@"Detail"}];
+    
+    if(self.callbackType){
+        [conf addEntriesFromDictionary:@{@"CallbackType":@(self.callbackType).stringValue}];
+    }
+    
+    NSMutableDictionary * freeze = [NSMutableDictionary new];
+    if(self.pornScore > -1){
+        [freeze setObject:@(self.pornScore).stringValue forKey:@"PornScore"];
+    }
+    
+    if(self.adsScore > -1){
+        [freeze setObject:@(self.adsScore).stringValue forKey:@"AdsScore"];
+    }
+    
+    if(self.terrorismScore > -1){
+        [freeze setObject:@(self.terrorismScore).stringValue forKey:@"TerrorismScore"];
+    }
+    
+    if(self.politicsScore > -1){
+        [freeze setObject:@(self.politicsScore).stringValue forKey:@"PoliticsScore"];
+    }
+    
+    [conf addEntriesFromDictionary:@{@"Freeze":freeze}];
+    
+    NSDictionary * params =@{
+        @"Input":inputs,
+        @"Conf":conf
     };
     
     [self.requestData setParameter:params withKey:@"Request"];
@@ -129,29 +204,6 @@ NS_ASSUME_NONNULL_BEGIN
     QCloudSignatureFields *fileds = [QCloudSignatureFields new];
 
     return fileds;
-}
-
-- (NSString *)getDetectType {
-    NSMutableArray *detecyTypes = [NSMutableArray arrayWithCapacity:0];
-    if (_detectType & QCloudRecognitionPorn) {
-        [detecyTypes addObject:@"Porn"];
-    }
-
-    if (_detectType & QCloudRecognitionTerrorist) {
-        [detecyTypes addObject:@"Terrorism"];
-    }
-
-    if (_detectType & QCloudRecognitionPolitics) {
-        [detecyTypes addObject:@"Politics"];
-    }
-
-    if (_detectType & QCloudRecognitionAds) {
-        [detecyTypes addObject:@"Ads"];
-    }
-    if(detecyTypes.count == 0){
-        return @"";
-    }
-    return [detecyTypes componentsJoinedByString:@","];
 }
 
 @end

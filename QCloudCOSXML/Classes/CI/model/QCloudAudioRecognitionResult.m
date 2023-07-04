@@ -15,6 +15,9 @@
         @"PoliticsInfo" : [QCloudAudioRecognitionItemInfo class],
         @"TerrorismInfo" : [QCloudAudioRecognitionItemInfo class],
         @"Section" : [QCloudAudioRecognitionSection class],
+        @"UserInfo":[QCloudBatchRecognitionUserInfo class],
+        @"ListInfo":[QCloudBatchRecognitionListInfo class],
+        @"TeenagerInfo":[QCloudAudioRecognitionItemInfo class]
     };
 }
 
@@ -48,7 +51,21 @@
         @"AdsInfo": [QCloudRecognitionResultsItemInfo class],
         @"TerrorismInfo": [QCloudRecognitionResultsItemInfo class],
         @"PoliticsInfo": [QCloudRecognitionResultsItemInfo class],
+        @"TeenagerInfo": [QCloudRecognitionResultsItemInfo class],
+        @"LanguageResults":[QCloudRecognitionResultsItem class]
     };
+}
+- (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dic {
+    if (!dic) {
+        return dic;
+    }
+    
+    NSMutableDictionary * mdic = [NSMutableDictionary dictionaryWithDictionary:dic];
+    if ([mdic[@"LanguageResults"] isKindOfClass:[NSDictionary class]]) {
+        [mdic setValue:@[mdic[@"LanguageResults"]] forKey:@"LanguageResults"];
+    }
+
+    return mdic.mutableCopy;
 }
 
 @end

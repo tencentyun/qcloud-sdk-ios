@@ -12,7 +12,7 @@
 + (NSDictionary *)modelContainerPropertyGenericClass {
     return @{
         @"JobsDetail": [QCloudPostAudioDiscernTaskJobsDetail class],
-        @"SpeechRecognitionResult": [QCloudPostAudioDiscernTaskInfoSpeechRecognitionResult class],
+        @"SpeechRecognitionResult": [QCloudPostAudioDiscernRecognitionResult class],
     };
 }
 @end

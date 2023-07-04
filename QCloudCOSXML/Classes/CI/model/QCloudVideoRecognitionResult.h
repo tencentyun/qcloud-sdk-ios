@@ -31,7 +31,8 @@
 
 #import <Foundation/Foundation.h>
 #import "QCloudRecognitionModel.h"
-@class QCloudVideoRecognitionSnapshotItemInfo;
+#import "QCloudBatchImageRecognitionResult.h"
+@class QCloudVideoRecognitionItemInfo;
 @class QCloudVideoRecognitionSnapshot;
 @class QCloudVideoRecognitionAudioSection;
 @class QCloudRecognitionObjectLibResult;
@@ -96,6 +97,15 @@ NS_ASSUME_NONNULL_BEGIN
 /// 注意：每次查看数据的有效期为2小时，2小时后如还需查看，请重新发起查询请求
 @property (nonatomic,strong)NSArray <QCloudVideoRecognitionAudioSection *> * AudioSection;
 
+@property (nonatomic,strong)QCloudBatchRecognitionUserInfo *UserInfo;
+
+@property (nonatomic,strong)QCloudBatchRecognitionListInfo *ListInfo;
+
+/// 若您在请求时设置了自动冻结，该字段表示图片的冻结状态。0：未冻结，1：已被冻结。
+@property (nonatomic,assign)NSInteger ForbidState;
+
+/// 审核类型，直播审核固定为 live_video。
+@property (nonatomic,strong)NSString * Type;
 @end
 
 
@@ -111,10 +121,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// 该字段用于返回当前截图位于视频中的时间，单位为毫秒。例如5000（视频开始后5000毫秒）。
 @property (nonatomic,strong)NSString * SnapshotTime;
 
-@property (nonatomic,strong)QCloudVideoRecognitionSnapshotItemInfo * PornInfo;
-@property (nonatomic,strong)QCloudVideoRecognitionSnapshotItemInfo * TerrorismInfo;
-@property (nonatomic,strong)QCloudVideoRecognitionSnapshotItemInfo * PoliticsInfo;
-@property (nonatomic,strong)QCloudVideoRecognitionSnapshotItemInfo * AdsInfo;
+@property (nonatomic,strong)QCloudVideoRecognitionItemInfo * PornInfo;
+@property (nonatomic,strong)QCloudVideoRecognitionItemInfo * TerrorismInfo;
+@property (nonatomic,strong)QCloudVideoRecognitionItemInfo * PoliticsInfo;
+@property (nonatomic,strong)QCloudVideoRecognitionItemInfo * AdsInfo;
 
 /**直播审核有下面字段********************/
 /// 该字段用于返回检测结果中所对应的优先级最高的恶意标签，表示模型推荐的审核结果，建议您按照业务所需，对不同违规类型与建议值进行处理。 返回值：Normal：正常，Porn：色情，Ads：广告，以及其他不安全或不适宜的类型。
@@ -126,7 +136,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface QCloudVideoRecognitionSnapshotItemInfo : NSObject
+@interface QCloudVideoRecognitionItemInfo : NSObject
 
 /// 是否命中该审核分类，0表示未命中，1表示命中，2表示疑似。
 @property (nonatomic,strong)NSString * HitFlag;

@@ -33,6 +33,7 @@
 #import <QCloudCore/QCloudCore.h>
 #import "QCloudRecognitionEnum.h"
 #import "QCloudVideoRecognitionResult.h"
+#import "QCloudBatchRecognitionUserInfo.h"
 @class QCloudLiveVideoRecognitionUserInfo;
 NS_ASSUME_NONNULL_BEGIN
 /**
@@ -84,7 +85,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) NSString *dataId;
 
 /// 自定义字段，可用于辅助行为数据分析。    非必传
-@property (strong, nonatomic) QCloudLiveVideoRecognitionUserInfo *userInfo;
+@property (strong, nonatomic) QCloudBatchRecognitionUserInfo *userInfo;
 
 /// 审核策略，不带审核策略时使用默认策略。具体查看 https://cloud.tencent.com/document/product/460/56345
 @property (strong, nonatomic) NSString * bizType;
@@ -107,40 +108,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface QCloudLiveVideoRecognitionUserInfo : NSObject
-
-///  一般用于表示账号信息，长度不超过128字节。
-@property (strong, nonatomic) NSString * TokenId;
-
-///  一般用于表示昵称信息，长度不超过128字节。
-@property (strong, nonatomic) NSString * Nickname;
-
-///  一般用于表示设备信息，长度不超过128字节。
-@property (strong, nonatomic) NSString * DeviceId;
-
-///  一般用于表示 App 的唯一标识，长度不超过128字节。
-@property (strong, nonatomic) NSString * AppId;
-
-///  一般用于表示房间号信息，长度不超过128字节。
-@property (strong, nonatomic) NSString * Room;
-
-///  一般用于表示 IP 地址信息，长度不超过128字节。
-@property (strong, nonatomic) NSString * IP;
-
-///  一般用于表示业务类型，长度不超过128字节。
-@property (strong, nonatomic) NSString * Type;
-
-///  一般用于表示接收消息的用户账号，长度不超过128字节。
-@property (strong, nonatomic) NSString * ReceiveTokenId;
-
-///  一般用于表示性别信息，长度不超过128字节。
-@property (strong, nonatomic) NSString * Gender;
-
-///  一般用于表示等级信息，长度不超过128字节。
-@property (strong, nonatomic) NSString * Level;
-
-///  一般用于表示角色信息，长度不超过128字节。
-@property (strong, nonatomic) NSString * Role;
-
-@end
 NS_ASSUME_NONNULL_END

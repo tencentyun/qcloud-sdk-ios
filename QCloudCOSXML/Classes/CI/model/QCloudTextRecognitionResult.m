@@ -17,6 +17,8 @@
         @"IllegalInfo" : [QCloudRecognitionItemInfo class],
         @"AdsInfo" : [QCloudRecognitionItemInfo class],
         @"Section" : [QCloudTextRecognitionSection class],
+        @"UserInfo" : [QCloudBatchRecognitionUserInfo class],
+        @"ListInfo" : [QCloudBatchRecognitionListInfo class],
     };
 }
 

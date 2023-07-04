@@ -44,6 +44,13 @@ NS_ASSUME_NONNULL_BEGIN
     if (!self) {
         return nil;
     }
+    self.callbackType = 1;
+    self.adsScore = -1;
+    self.pornScore = -1;
+    self.illegalScore = -1;
+    self.abuseScore = -1;
+    self.politicsScore = -1;
+    self.terrorismScore = -1;
     return self;
 }
 - (void)configureReuqestSerializer:(QCloudRequestSerializer *)requestSerializer responseSerializer:(QCloudResponseSerializer *)responseSerializer {
@@ -112,18 +119,51 @@ NS_ASSUME_NONNULL_BEGIN
         [input setValue:base64Content forKey:@"Content"];
     }
     
+    if(self.userInfo){
+        [input setObject:self.userInfo.qcloud_modelToJSONObject forKey:@"UserInfo"];
+    }
+    
     if (self.dataId) {
         [input setObject:self.dataId forKey:@"DataId"];
     }
     
+    NSMutableDictionary * freeze = [NSMutableDictionary new];
+   if(self.pornScore > -1){
+       [freeze setObject:@(self.pornScore).stringValue forKey:@"PornScore"];
+   }
+   
+   if(self.adsScore > -1){
+       [freeze setObject:@(self.adsScore).stringValue forKey:@"AdsScore"];
+   }
+    
+    if(self.illegalScore > -1){
+        [freeze setObject:@(self.illegalScore).stringValue forKey:@"IllegalScore"];
+    }
+    
+    if(self.abuseScore > -1){
+        [freeze setObject:@(self.abuseScore).stringValue forKey:@"AbuseScore"];
+    }
+    
+    if(self.terrorismScore > -1){
+        [freeze setObject:@(self.terrorismScore).stringValue forKey:@"TerrorismScore"];
+    }
+    
+    if(self.politicsScore > -1){
+        [freeze setObject:@(self.politicsScore).stringValue forKey:@"PoliticsScore"];
+    }
+    
+    NSMutableDictionary * conf = @{
+        @"Callback":self.callback?:@"",
+        @"BizType":self.bizType?:@"",
+    }.mutableCopy;
+
+    [conf setObject:@"Detail" forKey:@"CallbackVersion"];
+    [conf setObject:freeze forKey:@"Freeze"];
+    [conf setObject:@(self.callbackType).stringValue forKey:@"CallbackType"];
+    
     NSDictionary * params =@{
         @"Input":input,
-        @"Conf":@{
-                @"DetectType":[self getDetectType],
-                @"Callback":self.callback?:@"",
-                @"BizType":self.bizType?:@"",
-                @"CallbackVersion":@"Detail",
-        }
+        @"Conf":conf
     };
     
     [self.requestData setParameter:params withKey:@"Request"];
@@ -145,37 +185,5 @@ NS_ASSUME_NONNULL_BEGIN
     return fileds;
 }
 
-- (NSString *)getDetectType {
-    NSMutableArray *detecyTypes = [NSMutableArray arrayWithCapacity:0];
-    if (_detectType & QCloudRecognitionPorn) {
-        [detecyTypes addObject:@"Porn"];
-    }
-
-    if (_detectType & QCloudRecognitionTerrorist) {
-        [detecyTypes addObject:@"Terrorism"];
-    }
-
-    if (_detectType & QCloudRecognitionPolitics) {
-        [detecyTypes addObject:@"Politics"];
-    }
-
-    if (_detectType & QCloudRecognitionAds) {
-        [detecyTypes addObject:@"Ads"];
-    }
-
-    if (_detectType & QCloudRecognitionIllegal) {
-        [detecyTypes addObject:@"Illegal"];
-    }
-    
-    if (_detectType & QCloudRecognitionAbuse) {
-        [detecyTypes addObject:@"Abuse"];
-    }
-   
-    if(detecyTypes.count == 0){
-        return @"";
-    }
-    
-    return [detecyTypes componentsJoinedByString:@","];
-}
 @end
 NS_ASSUME_NONNULL_END

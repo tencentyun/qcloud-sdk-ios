@@ -57,6 +57,14 @@ type 类型可以为 RootAccount， Subaccount；
 当 type 类型为 Subaccount 时，在 ID 中指定子帐号
 */
 @property (assign, nonatomic) QCloudCOSAccountType type;
+
+/**
+ 被授权者信息，
+ xsiType 可指定为 Group 或 CanonicalUser，
+ 当指定为 Group 时子节点包括且仅允许包括 URI，
+ 当指定为 CanonicalUser 时子节点包括且仅允许包括 ID
+*/
+@property (assign, nonatomic) QCloudCOSAccountXSIType xsiType;
 /**
 命名空间
 */

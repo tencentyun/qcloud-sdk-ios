@@ -69,7 +69,9 @@ static QCloudCOSTransferMangerService *COSTransferMangerService = nil;
 
 + (QCloudCOSTransferMangerService *)registerDefaultCOSTransferMangerWithConfiguration:(QCloudServiceConfiguration *)configuration {
     @synchronized(self) {
-        COSTransferMangerService = [[QCloudCOSTransferMangerService alloc] initWithConfiguration:configuration];
+        if(!COSTransferMangerService){
+            COSTransferMangerService = [[QCloudCOSTransferMangerService alloc] initWithConfiguration:configuration];
+        }
     }
     return COSTransferMangerService;
 }
@@ -86,8 +88,11 @@ static QCloudCOSTransferMangerService *COSTransferMangerService = nil;
 
 + (QCloudCOSTransferMangerService *)registerCOSTransferMangerWithConfiguration:(QCloudServiceConfiguration *)configuration withKey:(NSString *)key;
 {
-    QCloudCOSTransferMangerService *costransfermangerService = [[QCloudCOSTransferMangerService alloc] initWithConfiguration:configuration];
-    [QCloudCOSTransferMangerServiceCache() setObject:costransfermangerService forKey:key];
+    QCloudCOSTransferMangerService * costransfermangerService = [QCloudCOSTransferMangerServiceCache() objectForKey:key];
+    if(!costransfermangerService){
+        costransfermangerService = [[QCloudCOSTransferMangerService alloc] initWithConfiguration:configuration];
+        [QCloudCOSTransferMangerServiceCache() setObject:costransfermangerService forKey:key];
+    }
     return costransfermangerService;
 }
 

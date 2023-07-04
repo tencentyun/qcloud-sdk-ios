@@ -58,9 +58,9 @@ NS_ASSUME_NONNULL_BEGIN
  
         // 其他更多参数请查看sdk文档或源码注释
  
-        request.finishBlock = ^(QCloudAudioAsrqueueUpdateResult * outputObject, NSError *error) {
+        request.finishBlock = ^(QCloudQueueItemModel * outputObject, NSError *error) {
          // outputObject 详细字段请查看api文档或者SDK源码
-         // QCloudAudioAsrqueueUpdateResult 类；
+         // QCloudQueueItemModel 类；
         };
         [[QCloudCOSXMLService defaultCOSXML] UpdateAudioDiscernTaskQueue:request];
 
@@ -97,7 +97,7 @@ NS_ASSUME_NONNULL_BEGIN
  设置完成回调。请求完成后会通过该回调来获取结果，如果没有error，那么可以认为请求成功。
  @param finishBlock 请求完成回调
  */
-- (void)setFinishBlock:(void (^_Nullable)(QCloudAudioAsrqueueUpdateResult *_Nullable result, NSError *_Nullable error))finishBlock;
+- (void)setFinishBlock:(void (^_Nullable)(QCloudQueueItemModel *_Nullable result, NSError *_Nullable error))finishBlock;
 
 @end
 NS_ASSUME_NONNULL_END

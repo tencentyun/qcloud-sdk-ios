@@ -31,6 +31,8 @@
 
 #import <Foundation/Foundation.h>
 #import "QCloudRecognitionModel.h"
+#import "QCloudBatchRecognitionUserInfo.h"
+#import "QCloudBatchImageRecognitionResult.h"
 @class QCloudTextRecognitionSectionItemInfo;
 @class QCloudTextRecognitionSection;
 
@@ -70,6 +72,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 该字段用于返回检测结果中所对应的优先级最高的恶意标签，表示模型推荐的审核结果，建议您按照业务所需，对不同违规类型与建议值进行处理。 返回值：Normal：正常，Porn：色情，Ads：广告，以及其他不安全或不适宜的类型。
 @property (nonatomic,strong)NSString * Label;
 
+/// 该文本内容命中的二级标签结果，该字段可能返回空，表示未命中具体的子标签。
+@property (nonatomic,strong)NSString * SubLabel;
+
 /// 该字段表示本次判定的审核结果，您可以根据该结果，进行后续的操作；建议您按照业务所需，对不同的审核结果进行相应处理。
 /// 有效值：0（审核正常），1 （判定为违规敏感文件），2（疑似敏感，建议人工复核）。
 @property (nonatomic,strong)NSString * Result;
@@ -95,6 +100,14 @@ NS_ASSUME_NONNULL_BEGIN
 /// 具体文本分片的审核结果信息。
 @property (nonatomic,strong)NSArray <QCloudTextRecognitionSection *> * Section;
 
+
+@property (nonatomic,strong)QCloudBatchRecognitionUserInfo *UserInfo;
+
+
+@property (nonatomic,strong)QCloudBatchRecognitionListInfo *ListInfo;
+
+/// 若您设置了自动冻结，该字段表示文本文件的冻结状态。0：未冻结，1：已被冻结，2：已转移文件。
+@property (nonatomic,strong)NSString * ForbidState;
 @end
 
 

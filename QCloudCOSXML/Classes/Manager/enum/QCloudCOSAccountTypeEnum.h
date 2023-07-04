@@ -42,4 +42,14 @@ typedef NS_ENUM(NSInteger, QCloudCOSAccountType) {
 
 FOUNDATION_EXTERN QCloudCOSAccountType QCloudCOSAccountTypeDumpFromString(NSString *key);
 FOUNDATION_EXTERN NSString *QCloudCOSAccountTypeTransferToString(QCloudCOSAccountType type);
+
+typedef NS_ENUM(NSInteger, QCloudCOSAccountXSIType) {
+
+    QCloudCOSAccountXSITypeGroup = 0,
+    QCloudCOSAccountXSITypeCanonicalUser = 1,
+};
+
+FOUNDATION_EXTERN QCloudCOSAccountXSIType QCloudCOSAccountXSITypeDumpFromString(NSString *key);
+FOUNDATION_EXTERN NSString *QCloudCOSAccountXSITypeTransferToString(QCloudCOSAccountXSIType type);
+
 NS_ASSUME_NONNULL_END

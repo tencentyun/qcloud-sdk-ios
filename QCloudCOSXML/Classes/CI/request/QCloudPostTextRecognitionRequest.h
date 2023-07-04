@@ -33,6 +33,7 @@
 #import <QCloudCore/QCloudCore.h>
 #import "QCloudRecognitionEnum.h"
 #import "QCloudTextRecognitionResult.h"
+#import "QCloudBatchRecognitionUserInfo.h"
 NS_ASSUME_NONNULL_BEGIN
 /**
  功能描述：
@@ -56,8 +57,7 @@ NS_ASSUME_NONNULL_BEGIN
         // 审核类型，拥有 porn（涉黄识别）、terrorist（涉暴恐识别）、politics（涉政识别）、ads（广告识别）四种，
         // 用户可选择多种识别类型，例如 detect-type=porn,ads 表示对图片进行涉黄及广告审核
         // 可以使用或进行组合赋值 如： QCloudRecognitionPorn | QCloudRecognitionTerrorist
-        request.detectType = QCloudRecognitionPorn | QCloudRecognitionAds | QCloudRecognitionPolitics | QCloudRecognitionTerrorist;
-
+    
         // 审核策略，不带审核策略时使用默认策略。具体查看 https://cloud.tencent.com/document/product/460/56345
         request.bizType = BizType;
 
@@ -95,12 +95,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (strong, nonatomic) NSString *bucket;
 
-/// 审核类型，拥有 porn（涉黄识别）、terrorist（涉暴恐识别）、politics（涉政识别）、ads（广告识别）四种，
-/// 用户可选择多种识别类型，例如 detect-type=porn,ads 表示对图片进行涉黄及广告审核
-/// 可以使用或进行组合赋值 如： QCloudRecognitionPorn | QCloudRecognitionTerrorist
-@property (assign, nonatomic) QCloudRecognitionEnum detectType;
-
-
 /// 审核策略，不带审核策略时使用默认策略。具体查看 https://cloud.tencent.com/document/product/460/56345
 @property (strong, nonatomic) NSString * bizType;
 
@@ -108,7 +102,28 @@ NS_ASSUME_NONNULL_BEGIN
 /// 回调地址，以http://或者https://开头的地址。
 @property (strong, nonatomic) NSString * callback;
 
+/// 回调片段类型，有效值：1（回调全部截帧和音频片段）、2（回调违规截帧和音频片段）。默认为 1。
+@property (assign, nonatomic) NSInteger callbackType;
 
+/// 取值为[0,100]，表示当色情审核结果大于或等于该分数时，自动进行冻结操作。不填写则表示不自动冻结，默认值为空。
+@property (assign, nonatomic) NSInteger pornScore;
+
+/// 取值为[0,100]，表示当广告审核结果大于或等于该分数时，自动进行冻结操作。不填写则表示不自动冻结，默认值为空。
+@property (assign, nonatomic) NSInteger adsScore;
+
+/// 取值为[0,100]，表示当违法审核结果大于或等于该分数时，自动进行冻结操作。不填写则表示不自动冻结，默认值为空。
+@property (assign, nonatomic) NSInteger illegalScore;
+
+/// 取值为[0,100]，表示当谩骂审核结果大于或等于该分数时，自动进行冻结操作。不填写则表示不自动冻结，默认值为空。
+@property (assign, nonatomic) NSInteger abuseScore;
+
+/// 取值为[0,100]，表示当恐怖审核结果大于或等于该分数时，自动进行冻结操作。不填写则表示不自动冻结，默认值为空。
+@property (assign, nonatomic) NSInteger terrorismScore;
+
+/// 取值为[0,100]，表示当涉政审核结果大于或等于该分数时，自动进行冻结操作。不填写则表示不自动冻结，默认值为空。
+@property (assign, nonatomic) NSInteger politicsScore;
+
+@property (strong,nonatomic)QCloudBatchRecognitionUserInfo * userInfo;
 /**
  设置完成回调。请求完成后会通过该回调来获取结果，如果没有error，那么可以认为请求成功。
 

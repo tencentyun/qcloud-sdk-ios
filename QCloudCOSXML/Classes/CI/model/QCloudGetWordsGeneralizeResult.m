@@ -11,7 +11,7 @@
 + (NSDictionary *)modelContainerPropertyGenericClass {
     return @{
         @"Input" : [QCloudGetWordsGeneralizeInputObject class],
-        @"Operation" : [QCloudGetWordsGeneralizeResultOperation class],
+        @"Operation" : [QCloudGetWordsGeneralizeOperation class],
     };
 }
 
@@ -32,7 +32,7 @@
 
 @end
 
-@implementation QCloudGetWordsGeneralizeResultOperation
+@implementation QCloudGetWordsGeneralizeOperation
 
 + (NSDictionary *)modelContainerPropertyGenericClass {
     return @{

@@ -16,6 +16,8 @@
         @"AdsInfo" : [QCloudRecognitionItemInfo class],
         @"Snapshot" : [QCloudVideoRecognitionSnapshot class],
         @"AudioSection" : [QCloudVideoRecognitionAudioSection class],
+        @"UserInfo":[QCloudBatchRecognitionUserInfo class],
+        @"ListInfo":[QCloudBatchRecognitionListInfo class]
     };
 }
 
@@ -46,16 +48,16 @@
 @implementation QCloudVideoRecognitionSnapshot
 + (NSDictionary *)modelContainerPropertyGenericClass {
     return @{
-        @"PornInfo": [QCloudVideoRecognitionSnapshotItemInfo class],
-        @"TerrorismInfo": [QCloudVideoRecognitionSnapshotItemInfo class],
-        @"PoliticsInfo": [QCloudVideoRecognitionSnapshotItemInfo class],
-        @"AdsInfo": [QCloudVideoRecognitionSnapshotItemInfo class],
+        @"PornInfo": [QCloudVideoRecognitionItemInfo class],
+        @"TerrorismInfo": [QCloudVideoRecognitionItemInfo class],
+        @"PoliticsInfo": [QCloudVideoRecognitionItemInfo class],
+        @"AdsInfo": [QCloudVideoRecognitionItemInfo class],
     };
 }
 
 @end
 
-@implementation QCloudVideoRecognitionSnapshotItemInfo
+@implementation QCloudVideoRecognitionItemInfo
 + (NSDictionary *)modelContainerPropertyGenericClass {
     return @{
         @"OcrResults": [QCloudRecognitionOcrResults class],

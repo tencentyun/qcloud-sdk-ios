@@ -60,7 +60,6 @@ NS_ASSUME_NONNULL_BEGIN
  
      request.regionName = @"regionName";
      request.object = @"***.jpg";
-     request.detectType = QCloudRecognitionPorn | QCloudRecognitionTerrorist | QCloudRecognitionPolitics | QCloudRecognitionAds;
      [request setFinishBlock:^(QCloudImageRecognitionResult * _Nullable result, NSError * _Nullable error) {
      }];
      [[QCloudCOSXMLService defaultCOSXML] SyncImageRecognition:request];
@@ -94,15 +93,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 对于超过大小限制的图片，可通过该参数选择是否需要压缩图片后再审核，压缩为后台默认操作，会产生额外的 基础图片处理用量
 /// 取值为：0（不压缩），1（压缩）。默认为0。 注意：最大支持压缩32MB的图片。
-@property (strong, nonatomic) NSString *largeImageDetect;
-
-
-/// 审核类型，拥有 porn（涉黄识别）、ads（广告识别）。用户可选择多种识别类型，例如 detect-type=porn,ads 表示对图片进行涉黄及广告审核
-@property (assign, nonatomic) QCloudRecognitionEnum detectType;
+@property (assign, nonatomic) NSInteger largeImageDetect;
 
 /// 审核策略，不带审核策略时使用默认策略。具体查看 https://cloud.tencent.com/document/product/460/56345
 @property (strong, nonatomic) NSString * bizType;
 
+/// 是否异步进行审核，取值 0：同步返回结果，1：异步进行审核，默认为0。
+@property (assign,nonatomic)BOOL async;
+
+/// 审核结果（Detail版本）以回调形式发送至您的回调地址，异步审核时生效，支持以 http:// 或者 https:// 开头的地址，例如： http://www.callback.com。
+@property (strong, nonatomic) NSString * callback;
 /**
  设置完成回调。请求完成后会通过该回调来获取结果，如果没有error，那么可以认为请求成功。
  @param finishBlock 请求完成回调

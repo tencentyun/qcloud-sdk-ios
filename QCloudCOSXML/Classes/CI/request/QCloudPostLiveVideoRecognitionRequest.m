@@ -42,6 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
     if (!self) {
         return nil;
     }
+    self.callbackType = 1;
     return self;
 }
 - (void)configureReuqestSerializer:(QCloudRequestSerializer *)requestSerializer responseSerializer:(QCloudResponseSerializer *)responseSerializer {
@@ -122,9 +123,7 @@ NS_ASSUME_NONNULL_BEGIN
         [conf setObject:self.bizType forKey:@"BizType"];
     }
     
-    if(self.callbackType > 0){
-        [conf setObject:@(self.callbackType) forKey:@"CallbackType"];
-    }
+    [conf setObject:@(self.callbackType).stringValue forKey:@"CallbackType"];
     
     NSMutableDictionary * params =@{
         @"Type":@"live_video",
@@ -154,11 +153,6 @@ NS_ASSUME_NONNULL_BEGIN
 
     return fileds;
 }
-
-@end
-
-@implementation QCloudLiveVideoRecognitionUserInfo
-
 
 @end
 NS_ASSUME_NONNULL_END

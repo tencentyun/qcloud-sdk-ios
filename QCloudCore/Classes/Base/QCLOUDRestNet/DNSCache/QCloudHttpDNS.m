@@ -250,9 +250,10 @@ NSArray *getIPListFromToHost(const char *mHost, const char *mPort) {
         QCloudLogInfo(@"host[%s] ipList:%@", mHost, ipList);
     }
 
-    if(res0 != NULL){
+    if(res0!=NULL){
         freeaddrinfo(res0);
     }
+
     return ipList;
 }
 @end

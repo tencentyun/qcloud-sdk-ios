@@ -56,7 +56,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSArray *responseSerializers = @[
         QCloudAcceptRespnseCodeBlock([NSSet setWithObjects:@(200), @(201), @(202), @(203), @(204), @(205), @(206), @(207), @(208), @(226), nil], nil),
         QCloudResponseXMLSerializerBlock,
-        QCloudResponseObjectSerilizerBlock([QCloudAudioAsrqueueUpdateResult class])
+        QCloudResponseObjectSerilizerBlock([QCloudQueueItemModel class])
     ];
     [requestSerializer setSerializerBlocks:customRequestSerilizers];
     [responseSerializer setSerializerBlocks:responseSerializers];
@@ -147,7 +147,7 @@ NS_ASSUME_NONNULL_BEGIN
     return YES;
 }
 
-- (void)setFinishBlock:(void (^_Nullable)(QCloudAudioAsrqueueUpdateResult *_Nullable result, NSError *_Nullable error))finishBlock {
+- (void)setFinishBlock:(void (^_Nullable)(QCloudQueueItemModel *_Nullable result, NSError *_Nullable error))finishBlock {
     [super setFinishBlock:finishBlock];
 }
 
