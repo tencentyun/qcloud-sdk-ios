@@ -32,7 +32,6 @@
 #import <Foundation/Foundation.h>
 #import <QCloudCore/QCloudCore.h>
 #import "QCloudGetFilePreviewHtmlResult.h"
-#import <UIKit/UIKit.h>
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -103,7 +102,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  水印 RGBA（颜色和透明度）
  */
-@property (strong, nonatomic)UIColor * htmlfillstyle;
+@property (strong, nonatomic)NSString * htmlfillstyle;
 
 /**
  水印文字样式  bold 20px Serif 默认

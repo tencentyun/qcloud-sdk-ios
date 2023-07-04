@@ -104,7 +104,7 @@ NS_ASSUME_NONNULL_BEGIN
         [self.requestData setQueryStringParamter:[self base64EncodeString:self.htmlwaterword] withKey:@"htmlwaterword"];
         
         if (self.htmlfillstyle != nil) {
-            [self.requestData setQueryStringParamter:[self colorToString:self.htmlfillstyle] withKey:@"htmlfillstyle"];
+            [self.requestData setQueryStringParamter:self.htmlfillstyle withKey:@"htmlfillstyle"];
         }
         
         if (self.htmlfront != nil) {
@@ -157,50 +157,50 @@ NS_ASSUME_NONNULL_BEGIN
 
     return fileds;
 }
-- (NSArray<NSMutableDictionary *> *)scopesArray {
-    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    NSArray *separatetmpArray = [self.requestData.serverURL componentsSeparatedByString:@"://"];
-    NSString *str = separatetmpArray[1];
-    NSArray *separateArray = [str componentsSeparatedByString:@"."];
-    dic[@"bucket"] = separateArray[0];
-    dic[@"region"] = self.runOnService.configuration.endpoint.regionName;
-    dic[@"prefix"] = self.object;
-    dic[@"action"] = @"name/cos:GetObject";
-    NSMutableArray *array = [NSMutableArray array];
-    [array addObject:dic];
-    return [array copy];
-}
-
-- (NSString *)colorToString:(UIColor *)color {
-
-    CGFloat red, green, blue, alpha;
-#if SD_UIKIT
-    if (![color getRed:&red green:&green blue:&blue alpha:&alpha]) {
-        [color getWhite:&red alpha:&alpha];
-        green = red;
-        blue = red;
-        alpha = 1;
-    }
-#else
-    @try {
-        [color getRed:&red green:&green blue:&blue alpha:&alpha];
-    }
-    @catch (NSException *exception) {
-        [color getWhite:&red alpha:&alpha];
-        green = red;
-        blue = red;
-        alpha = 1;
-    }
-#endif
-    
-    red = roundf(red * 255.f);
-    green = roundf(green * 255.f);
-    blue = roundf(blue * 255.f);
-    alpha = round(alpha * 255.f);
-    uint hex = (((uint)red << 16) | ((uint)green << 8) | ((uint)blue));
-    
-    return [self base64EncodeString:[NSString stringWithFormat:@"%06x", hex]];
-}
+//- (NSArray<NSMutableDictionary *> *)scopesArray {
+//    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+//    NSArray *separatetmpArray = [self.requestData.serverURL componentsSeparatedByString:@"://"];
+//    NSString *str = separatetmpArray[1];
+//    NSArray *separateArray = [str componentsSeparatedByString:@"."];
+//    dic[@"bucket"] = separateArray[0];
+//    dic[@"region"] = self.runOnService.configuration.endpoint.regionName;
+//    dic[@"prefix"] = self.object;
+//    dic[@"action"] = @"name/cos:GetObject";
+//    NSMutableArray *array = [NSMutableArray array];
+//    [array addObject:dic];
+//    return [array copy];
+//}
+//
+//- (NSString *)colorToString:(UIColor *)color {
+//
+//    CGFloat red, green, blue, alpha;
+//#if SD_UIKIT
+//    if (![color getRed:&red green:&green blue:&blue alpha:&alpha]) {
+//        [color getWhite:&red alpha:&alpha];
+//        green = red;
+//        blue = red;
+//        alpha = 1;
+//    }
+//#else
+//    @try {
+//        [color getRed:&red green:&green blue:&blue alpha:&alpha];
+//    }
+//    @catch (NSException *exception) {
+//        [color getWhite:&red alpha:&alpha];
+//        green = red;
+//        blue = red;
+//        alpha = 1;
+//    }
+//#endif
+//    
+//    red = roundf(red * 255.f);
+//    green = roundf(green * 255.f);
+//    blue = roundf(blue * 255.f);
+//    alpha = round(alpha * 255.f);
+//    uint hex = (((uint)red << 16) | ((uint)green << 8) | ((uint)blue));
+//    
+//    return [self base64EncodeString:[NSString stringWithFormat:@"%06x", hex]];
+//}
 
 - (NSString *)base64EncodeString:(NSString *)string{
     NSData *data =[string dataUsingEncoding:NSUTF8StringEncoding];
