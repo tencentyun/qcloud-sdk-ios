@@ -47,9 +47,4 @@ QCloudCore--腾讯云iOS-SDK Foundation。提供腾讯云iOS相关SDK的基础�
     s.subspec 'WithoutMTA' do |withoutMTA|
         withoutMTA.source_files = 'QCloudCore/Classes/Base/**/*'
     end
-    s.subspec 'DNSLoader' do |tdns|
-        tdns.dependency "MSDKDns_C11";
-        tdns.dependency "QCloudCore/WithoutMTA";
-        tdns.source_files = 'QCloudCore/Classes/DNSLoader/*';
-    end
 end
