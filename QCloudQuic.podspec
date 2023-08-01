@@ -37,16 +37,7 @@ s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
   s.static_framework = true
   s.default_subspec = 'Default'
   s.subspec 'Default' do |default|
-    default.source_files = 'QCloudQuic/Classes/*', 'QCloudQuic/Classes/QCloudBase/**/*','QCloudQuic/Classes/QuicFramework//*.{h}'
-  default.vendored_frameworks = 'QCloudQuic/Classes/QuicFramework/Tquic.framework'
-  default.dependency "QCloudCOSXML",'6.2.5'
+      default.source_files = 'QCloudQuic/Classes/*', 'QCloudQuic/Classes/QCloudBase/**/*','QCloudQuic/Classes/QuicFramework//*.{h}'
+      default.vendored_frameworks = 'QCloudQuic/Classes/QuicFramework/Tquic.framework'
   end
-  s.subspec 'Slim' do |slim|
-    slim.source_files = 'QCloudQuic/Classes/*', 'QCloudQuic/Classes/QCloudBase/**/*','QCloudQuic/Classes/QuicFramework//*.{h}'
-  slim.vendored_frameworks = 'QCloudQuic/Classes/QuicFramework/Tquic.framework'
-  slim.dependency "QCloudCOSXML/Slim",'6.2.5'
-  end
-
-  
-
 end
