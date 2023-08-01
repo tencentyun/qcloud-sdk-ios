@@ -48,8 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
         request.bucket = @"examplebucket-1250000000";
  
         request.regionName = @"regionName";
-        // 队列 ID，以“,”符号分割字符串
-        request.queueIds = @"1,2,3";
+
  
         // 1. Active 表示队列内的作业会被语音识别服务调度执行
         // 2. Paused 表示队列暂停，作业不再会被语音识别服务调度执行，队列内的所有作业状态维持在暂停状态，已经处于识别中的任务将继续执行，不受影响

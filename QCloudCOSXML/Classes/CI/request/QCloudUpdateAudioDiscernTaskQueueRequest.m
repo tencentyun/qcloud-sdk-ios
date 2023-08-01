@@ -78,16 +78,7 @@ NS_ASSUME_NONNULL_BEGIN
             return NO;
         }
     }
-    
-    if (!self.queueID) {
-        if (error != NULL) {
-            *error = [NSError
-                qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
-                             message:[NSString stringWithFormat:
-                                                   @"InvalidArgument:paramter[queueID] is invalid (nil), it must have some value. please check it"]];
-            return NO;
-        }
-    }
+
     
     if (!self.state) {
         if (error != NULL) {
@@ -119,7 +110,10 @@ NS_ASSUME_NONNULL_BEGIN
 
     NSMutableDictionary * mparams = [NSMutableDictionary new];
     [mparams setObject:self.name forKey:@"Name"];
-    [mparams setObject:self.queueID forKey:@"QueueID"];
+    if(self.queueID){
+        [mparams setObject:self.queueID forKey:@"QueueID"];
+    }
+    
     if (self.state == 1) {
         [mparams setObject:@"Active" forKey:@"State"];
     }else if (self.state == 2){

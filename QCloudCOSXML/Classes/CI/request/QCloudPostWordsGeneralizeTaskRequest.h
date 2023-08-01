@@ -61,9 +61,6 @@ NS_ASSUME_NONNULL_BEGIN
 
     taskInfo.Tag = @"WordsGeneralize";
  
-    // QCloudGetAIJobQueueRequest 接口获取
-    taskInfo.QueueId = @"QueueId";
-
     taskInfo.Operation = [QCloudWordsGeneralizeInputOperation new];
     taskInfo.Operation.WordsGeneralize = [QCloudWordsGeneralizeInputGeneralize new];
     taskInfo.Operation.WordsGeneralize.NerMethod = @"DL";

@@ -114,6 +114,12 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
     _customConcurrentCount = customConcurrentCount;
     _operationQueue.customConcurrentCount = customConcurrentCount;
 }
+
+- (void)setMaxConcurrentCountLimit:(int)maxConcurrentCountLimit{
+    _maxConcurrentCountLimit = maxConcurrentCountLimit;
+    _operationQueue.maxConcurrentCountLimit = maxConcurrentCountLimit;
+}
+
 - (void)setMaxConcurrencyTask:(int32_t)maxConcurrencyTask {
     if (_maxConcurrencyTask != maxConcurrencyTask) {
         _maxConcurrencyTask = maxConcurrencyTask;

@@ -100,7 +100,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic)NSString * htmlwaterword;
 
 /**
- 水印 RGBA（颜色和透明度）
+ 水印 RGBA（颜色和透明度），需要经过 URL 安全 的 Base64 编码，默认为：rgba(192,192,192,0.6)
  */
 @property (strong, nonatomic)NSString * htmlfillstyle;
 

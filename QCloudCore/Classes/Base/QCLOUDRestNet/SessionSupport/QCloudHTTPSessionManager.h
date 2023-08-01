@@ -20,4 +20,7 @@ typedef void (^QCloudURLSessionDidFinishEventsForBackgroundURLSessionBlock)(void
 FOUNDATION_EXTERN QCloudThreadSafeMutableDictionary *cloudBackGroundSessionManagersCache;
 + (QCloudHTTPSessionManager *)shareClient;
 @property (nonatomic, assign) int customConcurrentCount;
+
+@property (nonatomic, assign) int maxConcurrentCountLimit;
+
 @end

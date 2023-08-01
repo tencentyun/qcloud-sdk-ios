@@ -25,6 +25,7 @@ static const NSInteger kWeakNetworkConcurrentCount = 1;
     NSMutableArray *_backgroundPerformanceRequest;
 }
 @property (nonatomic, assign) NSInteger uploadSpeedReachThresholdTimes;
+@property (nonatomic, assign) int maxConcurrentCount;
 @end
 
 @implementation QCloudOperationQueue
@@ -218,23 +219,37 @@ static const NSInteger kWeakNetworkConcurrentCount = 1;
     int64_t currentUploadSpeedPerOperation = uploadSpeedIn30S / concurrentCount;
     //若每个任务速度大于250KB/s
     static const int64_t increaseConcurrentCountThreashold = 250 * 1024;
-    //        NSLog(@"Current network speed per operation = %lu  KB/S， uploadSpeedIn30S = %llu KB/s, max concurrent count
-    //        =%lu",currentUploadSpeedPerOperation/(1024),uploadSpeedIn30S/1024,self.maxConcurrentCount);
+    static const int64_t decreaseConcurrentCountThreashold = 100 * 1024;
+//            NSLog(@"Current network speed per operation = %lu  KB/S， uploadSpeedIn30S = %llu KB/s, max concurrent count =%lu",currentUploadSpeedPerOperation/(1024),uploadSpeedIn30S/1024,self.maxConcurrentCount);
     if (currentUploadSpeedPerOperation > increaseConcurrentCountThreashold) {
         self.uploadSpeedReachThresholdTimes++;
+    } else if (currentUploadSpeedPerOperation < decreaseConcurrentCountThreashold) {
+        self.uploadSpeedReachThresholdTimes--;
     } else {
         self.uploadSpeedReachThresholdTimes = 0;
     }
     if (self.uploadSpeedReachThresholdTimes > 5) {
         [self incresetConcurrentCount];
         self.uploadSpeedReachThresholdTimes = 0;
+    }else if (self.uploadSpeedReachThresholdTimes < -5){
+        [self decreaseConcurrentCount];
+        self.uploadSpeedReachThresholdTimes = 0;
     }
 }
 
 - (void)incresetConcurrentCount {
-    if (self.maxConcurrentCount < kDefaultCouncurrentCount) {
+    int tempLimit = self.maxConcurrentCountLimit?self.maxConcurrentCountLimit:kDefaultCouncurrentCount;
+    if (self.maxConcurrentCount < tempLimit) {
         QCloudLogDebug(@"concurernt count increased! previous concurrent count is %i ", self.maxConcurrentCount);
         self.maxConcurrentCount++;
+    }
+    return;
+}
+
+- (void)decreaseConcurrentCount {
+    if (self.maxConcurrentCount > kWeakNetworkConcurrentCount) {
+        QCloudLogDebug(@"concurernt count decreased! previous concurrent count is %i ", self.maxConcurrentCount);
+        self.maxConcurrentCount--;
     }
     return;
 }

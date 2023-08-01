@@ -47,9 +47,6 @@ NS_ASSUME_NONNULL_BEGIN
 
         // 存储桶名称，格式为 BucketName-APPID
         request.bucket = @"examplebucket-1250000000";
-
-        // 拉取该队列 ID 下的任务。
-        request.queueId = @"queueId";
  
         request.regionName = @"regionName";
  

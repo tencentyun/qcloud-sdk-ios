@@ -53,8 +53,6 @@ NS_ASSUME_NONNULL_BEGIN
      request.bucket = @"examplebucket-1250000000";
      // 文件所在地域
      request.regionName = @"regionName";
-     
-     request.queueId = @"queueId";
  
      request.queueType = @"queueType";
      [request setFinishBlock:^(QCloudGetMediaJobResponse * _Nullable result, NSError * _Nullable error) {

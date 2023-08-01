@@ -10,7 +10,7 @@
 #import "QCloudRequestOperation.h"
 
 @interface QCloudOperationQueue : NSObject
-@property (nonatomic, assign) int maxConcurrentCount;
+@property (nonatomic, assign) int maxConcurrentCountLimit;
 @property (nonatomic, assign) int customConcurrentCount;
 - (void)addOpreation:(QCloudRequestOperation *)operation;
 - (void)cancel:(QCloudRequestOperation *)operation;

@@ -103,6 +103,8 @@ static QCloudCOSTransferMangerService *COSTransferMangerService = nil;
     }
     _cosService = [[QCloudCOSXMLService alloc] initWithConfiguration:configuration];
     _uploadFileQueue = [QCloudOperationQueue new];
+    _uploadFileQueue.maxConcurrentCountLimit = [QCloudHTTPSessionManager shareClient].maxConcurrentCountLimit;
+    _uploadFileQueue.customConcurrentCount = [QCloudHTTPSessionManager shareClient].customConcurrentCount;
     return self;
 }
 

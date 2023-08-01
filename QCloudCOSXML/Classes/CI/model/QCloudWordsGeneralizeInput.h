@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 操作规则 必选
 @property (nonatomic,strong)QCloudWordsGeneralizeInputOperation *Operation;
 
-/// 任务所在的队列 ID 必选
+/// 任务所在的队列 ID
 @property (nonatomic,strong)NSString *QueueId;
 
 /// 任务回调地址，优先级高于队列的回调地址。设置为 no 时，表示队列的回调地址不产生回调 可选

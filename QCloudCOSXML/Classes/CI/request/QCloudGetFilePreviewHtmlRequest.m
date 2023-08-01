@@ -157,20 +157,20 @@ NS_ASSUME_NONNULL_BEGIN
 
     return fileds;
 }
-//- (NSArray<NSMutableDictionary *> *)scopesArray {
-//    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-//    NSArray *separatetmpArray = [self.requestData.serverURL componentsSeparatedByString:@"://"];
-//    NSString *str = separatetmpArray[1];
-//    NSArray *separateArray = [str componentsSeparatedByString:@"."];
-//    dic[@"bucket"] = separateArray[0];
-//    dic[@"region"] = self.runOnService.configuration.endpoint.regionName;
-//    dic[@"prefix"] = self.object;
-//    dic[@"action"] = @"name/cos:GetObject";
-//    NSMutableArray *array = [NSMutableArray array];
-//    [array addObject:dic];
-//    return [array copy];
-//}
-//
+- (NSArray<NSMutableDictionary *> *)scopesArray {
+    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
+    NSArray *separatetmpArray = [self.requestData.serverURL componentsSeparatedByString:@"://"];
+    NSString *str = separatetmpArray[1];
+    NSArray *separateArray = [str componentsSeparatedByString:@"."];
+    dic[@"bucket"] = separateArray[0];
+    dic[@"region"] = self.runOnService.configuration.endpoint.regionName;
+    dic[@"prefix"] = self.object;
+    dic[@"action"] = @"name/cos:GetObject";
+    NSMutableArray *array = [NSMutableArray array];
+    [array addObject:dic];
+    return [array copy];
+}
+
 //- (NSString *)colorToString:(UIColor *)color {
 //
 //    CGFloat red, green, blue, alpha;
@@ -192,13 +192,13 @@ NS_ASSUME_NONNULL_BEGIN
 //        alpha = 1;
 //    }
 //#endif
-//    
+//
 //    red = roundf(red * 255.f);
 //    green = roundf(green * 255.f);
 //    blue = roundf(blue * 255.f);
 //    alpha = round(alpha * 255.f);
 //    uint hex = (((uint)red << 16) | ((uint)green << 8) | ((uint)blue));
-//    
+//
 //    return [self base64EncodeString:[NSString stringWithFormat:@"%06x", hex]];
 //}
 
