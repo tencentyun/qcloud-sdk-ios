@@ -34,6 +34,7 @@ class TnetAsyncDelegate : public TnetRequestDelegate{
     private:
         int first_time_;
         int64_t totolSentBytes;
+        bool isComplete;
     
     public:
     TnetAsyncDelegate() {
@@ -174,26 +175,29 @@ class TnetAsyncDelegate : public TnetRequestDelegate{
                 error = [[NSError alloc] initWithDomain:NSURLErrorDomain code:error_code userInfo:@{NSLocalizedDescriptionKey:[NSString stringWithFormat:@"%s",error_detail]}];
                
             }
-            if (this->didCompleteWithError_ !=nullptr) {
-                 this->didCompleteWithError_(error);
+            if (!isComplete) {
+                isComplete = YES;
+                if (this->didCompleteWithError_ !=nullptr) {
+                     this->didCompleteWithError_(error);
+                }
             }
-           
         }
 
     // This request has received all the data and finished.
     void OnRequestFinish(int stream_error) override{
-//        request_sp->CloseConnection();
-//        NSError *error = nil;
-//        if (stream_error != 0) {
-//            error = [[NSError alloc] initWithDomain:NSURLErrorDomain code:stream_error userInfo:nil];
-//        }
-//
-//        NSLog(@"Tquic OnRequestCompleted with error: %@", error);
-//        if (this->didCompleteWithError_ != nullptr) {
-//            this->didCompleteWithError_(error);
-//        }
-   
-        
+        request_sp->CloseConnection();
+        NSError *error = nil;
+        if (stream_error != 0) {
+            error = [[NSError alloc] initWithDomain:NSURLErrorDomain code:stream_error userInfo:nil];
+        }
+
+        NSLog(@"Tquic OnRequestCompleted with error: %@", error);
+        if (!isComplete) {
+            isComplete = YES;
+            if (this->didCompleteWithError_ != nullptr) {
+                this->didCompleteWithError_(error);
+            }
+        }
     }
 };
 
