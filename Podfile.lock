@@ -24,7 +24,7 @@ EXTERNAL SOURCES:
     :path: "."
 
 SPEC CHECKSUMS:
-  QCloudCore: 611b7f24b56c1937693a21492044bbf56bdd8836
+  QCloudCore: b99da67cb77dfbe5ce585bc1fea0911eaf2ddb82
   QCloudCOSXML: 1704d7acb332103ac2559ddd5cc50c80c1738f6a
   QCloudQuic: b76e2c2641a6e94464762fb3b5a32c882bd09eb7
 
