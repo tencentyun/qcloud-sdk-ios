@@ -153,12 +153,24 @@ NS_ASSUME_NONNULL_BEGIN
     }
     
     NSMutableDictionary * conf = @{
-        @"Callback":self.callback?:@"",
-        @"BizType":self.bizType?:@"",
     }.mutableCopy;
 
+    
+    if(freeze.allKeys.count > 0){
+        [conf setObject:freeze forKey:@"Freeze"];
+    }
+    
+    if(self.callback){
+        [conf setObject:self.callback forKey:@"Callback"];
+    }
+    
+    if(self.bizType){
+        [conf setObject:self.bizType forKey:@"BizType"];
+    }
+    
+    
     [conf setObject:@"Detail" forKey:@"CallbackVersion"];
-    [conf setObject:freeze forKey:@"Freeze"];
+    
     [conf setObject:@(self.callbackType).stringValue forKey:@"CallbackType"];
     
     NSDictionary * params =@{

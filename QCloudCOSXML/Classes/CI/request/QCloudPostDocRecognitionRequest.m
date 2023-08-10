@@ -123,11 +123,17 @@ NS_ASSUME_NONNULL_BEGIN
     }
     
     NSMutableDictionary * conf = @{
-        @"Callback":self.callback?:@"",
-        @"BizType":self.bizType?:@"",
         @"CallbackVersion":@"Detail",
         @"CallbackType":@(self.callbackType).stringValue
     }.mutableCopy;
+    
+    if(self.callback){
+        [conf setObject:self.callback forKey:@"Callback"];
+    }
+    
+    if(self.bizType){
+        [conf setObject:self.bizType forKey:@"BizType"];
+    }
     
     NSMutableDictionary * freeze = [NSMutableDictionary new];
     if(self.pornScore > -1){
@@ -146,7 +152,9 @@ NS_ASSUME_NONNULL_BEGIN
         [freeze setObject:@(self.politicsScore).stringValue forKey:@"PoliticsScore"];
     }
     
-    [conf addEntriesFromDictionary:@{@"Freeze":freeze}];
+    if(freeze.allKeys.count > 0){
+        [conf addEntriesFromDictionary:@{@"Freeze":freeze}];
+    }
     
     NSDictionary * params =@{
         @"Input":input,

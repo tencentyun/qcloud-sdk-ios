@@ -180,7 +180,9 @@ NS_ASSUME_NONNULL_BEGIN
         [freeze setObject:@(self.politicsScore).stringValue forKey:@"PoliticsScore"];
     }
     
-    [conf addEntriesFromDictionary:@{@"Freeze":freeze}];
+    if(freeze.allKeys.count > 0){
+        [conf addEntriesFromDictionary:@{@"Freeze":freeze}];
+    }
     
     NSDictionary * params =@{
         @"Input":inputs,

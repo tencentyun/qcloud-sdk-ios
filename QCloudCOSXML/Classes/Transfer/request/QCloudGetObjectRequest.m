@@ -126,6 +126,8 @@ NS_ASSUME_NONNULL_BEGIN
         [self.requestData setValue:@(self.trafficLimit).stringValue forHTTPHeaderField:@"x-cos-traffic-limit"];
     }
   
+    [self.customHeaders setObject:@"no-cache" forKey:@"Cache-Control"];
+    
     NSURL *__serverURL = [self.runOnService.configuration.endpoint serverURLWithBucket:self.bucket
                                                                                  appID:self.runOnService.configuration.appID
                                                                             regionName:self.regionName];

@@ -6,9 +6,9 @@ PODS:
     - QCloudCOSXML/Default (= 6.2.6)
   - QCloudCOSXML/Default (6.2.6):
     - QCloudCore (= 6.2.6)
-  - QCloudQuic (6.2.6):
-    - QCloudQuic/Default (= 6.2.6)
-  - QCloudQuic/Default (6.2.6)
+  - QCloudQuic (6.2.7):
+    - QCloudQuic/Default (= 6.2.7)
+  - QCloudQuic/Default (6.2.7)
 
 DEPENDENCIES:
   - QCloudCore (from `.`)
@@ -26,7 +26,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   QCloudCore: b99da67cb77dfbe5ce585bc1fea0911eaf2ddb82
   QCloudCOSXML: 1704d7acb332103ac2559ddd5cc50c80c1738f6a
-  QCloudQuic: b76e2c2641a6e94464762fb3b5a32c882bd09eb7
+  QCloudQuic: 55367f6cd5f13ead49c38339f43079358da9910a
 
 PODFILE CHECKSUM: 87053f234f38ae6a394978f26bcb119015f9918e
 

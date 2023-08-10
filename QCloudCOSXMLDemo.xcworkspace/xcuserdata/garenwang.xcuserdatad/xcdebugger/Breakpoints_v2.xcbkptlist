@@ -7,33 +7,17 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "BCF3D2A1-32A1-40EA-9471-0E01F7205DB9"
+            uuid = "997680CB-C74A-4020-90BE-04D0BF2391BC"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "QCloudCore/Classes/Base/QCLOUDRestNet/DNSCache/QCloudHttpDNS.m"
+            filePath = "QCloudCore/Classes/Base/QCLOUDObjectModel/QCloudClassInfo.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "226"
-            endingLineNumber = "226"
-            landmarkName = "getIPListFromToHost(mHost, mPort)"
-            landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "2AA966A4-2E82-4BCB-A5E0-2D45F490F8DD"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "QCloudCore/Classes/Base/QCLOUDRestNet/DNSCache/QCloudHttpDNS.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "253"
-            endingLineNumber = "253"
-            landmarkName = "getIPListFromToHost(mHost, mPort)"
-            landmarkType = "9">
+            startingLineNumber = "263"
+            endingLineNumber = "263"
+            landmarkName = "-initWithProperty:"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

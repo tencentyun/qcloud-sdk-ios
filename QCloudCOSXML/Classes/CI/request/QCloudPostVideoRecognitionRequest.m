@@ -172,21 +172,33 @@ NS_ASSUME_NONNULL_BEGIN
         [freeze setObject:@(self.politicsScore).stringValue forKey:@"PoliticsScore"];
     }
     
+    NSMutableDictionary * config = @{
+        @"Snapshot":@{
+                @"Mode":QCloudVideoRecognitionModeTransferToString(self.mode),
+                @"TimeInterval":@(self.timeInterval),
+                @"Count":@(self.count)
+        },
+        @"CallbackVersion":@"Detail",
+        @"DetectContent":self.detectContent ?@"1":@"0",
+        @"CallbackType":@(self.callbackType).stringValue,
+        
+    }.mutableCopy;
+    
+    if(freeze.allKeys.count > 0){
+        [config setObject:freeze forKey:@"Freeze"];
+    }
+    
+    if(self.callback){
+        [config setObject:self.callback forKey:@"Callback"];
+    }
+    
+    if(self.bizType){
+        [config setObject:self.bizType forKey:@"BizType"];
+    }
+    
     NSDictionary * params =@{
         @"Input":input,
-        @"Conf":@{
-                @"Snapshot":@{
-                        @"Mode":QCloudVideoRecognitionModeTransferToString(self.mode),
-                        @"TimeInterval":@(self.timeInterval),
-                        @"Count":@(self.count)
-                },
-                @"Callback":self.callback?:@"",
-                @"BizType":self.bizType?:@"",
-                @"CallbackVersion":@"Detail",
-                @"DetectContent":self.detectContent ?@"1":@"0",
-                @"CallbackType":@(self.callbackType).stringValue,
-                @"Freeze":freeze
-        }
+        @"Conf":config
     };
     
     [self.requestData setParameter:params withKey:@"Request"];
