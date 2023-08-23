@@ -44,7 +44,8 @@ class TnetAsyncDelegate : public TnetRequestDelegate{
     TnetAsyncDelegate(TquicRequest *quicRequest,TquicRequestDidConnectBlock didConnectionBlock,TquicRequesDidReceiveResponseBlock didReceiveResponse,TquicRequestDidReceiveDataBlock didReceiveData, TquicRequestDidSendBodyDataBlock didSentBodyData,TquicRequesDidCompleteWithErrorBlock  didCompleteWithError){
     first_time_ = 1;
     totolSentBytes = 0;
-        this->didConnectionBlock_ =  didConnectionBlock;
+    isComplete = NO;
+    this->didConnectionBlock_ =  didConnectionBlock;
     this->didReceiveResponse_ = didReceiveResponse;
     this->didSendBodyData_ = didSentBodyData;
     this->didReceiveData_ = didReceiveData;
