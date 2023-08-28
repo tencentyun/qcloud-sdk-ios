@@ -26,6 +26,10 @@ QCloudCOSStorageClass QCloudCOSStorageClassDumpFromString(NSString *key) {
         return QCloudCOSStorageMAZ_INTELLIGENT_TIERING;
     } else if ([key isEqualToString:@"DEEP_ARCHIVE"]) {
         return QCloudCOSStorageDEEP_ARCHIVE;
+    } else if ([key isEqualToString:@"COLD"]) {
+        return QCloudCOSStorageCOLD;
+    } else if ([key isEqualToString:@"MAZ_COLD"]) {
+        return QCloudCOSStorageMAZ_COLD;
     }
     return 0;
 }
@@ -54,6 +58,12 @@ NSString *QCloudCOSStorageClassTransferToString(QCloudCOSStorageClass type) {
         }
         case QCloudCOSStorageDEEP_ARCHIVE: {
             return @"DEEP_ARCHIVE";
+        }
+        case QCloudCOSStorageCOLD: {
+            return @"COLD";
+        }
+        case QCloudCOSStorageMAZ_COLD: {
+            return @"MAZ_COLD";
         }
         default:
             return nil;

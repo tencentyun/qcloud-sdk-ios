@@ -47,6 +47,8 @@ typedef NS_ENUM(NSInteger, QCloudCOSStorageClass) {
     QCloudCOSStorageMAZ_INTELLIGENT_TIERING = 6,
     //深度归档
     QCloudCOSStorageDEEP_ARCHIVE = 7,
+    QCloudCOSStorageCOLD = 8,
+    QCloudCOSStorageMAZ_COLD = 9,
 };
 
 FOUNDATION_EXTERN QCloudCOSStorageClass QCloudCOSStorageClassDumpFromString(NSString *key);

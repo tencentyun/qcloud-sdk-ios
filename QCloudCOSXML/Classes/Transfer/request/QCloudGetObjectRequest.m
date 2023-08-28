@@ -67,18 +67,18 @@ NS_ASSUME_NONNULL_BEGIN
     if (!self.object || ([self.object isKindOfClass:NSString.class] && ((NSString *)self.object).length == 0)) {
         if (error != NULL) {
             *error = [NSError
-                qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
-                             message:[NSString stringWithFormat:
-                                                   @"InvalidArgument:paramter[object] is invalid (nil), it must have some value. please check it"]];
+                      qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
+                      message:[NSString stringWithFormat:
+                               @"InvalidArgument:paramter[object] is invalid (nil), it must have some value. please check it"]];
             return NO;
         }
     }
     if (!self.bucket || ([self.bucket isKindOfClass:NSString.class] && ((NSString *)self.bucket).length == 0)) {
         if (error != NULL) {
             *error = [NSError
-                qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
-                             message:[NSString stringWithFormat:
-                                                   @"InvalidArgument:paramter[bucket] is invalid (nil), it must have some value. please check it"]];
+                      qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
+                      message:[NSString stringWithFormat:
+                               @"InvalidArgument:paramter[bucket] is invalid (nil), it must have some value. please check it"]];
             return NO;
         }
     }
@@ -125,7 +125,10 @@ NS_ASSUME_NONNULL_BEGIN
     if (self.trafficLimit) {
         [self.requestData setValue:@(self.trafficLimit).stringValue forHTTPHeaderField:@"x-cos-traffic-limit"];
     }
-  
+    
+    if(![self.customHeaders isKindOfClass:NSMutableDictionary.class]){
+        self.customHeaders = self.customHeaders.mutableCopy;
+    }
     [self.customHeaders setObject:@"no-cache" forKey:@"Cache-Control"];
     
     NSURL *__serverURL = [self.runOnService.configuration.endpoint serverURLWithBucket:self.bucket
