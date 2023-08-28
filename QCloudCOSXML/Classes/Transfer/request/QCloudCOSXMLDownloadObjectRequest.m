@@ -129,7 +129,7 @@
     QCloudGetObjectRequest *request = [QCloudGetObjectRequest new];
     request.trafficLimit = self.trafficLimit;
     request.payload = self.payload;
-    request.customHeaders = [self.customHeaders copy];
+    request.customHeaders = [self.customHeaders mutableCopy];
     request.downloadingURL = self.downloadingURL;
     request.localCacheDownloadOffset = self.localCacheDownloadOffset;
     request.regionName = self.regionName;
