@@ -6,14 +6,14 @@
 //
 
 #import "QCloudCOSXMLService.h"
+#import "QCloudCICloudDataOperationsRequest.h"
+
 @class QCloudPutObjectWatermarkRequest;
-@class QCloudPostObjectProcessRequest;
 @class QCloudGetRecognitionObjectRequest;
 @class QCloudGetFilePreviewRequest;
 @class QCloudGetFilePreviewHtmlRequest;
 @class QCloudGetGenerateSnapshotRequest;
 @class QCloudCICloudDataOperationsRequest;
-@class QCloudCIPutObjectQRCodeRecognitionRequest;
 @class QCloudQRCodeRecognitionRequest;
 @class QCloudCIPicRecognitionRequest;
 @class QCloudGetDescribeMediaBucketsRequest;
@@ -51,7 +51,6 @@
 @class QCloudCIFaceEffectRequest;
 @class QCloudCIDetectFaceRequest;
 @class QCloudCIRecognizeLogoRequest;
-@class QCloudCIPostGoodsMattingRequest;
 @class QCloudCIGetGoodsMattingRequest;
 @class QCloudCIImageRepairRequest;
 @class QCloudPostLiveVideoRecognitionRequest;
@@ -80,7 +79,52 @@
 @class QCloudCreateMediaJobRequest;
 @class QCloudGetMediaJobListRequest;
 @class QCloudPostTextAuditReportRequest;
+
 @class QCloudPostImageAuditReportRequest;
+@class QCloudOpenAIBucketRequest;
+@class QCloudGetAIBucketRequest;
+@class QCloudCloseAIBucketRequest;
+@class QCloudUpdateAIQueueRequest;
+@class QCloudAIImageColoringRequest;
+@class QCloudAISuperResolutionRequest;
+@class QCloudAIEnhanceImageRequest;
+@class QCloudAIImageCropRequest;
+@class QCloudCreateQRcodeRequest;
+@class QCloudAIGameRecRequest;
+@class QCloudAssessQualityRequest;
+@class QCloudAIDetectPetRequest;
+@class QCloudAIIDCardOCRRequest;
+@class QCloudLivenessRecognitionRequest;
+@class QCloudGetLiveCodeRequest;
+@class QCloudGetActionSequenceRequest;
+
+@class QCloudAILicenseRecRequest;
+@class QCloudImageSearchBucketRequest;
+@class QCloudAddImageSearchRequest;
+@class QCloudGetSearchImageRequest;
+@class QCloudDeleteImageSearchRequest;
+@class QCloudPostTranslationRequest;
+@class QCloudPostWordsGeneralizeRequest;
+@class QCloudPostVideoTargetRecRequest;
+@class QCloudPostVideoTargetTempleteRequest;
+@class QCloudUpdateVideoTargetTempleteRequest;
+@class QCloudPostSegmentVideoBodyRequest;
+@class QCloudOpenAsrBucketRequest;
+@class QCloudCloseAsrBucketRequest;
+@class QCloudPostVoiceSeparateTempleteRequest;
+@class QCloudUpdateVoiceSeparateTempleteRequest;
+@class QCloudPostNoiseReductionRequest;
+@class QCloudPostNoiseReductionTempleteRequest;
+@class QCloudUpdateNoiseReductionTempleteRequest;
+@class QCloudPostVoiceSynthesisRequest;
+@class QCloudPostVoiceSynthesisTempleteRequest;
+@class QCloudUpdateVoiceSynthesisTempleteRequest;
+@class QCloudPostSpeechRecognitionRequest;
+@class QCloudPostSpeechRecognitionTempleteRequest;
+@class QCloudUpdateSpeechRecognitionTempleteRequest;
+@class QCloudPostSoundHoundRequest;
+@class QCloudVocalScoreRequest;
+@class QCloudCIUploadOperationsRequest;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface QCloudCOSXMLService (ImageHelper)
@@ -97,10 +141,13 @@ COS 文档预览方法.
 
 //云上数据处理
 - (void)CloudDataOperations:(QCloudCICloudDataOperationsRequest *)request;
-/**
- 上传时识别二维码
- */
-- (void)PutObjectQRCodeRecognition:(QCloudCIPutObjectQRCodeRecognitionRequest *)request;
+
+// 兼容老版本
+- (void)PostObjectProcess:(QCloudPostObjectProcessRequest *)request;
+
+// 上传时处理
+- (void)UploadOperations:(QCloudCIUploadOperationsRequest *)request;
+
 /**
  下载时识别二维码
  */
@@ -200,9 +247,6 @@ COS 文档预览方法.
 /// Logo 识别
 -(void)RecognizeLogo:(QCloudCIRecognizeLogoRequest *)request;
 
-/// 商品抠图  云上数据处理
--(void)PostGoodsMatting:(QCloudCIPostGoodsMattingRequest *)request;
-
 - (void)GetFilePreviewHtmlObject:(QCloudGetFilePreviewHtmlRequest *)request;
 
 - (void)GetGenerateSnapshot:(QCloudGetGenerateSnapshotRequest *)request;
@@ -215,8 +259,6 @@ COS 文档预览方法.
 
 /// 取消直播审核任务
 -(void)CancelLiveVideoRecognition:(QCloudCancelLiveVideoRecognitionRequest *)request;
-
-- (void)PostObjectProcess:(QCloudPostObjectProcessRequest *)request;
 
 /// 查询直播审核任务结果
 -(void)GetLiveVideoRecognition:(QCloudGetLiveVideoRecognitionRequest *)request;
@@ -287,6 +329,172 @@ COS 文档预览方法.
 -(void)PostTextAuditReport:(QCloudPostTextAuditReportRequest *)request;
 
 -(void)PostImageAuditReport:(QCloudPostImageAuditReportRequest *)request;
+
+
+/// 查询AI内容识别服务
+/// 本接口用于查询已经开通AI 内容识别（异步）服务的存储桶
+-(void)GetAIBucket:(QCloudGetAIBucketRequest *)request;
+
+/// 关闭AI内容识别服务
+/// 本接口用于关闭AI 内容识别（异步）服务并删除队列
+-(void)CloseAIBucket:(QCloudCloseAIBucketRequest *)request;
+
+/// 更新AI内容识别队列
+/// 本接口用于更新AI 内容识别（异步）的队列
+-(void)UpdateAIQueue:(QCloudUpdateAIQueueRequest *)request;
+
+/// 图片上色
+/// 腾讯云数据万象通过 AIImageColoring 接口对黑白图像进行上色
+-(void)AIImageColoring:(QCloudAIImageColoringRequest *)request;
+
+/// 图像超分
+/// 腾讯云数据万象通过 AISuperResolution 接口对图像进行超分辨率处理，当前默认超分为宽高的2倍
+-(void)AISuperResolution:(QCloudAISuperResolutionRequest *)request;
+
+/// 图像增强
+/// 腾讯云数据万象通过 AIEnhanceImage 接口对图像进行增强处理
+-(void)AIEnhanceImage:(QCloudAIEnhanceImageRequest *)request;
+
+/// 图像智能裁剪
+/// 腾讯云数据万象通过 AIImageCrop 接口对图像进行智能裁剪，支持持久化、云上处理及下载时处理
+-(void)AIImageCrop:(QCloudAIImageCropRequest *)request;
+
+/// 图片二维码生成
+/// 数据万象二维码生成功能可根据用户指定的文本信息（URL 或文本），生成对应的二维码或条形码
+-(void)CreateQRcode:(QCloudCreateQRcodeRequest *)request;
+
+/// 游戏场景识别
+/// 游戏标签功能实现游戏图片场景的识别，返回图片中置信度较高的游戏类别标签。游戏标签识别请求包属于 GET 请求，请求时需要携带签名
+-(void)AIGameRec:(QCloudAIGameRecRequest *)request;
+
+/// 图片质量评分
+/// 图片质量评分功能为同步请求方式，您可以通过本接口对图片文件进行检测，从多方面评估，最终给出综合可观的清晰度评分和主观的美观度评分。该接口属于 GET 请求
+-(void)AssessQuality:(QCloudAssessQualityRequest *)request;
+
+/// 宠物识别
+/// 腾讯云数据万象通过 detect-pet 接口识别并输出画面中宠物，输出其位置（矩形框）和置信度。图片宠物识别请求包属于 GET 请求，请求时需要携带签名
+-(void)AIDetectPet:(QCloudAIDetectPetRequest *)request;
+
+/// 身份证识别
+/// 支持中国大陆居民二代身份证正反面所有字段的识别，包括姓名、性别、民族、出生日期、住址、公民身份证号、签发机关、有效期限；具备身份证照片、人像照片的裁剪功能和翻拍、PS、复印件告警功能，以及边框和框内遮挡告警、临时身份证告警和身份证有效期不合法告警等扩展功能
+-(void)AIIDCardOCR:(QCloudAIIDCardOCRRequest *)request;
+
+/// 活体人脸核身
+/// 集成了活体检测和跟权威库进行比对的能力，传入一段视频和姓名、身份证号信息即可进行验证。对录制的自拍视频进行活体检测，从而确认当前用户为真人，可防止照片、视频、静态3D建模等各种不同类型的攻击。检测为真人后，再判断该视频中的人与权威库的证件照是否属于同一个人，实现用户身份信息核实
+-(void)LivenessRecognition:(QCloudLivenessRecognitionRequest *)request;
+
+/// 获取数字验证码
+/// 使用数字活体检测模式前，需调用本接口获取数字验证码
+-(void)GetLiveCode:(QCloudGetLiveCodeRequest *)request;
+
+/// 获取动作顺序
+/// 使用动作活体检测模式前，需调用本接口获取动作顺序
+-(void)GetActionSequence:(QCloudGetActionSequenceRequest *)request;
+
+/// 卡证识别
+/// 本接口支持中国大陆居民二代身份证正面（暂不支持背面）、驾驶证主页（暂不支持副页）所有字段的自动定位，暂不支持文本识别，用于对特定字段的抹除、屏蔽，以及进一步的文本识别
+-(void)AILicenseRec:(QCloudAILicenseRecRequest *)request;
+
+/// 开通以图搜图
+/// 该接口用于开通 Bucket 搜图功能
+-(void)ImageSearchBucket:(QCloudImageSearchBucketRequest *)request;
+
+/// 添加图库图片
+/// 该接口用于添加图库图片
+-(void)AddImageSearch:(QCloudAddImageSearchRequest *)request;
+
+/// 图片搜索接口
+/// 该接口用于检索图片
+-(void)GetSearchImage:(QCloudGetSearchImageRequest *)request;
+
+/// 删除图库图片
+/// 该接口用于删除图库图片
+-(void)DeleteImageSearch:(QCloudDeleteImageSearchRequest *)request;
+
+/// 提交任务
+/// 提交一个翻译任务
+-(void)PostTranslation:(QCloudPostTranslationRequest *)request;
+
+/// 提交任务
+/// 提交一个分词任务
+-(void)PostWordsGeneralize:(QCloudPostWordsGeneralizeRequest *)request;
+
+/// 提交任务
+/// 提交一个视频目标检测任务
+-(void)PostVideoTargetRec:(QCloudPostVideoTargetRecRequest *)request;
+
+/// 创建模板
+/// 创建视频目标检测模板
+-(void)PostVideoTargetTemplete:(QCloudPostVideoTargetTempleteRequest *)request;
+
+/// 更新模板
+/// 更新视频目标检测模板
+-(void)UpdateVideoTargetTemplete:(QCloudUpdateVideoTargetTempleteRequest *)request;
+
+/// 提交任务
+/// 提交一个视频人像抠图任务
+-(void)PostSegmentVideoBody:(QCloudPostSegmentVideoBodyRequest *)request;
+
+/// 开通智能语音服务
+/// 本接口用于开通智能语音服务并生成队列
+-(void)OpenAsrBucket:(QCloudOpenAsrBucketRequest *)request;
+
+/// 关闭智能语音服务
+/// 本接口用于关闭智能语音服务并删除队列
+-(void)CloseAsrBucket:(QCloudCloseAsrBucketRequest *)request;
+
+/// 创建模板
+/// 创建人声分离模板
+-(void)PostVoiceSeparateTemplete:(QCloudPostVoiceSeparateTempleteRequest *)request;
+
+/// 更新模板
+/// 更新人声分离转码模板
+-(void)UpdateVoiceSeparateTemplete:(QCloudUpdateVoiceSeparateTempleteRequest *)request;
+
+/// 提交任务
+/// 提交一个音频降噪任务
+-(void)PostNoiseReduction:(QCloudPostNoiseReductionRequest *)request;
+
+/// 创建模板
+/// 创建音频降噪模板
+-(void)PostNoiseReductionTemplete:(QCloudPostNoiseReductionTempleteRequest *)request;
+
+/// 更新模板
+/// 更新音频降噪模板
+-(void)UpdateNoiseReductionTemplete:(QCloudUpdateNoiseReductionTempleteRequest *)request;
+
+/// 提交任务
+/// 提交一个语音合成任务
+-(void)PostVoiceSynthesis:(QCloudPostVoiceSynthesisRequest *)request;
+
+/// 创建模板
+/// 创建语音合成模板
+-(void)PostVoiceSynthesisTemplete:(QCloudPostVoiceSynthesisTempleteRequest *)request;
+
+/// 更新模板
+/// 更新语音合成模板
+-(void)UpdateVoiceSynthesisTemplete:(QCloudUpdateVoiceSynthesisTempleteRequest *)request;
+
+/// 提交任务
+/// 提交一个语音识别任务
+-(void)PostSpeechRecognition:(QCloudPostSpeechRecognitionRequest *)request;
+
+/// 创建模板
+/// 创建语音识别模板
+-(void)PostSpeechRecognitionTemplete:(QCloudPostSpeechRecognitionTempleteRequest *)request;
+
+/// 更新模板
+/// 更新语音识别模板
+-(void)UpdateSpeechRecognitionTemplete:(QCloudUpdateSpeechRecognitionTempleteRequest *)request;
+
+/// 提交任务
+/// 提交一个听歌识曲任务
+-(void)PostSoundHound:(QCloudPostSoundHoundRequest *)request;
+
+/// 提交任务
+/// 提交一个音乐评分任务
+-(void)VocalScore:(QCloudVocalScoreRequest *)request;
+
 
 
 @end

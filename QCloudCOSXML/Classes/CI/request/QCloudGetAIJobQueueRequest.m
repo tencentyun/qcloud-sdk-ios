@@ -84,7 +84,7 @@ NS_ASSUME_NONNULL_BEGIN
     self.requestData.URIComponents = __pathComponents;
 
     if (self.queueId) {
-        [self.requestData setQueryStringParamter:self.queueId withKey:@"queueId"];
+        [self.requestData setQueryStringParamter:self.queueId withKey:@"queueIds"];
     }
     
     if (self.state == 1) {

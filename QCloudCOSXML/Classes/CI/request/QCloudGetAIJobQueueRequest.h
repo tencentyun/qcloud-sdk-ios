@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  功能描述：
 
- 接口用于查询分词队列。
+ 查询AI内容识别队列。
  具体请查看：https://cloud.tencent.com/document/product/460/79394
 
   @code

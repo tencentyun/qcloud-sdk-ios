@@ -147,3 +147,142 @@
 @end
 
 
+
+
+@implementation QCloudAudioConfig
+
+@end
+
+@implementation QCloudAudioMix
+
++ (NSDictionary *)modelContainerPropertyGenericClass {
+    return @{
+        @"EffectConfig" : [QCloudEffectConfig class],
+    };
+}
+
+@end
+
+
+@implementation QCloudCreateWorkflowMediaWorkflow
+
++ (NSDictionary *)modelContainerPropertyGenericClass {
+    return @{
+        @"Topology" : [QCloudCreateWorkflowTopology class],
+    };
+}
+
+@end
+
+@implementation QCloudCreateWorkflowResponseMediaWorkflow
+
++ (NSDictionary *)modelContainerPropertyGenericClass {
+    return @{
+        @"Topology" : [QCloudCreateWorkflowTopology class],
+    };
+}
+
+- (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dic {
+
+    if (!dic) {return dic;}
+
+    if (![dic isKindOfClass:[NSDictionary class]]) {return nil;}
+
+    if (dic[@"Topology"] && [dic[@"Topology"] isKindOfClass:[NSDictionary class]]){
+        NSMutableDictionary * mdic = [NSMutableDictionary dictionaryWithDictionary:dic];
+        [mdic setValue:@[dic[@"Topology"]] forKey:@"Topology"];
+        dic = mdic.copy;
+    }
+    return dic;
+}
+
+@end
+
+@implementation QCloudCreateWorkflowTopology
+
+
+@end
+
+@implementation QCloudEffectConfig
+
+@end
+
+@implementation QCloudNoiseReduction
+
+@end
+
+@implementation QCloudNoiseReductionTempleteResponseTemplate
+
++ (NSDictionary *)modelContainerPropertyGenericClass {
+    return @{
+        @"NoiseReduction" : [QCloudNoiseReduction class],
+    };
+}
+
+@end
+
+@implementation QCloudNotifyConfig
+
+@end
+
+@implementation QCloudSpeechRecognition
+
+@end
+
+@implementation QCloudSpeechRecognitionTempleteResponseTemplate
+
++ (NSDictionary *)modelContainerPropertyGenericClass {
+    return @{
+        @"SpeechRecognition" : [QCloudSpeechRecognition class],
+    };
+}
+
+@end
+
+@implementation QCloudVideoTargetRec
+
+@end
+
+@implementation QCloudVideoTargetTempleteResponseTemplate
+
++ (NSDictionary *)modelContainerPropertyGenericClass {
+    return @{
+        @"VideoTargetRec" : [QCloudVideoTargetRec class],
+    };
+}
+
+@end
+
+@implementation QCloudVoiceSeparateTempleteResponseTemplate
+
++ (NSDictionary *)modelContainerPropertyGenericClass {
+    return @{
+        @"VoiceSeparate" : [QCloudVoiceSeparateTempleteResponseVoiceSeparate class],
+    };
+}
+
+@end
+
+@implementation QCloudVoiceSeparateTempleteResponseVoiceSeparate
+
++ (NSDictionary *)modelContainerPropertyGenericClass {
+    return @{
+        @"AudioConfig" : [QCloudAudioConfig class],
+    };
+}
+
+@end
+
+@implementation QCloudVoiceSynthesisTempleteResponseTemplate
+
++ (NSDictionary *)modelContainerPropertyGenericClass {
+    return @{
+        @"TtsTpl" : [QCloudVoiceSynthesisTempleteResponseTtsTpl class],
+    };
+}
+
+@end
+
+@implementation QCloudVoiceSynthesisTempleteResponseTtsTpl
+
+@end

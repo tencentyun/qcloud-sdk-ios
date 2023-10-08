@@ -11,14 +11,12 @@
 #import "QCloudGetFilePreviewRequest.h"
 #import "QCloudGetGenerateSnapshotRequest.h"
 #import "QCloudCICloudDataOperationsRequest.h"
-#import "QCloudCIPutObjectQRCodeRecognitionRequest.h"
 #import "QCloudCIPicRecognitionRequest.h"
 #import "QCloudGetDescribeMediaBucketsRequest.h"
 #import "QCloudGetMediaInfoRequest.h"
 #import "QCloudGetVideoRecognitionRequest.h"
 #import "QCloudPostVideoRecognitionRequest.h"
 #import "QCloudGetFilePreviewHtmlRequest.h"
-#import "QCloudPostObjectProcessRequest.h"
 
 #import "QCloudGetAudioRecognitionRequest.h"
 #import "QCloudPostAudioRecognitionRequest.h"
@@ -66,6 +64,50 @@
 #import "QCloudCreateMediaJobRequest.h"
 #import "QCloudPostImageAuditReportRequest.h"
 #import "QCloudPostTextAuditReportRequest.h"
+
+#import "QCloudGetAIBucketRequest.h"
+#import "QCloudCloseAIBucketRequest.h"
+#import "QCloudUpdateAIQueueRequest.h"
+#import "QCloudAIImageColoringRequest.h"
+#import "QCloudAISuperResolutionRequest.h"
+#import "QCloudAIEnhanceImageRequest.h"
+#import "QCloudAIImageCropRequest.h"
+#import "QCloudCreateQRcodeRequest.h"
+#import "QCloudAIGameRecRequest.h"
+#import "QCloudAssessQualityRequest.h"
+#import "QCloudAIDetectPetRequest.h"
+#import "QCloudAIIDCardOCRRequest.h"
+#import "QCloudLivenessRecognitionRequest.h"
+#import "QCloudGetLiveCodeRequest.h"
+#import "QCloudGetActionSequenceRequest.h"
+#import "QCloudAILicenseRecRequest.h"
+#import "QCloudImageSearchBucketRequest.h"
+#import "QCloudAddImageSearchRequest.h"
+#import "QCloudGetSearchImageRequest.h"
+#import "QCloudDeleteImageSearchRequest.h"
+#import "QCloudPostTranslationRequest.h"
+#import "QCloudPostWordsGeneralizeRequest.h"
+#import "QCloudPostVideoTargetRecRequest.h"
+#import "QCloudPostVideoTargetTempleteRequest.h"
+#import "QCloudUpdateVideoTargetTempleteRequest.h"
+#import "QCloudPostSegmentVideoBodyRequest.h"
+#import "QCloudOpenAsrBucketRequest.h"
+#import "QCloudCloseAsrBucketRequest.h"
+#import "QCloudPostVoiceSeparateTempleteRequest.h"
+#import "QCloudUpdateVoiceSeparateTempleteRequest.h"
+#import "QCloudPostNoiseReductionRequest.h"
+#import "QCloudPostNoiseReductionTempleteRequest.h"
+#import "QCloudUpdateNoiseReductionTempleteRequest.h"
+#import "QCloudPostVoiceSynthesisRequest.h"
+#import "QCloudPostVoiceSynthesisTempleteRequest.h"
+#import "QCloudUpdateVoiceSynthesisTempleteRequest.h"
+#import "QCloudPostSpeechRecognitionRequest.h"
+#import "QCloudPostSpeechRecognitionTempleteRequest.h"
+#import "QCloudUpdateSpeechRecognitionTempleteRequest.h"
+#import "QCloudPostSoundHoundRequest.h"
+#import "QCloudVocalScoreRequest.h"
+#import "QCloudCIUploadOperationsRequest.h"
+
 @implementation QCloudCOSXMLService (ImageHelper)
 
 - (void)PutWatermarkObject:(QCloudPutObjectWatermarkRequest *)request {
@@ -88,7 +130,7 @@
     [super performRequest:request];
 }
 
-- (void)PutObjectQRCodeRecognition:(QCloudCIPutObjectQRCodeRecognitionRequest *)request {
+- (void)PostObjectProcess:(QCloudPostObjectProcessRequest *)request {
     [super performRequest:request];
 }
 
@@ -124,10 +166,6 @@
     [super performRequest:request];
 }
 - (void)PostVideoRecognition:(QCloudPostVideoRecognitionRequest *)request{
-    [super performRequest:request];
-}
-
-- (void)PostObjectProcess:(QCloudPostObjectProcessRequest *)request{
     [super performRequest:request];
 }
 
@@ -234,9 +272,7 @@
 -(void)RecognizeLogo:(QCloudCIRecognizeLogoRequest *)request{
     [super performRequest:(QCloudBizHTTPRequest *)request];
 }
--(void)PostGoodsMatting:(QCloudCIPostGoodsMattingRequest *)request{
-    [super performRequest:(QCloudBizHTTPRequest *)request];
-}
+
 -(void)GetGoodsMatting:(QCloudCIGetGoodsMattingRequest *)request{
     [self buildRequestUrl:(QCloudBizHTTPRequest *)request];
 }
@@ -377,4 +413,173 @@
 -(void)PostImageAuditReport:(QCloudPostImageAuditReportRequest *)request{
     [super performRequest:(QCloudPostImageAuditReportRequest *)request];
 }
+
+-(void)GetAIBucket:(QCloudGetAIBucketRequest *)request{
+     [super performRequest:(QCloudGetAIBucketRequest *)request];
+}
+
+-(void)CloseAIBucket:(QCloudCloseAIBucketRequest *)request{
+     [super performRequest:(QCloudCloseAIBucketRequest *)request];
+}
+
+-(void)UpdateAIQueue:(QCloudUpdateAIQueueRequest *)request{
+     [super performRequest:(QCloudUpdateAIQueueRequest *)request];
+}
+
+-(void)AIImageColoring:(QCloudAIImageColoringRequest *)request{
+     [super performRequest:(QCloudAIImageColoringRequest *)request];
+}
+
+-(void)AISuperResolution:(QCloudAISuperResolutionRequest *)request{
+     [super performRequest:(QCloudAISuperResolutionRequest *)request];
+}
+
+-(void)AIEnhanceImage:(QCloudAIEnhanceImageRequest *)request{
+     [super performRequest:(QCloudAIEnhanceImageRequest *)request];
+}
+
+-(void)AIImageCrop:(QCloudAIImageCropRequest *)request{
+     [super performRequest:(QCloudAIImageCropRequest *)request];
+}
+
+-(void)CreateQRcode:(QCloudCreateQRcodeRequest *)request{
+     [super performRequest:(QCloudCreateQRcodeRequest *)request];
+}
+
+-(void)AIGameRec:(QCloudAIGameRecRequest *)request{
+     [super performRequest:(QCloudAIGameRecRequest *)request];
+}
+
+-(void)AssessQuality:(QCloudAssessQualityRequest *)request{
+     [super performRequest:(QCloudAssessQualityRequest *)request];
+}
+
+-(void)AIDetectPet:(QCloudAIDetectPetRequest *)request{
+     [super performRequest:(QCloudAIDetectPetRequest *)request];
+}
+
+-(void)AIIDCardOCR:(QCloudAIIDCardOCRRequest *)request{
+     [super performRequest:(QCloudAIIDCardOCRRequest *)request];
+}
+
+-(void)LivenessRecognition:(QCloudLivenessRecognitionRequest *)request{
+     [super performRequest:(QCloudLivenessRecognitionRequest *)request];
+}
+
+-(void)GetLiveCode:(QCloudGetLiveCodeRequest *)request{
+     [super performRequest:(QCloudGetLiveCodeRequest *)request];
+}
+
+-(void)GetActionSequence:(QCloudGetActionSequenceRequest *)request{
+     [super performRequest:(QCloudGetActionSequenceRequest *)request];
+}
+
+-(void)AILicenseRec:(QCloudAILicenseRecRequest *)request{
+     [super performRequest:(QCloudAILicenseRecRequest *)request];
+}
+
+-(void)ImageSearchBucket:(QCloudImageSearchBucketRequest *)request{
+     [super performRequest:(QCloudImageSearchBucketRequest *)request];
+}
+
+-(void)AddImageSearch:(QCloudAddImageSearchRequest *)request{
+     [super performRequest:(QCloudAddImageSearchRequest *)request];
+}
+
+-(void)GetSearchImage:(QCloudGetSearchImageRequest *)request{
+     [super performRequest:(QCloudGetSearchImageRequest *)request];
+}
+
+-(void)DeleteImageSearch:(QCloudDeleteImageSearchRequest *)request{
+     [super performRequest:(QCloudDeleteImageSearchRequest *)request];
+}
+
+-(void)PostTranslation:(QCloudPostTranslationRequest *)request{
+     [super performRequest:(QCloudPostTranslationRequest *)request];
+}
+
+-(void)PostWordsGeneralize:(QCloudPostWordsGeneralizeRequest *)request{
+     [super performRequest:(QCloudPostWordsGeneralizeRequest *)request];
+}
+
+-(void)PostVideoTargetRec:(QCloudPostVideoTargetRecRequest *)request{
+     [super performRequest:(QCloudPostVideoTargetRecRequest *)request];
+}
+
+-(void)PostVideoTargetTemplete:(QCloudPostVideoTargetTempleteRequest *)request{
+     [super performRequest:(QCloudPostVideoTargetTempleteRequest *)request];
+}
+
+-(void)UpdateVideoTargetTemplete:(QCloudUpdateVideoTargetTempleteRequest *)request{
+     [super performRequest:(QCloudUpdateVideoTargetTempleteRequest *)request];
+}
+
+-(void)PostSegmentVideoBody:(QCloudPostSegmentVideoBodyRequest *)request{
+     [super performRequest:(QCloudPostSegmentVideoBodyRequest *)request];
+}
+
+-(void)OpenAsrBucket:(QCloudOpenAsrBucketRequest *)request{
+     [super performRequest:(QCloudOpenAsrBucketRequest *)request];
+}
+
+-(void)CloseAsrBucket:(QCloudCloseAsrBucketRequest *)request{
+     [super performRequest:(QCloudCloseAsrBucketRequest *)request];
+}
+
+-(void)PostVoiceSeparateTemplete:(QCloudPostVoiceSeparateTempleteRequest *)request{
+     [super performRequest:(QCloudPostVoiceSeparateTempleteRequest *)request];
+}
+
+-(void)UpdateVoiceSeparateTemplete:(QCloudUpdateVoiceSeparateTempleteRequest *)request{
+     [super performRequest:(QCloudUpdateVoiceSeparateTempleteRequest *)request];
+}
+
+-(void)PostNoiseReduction:(QCloudPostNoiseReductionRequest *)request{
+     [super performRequest:(QCloudPostNoiseReductionRequest *)request];
+}
+
+-(void)PostNoiseReductionTemplete:(QCloudPostNoiseReductionTempleteRequest *)request{
+     [super performRequest:(QCloudPostNoiseReductionTempleteRequest *)request];
+}
+
+-(void)UpdateNoiseReductionTemplete:(QCloudUpdateNoiseReductionTempleteRequest *)request{
+     [super performRequest:(QCloudUpdateNoiseReductionTempleteRequest *)request];
+}
+
+-(void)PostVoiceSynthesis:(QCloudPostVoiceSynthesisRequest *)request{
+     [super performRequest:(QCloudPostVoiceSynthesisRequest *)request];
+}
+
+-(void)PostVoiceSynthesisTemplete:(QCloudPostVoiceSynthesisTempleteRequest *)request{
+     [super performRequest:(QCloudPostVoiceSynthesisTempleteRequest *)request];
+}
+
+-(void)UpdateVoiceSynthesisTemplete:(QCloudUpdateVoiceSynthesisTempleteRequest *)request{
+     [super performRequest:(QCloudUpdateVoiceSynthesisTempleteRequest *)request];
+}
+
+-(void)PostSpeechRecognition:(QCloudPostSpeechRecognitionRequest *)request{
+     [super performRequest:(QCloudPostSpeechRecognitionRequest *)request];
+}
+
+-(void)PostSpeechRecognitionTemplete:(QCloudPostSpeechRecognitionTempleteRequest *)request{
+     [super performRequest:(QCloudPostSpeechRecognitionTempleteRequest *)request];
+}
+
+-(void)UpdateSpeechRecognitionTemplete:(QCloudUpdateSpeechRecognitionTempleteRequest *)request{
+     [super performRequest:(QCloudUpdateSpeechRecognitionTempleteRequest *)request];
+}
+
+-(void)PostSoundHound:(QCloudPostSoundHoundRequest *)request{
+     [super performRequest:(QCloudPostSoundHoundRequest *)request];
+}
+
+-(void)VocalScore:(QCloudVocalScoreRequest *)request{
+     [super performRequest:(QCloudVocalScoreRequest *)request];
+}
+- (void)UploadOperations:(QCloudCIUploadOperationsRequest *)request{
+    [super performRequest:(QCloudCIUploadOperationsRequest *)request];
+    
+}
+
 @end

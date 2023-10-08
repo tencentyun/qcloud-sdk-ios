@@ -49,15 +49,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface QCloudMediaInfoStream : NSObject
 
+/// 视频信息;是否必传：否
+@property (nonatomic,strong)NSArray <QCloudMediaInfoStreamVideo * > * Video;
 
-/// 视频信息
-@property (strong, nonatomic) QCloudMediaInfoStreamVideo *Video;
+/// 音频信息;是否必传：否
+@property (nonatomic,strong)NSArray <QCloudMediaInfoStreamAudio * > * Audio;
 
-/// 音频信息
-@property (strong, nonatomic) QCloudMediaInfoStreamAudio *Audio;
-
-/// 字幕信息
-@property (strong, nonatomic) QCloudMediaInfoStreamSubtitle *Subtitle;
+/// 字幕信息;是否必传：否
+@property (nonatomic,strong)NSArray <QCloudMediaInfoStreamSubtitle * > * Subtitle;
 
 @end
 

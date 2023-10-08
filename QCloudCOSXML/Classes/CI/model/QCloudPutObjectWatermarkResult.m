@@ -44,59 +44,54 @@
     return @{ @"originalInfo" : @"OriginalInfo", @"processResults" : @"ProcessResults" };
 }
 
-- (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic {
-    return YES;
-}
-
-- (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dic {
-    if (!dic) {
-        return dic;
-    }
-    NSMutableDictionary *transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
-
-    return transfromDic;
-}
-
 @end
 
 @implementation QCloudPutObjectOriginalInfo
+
++ (NSDictionary *)modelContainerPropertyGenericClass {
+    return @{
+        @"imageInfo" : [QCloudPutObjectImageInfo class]
+    };
+}
 
 + (NSDictionary *)modelCustomPropertyMapper {
     return @{ @"key" : @"Key", @"location" : @"Location", @"imageInfo" : @"ImageInfo" };
 }
 
-- (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic {
-    return YES;
-}
-
-- (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dic {
-    if (!dic) {
-        return dic;
-    }
-    NSMutableDictionary *transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
-
-    return transfromDic;
-}
 
 @end
 
 @implementation QCloudPutObjectProcessResults
 
-+ (NSDictionary *)modelCustomPropertyMapper {
+
++ (NSDictionary *)modelContainerPropertyGenericClass {
     return @{
-        @"object" : @"Object",
+        @"Object" : [QCloudPutObjectObj class],
     };
 }
 
-- (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic {
-    return YES;
-}
-
-- (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dic {
+- (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dic
+{
     if (!dic) {
         return dic;
     }
-    NSMutableDictionary *transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
+    NSMutableDictionary* transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
+    NSArray* transformArrayKeypaths = @[
+    @"Object",
+    ];
+
+    for (NSString* keyPath in transformArrayKeypaths) {
+        id object = [dic valueForKeyPath:keyPath];
+        if (!object) {
+            continue;
+        }
+        if ([object isKindOfClass:[NSNull class]]) {
+            continue;
+        }
+        if (![object isKindOfClass:[NSArray class]]) {
+            [transfromDic setValue:@[object] forKeyPath:keyPath];
+        }
+    }
 
     return transfromDic;
 }
@@ -117,19 +112,6 @@
     };
 }
 
-- (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic {
-    return YES;
-}
-
-- (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dic {
-    if (!dic) {
-        return dic;
-    }
-    NSMutableDictionary *transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
-
-    return transfromDic;
-}
-
 @end
 
 @implementation QCloudPutObjectObj
@@ -146,17 +128,35 @@
     };
 }
 
-- (BOOL)modelCustomTransformToDictionary:(NSMutableDictionary *)dic {
-    return YES;
++ (NSDictionary *)modelContainerPropertyGenericClass {
+    return @{
+        @"QRcodeInfo" : [QCloudCIQRcodeInfo class],
+    };
 }
 
-- (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dic {
+- (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dic
+{
     if (!dic) {
         return dic;
     }
-    NSMutableDictionary *transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
+    NSMutableDictionary* transfromDic = [NSMutableDictionary dictionaryWithDictionary:dic];
+    NSArray* transformArrayKeypaths = @[
+    @"QRcodeInfo",
+    ];
+
+    for (NSString* keyPath in transformArrayKeypaths) {
+        id object = [dic valueForKeyPath:keyPath];
+        if (!object) {
+            continue;
+        }
+        if ([object isKindOfClass:[NSNull class]]) {
+            continue;
+        }
+        if (![object isKindOfClass:[NSArray class]]) {
+            [transfromDic setValue:@[object] forKeyPath:keyPath];
+        }
+    }
 
     return transfromDic;
 }
-
 @end

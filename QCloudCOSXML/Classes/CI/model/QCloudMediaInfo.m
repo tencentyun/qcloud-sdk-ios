@@ -38,6 +38,30 @@
         @"Subtitle": [QCloudMediaInfoStreamSubtitle class],
     };
 }
+
+- (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dic {
+
+    if (!dic) {return dic;}
+
+    if (![dic isKindOfClass:[NSDictionary class]]) {return nil;}
+
+    if (dic[@"Video"] && [dic[@"Video"] isKindOfClass:[NSDictionary class]]){
+        NSMutableDictionary * mdic = [NSMutableDictionary dictionaryWithDictionary:dic];
+        [mdic setValue:@[dic[@"Video"]] forKey:@"Video"];
+        dic = mdic.copy;
+    }
+    if (dic[@"Audio"] && [dic[@"Audio"] isKindOfClass:[NSDictionary class]]){
+        NSMutableDictionary * mdic = [NSMutableDictionary dictionaryWithDictionary:dic];
+        [mdic setValue:@[dic[@"Audio"]] forKey:@"Audio"];
+        dic = mdic.copy;
+    }
+    if (dic[@"Subtitle"] && [dic[@"Subtitle"] isKindOfClass:[NSDictionary class]]){
+        NSMutableDictionary * mdic = [NSMutableDictionary dictionaryWithDictionary:dic];
+        [mdic setValue:@[dic[@"Subtitle"]] forKey:@"Subtitle"];
+        dic = mdic.copy;
+    }
+    return dic;
+}
 @end
 
 

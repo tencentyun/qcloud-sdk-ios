@@ -30,6 +30,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "QCloudPutObjectWatermarkResult.h"
+typedef QCloudPutObjectWatermarkResult QCloudImageProcessResult;
+
 @class QCloudPicOperationRule;
 
 NS_ASSUME_NONNULL_BEGIN

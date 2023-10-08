@@ -70,7 +70,7 @@ NS_ASSUME_NONNULL_BEGIN
     [__pathComponents addObject:@"badcase"];
     self.requestData.URIComponents = __pathComponents;
 
-    [self.requestData setParameter:[self.input qcloud_modelToJSONObject] withKey:@"Request"];
+    if(self.input)[self.requestData setParameter:[self.input qcloud_modelToJSONObject] withKey:@"Request"];
 
     return YES;
 }

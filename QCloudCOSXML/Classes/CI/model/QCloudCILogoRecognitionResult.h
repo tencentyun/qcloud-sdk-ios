@@ -1,5 +1,5 @@
 //
-//  QCloudCILogoRecognitionResult.h
+//  QCloudCILogoRecognitionResult.h 
 //  QCloudCILogoRecognitionResult
 //
 //  Created by tencent

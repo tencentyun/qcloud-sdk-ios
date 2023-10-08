@@ -48,6 +48,8 @@ NS_ASSUME_NONNULL_BEGIN
         // 存储桶名称，格式为 BucketName-APPID
         request.bucket = @"examplebucket-1250000000";
  
+        request.tag = @"SpeechRecognition";
+ 
         request.regionName = @"regionName";
  
         request.states = QCloudTaskStatesAll;

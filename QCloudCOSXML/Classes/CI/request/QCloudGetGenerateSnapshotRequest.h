@@ -35,9 +35,27 @@
 
 @class QCloudGenerateSnapshotConfiguration;
 NS_ASSUME_NONNULL_BEGIN
+
 /**
- GenerateSnapshot 接口用于获取媒体文件某个时间的截图，输出的截图统一为 jpeg 格式。
- */
+ 功能描述：
+
+ GetSnapshot 接口用于获取媒体文件某个时间的截图。
+ 具体请查看：https://cloud.tencent.com/document/product/436/55671
+
+  @code
+ 
+    QCloudGetGenerateSnapshotRequest * shotRequest = [QCloudGetGenerateSnapshotRequest new];
+
+    shotRequest.bucket = transferTestBucket.name;
+    shotRequest.generateSnapshotConfiguration = [QCloudGenerateSnapshotConfiguration new];
+
+    shotRequest.finishBlock = ^(id outputObject, NSError *error) {
+      
+    };
+    [[QCloudCOSXMLService defaultCOSXML] GetGenerateSnapshot:shotRequest];
+
+*/
+
 @interface QCloudGetGenerateSnapshotRequest : QCloudBizHTTPRequest
 /**
 存储桶名

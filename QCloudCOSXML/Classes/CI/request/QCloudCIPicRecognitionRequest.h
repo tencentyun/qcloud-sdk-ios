@@ -30,7 +30,23 @@
 #import "QCloudCIPicRecognitionResults.h"
 NS_ASSUME_NONNULL_BEGIN
 /**
-存储桶名称
+    图片标签
+ 
+    图片标签功能通过借助对象存储的持久化处理接口，实现对 COS 存量数据的图片标签识别，返回图片中置信度较高的主题标签。图片标签识别请求包属于 GET 请求，请求时需要携带签名。
+ 
+    https://cloud.tencent.com/document/product/436/54067
+ 
+     QCloudCIPicRecognitionRequest *request = [QCloudCIPicRecognitionRequest new];
+     
+     request.bucket = imageTestBucket.name;
+     request.object = @"ci.png";
+     
+     [request setFinishBlock:^(QCloudCIPicRecognitionResults *_Nullable outputObject, NSError *_Nullable error) {
+         
+     }];
+
+     [[QCloudCOSXMLService defaultCOSXML] CIPicRecognition:request];
+     
 */
 @interface QCloudCIPicRecognitionRequest: QCloudBizHTTPRequest
 /**

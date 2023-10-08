@@ -34,6 +34,7 @@
 @class QCloudPutObjectProcessResults;
 @class QCloudPutObjectImageInfo;
 @class QCloudPutObjectObj;
+#import "QCloudCIQRcodeInfo.h"
 
 NS_ASSUME_NONNULL_BEGIN
 /**
@@ -54,7 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 /**
- 图片添加盲水印_原图信息
+ 原图信息
  */
 @interface QCloudPutObjectOriginalInfo : NSObject
 
@@ -67,21 +68,24 @@ NS_ASSUME_NONNULL_BEGIN
 /// 原图图片信息
 @property (nonatomic, strong) QCloudPutObjectImageInfo *imageInfo;
 
+/// 原图 ETag 信息（若处理结果图覆盖原图则为结果图 ETag 信息）
+@property (nonatomic, copy) NSString *ETag;
+
 @end
 
 /**
- 图片添加盲水印_图片处理结果
+ 图片处理结果
  */
 @interface QCloudPutObjectProcessResults : NSObject
 /**
  图片处理结果
 */
-@property (nonatomic, strong) QCloudPutObjectObj *object;
+@property (nonatomic, strong) NSArray <QCloudPutObjectObj *> *Object;
 
 @end
 
 /**
-图片添加盲水印_每一个图片处理结果
+每一个图片处理结果
 */
 @interface QCloudPutObjectObj : NSObject
 
@@ -112,6 +116,12 @@ NS_ASSUME_NONNULL_BEGIN
 /// 图片的帧数。静态图为1，动图为对应的帧数.
 @property (nonatomic, assign) NSInteger FrameCount;
 
+/// 二维码识别结果。0表示未识别到二维码，1表示识别到二维码
+@property (nonatomic,assign) NSInteger CodeStatus;
+
+/// 二维码识别结果，可能有多个
+@property (nonatomic,strong) NSArray<QCloudCIQRcodeInfo *> * QRcodeInfo;
+
 @end
 
 /// 原图图片信息
@@ -133,6 +143,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 图片旋转角度
 @property (nonatomic, assign) NSInteger orientation;
+
+/// 图片的帧数。静态图为1，动图为对应的帧数.
+@property (nonatomic, assign) NSInteger FrameCount;
 @end
 
 NS_ASSUME_NONNULL_END
+
