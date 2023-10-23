@@ -574,15 +574,15 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
             [[QCloudHttpDNS shareDNS] prepareFetchIPListForHost:host port:@"443"];
             ipAddr = [[QCloudHttpDNS shareDNS] findHealthyIpFor:host];
         }
-        if (!ipAddr) {
-            @throw [NSException exceptionWithName:NSURLErrorDomain reason:@"No Available IP Address for QUIC." userInfo:nil];
-        }
+//        if (!ipAddr) {
+//            @throw [NSException exceptionWithName:NSURLErrorDomain reason:@"No Available IP Address for QUIC." userInfo:nil];
+//        }
 
         NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:transformRequest.allHTTPHeaderFields];
   
  
         dic[@"quicHost"] = host;
-        dic[@"quicIP"] = ipAddr;
+        if(ipAddr) dic[@"quicIP"] = ipAddr;
         if (uploadFileURL) {
             dic[@"body"] = uploadFileURL;
         } else if (httpRequest.requestData.directBody) {

@@ -15,7 +15,7 @@
 typedef id (^QCloudResponseSerializerBlock)(NSHTTPURLResponse *response, id inputData, NSError *__autoreleasing *error);
 
 QCloudResponseSerializerBlock QCloudResponseXMLSerializerBlock = ^(NSHTTPURLResponse *response, id inputData, NSError *__autoreleasing *error) {
-    //    QCloudLogDebug(@"response  %@", response);
+        
     if (![inputData isKindOfClass:[NSData class]]) {
         if (NULL != error) {
             *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeResponseDataTypeInvalid
@@ -49,6 +49,7 @@ QCloudResponseSerializerBlock QCloudResponseXMLSerializerBlock = ^(NSHTTPURLResp
                                                                                                                  encoding:NSUTF8StringEncoding]]];
         return (id)nil;
     }
+    NSLog(@"output =  %@", output);
     return (id)output;
 };
 

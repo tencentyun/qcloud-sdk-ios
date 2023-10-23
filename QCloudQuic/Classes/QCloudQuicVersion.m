@@ -1,5 +1,5 @@
 #import "QCloudQuicVersion.h"
-NSString * const QCloudQuicModuleVersion = @"6.2.9";
+NSString * const QCloudQuicModuleVersion = @"6.3.0";
 NSString * const QCloudQuicModuleName = @"QCloudQuic";
 @interface QCloudQCloudQuicLoad : NSObject
 @end

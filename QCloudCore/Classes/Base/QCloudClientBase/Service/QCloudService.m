@@ -140,7 +140,9 @@
     }
 }
 - (int)performRequest:(QCloudBizHTTPRequest *)httpRequst {
-    httpRequst.timeoutInterval = self.configuration.timeoutInterval;
+    if(httpRequst.timeoutInterval == 0){
+        httpRequst.timeoutInterval = self.configuration.timeoutInterval;
+    }
     httpRequst.enableQuic = self.configuration.enableQuic;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSError *error;
@@ -157,8 +159,10 @@
 }
 
 - (int)performRequest:(QCloudBizHTTPRequest *)httpRequst withFinishBlock:(QCloudRequestFinishBlock)block {
-    httpRequst.timeoutInterval = self.configuration.timeoutInterval;
-    httpRequst.enableQuic = self.configuration.enableQuic;;
+    if(httpRequst.timeoutInterval == 0){
+        httpRequst.timeoutInterval = self.configuration.timeoutInterval;
+    }
+    httpRequst.enableQuic = self.configuration.enableQuic;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSError *error;
         [self fillCommonParamtersForRequest:httpRequst error:&error];
