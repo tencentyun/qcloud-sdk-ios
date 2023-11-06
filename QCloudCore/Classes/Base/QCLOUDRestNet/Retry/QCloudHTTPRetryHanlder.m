@@ -10,6 +10,28 @@
 #import "QCloudNetEnv.h"
 #import "QCloudLogger.h"
 #import "NSError+QCloudNetworking.h"
+
+@implementation QCloudHTTPRetryConfig
+
++ (QCloudHTTPRetryConfig *)globalRetryConfig{
+    static QCloudHTTPRetryConfig * config = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        config = [[QCloudHTTPRetryConfig alloc]init];
+    });
+    return config;
+}
+
+- (instancetype)init{
+    if(self = [super init]){
+        _maxCount = 0;
+        _sleepStep = 0;
+    }
+    return self;
+}
+
+@end
+
 @interface QCloudHTTPRetryHanlder ()
 @end
 
@@ -27,8 +49,8 @@
     if (!self) {
         return self;
     }
-    _maxCount = maxCount;
     _sleepStep = sleepStep;
+    _maxCount = maxCount;
     [self reset];
     return self;
 }
@@ -60,12 +82,26 @@
         }
     }
 
-    if (_currentTryCount >= _maxCount) {
+    if (_currentTryCount >= self.maxCount) {
         QCloudLogDebug(@"超过了最大重试次数，不再重试");
         return NO;
     }
 
     return [NSError isNetworkErrorAndRecoverable:error] || ([error.domain isEqualToString:kQCloudNetworkDomain] && error.code >= 500);
+}
+
+- (NSInteger)maxCount{
+    if(QCloudHTTPRetryConfig.globalRetryConfig.openConfig){
+        return QCloudHTTPRetryConfig.globalRetryConfig.maxCount;
+    }
+    return _maxCount;
+}
+
+- (NSTimeInterval)sleepStep{
+    if(QCloudHTTPRetryConfig.globalRetryConfig.openConfig){
+        return QCloudHTTPRetryConfig.globalRetryConfig.sleepStep;
+    }
+    return _sleepStep;
 }
 
 @end

@@ -465,7 +465,7 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     dispatch_resume(_queueSource);
     for (int i = 0; i < allParts.count; i++) {
         __block QCloudFileOffsetBody *body = allParts[i];
-
+        
         //如果自身被取消，终止c创建新的uploadPartRequest
         if (self.canceled) {
             QCloudLogDebug(@"请求被取消，终止创建新的uploadPartRequest");
@@ -488,19 +488,22 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
         __weak typeof(request) weakRequest = request;
         __block int64_t partBytesSent = 0;
         int64_t partSize = body.sliceLength;
+        BOOL isRetry = request.isRetry;
         [request setSendProcessBlock:^(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
-            int64_t restSize = totalBytesExpectedToSend - partSize;
-            if (restSize - partBytesSent <= 0) {
-                [weakSelf appendUploadBytesSent:bytesSent];
-            } else {
-                partBytesSent += bytesSent;
+            if(!request.enableQuic || !isRetry){
+                int64_t restSize = totalBytesExpectedToSend - partSize;
                 if (restSize - partBytesSent <= 0) {
-                    [weakSelf appendUploadBytesSent:partBytesSent - restSize];
+                    [weakSelf appendUploadBytesSent:bytesSent];
+                } else {
+                    partBytesSent += bytesSent;
+                    if (restSize - partBytesSent <= 0) {
+                        [weakSelf appendUploadBytesSent:partBytesSent - restSize];
+                    }
                 }
             }
         }];
         [request setFinishBlock:^(QCloudUploadPartResult *outputObject, NSError *error) {
-            QCloudLogInfo(@"收到一个part  %d的响应 %@", (i + 1), outputObject.eTag);
+            QCloudLogInfo(@"收到一个part  %d的响应 %@；是否重试：", (i + 1), outputObject.eTag, isRetry);
             if (!weakSelf) {
                 return;
             }
