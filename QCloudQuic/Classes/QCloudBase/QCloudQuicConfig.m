@@ -32,6 +32,7 @@ static QCloudQuicConfig*_config;
     self.race_type = QCloudRaceTypeOnlyQUIC;
     self.congestion_type = QCloudCongestionTypeBBR;
     self.is_custom = NO;
+    self.use_session_reuse_ = YES;
     return self;
 }
 @end
