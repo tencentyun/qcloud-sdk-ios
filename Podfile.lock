@@ -1,14 +1,14 @@
 PODS:
-  - QCloudCore (6.2.7):
-    - QCloudCore/Default (= 6.2.7)
-  - QCloudCore/Default (6.2.7)
-  - QCloudCOSXML (6.2.7):
-    - QCloudCOSXML/Default (= 6.2.7)
-  - QCloudCOSXML/Default (6.2.7):
-    - QCloudCore (= 6.2.7)
-  - QCloudQuic (6.2.7):
-    - QCloudQuic/Default (= 6.2.7)
-  - QCloudQuic/Default (6.2.7)
+  - QCloudCore (6.3.2):
+    - QCloudCore/Default (= 6.3.2)
+  - QCloudCore/Default (6.3.2)
+  - QCloudCOSXML (6.3.2):
+    - QCloudCOSXML/Default (= 6.3.2)
+  - QCloudCOSXML/Default (6.3.2):
+    - QCloudCore (= 6.3.2)
+  - QCloudQuic (6.3.2):
+    - QCloudQuic/Default (= 6.3.2)
+  - QCloudQuic/Default (6.3.2)
 
 DEPENDENCIES:
   - QCloudCore (from `.`)
@@ -24,9 +24,9 @@ EXTERNAL SOURCES:
     :path: "."
 
 SPEC CHECKSUMS:
-  QCloudCore: 6fe4510cc29e3c4ab49630f03e832ebd4357d9d5
-  QCloudCOSXML: edc4ab965668a0ed7661cfc1c77092c4c94f406e
-  QCloudQuic: 55367f6cd5f13ead49c38339f43079358da9910a
+  QCloudCore: ad71cd77b8e7a0c62e6a63f869106d160ee64d2f
+  QCloudCOSXML: 80b70aaddafadd36ba475af1dade4f6c4be533af
+  QCloudQuic: 909377017159e8bb48223e268f5c6c885792d846
 
 PODFILE CHECKSUM: 87053f234f38ae6a394978f26bcb119015f9918e
 
