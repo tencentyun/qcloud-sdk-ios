@@ -284,7 +284,6 @@ class TnetAsyncDelegate : public TnetRequestDelegate{
       // 设置连接空闲时间，单位为ms，默认值为与服务端协商值，一般为90000ms
     config.idle_timeout_millisec_ =  [QCloudQuicConfig shareConfig].idle_timeout_millisec_;
     config.is_custom_ = [QCloudQuicConfig shareConfig].is_custom;
-    config.use_session_reuse_ = NO;
     request_sp.reset(new TnetQuicRequest(tquic_delegate_sp.get(),config));
     tquic_delegate_sp.get()->request_sp = request_sp;
     self.quicReqeust = quicRequest;
