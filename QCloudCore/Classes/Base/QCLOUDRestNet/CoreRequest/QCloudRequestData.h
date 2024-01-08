@@ -12,6 +12,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 extern NSString *const HTTPHeaderUserAgent;
+extern NSString *const emergencyHost;
 
 /**
    网络请求参数的容器类
@@ -29,6 +30,9 @@ extern NSString *const HTTPHeaderUserAgent;
    服务器地址
  */
 @property (strong, nonatomic ,nullable) NSString *serverURL;
+
+/// 重试时是否需要更换域名
+@property (assign, nonatomic) BOOL needChangeHost;
 
 /**
  * 统一资源标识符，用来标识调用的具体的资源地址

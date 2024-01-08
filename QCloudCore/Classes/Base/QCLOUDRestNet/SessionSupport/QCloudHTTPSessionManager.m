@@ -228,6 +228,18 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
        #endif
     }
 }
+
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task willPerformHTTPRedirection:(NSHTTPURLResponse *)response newRequest:(NSURLRequest *)request completionHandler:(void (^)(NSURLRequest * _Nullable))completionHandler{
+    QCloudURLSessionTaskData *taskData = [self taskDataForTask:task];
+    if(taskData.httpRequest.runOnService.configuration.disableChangeHost == YES || [response.allHeaderFields.allKeys containsObject:@"x-cos-request-id"] || [request.URL.absoluteURL.host rangeOfString:@"tencentcos.cn"].length > 0){
+        completionHandler(request);
+    }else{
+        completionHandler(nil);
+        NSError *error = [NSError errorWithDomain:request.URL.host code:QCloudNetworkErrorCodeDomainInvalid userInfo:@{NSLocalizedDescriptionKey: @""}];
+        [task cancel];
+        [self URLSession:session task:task didCompleteWithError:error];
+    }
+}
 #endif
 - (void)URLSession:(NSURLSession *)session
               dataTask:(NSURLSessionDataTask *)dataTask
@@ -311,6 +323,12 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
     if (!taskData) {
         return;
     }
+    
+    if(taskData.response.statusCode > 400 && [hostURL.host rangeOfString:@"tencentcos.cn"].length == 0 && ![taskData.response.allHeaderFields.allKeys containsObject:@"x-cos-request-id"] && taskData.httpRequest.runOnService.configuration.disableChangeHost == NO){
+        error = [NSError errorWithDomain:hostURL.host code:QCloudNetworkErrorCodeDomainInvalid userInfo:@{NSLocalizedDescriptionKey: @""}];
+        taskData.isTaskCancelledByStatusCodeCheck = NO;
+    }
+    
     int seq = [self seqForTask:task];
     __weak typeof(self) weakSelf = self;
     if (!taskData.isTaskCancelledByStatusCodeCheck && error) {
@@ -347,9 +365,10 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
                         [taskData restData];
                         [weakSelf removeTask:task];
                         [httpRequset.requestData clean];
-                        if (QCloudFileExist(httpRequset.downloadingURL.path)) {
-                            httpRequset.localCacheDownloadOffset = QCloudFileSize(httpRequset.downloadingURL.path);
+                        if (QCloudFileExist(httpRequset.downloadingTempURL.path)) {
+                            httpRequset.localCacheDownloadOffset = QCloudFileSize(httpRequset.downloadingTempURL.path);
                         }
+                        httpRequset.requestData.needChangeHost = [httpRequset needChangeHost] && !httpRequset.runOnService.configuration.disableChangeHost;
                         [httpRequset setValue:@(YES) forKey:@"isRetry"];
                         [weakSelf executeRestHTTPReqeust:httpRequset];
                     }
@@ -457,12 +476,12 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
     }
 
     QCloudURLSessionTaskData *taskData = nil;
-    if (httpRequest.downloadingURL) {
+    if (httpRequest.downloadingTempURL) {
         NSError *localError;
-        if (!QCloudFileExist(httpRequest.downloadingURL.path)) {
-            [[NSFileManager defaultManager] createFileAtPath:httpRequest.downloadingURL.path contents:nil attributes:nil];
+        if (!QCloudFileExist(httpRequest.downloadingTempURL.path)) {
+            [[NSFileManager defaultManager] createFileAtPath:httpRequest.downloadingTempURL.path contents:nil attributes:nil];
         }
-        NSFileHandle *handler = [NSFileHandle fileHandleForWritingToURL:httpRequest.downloadingURL error:&localError];
+        NSFileHandle *handler = [NSFileHandle fileHandleForWritingToURL:httpRequest.downloadingTempURL error:&localError];
         if (localError) {
             [httpRequest onError:localError];
             return;

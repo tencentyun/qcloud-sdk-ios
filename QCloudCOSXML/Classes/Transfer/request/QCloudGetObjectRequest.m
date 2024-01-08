@@ -160,6 +160,24 @@ NS_ASSUME_NONNULL_BEGIN
 
     return fileds;
 }
+
+- (void)setFinishBlock:(void (^)(id _Nonnull result, NSError *_Nonnull error))finishBlock {
+    
+    if (finishBlock) {
+        WeakSelf(self);
+        [super setFinishBlock:^(id outputObject, NSError *error) {
+            StrongSelf(self);
+            NSError * lError;
+            if (QCloudFileExist(strongself.downloadingTempURL.relativePath)) {
+                if (QCloudFileExist(strongself.downloadingURL.relativePath)) {
+                    QCloudRemoveFileByPath(strongself.downloadingURL.relativePath);
+                }
+                QCloudMoveFile(strongself.downloadingTempURL.relativePath, strongself.downloadingURL.relativePath, &lError);
+            }
+            finishBlock(outputObject,error);
+        }];
+    }
+}
 - (NSArray<NSMutableDictionary *> *)scopesArray {
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     NSArray *separatetmpArray = [self.requestData.serverURL componentsSeparatedByString:@"://"];

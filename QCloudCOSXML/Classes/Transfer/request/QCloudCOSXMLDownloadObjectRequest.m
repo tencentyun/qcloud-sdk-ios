@@ -18,6 +18,7 @@
 //存储所有的下载请求
 @property (nonatomic, strong) NSPointerArray *requestCacheArray;
 @property (nonatomic, strong) dispatch_source_t queueSource;
+@property (nonatomic, strong) NSURL *_Nonnull downloadingTempURL;
 @end
   
 @implementation QCloudCOSXMLDownloadObjectRequest
@@ -131,6 +132,7 @@
     request.payload = self.payload;
     request.customHeaders = [self.customHeaders mutableCopy];
     request.downloadingURL = self.downloadingURL;
+    self.downloadingTempURL = request.downloadingTempURL;
     request.localCacheDownloadOffset = self.localCacheDownloadOffset;
     request.regionName = self.regionName;
     request.enableMD5Verification = self.enableMD5Verification;
@@ -227,6 +229,8 @@
     [self.transferManager.cosService GetObject:request];
     [self.requestCacheArray addPointer:(__bridge void *_Nullable)(request)];
 }
+
+
 
 -(void)cancel{
     [self.requestCacheArray addPointer:(__bridge void *_Nullable)([NSObject new])];

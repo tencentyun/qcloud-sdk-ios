@@ -488,9 +488,10 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
         __weak typeof(request) weakRequest = request;
         __block int64_t partBytesSent = 0;
         int64_t partSize = body.sliceLength;
-        BOOL isRetry = request.isRetry;
+        
         [request setSendProcessBlock:^(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
-            if(!request.enableQuic || !isRetry){
+            BOOL isRetry = weakRequest.isRetry;
+            if(!weakRequest.enableQuic || !isRetry){
                 int64_t restSize = totalBytesExpectedToSend - partSize;
                 if (restSize - partBytesSent <= 0) {
                     [weakSelf appendUploadBytesSent:bytesSent];
@@ -503,7 +504,7 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
             }
         }];
         [request setFinishBlock:^(QCloudUploadPartResult *outputObject, NSError *error) {
-            QCloudLogInfo(@"收到一个part  %d的响应 %@；是否重试：", (i + 1), outputObject.eTag, isRetry);
+            QCloudLogInfo(@"收到一个part  %d的响应 %@；是否重试：%ld", (i + 1), outputObject.eTag, weakRequest.isRetry);
             if (!weakSelf) {
                 return;
             }

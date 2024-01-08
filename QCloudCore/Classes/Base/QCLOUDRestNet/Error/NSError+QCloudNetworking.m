@@ -46,7 +46,7 @@ NSString *const kQCloudErrorDetailCode = @"kQCloudErrorDetailCode";
             case NSURLErrorClientCertificateRequired:
             case NSURLErrorCannotLoadFromNetwork:
                 return NO;
-
+            case NSURLErrorCannotConnectToHost:
             default:
                 return YES;
         }

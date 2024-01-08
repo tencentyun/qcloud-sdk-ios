@@ -57,8 +57,8 @@
         return;
     }
     NSString *localMD5String;
-    if (self.downloadingURL) {
-        localMD5String = [QCloudEncrytFileMD5(self.downloadingURL.path) lowercaseString];
+    if (self.downloadingTempURL) {
+        localMD5String = [QCloudEncrytFileMD5(self.downloadingTempURL.path) lowercaseString];
     } else {
         if ([object isKindOfClass:[NSData class]]) {
             localMD5String = [QCloudEncrytNSDataMD5(object) lowercaseString];

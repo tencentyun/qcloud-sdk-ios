@@ -42,26 +42,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSInteger tcp_port;
 // 设置拥塞算法，默认值即为BBR
 @property (nonatomic,assign)QCloudCongestionType congestion_type;
-
-// ConnectWithDomain get ipv6 ip if true, false defaultly.
-@property (nonatomic,assign) bool support_v6_;
-
-@property (nonatomic,assign) bool isCongetionOptimizationEnabled_;
-
-@property (nonatomic,assign) NSInteger mp_strategy_;
-
-// The max receive window for a whole session.
-// unit is bytes, default is 15 MB, max is 24 MB
-// The window size of session must be larger than
-// a single stream's size. This size affects all
-// the streams within this session.
-@property (nonatomic,assign) NSUInteger nSessionMaxRecvWindowSize;
-
-// The max receive window for a single stream
-// unit is bytes, default is 6 MB, max is 16 MB
-@property (nonatomic,assign) NSUInteger nStreamMaxRecvWindowSize;
-// 默认:true
-@property (nonatomic,assign) bool use_session_reuse_;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -119,6 +119,14 @@
     _cachedURLRequestBuildError = nil;
 }
 
+- (NSURL *)downloadingTempURL{
+    if(_downloadingURL){
+        return [NSURL URLWithString:[NSString stringWithFormat:@"%@.downloading",_downloadingURL.absoluteString]];
+    }else{
+        return nil;
+    }
+}
+
 - (NSURLRequest *)buildURLRequest:(NSError *__autoreleasing *)error {
     if (![self buildRequestData:error]) {
         return nil;
@@ -224,5 +232,48 @@
 
 - (NSURLSessionResponseDisposition)reciveResponse:(NSURLResponse *)response {
     return NSURLSessionResponseAllow;
+}
+
+-(BOOL)needChangeHost{
+    NSString * host = self.urlRequest.URL.host;
+    if(!host){
+        return NO;
+    }
+    if([host rangeOfString:@".cos.accelerate.myqcloud.com"].length > 0){
+        return NO;
+    }
+    
+    if([host rangeOfString:@"service.cos.myqcloud.com"].length > 0){
+        return NO;
+    }
+    if([host rangeOfString:@".myqcloud.com"].length > 0 && [host rangeOfString:@"cos."].length > 0 && [host rangeOfString:@".cos."].length == 0){
+        return NO;
+    }
+    
+    if([host rangeOfString:@".myqcloud.com"].length > 0 && [host rangeOfString:@".cos."].length > 0){
+        return YES;
+    }
+    return NO;
+}
+
++(BOOL)needChangeHost:(NSString *)host{
+    if(!host){
+        return NO;
+    }
+    if([host rangeOfString:@".cos.accelerate.myqcloud.com"].length > 0){
+        return NO;
+    }
+    
+    if([host rangeOfString:@"service.cos.myqcloud.com"].length > 0){
+        return NO;
+    }
+    if([host rangeOfString:@".myqcloud.com"].length > 0 && [host rangeOfString:@"cos."].length > 0 && [host rangeOfString:@".cos."].length == 0){
+        return NO;
+    }
+    
+    if([host rangeOfString:@".myqcloud.com"].length > 0 && [host rangeOfString:@".cos."].length > 0){
+        return YES;
+    }
+    return NO;
 }
 @end

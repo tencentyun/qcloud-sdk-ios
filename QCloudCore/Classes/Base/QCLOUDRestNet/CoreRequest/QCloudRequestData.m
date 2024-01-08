@@ -23,6 +23,8 @@
     if (p == nil)                    \
         return NO;
 
+
+
 NSDictionary *QCloudURLDecodePatamters(NSString *str) {
     NSRange rangeOfQ = [str rangeOfString:@"?"];
     NSString *subStr = str;
@@ -48,6 +50,7 @@ NSDictionary *QCloudURLDecodePatamters(NSString *str) {
 }
 
 NSString *const HTTPHeaderUserAgent = @"User-Agent";
+NSString *const emergencyHost = @"tencentcos.cn";
 
 @interface QCloudRequestData () {
     NSMutableDictionary *_paramters;
@@ -372,6 +375,14 @@ NSString *const HTTPHeaderUserAgent = @"User-Agent";
         [str appendFormat:@"[MULTIDATA] \n%@\n", self.multiDataStream];
     }
     return str;
+}
+
+- (void)setServerURL:(NSString *)serverURL{
+    if(self.needChangeHost){
+        _serverURL = [serverURL stringByReplacingOccurrencesOfString:@"myqcloud.com" withString:emergencyHost];
+    }else{
+        _serverURL = serverURL;
+    }
 }
 
 @end

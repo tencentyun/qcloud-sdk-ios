@@ -86,6 +86,10 @@
         QCloudLogDebug(@"超过了最大重试次数，不再重试");
         return NO;
     }
+    
+    if(error.code == QCloudNetworkErrorCodeDomainInvalid){
+        return YES;
+    }
 
     return [NSError isNetworkErrorAndRecoverable:error] || ([error.domain isEqualToString:kQCloudNetworkDomain] && error.code >= 500);
 }

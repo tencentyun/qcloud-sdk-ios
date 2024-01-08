@@ -83,6 +83,9 @@
                                                                                     appID:self.runOnService.configuration.appID
                                                                                regionName:self.regionName]
                                 .absoluteString];
+    if (!self.runOnService.configuration.disableChangeHost && [QCloudHTTPRequest needChangeHost:URLString]) {
+        URLString = [[URLString stringByReplacingOccurrencesOfString:@"myqcloud.com" withString:emergencyHost] mutableCopy];
+    }
     if (self.object) {
         [URLString appendFormat:@"/%@", self.object];
     }

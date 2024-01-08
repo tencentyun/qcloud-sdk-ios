@@ -38,6 +38,7 @@ typedef NS_ENUM(int, QCloudNetworkErrorCode) {
      */
     // ServerError 服务器返回了不合法的数据
     QCloudNetworkErrorCodeResponseDataTypeInvalid = 40000,
+    QCloudNetworkErrorCodeDomainInvalid = 50000,
 };
 
 @protocol QCloudNetworkError <NSObject>
