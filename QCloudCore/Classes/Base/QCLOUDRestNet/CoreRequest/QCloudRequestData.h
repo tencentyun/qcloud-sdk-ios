@@ -31,7 +31,6 @@ extern NSString *const emergencyHost;
  */
 @property (strong, nonatomic ,nullable) NSString *serverURL;
 
-/// 重试时是否需要更换域名
 @property (assign, nonatomic) BOOL needChangeHost;
 
 /**
