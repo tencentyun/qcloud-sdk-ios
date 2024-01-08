@@ -265,11 +265,25 @@ class TnetAsyncDelegate : public TnetRequestDelegate{
     }
     config.race_type = raceType;
     config.total_timeout_millisec_ =[QCloudQuicConfig shareConfig].total_timeout_millisec_;
+    
+    config.support_v6_ = [QCloudQuicConfig shareConfig].support_v6_;
+    
+    config.isCongetionOptimizationEnabled_ = [QCloudQuicConfig shareConfig].isCongetionOptimizationEnabled_;
+    config.mp_strategy_ = [QCloudQuicConfig shareConfig].mp_strategy_;
+    
     config.connect_timeout_millisec_ = [QCloudQuicConfig shareConfig].connect_timeout_millisec_;
+    if ([QCloudQuicConfig shareConfig].nStreamMaxRecvWindowSize > 0) {
+        config.nStreamMaxRecvWindowSize = [QCloudQuicConfig shareConfig].nStreamMaxRecvWindowSize;
+    }
+    
+    if ([QCloudQuicConfig shareConfig].nSessionMaxRecvWindowSize > 0) {
+        config.nSessionMaxRecvWindowSize = [QCloudQuicConfig shareConfig].nSessionMaxRecvWindowSize;
+    }
+    config.use_session_reuse_ = [QCloudQuicConfig shareConfig].use_session_reuse_;
+    
       // 设置连接空闲时间，单位为ms，默认值为与服务端协商值，一般为90000ms
     config.idle_timeout_millisec_ =  [QCloudQuicConfig shareConfig].idle_timeout_millisec_;
     config.is_custom_ = [QCloudQuicConfig shareConfig].is_custom;
-    config.use_session_reuse_ = NO;
     request_sp.reset(new TnetQuicRequest(tquic_delegate_sp.get(),config));
     tquic_delegate_sp.get()->request_sp = request_sp;
     self.quicReqeust = quicRequest;
