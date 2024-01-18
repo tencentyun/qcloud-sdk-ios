@@ -61,4 +61,8 @@
         self.credentials = self.refreshBlock();
     }
 }
+
+-(BOOL)needRefresh{
+    return !self.credentials.isValid;
+}
 @end

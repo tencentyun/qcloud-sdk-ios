@@ -55,9 +55,9 @@
     if (self.isCloseReport) {
         return;
     }
-    
-    [self setupCLSSDK];
-    
+    if([self.credentialProvider needRefresh]){
+        [self setupCLSSDK];
+    }
     [self _reportWithEventCode:eventCode params:params];
 }
 

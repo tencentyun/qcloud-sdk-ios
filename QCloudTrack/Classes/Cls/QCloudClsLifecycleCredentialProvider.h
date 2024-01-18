@@ -28,6 +28,7 @@ typedef QCloudClsSessionCredentials* _Nonnull (^QCloudCredentialRefreshBlock)(vo
 /// 强制临时密钥失效
 -(void)forceInvalidationCredential;
 
+-(BOOL)needRefresh;
 @end
 
 NS_ASSUME_NONNULL_END

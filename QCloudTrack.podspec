@@ -49,6 +49,6 @@ TODO: Add long description of the pod here.aaa
                       'QCloudTrack/Classes/Default/*.{h,m}',
                       'QCloudTrack/Classes/Default/*/*.{h,m}',
                       'QCloudTrack/Classes/Cls/*.{h,m}'
-    cls.dependency "TencentCloudLogProducer"
+    cls.dependency "TencentCloudLogProducer" ,'1.0.9'
   end
 end
