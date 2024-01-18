@@ -15,22 +15,20 @@ s.version              = "6.3.4"
   s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
   s.ios.deployment_target = '9.0'
   s.osx.deployment_target = "10.12"
-
+  
   s.static_framework = true
-
   s.default_subspec = 'Default'
   s.subspec 'Default' do |default|
-  default.source_files = 'QCloudCOSXML/Classes/**/*','QCloudCOSXML/Classes/QCloudCOSXML/*'
-
-  default.dependency "QCloudCore",'6.3.4'
-    end
+    default.source_files = 'QCloudCOSXML/Classes/**/*','QCloudCOSXML/Classes/QCloudCOSXML/*'
+    default.dependency "QCloudCore",'6.3.4'
+  end
   s.subspec 'Slim' do |slim|
-  slim.source_files = 'QCloudCOSXML/Classes/**/*','QCloudCOSXML/Classes/QCloudCOSXML/*'
-  slim.dependency "QCloudCore/WithoutMTA",'6.3.4'
+    slim.source_files = 'QCloudCOSXML/Classes/**/*','QCloudCOSXML/Classes/QCloudCOSXML/*'
+    slim.dependency "QCloudCore/WithoutMTA",'6.3.4'
   end
   s.subspec 'Transfer' do |transfer|
-  transfer.source_files = 'QCloudCOSXML/Classes/*','QCloudCOSXML/Classes/Transfer/**/*','QCloudCOSXML/Classes/Base/**/*'
-  transfer.dependency "QCloudCore/WithoutMTA",'6.3.4'
+    transfer.source_files = 'QCloudCOSXML/Classes/*','QCloudCOSXML/Classes/Transfer/**/*','QCloudCOSXML/Classes/Base/**/*'
+    transfer.dependency "QCloudCore/WithoutMTA",'6.3.4'
 
   end
 

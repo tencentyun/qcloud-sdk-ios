@@ -28,8 +28,9 @@ TODO: Add long description of the pod here.aaa
   s.source           = { :git => "https://github.com/tencentyun/qcloud-sdk-ios.git", :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
   s.ios.deployment_target = '9.0'
-  s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
+  s.osx.deployment_target = "10.12"
   
+  s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
   # s.frameworks = 'UIKit', 'MapKit'
   s.static_framework = true
 
@@ -49,6 +50,6 @@ TODO: Add long description of the pod here.aaa
                       'QCloudTrack/Classes/Default/*.{h,m}',
                       'QCloudTrack/Classes/Default/*/*.{h,m}',
                       'QCloudTrack/Classes/Cls/*.{h,m}'
-    cls.dependency "TencentCloudLogProducer" ,'1.0.9'
+    cls.dependency "TencentCloudLogProducer"
   end
 end
