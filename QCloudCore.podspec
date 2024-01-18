@@ -42,7 +42,7 @@ QCloudCore--腾讯云iOS-SDK Foundation。提供腾讯云iOS相关SDK的基础�
   s.default_subspec = 'Default'
   s.subspec 'Default' do |default|
       default.source_files = 'QCloudCore/Classes/Base/**/*'
-      default.dependency "QCloudTrack/Beacon"
+      default.dependency "QCloudTrack/Beacon","6.3.4"
   end
   
   s.subspec 'WithoutMTA' do |withoutMTA|
