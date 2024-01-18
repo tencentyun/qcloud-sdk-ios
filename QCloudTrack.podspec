@@ -45,7 +45,10 @@ TODO: Add long description of the pod here.aaa
   end
   
   s.subspec 'Cls' do |cls|
-    cls.source_files = 'QCloudTrack/Classes/*.{h,m}','QCloudTrack/Classes/Default/*.{h,m}','QCloudTrack/Classes/Default/*/*.{h,m}','QCloudTrack/Classes/Cls/*.{h,m}'
-    cls.dependency "TencentCloudLogProducer","1.0.9"
+    cls.source_files = 'QCloudTrack/Classes/*.{h,m}',
+                      'QCloudTrack/Classes/Default/*.{h,m}',
+                      'QCloudTrack/Classes/Default/*/*.{h,m}',
+                      'QCloudTrack/Classes/Cls/*.{h,m}'
+    cls.dependency "TencentCloudLogProducer"
   end
 end
