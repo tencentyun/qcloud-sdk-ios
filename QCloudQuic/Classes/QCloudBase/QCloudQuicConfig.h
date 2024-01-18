@@ -44,11 +44,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,assign)QCloudCongestionType congestion_type;
 
 // ConnectWithDomain get ipv6 ip if true, false defaultly.
-@property (nonatomic,assign) bool support_v6_;
+@property (nonatomic,assign) bool support_v6_; // QCloudQuic/v83版本不生效
 
-@property (nonatomic,assign) bool isCongetionOptimizationEnabled_;
+@property (nonatomic,assign) bool isCongetionOptimizationEnabled_; // QCloudQuic/v83版本不生效
 
-@property (nonatomic,assign) NSInteger mp_strategy_;
+@property (nonatomic,assign) NSInteger mp_strategy_; // QCloudQuic/v83版本不生效
 
 // The max receive window for a whole session.
 // unit is bytes, default is 15 MB, max is 24 MB

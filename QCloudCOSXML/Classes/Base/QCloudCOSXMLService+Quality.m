@@ -13,6 +13,9 @@
 #import "QCloudCOSXMLVersion.h"
 #import <QCloudCore/QualityDataUploader.h>
 #import <QCloudCore/QCloudServiceConfiguration+Quality.h>
+#import <QCloudCore/QCloudConfiguration_Private.h>
+
+NSString *const kQCloudDataAppReleaseKey = @"0IOS05O9HW7A9XPI";
 
 @implementation QCloudCOSXMLService (Quality)
 
@@ -33,16 +36,29 @@
 + (QCloudCOSXMLService *)Quality_registerDefaultCOSXMLWithConfiguration:(QCloudServiceConfiguration *)configuration {
     id result = [self Quality_registerDefaultCOSXMLWithConfiguration:configuration];
     if(!configuration.disableSetupBeacon){
-        [self initMTA];
+        [self initMTA:configuration];
     }
-    
     return result;
 }
 
-+ (void)initMTA {
++ (void)initMTA:(QCloudServiceConfiguration *)configuration {
 #if defined(DEBUG) && DEBUG
 #else
-    [QualityDataUploader startWithAppkey:kQCloudUploadAppReleaseKey];
+    [QualityDataUploader startWithAppkey:kQCloudDataAppReleaseKey];
+    NSMutableDictionary * commonParams = [self commonParams:nil];
+    commonParams[@"sdk_bridge"] = configuration.bridge?:@"";
+    [QualityDataUploader trackBaseInfoToTrachCommonParams:commonParams];
 #endif
+}
+
++(NSMutableDictionary *)commonParams:(NSString *)appKey{
+    NSMutableDictionary * params = [NSMutableDictionary new];
+    if (appKey) {
+        params[kQCloudRequestAppkeyKey] = appKey;
+    }
+    params[@"pName"] = @"cos";
+    params[@"sdkVersion"] = QCloudCOSXMLModuleVersion;
+    params[@"sdkVersionName"] = @(QCloudCOSXMLModuleVersionNumber);
+    return params;
 }
 @end

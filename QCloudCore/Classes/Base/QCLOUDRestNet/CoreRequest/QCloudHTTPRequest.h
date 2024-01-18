@@ -37,6 +37,7 @@ typedef void (^QCloudHTTPRequestConfigure)(QCloudRequestSerializer *_Nonnull req
 
 /// sdk内部管理，业务测无需设置。
 @property (nonatomic, assign, readonly) BOOL isRetry;
+@property (nonatomic, assign) NSInteger retryCount;
 
 /**
  该任务所处的服务

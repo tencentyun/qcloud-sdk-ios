@@ -113,13 +113,12 @@ class TnetAsyncDelegate : public TnetRequestDelegate{
                        
                         NSLog(@"Tquic SendRequest with size: %lld and end",resetLength);
                         request_sp.get()->SendRequest(c, (int)resetLength, true);
-                         totolSentBytes+=resetLength;
-                        resetLength = resetLength - resetLength;
-                         free(c);
+                        totolSentBytes+=resetLength;
+                        free(c);
                         if (this->didSendBodyData_ != NULL) {
-                             this->didSendBodyData_(sentByte,totolSentBytes,data.length);
+                             this->didSendBodyData_(resetLength,totolSentBytes,data.length);
                         }
-                       
+                        resetLength = resetLength - resetLength;    
                     }else{
                         char *c = (char*)malloc(sentByte * sizeof(char));
                         [data getBytes:c range:NSMakeRange(i*sentByte, sentByte)];
@@ -265,7 +264,7 @@ class TnetAsyncDelegate : public TnetRequestDelegate{
     }
     config.race_type = raceType;
     config.total_timeout_millisec_ =[QCloudQuicConfig shareConfig].total_timeout_millisec_;
-    
+
     config.support_v6_ = [QCloudQuicConfig shareConfig].support_v6_;
     
     config.isCongetionOptimizationEnabled_ = [QCloudQuicConfig shareConfig].isCongetionOptimizationEnabled_;

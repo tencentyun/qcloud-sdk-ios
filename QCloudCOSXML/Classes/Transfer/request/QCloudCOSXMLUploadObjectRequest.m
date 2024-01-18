@@ -504,7 +504,7 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
             }
         }];
         [request setFinishBlock:^(QCloudUploadPartResult *outputObject, NSError *error) {
-            QCloudLogInfo(@"收到一个part  %d的响应 %@；是否重试：%ld", (i + 1), outputObject.eTag, weakRequest.isRetry);
+            QCloudLogInfo(@"收到一个part  %d的响应 %@；是否重试：%@", (i + 1), outputObject.eTag, weakRequest.isRetry?@"是":@"否");
             if (!weakSelf) {
                 return;
             }

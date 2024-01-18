@@ -7,6 +7,9 @@
 
 #import <Foundation/Foundation.h>
 #import "QCloudCOSXMLService.h"
-@interface QCloudCOSXMLService (Quality)
 
+extern  NSString *const kQCloudDataAppReleaseKey;
+
+@interface QCloudCOSXMLService (Quality)
++(NSMutableDictionary *)commonParams:(NSString *)appKey;
 @end

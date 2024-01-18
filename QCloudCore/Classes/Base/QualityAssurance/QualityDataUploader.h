@@ -17,7 +17,6 @@ extern  NSString *const kQCloudQualityServiceNameKey;
 extern  NSString *const kQCloudQualityErrorStatusCodeKey;
 extern  NSString *const kQCloudQualityErrorTypeKey;
 extern  NSString *const kQCloudQualityErrorIDKey;
-extern  NSString *const kQCloudUploadAppReleaseKey;
 extern  NSString *const kQCloudRequestAppkeyKey;
 
 @interface QualityDataUploader : NSObject
@@ -25,4 +24,6 @@ extern  NSString *const kQCloudRequestAppkeyKey;
 + (void)trackSDKRequestSuccessWithRequest:(QCloudAbstractRequest *)request params:(NSMutableDictionary * )commonParams;
 + (void)trackSDKRequestFailWithRequest:(QCloudAbstractRequest *)request error:(NSError *)error params:(NSMutableDictionary * )commonParams;
 + (void)trackNormalEventWithKey:(NSString *)key props:(NSDictionary *)props;
+
++ (void)trackBaseInfoToTrachCommonParams:(NSMutableDictionary * )commonParams;
 @end

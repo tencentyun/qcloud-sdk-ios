@@ -370,6 +370,7 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
                         }
                         httpRequset.requestData.needChangeHost = [httpRequset needChangeHost] && !httpRequset.runOnService.configuration.disableChangeHost;
                         [httpRequset setValue:@(YES) forKey:@"isRetry"];
+                        httpRequset.retryCount = taskData.httpRequest.retryCount + 1;
                         [weakSelf executeRestHTTPReqeust:httpRequset];
                     }
                         whenError:error]) {

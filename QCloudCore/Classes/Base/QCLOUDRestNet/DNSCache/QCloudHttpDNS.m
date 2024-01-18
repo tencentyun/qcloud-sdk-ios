@@ -87,6 +87,16 @@ BOOL QCloudCheckIPVaild(NSString *ip) {
     }
     return nil;
 }
+
+- (NSArray *)queryIPsForHost:(NSString *)host {
+    NSArray *ips = [_ipHostMap objectForKey:host];
+    NSMutableArray * ipStrs = [NSMutableArray new];
+    for (NSString *ip in ips) {
+        [ipStrs addObject:[NSString stringWithFormat:@"%@/%@",host,ip]];
+    }
+    return ipStrs.copy;
+}
+
 - (NSMutableURLRequest *)resolveURLRequestIfCan:(NSMutableURLRequest *)request {
     if (!request) {
         return request;

@@ -1,19 +1,36 @@
 PODS:
-  - QCloudCore (6.3.2):
-    - QCloudCore/Default (= 6.3.2)
-  - QCloudCore/Default (6.3.2)
-  - QCloudCOSXML (6.3.2):
-    - QCloudCOSXML/Default (= 6.3.2)
-  - QCloudCOSXML/Default (6.3.2):
-    - QCloudCore (= 6.3.2)
-  - QCloudQuic (6.3.2):
-    - QCloudQuic/Default (= 6.3.2)
-  - QCloudQuic/Default (6.3.2)
+  - GMOpenSSL (2.2.9)
+  - QCloudCore (6.3.4):
+    - QCloudCore/Default (= 6.3.4)
+  - QCloudCore/Default (6.3.4):
+    - QCloudTrack/Beacon
+  - QCloudCOSXML (6.3.4):
+    - QCloudCOSXML/Default (= 6.3.4)
+  - QCloudCOSXML/Default (6.3.4):
+    - QCloudCore (= 6.3.4)
+  - QCloudQuic (6.3.4):
+    - QCloudQuic/Default (= 6.3.4)
+  - QCloudQuic/Default (6.3.4)
+  - QCloudTrack (6.3.4):
+    - QCloudTrack/Default (= 6.3.4)
+  - QCloudTrack/Beacon (6.3.4)
+  - QCloudTrack/Cls (6.3.4):
+    - TencentCloudLogProducer/Core
+  - QCloudTrack/Default (6.3.4)
+  - TencentCloudLogProducer/Core (1.0.9):
+    - GMOpenSSL (~> 2.2.6)
 
 DEPENDENCIES:
   - QCloudCore (from `.`)
   - QCloudCOSXML (from `.`)
   - QCloudQuic (from `.`)
+  - QCloudTrack (from `.`)
+  - QCloudTrack/Cls (from `.`)
+
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs:
+    - GMOpenSSL
+    - TencentCloudLogProducer
 
 EXTERNAL SOURCES:
   QCloudCore:
@@ -22,12 +39,17 @@ EXTERNAL SOURCES:
     :path: "."
   QCloudQuic:
     :path: "."
+  QCloudTrack:
+    :path: "."
 
 SPEC CHECKSUMS:
-  QCloudCore: ad71cd77b8e7a0c62e6a63f869106d160ee64d2f
-  QCloudCOSXML: 80b70aaddafadd36ba475af1dade4f6c4be533af
-  QCloudQuic: 909377017159e8bb48223e268f5c6c885792d846
+  GMOpenSSL: d6d119ff8f00d4e03c2cdf733fb61e98e22da9c7
+  QCloudCore: e7519fd3c3fa1ec83f808b12b8d9d2791b9cceca
+  QCloudCOSXML: ddce35e6324b3d1ed6aae8cd6e565e7f0c9b83a9
+  QCloudQuic: f16396598d892d47b7b69ee298a1a66681ab0823
+  QCloudTrack: 35e1acef25f9846a744829f7cbd363b2a1d8f8e6
+  TencentCloudLogProducer: 980e6a4b9ed49b7b3f41779203be5e4ba1b03b95
 
-PODFILE CHECKSUM: 87053f234f38ae6a394978f26bcb119015f9918e
+PODFILE CHECKSUM: 70fab69b55a156a2cdbbceeaba228ea43f530439
 
 COCOAPODS: 1.12.1

@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.name             = "QCloudCore"
 
 
-s.version              = "6.3.3"
+s.version              = "6.3.4"
 
 
 
@@ -39,12 +39,19 @@ QCloudCore--腾讯云iOS-SDK Foundation。提供腾讯云iOS相关SDK的基础�
   s.frameworks ='CoreMedia', "Accelerate", "SystemConfiguration"
   s.libraries = "z","c++"
   s.static_framework = true
-    s.default_subspec = 'Default'
-    s.subspec 'Default' do |default|
-        default.source_files = 'QCloudCore/Classes/Base/**/*'
-        default.ios.vendored_frameworks = 'QCloudCore/Classes/BeaconFramework/BeaconAPI_Base.framework','QCloudCore/Classes/BeaconFramework/QimeiSDK.framework'
-    end
-    s.subspec 'WithoutMTA' do |withoutMTA|
-        withoutMTA.source_files = 'QCloudCore/Classes/Base/**/*'
-    end
+  s.default_subspec = 'Default'
+  s.subspec 'Default' do |default|
+      default.source_files = 'QCloudCore/Classes/Base/**/*'
+      default.dependency "QCloudTrack/Beacon"
+  end
+  
+  s.subspec 'WithoutMTA' do |withoutMTA|
+      withoutMTA.source_files = 'QCloudCore/Classes/Base/**/*'
+  end
+  
+  s.subspec 'DNSLoader' do |tdns|
+    tdns.dependency "MSDKDns_C11";
+    tdns.dependency "QCloudCore/WithoutMTA";
+    tdns.source_files = 'Pod/Classes/DNSLoader/*';
+  end
 end

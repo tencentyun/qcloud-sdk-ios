@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.name             = "QCloudQuic"
 
 
-s.version              = "6.3.2"
+s.version              = "6.3.3"
 
 
   s.summary          = "QCloudQuic 腾讯云iOS-SDK组件"
@@ -39,5 +39,9 @@ s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
   s.subspec 'Default' do |default|
       default.source_files = 'QCloudQuic/Classes/*', 'QCloudQuic/Classes/QCloudBase/**/*','QCloudQuic/Classes/QuicFramework//*.{h}'
       default.vendored_frameworks = 'QCloudQuic/Classes/QuicFramework/Tquic.framework'
+  end
+  s.subspec 'v83' do |v83|
+    v83.source_files = 'QCloudQuic/Classes/*', 'QCloudQuic/Classes/QCloudBase/**/*','QCloudQuic/Classes/QuicFrameworkv83//*.{h}'
+    v83.vendored_frameworks = 'QCloudQuic/Classes/QuicFrameworkv83/Tquic.framework'
   end
 end

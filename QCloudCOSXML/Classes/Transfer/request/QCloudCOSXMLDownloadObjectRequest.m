@@ -155,6 +155,9 @@
             NSMutableDictionary *dic = [NSMutableDictionary dictionary];
             if(jsonData){
                 dic = [[NSJSONSerialization JSONObjectWithData:jsonData options:kNilOptions error:nil] mutableCopy];
+                if (dic == nil) {
+                    dic = [NSMutableDictionary dictionary];
+                }
             }
           
             if(error){
