@@ -28,6 +28,7 @@ DEPENDENCIES:
   - QCloudQuic (from `.`)
   - QCloudTrack (from `.`)
   - QCloudTrack/Cls (from `.`)
+  - TencentCloudLogProducer
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs:
@@ -52,6 +53,6 @@ SPEC CHECKSUMS:
   QCloudTrack: 2b7ac04c48f0276b29414d4ba6c6212057f69fbd
   TencentCloudLogProducer: 980e6a4b9ed49b7b3f41779203be5e4ba1b03b95
 
-PODFILE CHECKSUM: 70fab69b55a156a2cdbbceeaba228ea43f530439
+PODFILE CHECKSUM: 749f67d82d0f236fb196c23e7f7211cce189d4b4
 
 COCOAPODS: 1.12.1

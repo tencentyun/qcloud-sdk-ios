@@ -40,7 +40,7 @@ TODO: Add long description of the pod here.aaa
   end
   
   s.subspec 'Beacon' do |beacon|
-    beacon.source_files = 'QCloudTrack/Classes/*.{h,m}','QCloudTrack/Classes/Default/*.{h,m}','QCloudTrack/Classes/Default/*/*.{h,m}','Pod/Classes/Beacon/*.{h,m}'
+    beacon.source_files = 'QCloudTrack/Classes/*.{h,m}','QCloudTrack/Classes/Default/*.{h,m}','QCloudTrack/Classes/Default/*/*.{h,m}','QCloudTrack/Classes/Beacon/*.{h,m}'
     beacon.vendored_frameworks = 'QCloudTrack/Classes/BeaconFramework/BeaconAPI_Base.framework','QCloudTrack/Classes/BeaconFramework/QimeiSDK.framework'
   end
   
