@@ -35,23 +35,27 @@ QCloudCore--腾讯云iOS-SDK Foundation。提供腾讯云iOS相关SDK的基础�
   s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
   s.ios.deployment_target = '9.0'
-  s.osx.deployment_target = "10.12"
   s.frameworks ='CoreMedia', "Accelerate", "SystemConfiguration"
   s.libraries = "z","c++"
   s.static_framework = true
   s.default_subspec = 'Default'
   s.subspec 'Default' do |default|
+      default.ios.deployment_target = '9.0'
+      default.osx.deployment_target = "10.12"
       default.source_files = 'QCloudCore/Classes/Base/**/*'
       default.dependency "QCloudTrack/Beacon","6.3.5"
   end
   
   s.subspec 'WithoutMTA' do |withoutMTA|
+      withoutMTA.ios.deployment_target = '9.0'
+      withoutMTA.osx.deployment_target = "10.12"
       withoutMTA.source_files = 'QCloudCore/Classes/Base/**/*'
   end
   
   s.subspec 'DNSLoader' do |tdns|
+    tdns.ios.deployment_target = '9.0'
     tdns.dependency "MSDKDns_C11";
     tdns.dependency "QCloudCore/WithoutMTA";
-    tdns.source_files = 'Pod/Classes/DNSLoader/*';
+    tdns.source_files = 'QCloudCore/Classes/DNSLoader/*';
   end
 end
