@@ -9,7 +9,6 @@ target 'QCloudCOSXMLDemo' do
  pod 'QCloudTrack', path:'.'
  pod 'QCloudTrack/Beacon', path:'.'
  pod 'QCloudTrack/Cls', path:'.'
- pod 'TencentCloudLogProducer'
 target 'QCloudCOSXMLDemoTests' do
   inherit! :search_paths
 end
