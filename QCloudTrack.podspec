@@ -30,7 +30,7 @@ TODO: Add long description of the pod here.aaa
   s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
   # s.frameworks = 'UIKit', 'MapKit'
   s.static_framework = true
-
+  s.ios.deployment_target = '9.0'
   s.default_subspec = 'Default'
   
   s.subspec 'Default' do |default|
