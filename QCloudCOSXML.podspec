@@ -20,7 +20,7 @@ s.version              = "6.3.4"
   s.default_subspec = 'Default'
   s.subspec 'Default' do |default|
     default.source_files = 'QCloudCOSXML/Classes/**/*','QCloudCOSXML/Classes/QCloudCOSXML/*'
-    default.dependency "QCloudCore",'6.3.4'
+    default.dependency "QCloudCore/Default",'6.3.4'
   end
   s.subspec 'Slim' do |slim|
     slim.source_files = 'QCloudCOSXML/Classes/**/*','QCloudCOSXML/Classes/QCloudCOSXML/*'
