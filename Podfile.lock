@@ -14,8 +14,7 @@ PODS:
   - QCloudTrack (6.3.4):
     - QCloudTrack/Default (= 6.3.4)
   - QCloudTrack/Beacon (6.3.4)
-  - QCloudTrack/Cls (6.3.4):
-    - TencentCloudLogProducer (= 1.0.9)
+  - QCloudTrack/Cls (6.3.4)
   - QCloudTrack/Default (6.3.4)
   - TencentCloudLogProducer (1.0.9):
     - TencentCloudLogProducer/Core (= 1.0.9)
@@ -29,6 +28,7 @@ DEPENDENCIES:
   - QCloudTrack (from `.`)
   - QCloudTrack/Beacon (from `.`)
   - QCloudTrack/Cls (from `.`)
+  - TencentCloudLogProducer
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs:
@@ -50,9 +50,9 @@ SPEC CHECKSUMS:
   QCloudCore: 3a57a8619a14049a3cb4fe1ac7b1143784908594
   QCloudCOSXML: 886d52f482c7108604b3ffef5476cf28c502af97
   QCloudQuic: 840f529d7e8adf058e28405106ccb01fd920548b
-  QCloudTrack: 6499fc9d02d7f5996a60e73c5fcaa0dae89f2e2b
+  QCloudTrack: 80b224f47c62facd7335ae3934b9619ba2913ea1
   TencentCloudLogProducer: 980e6a4b9ed49b7b3f41779203be5e4ba1b03b95
 
-PODFILE CHECKSUM: 469848875513aa1180afa1e3751e2d873841a154
+PODFILE CHECKSUM: e2b71a7dd24177e95cd477eceb7428d2f98406ec
 
 COCOAPODS: 1.12.1

@@ -78,8 +78,15 @@
     NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
     [commonParams setObject:appVersion?:@"" forKey:@"app_version_code"];
     [commonParams setObject:appVersion?:@"" forKey:@"app_version_name"];
+    
+#if TARGET_OS_IOS
     [commonParams setObject:[UIDevice currentDevice].systemName forKey:@"os_name"];
     [commonParams setObject:[UIDevice currentDevice].systemVersion forKey:@"os_version"];
+#else
+    [commonParams setObject:@"macos" forKey:@"os_name"];
+    [commonParams setObject:@"" forKey:@"os_version"];
+#endif
+    
     [commonParams setObject:[QCloudTrackNetworkUtils single].getCurrentLocalIP ?:@"" forKey:@"client_local_ip"];
     [commonParams setObject:[QCloudTrackNetworkUtils single].isProxy?@"true":@"false" forKey:@"client_proxy"];
     [commonParams setObject:[QCloudTrackNetworkUtils single].getNetWorkType ?:@"" forKey:@"network_type"];

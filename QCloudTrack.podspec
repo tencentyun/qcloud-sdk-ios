@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "QCloudTrack"
-s.version              = "6.3.4.1"
+s.version              = "6.3.4"
   s.summary          = "QCloudTrack 腾讯云iOS-SDK组件"
 
 # This description is used to generate tags and improve search results.
@@ -27,9 +27,8 @@ TODO: Add long description of the pod here.aaa
   s.author           = { "QCloudTerminalLab" => "g_PDTC_storage_DEV_terminallab@tencent.com" }
   s.source           = { :git => "https://github.com/tencentyun/qcloud-sdk-ios.git", :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
-  s.ios.deployment_target = '9.0'
+  s.ios.deployment_target = '9.0'  
   s.osx.deployment_target = "10.12"
-  
   s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
   # s.frameworks = 'UIKit', 'MapKit'
   s.static_framework = true
@@ -50,6 +49,5 @@ TODO: Add long description of the pod here.aaa
                       'QCloudTrack/Classes/Default/*.{h,m}',
                       'QCloudTrack/Classes/Default/*/*.{h,m}',
                       'QCloudTrack/Classes/Cls/*.{h,m}'
-    cls.dependency "TencentCloudLogProducer"
   end
 end
