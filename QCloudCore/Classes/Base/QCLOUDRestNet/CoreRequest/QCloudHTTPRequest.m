@@ -236,24 +236,7 @@
 
 -(BOOL)needChangeHost{
     NSString * host = self.urlRequest.URL.host;
-    if(!host){
-        return NO;
-    }
-    if([host rangeOfString:@".cos.accelerate.myqcloud.com"].length > 0){
-        return NO;
-    }
-    
-    if([host rangeOfString:@"service.cos.myqcloud.com"].length > 0){
-        return NO;
-    }
-    if([host rangeOfString:@".myqcloud.com"].length > 0 && [host rangeOfString:@"cos."].length > 0 && [host rangeOfString:@".cos."].length == 0){
-        return NO;
-    }
-    
-    if([host rangeOfString:@".myqcloud.com"].length > 0 && [host rangeOfString:@".cos."].length > 0){
-        return YES;
-    }
-    return NO;
+    return [QCloudHTTPRequest needChangeHost:host];
 }
 
 +(BOOL)needChangeHost:(NSString *)host{

@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.name             = "QCloudQuic"
 
 
-s.version              = "6.3.4"
+s.version              = "6.3.5"
 
 
   s.summary          = "QCloudQuic 腾讯云iOS-SDK组件"

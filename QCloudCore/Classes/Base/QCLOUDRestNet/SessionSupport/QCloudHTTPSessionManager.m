@@ -231,7 +231,7 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task willPerformHTTPRedirection:(NSHTTPURLResponse *)response newRequest:(NSURLRequest *)request completionHandler:(void (^)(NSURLRequest * _Nullable))completionHandler{
     QCloudURLSessionTaskData *taskData = [self taskDataForTask:task];
-    if(taskData.httpRequest.runOnService.configuration.disableChangeHost == YES || [response.allHeaderFields.allKeys containsObject:@"x-cos-request-id"] || [request.URL.absoluteURL.host rangeOfString:@"tencentcos.cn"].length > 0){
+    if(![taskData.httpRequest needChangeHost] || taskData.httpRequest.runOnService.configuration.disableChangeHost == YES || [response.allHeaderFields.allKeys containsObject:@"x-cos-request-id"] || [request.URL.absoluteURL.host rangeOfString:@"tencentcos.cn"].length > 0){
         completionHandler(request);
     }else{
         completionHandler(nil);
@@ -324,7 +324,9 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
         return;
     }
     
-    if(taskData.response.statusCode > 400 && [hostURL.host rangeOfString:@"tencentcos.cn"].length == 0 && ![taskData.response.allHeaderFields.allKeys containsObject:@"x-cos-request-id"] && taskData.httpRequest.runOnService.configuration.disableChangeHost == NO){
+    if(taskData.response.statusCode > 400 && [hostURL.host rangeOfString:@"tencentcos.cn"].length == 0 && ![taskData.response.allHeaderFields.allKeys containsObject:@"x-cos-request-id"] &&
+       [taskData.httpRequest needChangeHost] &&
+       taskData.httpRequest.runOnService.configuration.disableChangeHost == NO){
         error = [NSError errorWithDomain:hostURL.host code:QCloudNetworkErrorCodeDomainInvalid userInfo:@{NSLocalizedDescriptionKey: @""}];
         taskData.isTaskCancelledByStatusCodeCheck = NO;
     }
