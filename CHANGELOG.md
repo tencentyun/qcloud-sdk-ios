@@ -1,3 +1,7 @@
+# 6.3.5
+优化请求失败重试逻辑
+
+
 # 6.3.4
 1、新增日志上报sdk（QCloudTrack）,包括灯塔模块（Beacon）和Cls模块。
 2、QCloudQuic 新增v83模块，支持老版本quic sdk。
