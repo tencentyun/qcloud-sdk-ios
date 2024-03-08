@@ -21,7 +21,9 @@
 static const int64_t sentByte = 32768;
 class TnetAsyncDelegate : public TnetRequestDelegate{
     public:
-    std::shared_ptr<TnetQuicRequest> request_sp;
+//    std::shared_ptr<TnetQuicRequest> request_sp;
+    std::weak_ptr<TnetQuicRequest> request_sp;
+    bool isComplete;
     
     protected:
     TquicRequestDidConnectBlock didConnectionBlock_;
@@ -34,8 +36,7 @@ class TnetAsyncDelegate : public TnetRequestDelegate{
     private:
         int first_time_;
         int64_t totolSentBytes;
-        bool isComplete;
-    
+        
     public:
     TnetAsyncDelegate() {
         first_time_ = 1;
@@ -60,10 +61,11 @@ class TnetAsyncDelegate : public TnetRequestDelegate{
 #pragma mark URLRequest::Delegate methods
     //连接建立成功的回调
     void  OnConnect(int error_code) override{
+        
         if (this->didConnectionBlock_ !=nullptr) {
              this->didConnectionBlock_(nil);
         }
-        NSLog(@"Tquic connect host success: %@ (%@)", this->quicReqeust_.host, this->quicReqeust_.ip);
+        
         //设置header 头部
         NSArray *allkeys = this->quicReqeust_.quicAllHeaderFields.allKeys;
         NSDictionary *kvs = [NSMutableDictionary new];
@@ -72,9 +74,16 @@ class TnetAsyncDelegate : public TnetRequestDelegate{
             if([value isKindOfClass:[NSNumber class]]){
                 value = [NSString stringWithFormat:@"%@",value];
             }
+            if (value == NULL || key == NULL) {
+                continue;
+            }
             const char* cValue = [value UTF8String];
             const char* ukey = [[key lowercaseString] UTF8String];
-            request_sp.get()->AddHeaders(ukey, cValue);
+            if(auto sp = request_sp.lock()) {
+                sp->AddHeaders(ukey, cValue);
+            }else{
+                return;
+            }
             [kvs setValue:[[NSString alloc] initWithUTF8String:cValue] forKey:key];
         }
         NSLog(@"Tquic send headers: %@", kvs);
@@ -92,7 +101,12 @@ class TnetAsyncDelegate : public TnetRequestDelegate{
                 char *c = (char*)malloc(data.length * sizeof(char));
                 [data getBytes:c range:NSMakeRange(0, data.length)];
                 NSLog(@"Tquic SendRequest with size: %lu and end", (unsigned long)data.length);
-                request_sp.get()->SendRequest(c, (int)data.length, true);
+                if(auto sp = request_sp.lock()) {
+                    sp->SendRequest(c, (int)data.length, true);
+                }else{
+                    return;
+                }
+            
                 totolSentBytes+=data.length;
                 free(c);
                 //小于32768的情况
@@ -112,18 +126,26 @@ class TnetAsyncDelegate : public TnetRequestDelegate{
                         [data getBytes:c range:NSMakeRange(i*sentByte, resetLength)];
                        
                         NSLog(@"Tquic SendRequest with size: %lld and end",resetLength);
-                        request_sp.get()->SendRequest(c, (int)resetLength, true);
+                        if(auto sp = request_sp.lock()) {
+                            sp->SendRequest(c, (int)resetLength, true);
+                        }else{
+                            return;
+                        }
                         totolSentBytes+=resetLength;
                         free(c);
                         if (this->didSendBodyData_ != NULL) {
                              this->didSendBodyData_(resetLength,totolSentBytes,data.length);
                         }
-                        resetLength = resetLength - resetLength;    
+                        resetLength = resetLength - resetLength;
                     }else{
                         char *c = (char*)malloc(sentByte * sizeof(char));
                         [data getBytes:c range:NSMakeRange(i*sentByte, sentByte)];
                         NSLog(@"Tquic SendRequest with size: %lld",sentByte);
-                        request_sp.get()->SendRequest(c, sentByte, false);
+                        if(auto sp = request_sp.lock()) {
+                            sp->SendRequest(c, sentByte, false);
+                        }else{
+                            return;
+                        }
                         totolSentBytes+=sentByte;
                         resetLength = resetLength - sentByte;
                         free(c);
@@ -138,7 +160,9 @@ class TnetAsyncDelegate : public TnetRequestDelegate{
             }
             
         }else {
-            request_sp.get()->SendRequest([@"" UTF8String], 0, true);
+            if(auto sp = request_sp.lock()) {
+                sp->SendRequest([@"" UTF8String], 0, true);
+            }
         }
            //在这里发送request
     }
@@ -185,7 +209,9 @@ class TnetAsyncDelegate : public TnetRequestDelegate{
 
     // This request has received all the data and finished.
     void OnRequestFinish(int stream_error) override{
-        request_sp->CloseConnection();
+        if(auto sp = request_sp.lock()) {
+            sp->CloseConnection();
+        }
         NSError *error = nil;
         if (stream_error != 0) {
             error = [[NSError alloc] initWithDomain:NSURLErrorDomain code:stream_error userInfo:nil];
@@ -285,15 +311,15 @@ class TnetAsyncDelegate : public TnetRequestDelegate{
     config.is_custom_ = [QCloudQuicConfig shareConfig].is_custom;
     request_sp.reset(new TnetQuicRequest(tquic_delegate_sp.get(),config));
     tquic_delegate_sp.get()->request_sp = request_sp;
+//    tquic_delegate_sp.get()->w_request_sp = request_sp;
     self.quicReqeust = quicRequest;
 
 }
 
 //cancle request
 -(void)cancleRequest{
-    NSLog(@"Tquic cancleRequest: request_sp.use_count = %ld",request_sp.use_count());
+    NSLog(@"garenwang_Tquic cancleRequest: request_sp.use_count = %ld add=%p",request_sp.use_count(),request_sp.get());
     request_sp.get()->CancelRequest();
-
 }
 
 //sent request
