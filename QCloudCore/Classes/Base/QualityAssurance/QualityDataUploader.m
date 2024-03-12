@@ -36,7 +36,6 @@
 //NSString *const kQCloudUploadAppReleaseKey = @"0AND0VEVB24UBGDU"; // 废弃
 
 
-NSString *const KQCloudServiceKey = @"qcloud_track_cos_sdk";
 NSString *const KQCloudServiceBaseInfoKey = @"qcloud_track_sd_sdk_start";
 #pragma mark -commen key
 NSString *const kQCloudQualityBundleIDKey = @"boundle_id";
@@ -180,7 +179,7 @@ static NSString * sdkBridge = @"";
                                            id report = [cls performSelector:NSSelectorFromString(@"singleService")];
                                            id beaconService = [beaconCls performSelector:NSSelectorFromString(@"new")];
                                            [beaconService performSelector:NSSelectorFromString(@"updateBeaconKey:") withObject:appkey];
-                                           [report performSelector:NSSelectorFromString(@"addTrackService:serviceKey:") withObject:beaconService withObject:KQCloudServiceKey];
+                                           [report performSelector:NSSelectorFromString(@"addTrackService:serviceKey:") withObject:beaconService withObject:[self qcloud_trackServiceKey]];
                                            
         );
     
@@ -239,7 +238,7 @@ static NSString * sdkBridge = @"";
     NSMutableDictionary *paramas = commonParams?:[NSMutableDictionary dictionary];
     paramas[kQCloudQualityResultKey] = kQCloudRequestSuccessKey;
     paramas[kQCloudQualityErrorRequestNameKey] = [self getServiceNameFromClass:request.class];
-    [self internalUploadRequest:request event:[self qcloud_traceEventTypeFromClass:request.class] withParamter:paramas];
+    [self internalUploadRequest:request event:[self qcloud_trackServiceKey] withParamter:paramas];
 }
 
 +(void)initCommonParams:(NSMutableDictionary * )commonParams{
@@ -328,7 +327,7 @@ static NSString * sdkBridge = @"";
     }
     mutableDicParams[kQCloudQualityErrorRequestNameKey] = [self getServiceNameFromClass:request.class];
     mutableDicParams[kQCloudQualityResultKey] = kQCloudRequestFailureKey;
-    [self internalUploadRequest:request event:[self qcloud_traceEventTypeFromClass:cls] withParamter:mutableDicParams];
+    [self internalUploadRequest:request event:[self qcloud_trackServiceKey] withParamter:mutableDicParams];
 }
 
 
@@ -408,12 +407,13 @@ static NSString * sdkBridge = @"";
         SEL selector = NSSelectorFromString(@"reportWithEventCode:params:serviceKey:");
 
         if ([instance respondsToSelector:selector]) {
+            NSString * serviceKey = [self qcloud_trackServiceKey];
             NSMethodSignature *methodSignature = [instance methodSignatureForSelector:selector];
             NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
             [invocation setSelector:selector];
             [invocation setArgument:&eventKey atIndex:2];
             [invocation setArgument:&paramter atIndex:3];
-            [invocation setArgument:&KQCloudServiceKey atIndex:4];
+            [invocation setArgument:&serviceKey atIndex:4];
             [invocation invokeWithTarget:instance];
         }
     }
@@ -462,7 +462,7 @@ static NSString * sdkBridge = @"";
 
 
 //获取上报的EventKey
-+ (NSString *)qcloud_traceEventTypeFromClass:(Class)cls {
++ (NSString *)qcloud_trackServiceKey{
     return [NSString stringWithFormat:@"qcloud_track_%@_sdk",productName.lowercaseString];
 //    NSString *classString = NSStringFromClass(cls);
 //    if ([kUploadEvents containsObject:classString] || [classString isEqualToString:[NSString stringWithFormat:@"QCloudCOS%@UploadObjectRequest",[productName uppercaseString]]]) {

@@ -56,9 +56,11 @@
     if (self.isCloseReport) {
         return;
     }
-    if([self.credentialProvider needRefresh] || self.clsClient == nil){
+    
+    if([self.credentialProvider needRefresh] || !self.clsClient){
         [self setupCLSSDK];
     }
+    
     [self _reportWithEventCode:eventCode params:params];
 }
 
