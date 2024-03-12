@@ -6,6 +6,7 @@
 //
 
 #import "QCloudCLSTrackService.h"
+#import "TencentCloudLogProducer.h"
 
 @interface QCloudCLSTrackService ()
 @property (nonatomic,strong)NSString * topicId;

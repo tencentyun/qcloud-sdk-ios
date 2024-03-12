@@ -9,7 +9,6 @@
 #import "QCloudBaseTrackService.h"
 #import "QCloudClsSessionCredentials.h"
 #import "QCloudClsLifecycleCredentialProvider.h"
-#import "TencentCloudLogProducer.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
