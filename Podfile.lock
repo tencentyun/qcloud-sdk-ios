@@ -1,22 +1,22 @@
 PODS:
   - GMOpenSSL (2.2.9)
-  - QCloudCore (6.3.4):
-    - QCloudCore/Default (= 6.3.4)
-  - QCloudCore/Default (6.3.4):
+  - QCloudCore (6.3.5):
+    - QCloudCore/Default (= 6.3.5)
+  - QCloudCore/Default (6.3.5):
     - QCloudTrack/Beacon (= 6.3.5)
-  - QCloudCOSXML (6.3.4):
-    - QCloudCOSXML/Default (= 6.3.4)
-  - QCloudCOSXML/Default (6.3.4):
-    - QCloudCore/Default (= 6.3.4)
-  - QCloudQuic (6.3.4):
-    - QCloudQuic/Default (= 6.3.4)
-  - QCloudQuic/Default (6.3.4)
-  - QCloudTrack (6.3.5):
-    - QCloudTrack/Default (= 6.3.5)
+  - QCloudCOSXML (6.3.5):
+    - QCloudCOSXML/Default (= 6.3.5)
+  - QCloudCOSXML/Default (6.3.5):
+    - QCloudCore/Default (= 6.3.5)
+  - QCloudQuic (6.3.6):
+    - QCloudQuic/Default (= 6.3.6)
+  - QCloudQuic/Default (6.3.6)
+  - QCloudTrack (6.3.6):
+    - QCloudTrack/Default (= 6.3.6)
   - QCloudTrack/Beacon (6.3.5)
-  - QCloudTrack/Cls (6.3.5):
+  - QCloudTrack/Cls (6.3.6):
     - TencentCloudLogProducer
-  - QCloudTrack/Default (6.3.5)
+  - QCloudTrack/Default (6.3.6)
   - TencentCloudLogProducer (1.0.9):
     - TencentCloudLogProducer/Core (= 1.0.9)
   - TencentCloudLogProducer/Core (1.0.9):
@@ -26,13 +26,14 @@ DEPENDENCIES:
   - QCloudCore (from `.`)
   - QCloudCOSXML (from `.`)
   - QCloudQuic (from `.`)
-  - QCloudTrack (from `.`)
-  - QCloudTrack/Beacon (from `.`)
-  - QCloudTrack/Cls (from `.`)
+  - QCloudTrack
+  - QCloudTrack/Beacon
+  - QCloudTrack/Cls
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs:
     - GMOpenSSL
+    - QCloudTrack
     - TencentCloudLogProducer
 
 EXTERNAL SOURCES:
@@ -42,17 +43,15 @@ EXTERNAL SOURCES:
     :path: "."
   QCloudQuic:
     :path: "."
-  QCloudTrack:
-    :path: "."
 
 SPEC CHECKSUMS:
   GMOpenSSL: d6d119ff8f00d4e03c2cdf733fb61e98e22da9c7
-  QCloudCore: 0fab1d5a90c79be21b10285d2252fa1f8d8d5c1e
-  QCloudCOSXML: 7bbdb57c28a2d2b65312a16ede903c7c1fc28f99
-  QCloudQuic: 898b278b4424a5971dd204d8548fc7111c7fc6e4
-  QCloudTrack: a1e25308ead00d58db596b8564c7f197a8a06102
+  QCloudCore: 9ba71f98027912b87bde80084e074d4e443769f5
+  QCloudCOSXML: e10fecf4f3bf55b56930162483c41c246237853f
+  QCloudQuic: 9be2a87ec0515a3280d9873666e2b7cd268524d4
+  QCloudTrack: 230442755d19a327b0752a9c227f229404ce9607
   TencentCloudLogProducer: 980e6a4b9ed49b7b3f41779203be5e4ba1b03b95
 
-PODFILE CHECKSUM: 469848875513aa1180afa1e3751e2d873841a154
+PODFILE CHECKSUM: c69f662dc5a83179eb96024ea8a3b9f3606bfbd4
 
 COCOAPODS: 1.12.1
