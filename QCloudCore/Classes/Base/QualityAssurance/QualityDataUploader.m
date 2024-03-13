@@ -189,6 +189,7 @@ static NSString * sdkBridge = @"";
 }
 
 + (void)trackBaseInfoToTrachCommonParams:(NSMutableDictionary * )commonParams{
+    [self initCommonParams:commonParams];
     NSString * productName = commonParams[@"pName"];
     NSString * sdkVersion = commonParams[@"sdkVersion"];
     NSString * sdkVersionName = commonParams[@"sdkVersionName"];

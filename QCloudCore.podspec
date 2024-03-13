@@ -44,7 +44,7 @@ QCloudCore--腾讯云iOS-SDK Foundation。提供腾讯云iOS相关SDK的基础�
       default.ios.deployment_target = '9.0'
       default.osx.deployment_target = "10.12"
       default.source_files = 'QCloudCore/Classes/Base/**/*'
-      default.dependency "QCloudTrack/Beacon","6.3.5"
+      default.dependency "QCloudTrack/Beacon","6.3.6"
   end
   
   s.subspec 'WithoutMTA' do |withoutMTA|
