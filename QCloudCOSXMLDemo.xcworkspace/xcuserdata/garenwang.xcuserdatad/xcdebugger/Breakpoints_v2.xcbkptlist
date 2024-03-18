@@ -16,36 +16,6 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "165"
             endingLineNumber = "165">
-            <Locations>
-               <Location
-                  uuid = "A4BF0AE3-3097-44A9-A1B7-94C7554F4EE3 - 5000eb6f0714dd52"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[QCloudCLSTrackService _reportWithEventCode:params:]"
-                  moduleName = "QCloudCOSXMLDemo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/garenwang/Documents/code/qcloud-sdk-ios/QCloudTrack/Classes/Cls/QCloudCLSTrackService.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "165"
-                  endingLineNumber = "165">
-               </Location>
-               <Location
-                  uuid = "A4BF0AE3-3097-44A9-A1B7-94C7554F4EE3 - 5000eb6f0714dd52"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[QCloudCLSTrackService _reportWithEventCode:params:]"
-                  moduleName = "QCloudCOSXMLDemo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/garenwang/Documents/code/qcloud-sdk-ios/QCloudTrack/Classes/Cls/QCloudCLSTrackService.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "165"
-                  endingLineNumber = "165">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -60,50 +30,6 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "146"
             endingLineNumber = "146">
-            <Locations>
-               <Location
-                  uuid = "5B49B647-DAFD-4C98-BE1E-810CF0721901 - 5000eb6f0714df00"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[QCloudCLSTrackService _reportWithEventCode:params:]"
-                  moduleName = "QCloudCOSXMLDemo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/garenwang/Documents/code/qcloud-sdk-ios/QCloudTrack/Classes/Cls/QCloudCLSTrackService.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "147"
-                  endingLineNumber = "147">
-               </Location>
-               <Location
-                  uuid = "5B49B647-DAFD-4C98-BE1E-810CF0721901 - 5000eb6f0714dfe1"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[QCloudCLSTrackService _reportWithEventCode:params:]"
-                  moduleName = "QCloudCOSXMLDemo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/garenwang/Documents/code/qcloud-sdk-ios/QCloudTrack/Classes/Cls/QCloudCLSTrackService.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "146"
-                  endingLineNumber = "146">
-               </Location>
-               <Location
-                  uuid = "5B49B647-DAFD-4C98-BE1E-810CF0721901 - 5000eb6f0714dfe1"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[QCloudCLSTrackService _reportWithEventCode:params:]"
-                  moduleName = "QCloudCOSXMLDemo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/garenwang/Documents/code/qcloud-sdk-ios/QCloudTrack/Classes/Cls/QCloudCLSTrackService.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "146"
-                  endingLineNumber = "146">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -118,50 +44,6 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "141"
             endingLineNumber = "141">
-            <Locations>
-               <Location
-                  uuid = "D01D1EF9-3891-4196-BF9B-5ADA5310D738 - c43146960d4e4685"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[QCloudCLSTrackService reportWithEventCode:params:]"
-                  moduleName = "QCloudCOSXMLDemo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/garenwang/Documents/code/qcloud-sdk-ios/QCloudTrack/Classes/Cls/QCloudCLSTrackService.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "142"
-                  endingLineNumber = "142">
-               </Location>
-               <Location
-                  uuid = "D01D1EF9-3891-4196-BF9B-5ADA5310D738 - c43146960d4e46da"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[QCloudCLSTrackService reportWithEventCode:params:]"
-                  moduleName = "QCloudCOSXMLDemo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/garenwang/Documents/code/qcloud-sdk-ios/QCloudTrack/Classes/Cls/QCloudCLSTrackService.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "141"
-                  endingLineNumber = "141">
-               </Location>
-               <Location
-                  uuid = "D01D1EF9-3891-4196-BF9B-5ADA5310D738 - 5000eb6f0714d83a"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[QCloudCLSTrackService _reportWithEventCode:params:]"
-                  moduleName = "QCloudCOSXMLDemo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/garenwang/Documents/code/qcloud-sdk-ios/QCloudTrack/Classes/Cls/QCloudCLSTrackService.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "141"
-                  endingLineNumber = "141">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -176,50 +58,6 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "130"
             endingLineNumber = "130">
-            <Locations>
-               <Location
-                  uuid = "BE473FB5-0485-42F9-9806-F2DCDC66D53A - f49d89f14a5bea09"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[QCloudCLSTrackService setupCLSSDK]"
-                  moduleName = "QCloudCOSXMLDemo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/garenwang/Documents/code/qcloud-sdk-ios/QCloudTrack/Classes/Cls/QCloudCLSTrackService.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "130"
-                  endingLineNumber = "130">
-               </Location>
-               <Location
-                  uuid = "BE473FB5-0485-42F9-9806-F2DCDC66D53A - f49d89f14a5bea09"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[QCloudCLSTrackService setupCLSSDK]"
-                  moduleName = "QCloudCOSXMLDemo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/garenwang/Documents/code/qcloud-sdk-ios/QCloudTrack/Classes/Cls/QCloudCLSTrackService.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "130"
-                  endingLineNumber = "130">
-               </Location>
-               <Location
-                  uuid = "BE473FB5-0485-42F9-9806-F2DCDC66D53A - c43146960d4e4710"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[QCloudCLSTrackService reportWithEventCode:params:]"
-                  moduleName = "QCloudCOSXMLDemo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/garenwang/Documents/code/qcloud-sdk-ios/QCloudTrack/Classes/Cls/QCloudCLSTrackService.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "131"
-                  endingLineNumber = "131">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -234,36 +72,6 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "117"
             endingLineNumber = "117">
-            <Locations>
-               <Location
-                  uuid = "0FDE3E06-8261-451F-B997-59D5B99987EE - f49d89f14a5be8fa"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[QCloudCLSTrackService setupCLSSDK]"
-                  moduleName = "QCloudCOSXMLDemo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/garenwang/Documents/code/qcloud-sdk-ios/QCloudTrack/Classes/Cls/QCloudCLSTrackService.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "117"
-                  endingLineNumber = "117">
-               </Location>
-               <Location
-                  uuid = "0FDE3E06-8261-451F-B997-59D5B99987EE - f49d89f14a5be8fa"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[QCloudCLSTrackService setupCLSSDK]"
-                  moduleName = "QCloudCOSXMLDemo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/garenwang/Documents/code/qcloud-sdk-ios/QCloudTrack/Classes/Cls/QCloudCLSTrackService.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "117"
-                  endingLineNumber = "117">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -280,36 +88,6 @@
             endingLineNumber = "146"
             landmarkName = "-fetchData"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "8DA76074-1419-4B72-B54D-9E08779DCFAD - 1c06dd375cf4c6cb"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__34-[QCloudDownLoadNewCtor fetchData]_block_invoke.115"
-                  moduleName = "QCloudCOSXMLDemo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/garenwang/Documents/code/qcloud-sdk-ios/QCloudCOSXMLDemo/QCloudDownLoadNewCtor.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "146"
-                  endingLineNumber = "146">
-               </Location>
-               <Location
-                  uuid = "8DA76074-1419-4B72-B54D-9E08779DCFAD - d91332317d7af37c"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "__34-[QCloudDownLoadNewCtor fetchData]_block_invoke_2.116"
-                  moduleName = "QCloudCOSXMLDemo"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/garenwang/Documents/code/qcloud-sdk-ios/QCloudCOSXMLDemo/QCloudDownLoadNewCtor.m"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "147"
-                  endingLineNumber = "147">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

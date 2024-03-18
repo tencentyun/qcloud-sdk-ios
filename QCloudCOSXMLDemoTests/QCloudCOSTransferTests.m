@@ -17,7 +17,6 @@
 #import "SecretStorage.h"
 #import <QCloudCOSXMLService.h>
 #import <QCloudGenerateSnapshotConfiguration.h>
-#import <BeaconAPI_Base/BeaconReport.h>
 @interface QCloudCOSTransferTests : XCTestCase <QCloudSignatureProvider>
 @property (nonatomic, strong) NSMutableArray *tempFilePathArray;
 @property (nonatomic, strong) NSString *appID;

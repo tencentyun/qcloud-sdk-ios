@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -428,8 +428,6 @@
 				TargetAttributes = {
 					1AB143EB1E601E0500830F93 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = TD5DJDNRQ4;
-						ProvisioningStyle = Automatic;
 					};
 					1AB144041E601E0500830F93 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -726,7 +724,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = TD5DJDNRQ4;
+				DEVELOPMENT_TEAM = 6RL39LH4U4;
 				ENABLE_BITCODE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/QCloudCOSXMLDemo/PrefixHeader.pch";
@@ -740,7 +738,7 @@
 					"$(inherited)",
 					"-ObjC",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.qcloud.QCloudCOSXMLDemo1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.qcloud.QCloudCOSXMLDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -754,7 +752,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = TD5DJDNRQ4;
+				DEVELOPMENT_TEAM = 6RL39LH4U4;
 				ENABLE_BITCODE = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/QCloudCOSXMLDemo/PrefixHeader.pch";
@@ -768,7 +766,7 @@
 					"$(inherited)",
 					"-ObjC",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.qcloud.QCloudCOSXMLDemo1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.qcloud.QCloudCOSXMLDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
