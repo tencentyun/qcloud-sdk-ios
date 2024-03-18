@@ -26,6 +26,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 是否禁止上传空文件  NO 不禁止。YES 禁止
 @property (nonatomic, assign) BOOL disableUploadZeroData;
+
+
+/// 是否全局禁用HTTPDNSPrefetch功能获取到IP。
+@property (nonatomic, assign) BOOL disableGlobalHTTPDNSPrefetch;
 @end
 
 NS_ASSUME_NONNULL_END

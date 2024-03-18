@@ -471,7 +471,7 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
         return;
     }
     NSMutableURLRequest *transformRequest = urlRequest;
-    if (httpRequest.requestSerializer.HTTPDNSPrefetch) {
+    if (httpRequest.requestSerializer.HTTPDNSPrefetch && !httpRequest.runOnService.configuration.disableGlobalHTTPDNSPrefetch) {
         transformRequest = [[QCloudHttpDNS shareDNS] resolveURLRequestIfCan:urlRequest];
         if (error) {
             QCloudLogError(@"DNS转存请求失败%@", error);

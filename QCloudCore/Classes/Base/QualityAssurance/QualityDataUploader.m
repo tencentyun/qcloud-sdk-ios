@@ -179,7 +179,7 @@ static NSString * sdkBridge = @"";
                                            id report = [cls performSelector:NSSelectorFromString(@"singleService")];
                                            id beaconService = [beaconCls performSelector:NSSelectorFromString(@"new")];
                                            [beaconService performSelector:NSSelectorFromString(@"updateBeaconKey:") withObject:appkey];
-                                           [report performSelector:NSSelectorFromString(@"addTrackService:serviceKey:") withObject:beaconService withObject:[self qcloud_trackServiceKey]];
+                                           [report performSelector:NSSelectorFromString(@"addTrackService:serviceKey:") withObject:beaconService withObject:[self qcloud_trackSDKEventKey]];
                                            
         );
     
@@ -221,12 +221,16 @@ static NSString * sdkBridge = @"";
 }
 
 + (void)trackNormalEventWithKey:(NSString *)key props:(NSDictionary *)props {
+    [self trackNormalEventWithKey:key serviceKey:nil props:props];
+}
+
++ (void)trackNormalEventWithKey:(NSString *)key serviceKey:(NSString *)serviceKey props:(NSDictionary *)props {
     
     NSString * appKey = props[kQCloudRequestAppkeyKey];
     NSMutableDictionary * params = [NSMutableDictionary dictionaryWithDictionary:props];
     [params removeObjectForKey:kQCloudRequestAppkeyKey];
     
-    [self startReportWithEventKey:key paramters:params];
+    [self startReportWithEventKey:key serviceKey:serviceKey paramters:params];
 }
 
 //上报成功的事件：需要排除掉uploadPart、uploadPartCopy等请求，在其对应的高级接口成功的回调中上报
@@ -239,26 +243,14 @@ static NSString * sdkBridge = @"";
     NSMutableDictionary *paramas = commonParams?:[NSMutableDictionary dictionary];
     paramas[kQCloudQualityResultKey] = kQCloudRequestSuccessKey;
     paramas[kQCloudQualityErrorRequestNameKey] = [self getServiceNameFromClass:request.class];
-    [self internalUploadRequest:request event:[self qcloud_trackServiceKey] withParamter:paramas];
+    [self internalUploadRequest:request event:[self qcloud_trackSDKEventKey] withParamter:paramas];
 }
 
 +(void)initCommonParams:(NSMutableDictionary * )commonParams{
     productName = commonParams[@"pName"];
-    if (productName) {
-        [commonParams removeObjectForKey:@"pName"];
-    }
     sdkVersion = commonParams[@"sdkVersion"];
-    if (sdkVersion) {
-        [commonParams removeObjectForKey:@"sdkVersion"];
-    }
     sdkVersionName = commonParams[@"sdkVersionName"];
-    if (sdkVersionName != nil) {
-        [commonParams removeObjectForKey:@"sdkVersionName"];
-    }
     appKey = commonParams[kQCloudRequestAppkeyKey];
-    if (appKey) {
-        [commonParams removeObjectForKey:kQCloudRequestAppkeyKey];
-    }
 }
 
 +(NSDictionary *)getRequestURLInfo:(QCloudAbstractRequest *)request{
@@ -289,7 +281,10 @@ static NSString * sdkBridge = @"";
         urlInfo[@"http_retry_times"] = @(bizRequest.retryCount).stringValue;
         urlInfo[@"http_dns_ips"] = [[[QCloudHttpDNS shareDNS] queryIPsForHost:bizRequest.urlRequest.URL.host] componentsJoinedByString:@","];
     }
-    urlInfo[@"sdk_bridge"] = sdkBridge;
+    if (sdkBridge) {
+        urlInfo[@"sdk_bridge"] = sdkBridge;
+    }
+    
     return urlInfo.copy;
 }
 //上报失败的事件，需要上报网络性能,错误码
@@ -299,8 +294,7 @@ static NSString * sdkBridge = @"";
         return;
     
     [self initCommonParams:commonParams];
-    
-    Class cls = [request class];
+
     NSMutableDictionary *mutableDicParams = [[error toUploadEventParamters] mutableCopy];
     
     [mutableDicParams addEntriesFromDictionary:commonParams];
@@ -328,7 +322,7 @@ static NSString * sdkBridge = @"";
     }
     mutableDicParams[kQCloudQualityErrorRequestNameKey] = [self getServiceNameFromClass:request.class];
     mutableDicParams[kQCloudQualityResultKey] = kQCloudRequestFailureKey;
-    [self internalUploadRequest:request event:[self qcloud_trackServiceKey] withParamter:mutableDicParams];
+    [self internalUploadRequest:request event:[self qcloud_trackSDKEventKey] withParamter:mutableDicParams];
 }
 
 
@@ -395,11 +389,11 @@ static NSString * sdkBridge = @"";
 #if defined(DEBUG) && DEBUG
   
 #else
-    [self startReportWithEventKey:eventKey paramters:[paramter copy]];
+    [self startReportWithEventKey:eventKey serviceKey:nil paramters:[paramter copy]];
 #endif
 }
 
-+ (void)startReportWithEventKey:(NSString *)eventKey paramters:(NSDictionary *)paramter {
++ (void)startReportWithEventKey:(NSString *)eventKey serviceKey:(NSString *)serviceKey paramters:(NSDictionary *)paramter {
 
     
     Class cls = NSClassFromString(@"QCloudTrackService");
@@ -408,7 +402,9 @@ static NSString * sdkBridge = @"";
         SEL selector = NSSelectorFromString(@"reportWithEventCode:params:serviceKey:");
 
         if ([instance respondsToSelector:selector]) {
-            NSString * serviceKey = [self qcloud_trackServiceKey];
+            if (!serviceKey) {
+                serviceKey = [self qcloud_trackSDKEventKey];
+            }
             NSMethodSignature *methodSignature = [instance methodSignatureForSelector:selector];
             NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:methodSignature];
             [invocation setSelector:selector];
@@ -463,17 +459,8 @@ static NSString * sdkBridge = @"";
 
 
 //获取上报的EventKey
-+ (NSString *)qcloud_trackServiceKey{
++ (NSString *)qcloud_trackSDKEventKey{
     return [NSString stringWithFormat:@"qcloud_track_%@_sdk",productName.lowercaseString];
-//    NSString *classString = NSStringFromClass(cls);
-//    if ([kUploadEvents containsObject:classString] || [classString isEqualToString:[NSString stringWithFormat:@"QCloudCOS%@UploadObjectRequest",[productName uppercaseString]]]) {
-//        return [productName?:@"" stringByAppendingString:kQCloudUploadEventCode];
-//    } else if ([kCopyEvents containsObject:classString] || [classString isEqualToString:@"QCloudCOSXMLCopyObjectRequest"]) {
-//        return kQCloudCopyEventCode;
-//    } else if ([kDownloadEvents containsObject:classString]) {
-//        return [productName?:@"" stringByAppendingString:kQCloudDownloadEventCode];
-//    }
-//    return kQCloudBaseEventCode;
 }
 
 + (BOOL)isErrorInsterested:(NSError *)error {

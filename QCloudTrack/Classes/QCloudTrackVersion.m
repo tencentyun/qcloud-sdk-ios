@@ -1,5 +1,5 @@
 #import "QCloudTrackVersion.h"
-NSString * const QCloudTrackModuleVersion = @"6.3.6";
+NSString * const QCloudTrackModuleVersion = @"6.3.7";
 NSString * const QCloudTrackModuleName = @"QCloudTrack";
 @interface QCloudQCloudTrackLoad : NSObject
 @end

@@ -18,7 +18,7 @@
     }
 
     NSDictionary *dicOperations = @{ @"is_pic_info" : _is_pic_info ? @(1) : @(0), @"rules" : [self getRules] };
-    QCloudLogInfo(@"水印生成成功————%@", [dicOperations qcloud_modelToJSONString]);
+    QCloudLogInfo(@"%@", [dicOperations qcloud_modelToJSONString]);
     return [dicOperations qcloud_modelToJSONString];
 }
 

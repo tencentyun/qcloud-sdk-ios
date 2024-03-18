@@ -7,7 +7,7 @@
 
 #import "QCloudBeaconTrackService.h"
 #import "QCloudTrackConstants.h"
-#import <BeaconAPI_Base/BeaconReport.h>
+#import <COSBeaconAPI_Base/COSBeaconReport.h>
 #import "QCloudTrackConstants.h"
 
 void QCloudTrackEnsurePathExist(NSString *path) {
@@ -18,6 +18,8 @@ void QCloudTrackEnsurePathExist(NSString *path) {
         [[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:&error];
     }
 }
+
+static BOOL isStartedBeacon;
 
 @interface QCloudBeaconTrackService ()
 
@@ -33,7 +35,17 @@ void QCloudTrackEnsurePathExist(NSString *path) {
     if (self) {
         self.beaconKey = key;
         if (self.beaconKey) {
-            [[BeaconReport sharedInstance] startWithAppkey:self.beaconKey config:nil];
+            @try {
+                @synchronized ([QCloudBeaconTrackService class]) {
+                    if (!isStartedBeacon) {
+                        [[COSBeaconReport sharedInstance] startWithAppkey:self.beaconKey config:nil];
+                        isStartedBeacon = YES;
+                    }
+                }
+            } @catch (NSException *exception) {
+                NSLog(@"%@",exception);
+            }
+            
         }
     }
     return self;
@@ -42,7 +54,16 @@ void QCloudTrackEnsurePathExist(NSString *path) {
 - (void)updateBeaconKey:(NSString *)key{
     self.beaconKey = key;
     if(self.beaconKey){
-        [[BeaconReport sharedInstance] startWithAppkey:self.beaconKey config:nil];
+        @try {
+            @synchronized ([QCloudBeaconTrackService class]) {
+                if (!isStartedBeacon) {
+                    [[COSBeaconReport sharedInstance] startWithAppkey:self.beaconKey config:nil];
+                    isStartedBeacon = YES;
+                }
+            }
+        } @catch (NSException *exception) {
+            NSLog(@"%@",exception);
+        }
     }
 }
 
@@ -106,15 +127,15 @@ void QCloudTrackEnsurePathExist(NSString *path) {
         return;
     }
     
-    BeaconEvent * eventObj = [BeaconEvent new];
+    COSBeaconEvent * eventObj = [COSBeaconEvent new];
     [eventObj setCode:eventCode];
     [eventObj setParams:params?:@{}];
     if (self.beaconKey) {
         [eventObj setAppKey:self.beaconKey];
     }
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        BeaconReport * beaconInstance = [BeaconReport sharedInstance];
-        BeaconReportResult * result = [beaconInstance reportEvent:eventObj];
+        COSBeaconReport * beaconInstance = [COSBeaconReport sharedInstance];
+        COSBeaconReportResult * result = [beaconInstance reportEvent:eventObj];
     });
 }
 

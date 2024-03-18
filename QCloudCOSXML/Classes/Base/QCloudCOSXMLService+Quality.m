@@ -42,12 +42,14 @@ NSString *const kQCloudDataAppReleaseKey = @"0IOS05O9HW7A9XPI";
 }
 
 + (void)initMTA:(QCloudServiceConfiguration *)configuration {
+        
 #if defined(DEBUG) && DEBUG
 #else
-    [QualityDataUploader startWithAppkey:kQCloudDataAppReleaseKey];
     NSMutableDictionary * commonParams = [self commonParams:nil];
     commonParams[@"sdk_bridge"] = configuration.bridge?:@"";
+    [QualityDataUploader initCommonParams:commonParams];
     [QualityDataUploader trackBaseInfoToTrachCommonParams:commonParams];
+    [QualityDataUploader startWithAppkey:kQCloudDataAppReleaseKey];
 #endif
 }
 

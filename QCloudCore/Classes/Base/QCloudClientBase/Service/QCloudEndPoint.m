@@ -20,7 +20,7 @@
     if (!self) {
         return self;
     }
-    _useHTTPS = NO;
+    _useHTTPS = YES;
     return self;
 }
 - (instancetype)initWithLiteralURL:(NSURL *)url {
