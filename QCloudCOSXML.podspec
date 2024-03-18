@@ -15,7 +15,7 @@ s.version              = "6.3.7"
   s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
   s.ios.deployment_target = '9.0'
   s.osx.deployment_target = "10.12"
-  
+  s.resource_bundles = {'QCloudCOSXML' => ['QCloudCOSXML/PrivacyInfo.xcprivacy']}
   s.static_framework = true
   s.default_subspec = 'Default'
   s.subspec 'Default' do |default|

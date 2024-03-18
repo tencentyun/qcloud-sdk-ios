@@ -43,7 +43,7 @@ TODO: Add long description of the pod here.aaa
     beacon.ios.deployment_target = '9.0'
     beacon.osx.deployment_target = "10.12"
     beacon.source_files = 'QCloudTrack/Classes/*.{h,m}','QCloudTrack/Classes/Default/*.{h,m}','QCloudTrack/Classes/Default/*/*.{h,m}','QCloudTrack/Classes/Beacon/*.{h,m}'
-    beacon.vendored_frameworks = 'QCloudTrack/Classes/BeaconFramework/BeaconAPI_Base.framework','QCloudTrack/Classes/BeaconFramework/QimeiSDK.framework'
+    beacon.vendored_frameworks = 'QCloudTrack/Classes/BeaconFramework/COSBeaconAPI_Base.xcframework','QCloudTrack/Classes/BeaconFramework/QimeiSDK.framework'
   end
   
   s.subspec 'Cls' do |cls|
