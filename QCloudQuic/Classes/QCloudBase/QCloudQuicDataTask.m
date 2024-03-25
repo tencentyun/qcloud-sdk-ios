@@ -74,6 +74,7 @@
                                                  headerFileds:[quicHeaders copy]];
         _manager = [TquicConnection new];
         __weak typeof(self) weakSelf = self;
+        __weak typeof(httpRequest) wHttpRequest = httpRequest;
         [_manager tquicConnectWithQuicRequest:req
                                    didConnect:^(NSError * _Nonnull error) {
             __strong typeof(weakSelf) strngSelf = weakSelf;
@@ -85,7 +86,9 @@
             }
         } didReceiveResponse:^(TquicResponse *_Nonnull response) {
             __strong typeof(weakSelf) strngSelf = weakSelf;
-            strngSelf.response = [[NSHTTPURLResponse alloc] initWithURL:httpRequest.URL
+            __strong typeof(wHttpRequest) sHttpRequest = wHttpRequest;
+            
+            strngSelf.response = [[NSHTTPURLResponse alloc] initWithURL:sHttpRequest.URL
                                                              statusCode:response.statusCode
                                                             HTTPVersion:response.httpVersion
                                                            headerFields:[response.allHeaderFields copy]];
@@ -111,7 +114,8 @@
         }
                   RequestDidCompleteWithError:^(NSError *_Nonnull error) {
             __strong typeof(weakSelf) strngSelf = weakSelf;
-            strngSelf.originalRequest = [[NSURLRequest alloc] initWithURL:httpRequest.URL];
+            __strong typeof(wHttpRequest) sHttpRequest = wHttpRequest;
+            strngSelf.originalRequest = [[NSURLRequest alloc] initWithURL:sHttpRequest.URL];
             if ([strngSelf.quicDelegate respondsToSelector:@selector(URLSession:task:didCompleteWithError:)]) {
                 [strngSelf.quicDelegate URLSession:quicSession task:strngSelf didCompleteWithError:error];
             }
