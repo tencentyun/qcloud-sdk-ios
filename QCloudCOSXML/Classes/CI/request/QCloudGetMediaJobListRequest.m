@@ -58,6 +58,10 @@ NS_ASSUME_NONNULL_BEGIN
 
     NSURL *__serverURL = [self.runOnService.configuration.endpoint serverURLWithBucket:self.bucket appID:self.runOnService.configuration.appID regionName:self.regionName];
     NSString * serverUrlString = __serverURL.absoluteString;
+    
+    serverUrlString = [serverUrlString stringByReplacingOccurrencesOfString:@".cos." withString:@".ci."];
+    __serverURL = [NSURL URLWithString:serverUrlString];
+    self.requestData.serverURL = __serverURL.absoluteString;
 
     [self.requestData setValue:__serverURL.host forHTTPHeaderField:@"Host"];
 

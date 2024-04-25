@@ -116,6 +116,10 @@ NS_ASSUME_NONNULL_BEGIN
             [infoDic setObject:info.Url forKey:@"Url"];
         }
         
+        if(info.Object){
+            [infoDic setObject:info.Object forKey:@"Object"];
+        }
+
         if(info.Content){
             [infoDic setObject:info.Content forKey:@"Content"];
         }

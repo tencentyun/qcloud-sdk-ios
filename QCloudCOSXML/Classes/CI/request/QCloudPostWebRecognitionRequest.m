@@ -122,7 +122,7 @@ NS_ASSUME_NONNULL_BEGIN
                 @"Callback":self.callback?:@"",
                 @"BizType":self.bizType?:@"",
                 @"CallbackVersion":@"Detail",
-                @"ReturnHighlightHtml":@(self.returnHighlightHtml),
+                @"ReturnHighlightHtml":self.returnHighlightHtml?@"true":@"false",
                 @"CallbackType":@(self.callbackType).stringValue
         }
     };

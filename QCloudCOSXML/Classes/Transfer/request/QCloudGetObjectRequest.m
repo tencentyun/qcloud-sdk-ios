@@ -168,7 +168,7 @@ NS_ASSUME_NONNULL_BEGIN
         [super setFinishBlock:^(id outputObject, NSError *error) {
             StrongSelf(self);
             NSError * lError;
-            if (QCloudFileExist(strongself.downloadingTempURL.relativePath)) {
+            if (QCloudFileExist(strongself.downloadingTempURL.relativePath) && !error) {
                 if (QCloudFileExist(strongself.downloadingURL.relativePath)) {
                     QCloudRemoveFileByPath(strongself.downloadingURL.relativePath);
                 }

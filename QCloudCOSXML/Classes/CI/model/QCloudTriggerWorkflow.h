@@ -25,7 +25,8 @@
 @property (nonatomic,assign)NSInteger PageSize;
 
 /// 工作流数组
-@property (nonatomic,strong)QCloudMediaWorkflowList * MediaWorkflowList;
+@property (nonatomic,strong)NSArray <QCloudMediaWorkflowList *> * MediaWorkflowList;
+
 
 @end
 
