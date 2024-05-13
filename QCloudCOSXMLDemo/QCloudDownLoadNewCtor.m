@@ -124,7 +124,7 @@
 //    在FinishBlock获取结果
 //          参数：桶名称 + 文件唯一标识 + 本地下载路径
     _request = [[QCloudGetObjectRequest alloc]init];
-    _request.downloadingURL = [self tempFileURLWithName:_content.key];
+    _request.downloadingURL = [self tempFileURLWithName:[_content.key componentsSeparatedByString:@"/"].lastObject];
     _request.bucket = CURRENT_BUCKET;
     _request.object = _content.key;
 
