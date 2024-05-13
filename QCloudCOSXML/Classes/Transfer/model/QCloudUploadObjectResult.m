@@ -32,7 +32,25 @@
 #import "QCloudUploadObjectResult.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
+@implementation QCloudUploadCallbackError
+
+@end
+
+@implementation QCloudUploadCallbackResult
++ (NSDictionary *)modelContainerPropertyGenericClass {
+    return @{
+        @"Error" : [QCloudUploadCallbackError class],
+    };
+}
+@end
 @implementation QCloudUploadObjectResult
+
++ (NSDictionary *)modelContainerPropertyGenericClass {
+    return @{
+        @"CallbackResult" : [QCloudUploadCallbackResult class],
+    };
+}
 
 + (NSDictionary *)modelCustomPropertyMapper {
     return @{

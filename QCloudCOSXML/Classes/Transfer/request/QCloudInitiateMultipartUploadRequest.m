@@ -105,6 +105,14 @@ NS_ASSUME_NONNULL_BEGIN
     if (self.contentSHA1) {
         [self.requestData setValue:self.contentSHA1 forHTTPHeaderField:@"x-cos-content-sha1"];
     }
+    
+    if (self.contentType) {
+        [self.requestData setValue:self.contentType forHTTPHeaderField:@"Content-Type"];
+    }else{
+        NSString *miniType = detemineFileMemeType(nil, self.object);
+        [self.requestData setValue:miniType forHTTPHeaderField:@"Content-Type"];
+    }
+    
     if (self.storageClass) {
         [self.requestData setValue:QCloudCOSStorageClassTransferToString(self.storageClass) forHTTPHeaderField:@"x-cos-storage-class"];
     }

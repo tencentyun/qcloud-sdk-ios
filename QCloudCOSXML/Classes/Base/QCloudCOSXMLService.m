@@ -32,9 +32,6 @@
 #import "QCloudCOSXMLService.h"
 #import "QCloudCOSXMLService+Configuration.h"
 #import "QCloudCOSXMLService+Private.h"
-#if TARGET_OS_IOS
-#import "QCloudLogManager.h"
-#endif
 QCloudThreadSafeMutableDictionary *QCloudCOSXMLServiceCache() {
     static QCloudThreadSafeMutableDictionary *CloudcosxmlService = nil;
     static dispatch_once_t onceToken;
@@ -61,7 +58,10 @@ static QCloudCOSXMLService *COSXMLService = nil;
             COSXMLService = [[QCloudCOSXMLService alloc] initWithConfiguration:configuration];
             if (!configuration.isCloseShareLog) {
     #if TARGET_OS_IOS
-                [QCloudLogManager sharedInstance];
+                if (NSClassFromString(@"QCloudLogManager")) {
+                    Class clazz = NSClassFromString(@"QCloudLogManager");
+                    [clazz performSelector:@selector(sharedInstance)];
+                }
     #endif
             }
         }

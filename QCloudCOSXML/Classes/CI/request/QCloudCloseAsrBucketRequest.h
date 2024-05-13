@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  本接口用于关闭智能语音服务并删除队列.
 
- 具体请查看  https://cloud.tencent.com/document/product/460/95755.
+ 具体请查看  https://cloud.tencent.com/document/product/460/95755
 
 ### 示例
 

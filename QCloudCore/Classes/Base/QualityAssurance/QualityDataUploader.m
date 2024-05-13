@@ -200,7 +200,7 @@ static NSString * sdkBridge = @"";
         
         Class clsClass = NSClassFromString(@"QCloudCLSTrackService");
         NSDictionary * paramter = @{
-            @"sdk_name":[NSString stringWithFormat:@"QCloud%@SDK",productName.uppercaseString], //  sdk名称,
+            @"sdk_name":productName.lowercaseString?:@"cos", //  sdk名称,
             @"sdk_version_code":sdkVersion?:@"", //  sdk版本号,
             @"sdk_version_name":sdkVersionName?:@"", //  sdk版本名称,
             @"sdk_bridge":sdk_bridge?:@"", //  桥接名称,
@@ -367,7 +367,7 @@ static NSString * sdkBridge = @"";
     
     Class clsClass = NSClassFromString(@"QCloudCLSTrackService");
     NSDictionary * baseInfo = @{
-        @"sdk_name":[NSString stringWithFormat:@"QCloud%@SDK",productName.uppercaseString], //  sdk名称,
+        @"sdk_name":productName.lowercaseString?:@"cos", //  sdk名称,
         @"sdk_version_code":sdkVersion?:@"", //  sdk版本号,
         @"sdk_version_name":sdkVersionName?:@"", //  sdk版本名称,
         @"cls_report":clsClass != nil?@"true":@"false"

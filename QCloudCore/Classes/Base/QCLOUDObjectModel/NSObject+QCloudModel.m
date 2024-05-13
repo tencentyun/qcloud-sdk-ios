@@ -1658,7 +1658,13 @@ static NSString *qcloudModelDescription(NSObject *model) {
     id jsonObject = [self qcloud_modelToJSONObject];
     if (!jsonObject)
         return nil;
-    return [NSJSONSerialization dataWithJSONObject:jsonObject options:0 error:NULL];
+    
+    @try {
+        return [NSJSONSerialization dataWithJSONObject:jsonObject options:0 error:NULL];
+    } @catch (NSException *exception) {
+        return nil;
+    }
+    
 }
 
 - (NSString *)qcloud_modelToJSONString {

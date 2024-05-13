@@ -72,12 +72,22 @@
 - (NSURLRequest *)buildURLRequest:(NSError *__autoreleasing *)error {
     __block NSMutableURLRequest *mutableURLRequest = [[NSMutableURLRequest alloc] init];
     [mutableURLRequest setHTTPMethod:self.HTTPMethod];
-    NSError *buildError;
     if (!self.bucket) {
-        buildError =
-            [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
-                                  message:[NSString stringWithFormat:@"InvalidArgument:paramter[bucket] which cannot be nil is invalid (nil)"]];
+        if (error) {
+            *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
+                                          message:[NSString stringWithFormat:@"InvalidArgument:paramter[bucket] which cannot be nil is invalid (nil)"]];
+        }
+        return nil;
     }
+    
+    if (!self.object || self.object.length == 0) {
+        if (error) {
+            *error = [NSError qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
+                                           message:[NSString stringWithFormat:@"InvalidArgument:paramter[object] which cannot be nil is invalid (nil)"]];
+        }
+        return nil;
+    }
+    
     NSMutableString *URLString = [[NSMutableString alloc] init];
     [URLString appendString:[self.runOnService.configuration.endpoint serverURLWithBucket:self.bucket
                                                                                     appID:self.runOnService.configuration.appID

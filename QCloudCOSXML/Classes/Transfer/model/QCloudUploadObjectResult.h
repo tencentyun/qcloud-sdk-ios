@@ -33,6 +33,23 @@
 #import <QCloudCore/QCloudCore.h>
 
 NS_ASSUME_NONNULL_BEGIN
+
+@interface QCloudUploadCallbackError : NSObject
+@property (strong, nonatomic) NSString *Code;
+
+@property (strong, nonatomic) NSString *Message;
+@end
+
+@interface QCloudUploadCallbackResult : NSObject
+@property (strong, nonatomic) NSString *Status;
+
+@property (strong, nonatomic) QCloudUploadCallbackError *Error;
+
+@property (strong, nonatomic) NSString *CallbackBody;
+
+@end
+
+
 /**
  完成分块上传返回结果信息
  */
@@ -63,5 +80,10 @@ NS_ASSUME_NONNULL_BEGIN
 */
 @property (assign, nonatomic) NSInteger size;
 
+@property (strong, nonatomic) QCloudUploadCallbackResult *CallbackResult;
+
 @end
+
+
+
 NS_ASSUME_NONNULL_END

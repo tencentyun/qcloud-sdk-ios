@@ -27,7 +27,6 @@
 /// 工作流数组
 @property (nonatomic,strong)NSArray <QCloudMediaWorkflowList *> * MediaWorkflowList;
 
-
 @end
 
 @interface QCloudTriggerWorkflow : NSObject 

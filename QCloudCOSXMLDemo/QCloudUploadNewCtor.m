@@ -298,7 +298,7 @@
 //      body   ：本地文件url（真正要上传的文件）
 //      object ：object 文件名称
     
-    WeakSelf(self);
+    QCloudWeakSelf(self);
     [upload setFinishBlock:^(QCloudUploadObjectResult *result, NSError * error) {
         
         dispatch_async(dispatch_get_main_queue(), ^{

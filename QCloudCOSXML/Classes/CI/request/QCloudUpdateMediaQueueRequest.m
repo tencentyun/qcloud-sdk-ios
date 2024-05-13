@@ -110,8 +110,14 @@ NS_ASSUME_NONNULL_BEGIN
     self.requestData.URIComponents = __pathComponents;
 
     NSMutableDictionary * mparams = [NSMutableDictionary new];
-    [mparams setObject:self.name forKey:@"Name"];
-    [mparams setObject:self.queueID forKey:@"QueueID"];
+    if (self.name) {
+        [mparams setObject:self.name forKey:@"Name"];
+    }
+    
+    if (self.queueID) {
+        [mparams setObject:self.queueID forKey:@"QueueID"];
+    }
+    
     if (self.state == 1) {
         [mparams setObject:@"Active" forKey:@"State"];
     }else if (self.state == 2){

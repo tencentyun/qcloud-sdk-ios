@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  使用动作活体检测模式前，需调用本接口获取动作顺序.
 
- 具体请查看  https://cloud.tencent.com/document/product/460/48648.
+ 具体请查看  https://cloud.tencent.com/document/product/460/48648
 
 ### 示例
 

@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  该接口用于添加图库图片.
 
- 具体请查看  https://cloud.tencent.com/document/product/460/63900.
+ 具体请查看  https://cloud.tencent.com/document/product/460/63900
 
 ### 示例
 

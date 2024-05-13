@@ -40,9 +40,9 @@ NS_ASSUME_NONNULL_BEGIN
  ### 功能描述
 
  简单上传主要适用于在单个请求中上传一个小于 5 GB 大小的对象. 对于大于 5 GB 的对象(或者在高带宽或弱网络环境中
- ）优先使用分片上传的方式 (https://cloud.tencent.com/document/product/436/14112).
+ ）优先使用分片上传的方式 (https://cloud.tencent.com/document/product/436/14112)
 
- 关于简单上传接口的具体描述，请查看 https://cloud.tencent.com/document/product/436/7749.
+ 关于简单上传接口的具体描述，请查看 https://cloud.tencent.com/document/product/436/7749
 
 ### 示例
 

@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "QCloudTrack"
-s.version              = "6.3.8"
+s.version              = "6.3.9"
   s.summary          = "QCloudTrack 腾讯云iOS-SDK组件"
 
 # This description is used to generate tags and improve search results.

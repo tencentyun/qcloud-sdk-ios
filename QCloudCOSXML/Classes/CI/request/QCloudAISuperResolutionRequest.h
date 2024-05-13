@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  腾讯云数据万象通过 AISuperResolution 接口对图像进行超分辨率处理，当前默认超分为宽高的2倍.
 
- 具体请查看  https://cloud.tencent.com/document/product/460/83793.
+ 具体请查看  https://cloud.tencent.com/document/product/460/83793
 
 ### 示例
 

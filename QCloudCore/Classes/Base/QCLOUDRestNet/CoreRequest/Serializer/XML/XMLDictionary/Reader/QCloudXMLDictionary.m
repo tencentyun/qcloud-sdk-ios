@@ -98,6 +98,7 @@
 
 - (NSDictionary<NSString *, id> *)dictionaryWithData:(NSData *)data {
     NSXMLParser *parser = [[NSXMLParser alloc] initWithData:data];
+    [parser setShouldResolveExternalEntities:NO];
     return [self dictionaryWithParser:parser];
 }
 

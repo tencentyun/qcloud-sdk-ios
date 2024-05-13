@@ -92,10 +92,16 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     _requstMetricArray = [NSMutableArray array];
     _mutilThreshold = kQCloudCOSXMLUploadLengthLimit;
     _enableMD5Verification = YES;
+    _enableVerification = YES;
     _retryHandler = [QCloudHTTPRetryHanlder defaultRetryHandler];
     startPartNumber = -1;
     self.priority = QCloudAbstractRequestPriorityHigh;
     return self;
+}
+
+- (void)setEnableVerification:(BOOL)enableVerification{
+    _enableVerification = enableVerification;
+    _enableMD5Verification = enableVerification;
 }
 
 - (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dictionary {
@@ -323,6 +329,32 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
                                              weakSelf.bucket, weakSelf.object, self.regionName);
             result.__originHTTPURLResponse__ = [outputObject __originHTTPURLResponse__];
             result.__originHTTPResponseData__ = [outputObject __originHTTPResponseData__];
+            if ([outputObject __originHTTPResponseData__]) {
+                NSData * data  = [outputObject __originHTTPResponseData__];
+                NSHTTPURLResponse * response = [outputObject __originHTTPURLResponse__];
+                if (response.statusCode == 200) {
+                    NSString *callbackBody = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                    QCloudUploadCallbackResult * callbackResult = [QCloudUploadCallbackResult new];
+                    callbackResult.CallbackBody = callbackBody;
+                    callbackResult.Status = @(response.statusCode).stringValue;
+                    result.CallbackResult = callbackResult;
+                }
+                
+                if (response.statusCode == 203 && [response.allHeaderFields[@"Content-Type"] isEqualToString:@"application/xml"]) {
+                    NSError * error;
+                    QCloudXMLDictionaryParser *parser = [QCloudXMLDictionaryParser new];
+                    NSDictionary *params = [parser dictionaryWithData:data];
+                    if (!error && params) {
+                        QCloudUploadCallbackResult * callbackResult = [QCloudUploadCallbackResult new];
+                        callbackResult.Status = @(response.statusCode).stringValue;
+                        QCloudUploadCallbackError * Error = [QCloudUploadCallbackError new];
+                        Error.Code = params[@"Code"];
+                        Error.Message = params[@"Message"];
+                        callbackResult.Error = Error;
+                        result.CallbackResult = callbackResult;
+                    }
+                }
+            }
             [weakSelf onSuccess:result];
         }
     };
@@ -365,6 +397,8 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     uploadRequet.accessControlList = self.accessControlList;
     uploadRequet.grantRead = self.grantRead;
     uploadRequet.grantFullControl = self.grantFullControl;
+    uploadRequet.contentType = self.contentType;
+    
     uploadRequet.customHeaders = [self.customHeaders mutableCopy];
     uploadRequet.retryPolicy.delegate = self;
     __weak typeof(uploadRequet) weakRequest = uploadRequet;
@@ -653,6 +687,14 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
                 outputObject.location
                     = QCloudFormattHTTPURL(outputObject.location, weakSelf.transferManager.cosService.configuration.endpoint.useHTTPS);
             }
+            
+            if (outputObject.CallbackResult && outputObject.CallbackResult.CallbackBody) {
+                NSString * callBackBody = outputObject.CallbackResult.CallbackBody;
+                NSData *data = [[NSData alloc] initWithBase64EncodedString:callBackBody options:0];
+                NSString *decodedString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                outputObject.CallbackResult.CallbackBody = decodedString;
+            }
+            
             [weakSelf onSuccess:outputObject];
         }
     }];

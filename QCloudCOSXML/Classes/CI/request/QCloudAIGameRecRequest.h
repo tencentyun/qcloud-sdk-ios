@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  游戏标签功能实现游戏图片场景的识别，返回图片中置信度较高的游戏类别标签。游戏标签识别请求包属于 GET 请求，请求时需要携带签名.
 
- 具体请查看  https://cloud.tencent.com/document/product/460/93153.
+ 具体请查看  https://cloud.tencent.com/document/product/460/93153
 
 ### 示例
 

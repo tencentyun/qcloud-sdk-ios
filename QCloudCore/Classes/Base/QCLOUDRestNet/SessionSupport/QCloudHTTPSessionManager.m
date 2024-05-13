@@ -359,8 +359,12 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
 
                         QCloudURLSessionTaskData *taskData = [weakSelf taskDataForTask:task];
                         if (taskData.httpRequest.sendProcessBlock) {
-                            [taskData.httpRequest notifySendProgressBytesSend:-(task.countOfBytesSent)
-                                                               totalBytesSend:task.countOfBytesSent
+                            int64_t countOfBytesSent = 0;
+                            if ([task respondsToSelector:@selector(countOfBytesSent)]) {
+                                countOfBytesSent = task.countOfBytesSent;
+                            }
+                            [taskData.httpRequest notifySendProgressBytesSend:-(countOfBytesSent)
+                                                               totalBytesSend:countOfBytesSent
                                                      totalBytesExpectedToSend:task.countOfBytesExpectedToSend];
                         }
                         QCloudHTTPRequest *httpRequset = taskData.httpRequest;
@@ -397,7 +401,7 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
     NSURLSessionAuthChallengeDisposition disposition = NSURLSessionAuthChallengePerformDefaultHandling;
     NSURLCredential *credential = nil;
     if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
-        if (!IS_QCloud_NORMAL_ENV || !taskData.httpRequest.requestSerializer.shouldAuthentication) {
+        if (!IS_QCloud_NORMAL_ENV || !taskData.httpRequest.requestSerializer.shouldAuthentication || taskData.httpRequest.runOnService.configuration.disableGlobalAuthentication) {
             SecTrustRef serverTrust = challenge.protectionSpace.serverTrust;
             credential = [NSURLCredential credentialForTrust:serverTrust];
             disposition = NSURLSessionAuthChallengeUseCredential;

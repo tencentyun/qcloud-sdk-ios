@@ -33,7 +33,6 @@
     return mdic.mutableCopy;
 }
 
-
 @end
 
 @implementation QCloudTriggerWorkflow

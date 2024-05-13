@@ -30,6 +30,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 是否全局禁用HTTPDNSPrefetch功能获取到IP。
 @property (nonatomic, assign) BOOL disableGlobalHTTPDNSPrefetch;
+
+/// 是否全局禁用HTTPS验证，默认为NO 不禁用。
+@property (nonatomic, assign) BOOL disableGlobalAuthentication;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  提交多个任务.
 
- 具体请查看  https://cloud.tencent.com/document/product/460/84764.
+ 具体请查看  https://cloud.tencent.com/document/product/460/84764
 
 ### 示例
  

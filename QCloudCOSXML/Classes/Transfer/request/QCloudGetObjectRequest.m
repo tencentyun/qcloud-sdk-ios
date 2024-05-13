@@ -73,6 +73,8 @@ NS_ASSUME_NONNULL_BEGIN
             return NO;
         }
     }
+
+    
     if (!self.bucket || ([self.bucket isKindOfClass:NSString.class] && ((NSString *)self.bucket).length == 0)) {
         if (error != NULL) {
             *error = [NSError
@@ -164,9 +166,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setFinishBlock:(void (^)(id _Nonnull result, NSError *_Nonnull error))finishBlock {
     
     if (finishBlock) {
-        WeakSelf(self);
+        QCloudWeakSelf(self);
         [super setFinishBlock:^(id outputObject, NSError *error) {
-            StrongSelf(self);
+            QCloudStrongSelf(self);
             NSError * lError;
             if (QCloudFileExist(strongself.downloadingTempURL.relativePath) && !error) {
                 if (QCloudFileExist(strongself.downloadingURL.relativePath)) {

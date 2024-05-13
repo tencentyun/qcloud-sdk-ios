@@ -111,6 +111,8 @@ RFC 2616 中定义的文件名称，将作为 Object 元数据保存。
 */
 @property (strong, nonatomic) NSString *expires;
 @property (strong, nonatomic) NSString *contentSHA1;
+
+@property (strong, nonatomic) NSString *contentType;
 /**
 设置 Object 的存储级别
 */

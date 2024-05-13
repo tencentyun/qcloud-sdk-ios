@@ -145,7 +145,7 @@ NSInteger const marginV = 12;
     
     putBucket.bucket =bucketName;
     
-    WeakSelf(self);
+    QCloudWeakSelf(self);
     [putBucket setFinishBlock:^(id outputObject, NSError *error) {
         NSLog(@"%@",outputObject);
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -168,7 +168,7 @@ NSInteger const marginV = 12;
 -(void)actionSelectRegion{
     
     QCloudSelectRegionTableViewController * selectRegion = [[QCloudSelectRegionTableViewController alloc]init];
-    WeakSelf(self);
+    QCloudWeakSelf(self);
     selectRegion.selectRegion = ^(NSObject *obj) {
         [weakself.btnSelectRegion setTitle:(NSString *)obj forState:0];
         weakself.strRegionName = (NSString *)obj;

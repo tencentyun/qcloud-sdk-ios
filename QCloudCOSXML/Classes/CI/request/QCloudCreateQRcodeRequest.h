@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  数据万象二维码生成功能可根据用户指定的文本信息（URL 或文本），生成对应的二维码或条形码.
 
- 具体请查看  https://cloud.tencent.com/document/product/460/53491.
+ 具体请查看  https://cloud.tencent.com/document/product/460/53491
 
 ### 示例
 

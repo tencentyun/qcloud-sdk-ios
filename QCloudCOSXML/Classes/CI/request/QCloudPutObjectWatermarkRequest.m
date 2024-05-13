@@ -99,6 +99,9 @@ NS_ASSUME_NONNULL_BEGIN
         if ([self.body isKindOfClass:[NSURL class]]) {
             NSString *miniType = detemineFileMemeType(self.body, self.object);
             [self.requestData setValue:miniType forHTTPHeaderField:@"Content-Type"];
+        } else{
+            NSString *miniType = detemineFileMemeType(nil, self.object);
+            [self.requestData setValue:miniType forHTTPHeaderField:@"Content-Type"];
         }
     }
     if (self.cacheControl) {
