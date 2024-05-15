@@ -386,8 +386,8 @@
 				1AB143E81E601E0500830F93 /* Sources */,
 				1AB143E91E601E0500830F93 /* Frameworks */,
 				1AB143EA1E601E0500830F93 /* Resources */,
-				86791D761081E42076358600 /* [CP] Embed Pods Frameworks */,
 				5531753F06D2602A23691AE3 /* [CP] Copy Pods Resources */,
+				905E623E0EDCB9F5095F7201 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -506,17 +506,19 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-QCloudCOSXMLDemo/Pods-QCloudCOSXMLDemo-resources.sh",
 				"${PODS_CONFIGURATION_BUILD_DIR}/QCloudCOSXML/QCloudCOSXML.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TencentCloudLogProducer/TencentCloudLogProducer.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/QCloudCOSXML.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TencentCloudLogProducer.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-QCloudCOSXMLDemo/Pods-QCloudCOSXMLDemo-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		86791D761081E42076358600 /* [CP] Embed Pods Frameworks */ = {
+		905E623E0EDCB9F5095F7201 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (

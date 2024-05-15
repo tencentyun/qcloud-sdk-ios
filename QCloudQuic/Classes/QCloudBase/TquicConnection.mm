@@ -326,9 +326,9 @@ class TnetAsyncDelegate : public TnetRequestDelegate{
 -(void)startRequest{
     NSLog(@"Tquic startRequest: %@ (%@)", self.quicReqeust.host, self.quicReqeust.ip);
     if(self.quicReqeust.ip == nil){
-        request_sp->ConnectWithDomain([self.quicReqeust.host UTF8String], [QCloudQuicConfig shareConfig].port);
+        request_sp->ConnectWithDomain([self.quicReqeust.host?:@"" UTF8String], [QCloudQuicConfig shareConfig].port);
     }else{
-        request_sp->Connect([self.quicReqeust.host UTF8String], [self.quicReqeust.ip UTF8String], [QCloudQuicConfig shareConfig].port, [QCloudQuicConfig shareConfig].tcp_port);
+        request_sp->Connect([self.quicReqeust.host?:@"" UTF8String], [self.quicReqeust.ip?:@"" UTF8String], [QCloudQuicConfig shareConfig].port, [QCloudQuicConfig shareConfig].tcp_port);
     }
 //    request_sp.get()->Connect([@"iacc.stgw.qq.com" UTF8String] , [@"101.89.15.244" UTF8String],  [QCloudQuicConfig shareConfig].port, [QCloudQuicConfig shareConfig].tcp_port);
 }

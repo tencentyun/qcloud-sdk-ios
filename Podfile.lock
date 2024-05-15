@@ -17,9 +17,9 @@ PODS:
   - QCloudTrack/Cls (6.3.9):
     - TencentCloudLogProducer
   - QCloudTrack/Default (6.3.9)
-  - TencentCloudLogProducer (1.0.9):
-    - TencentCloudLogProducer/Core (= 1.0.9)
-  - TencentCloudLogProducer/Core (1.0.9):
+  - TencentCloudLogProducer (1.1.0):
+    - TencentCloudLogProducer/Core (= 1.1.0)
+  - TencentCloudLogProducer/Core (1.1.0):
     - GMOpenSSL (~> 2.2.6)
 
 DEPENDENCIES:
@@ -51,7 +51,7 @@ SPEC CHECKSUMS:
   QCloudCOSXML: a8139aaa7db0c74c870a5a36ccccbee89d5cad75
   QCloudQuic: 895ccf08046ecf068a6f965831dd16fc7d531fb4
   QCloudTrack: 00557c28b5b1a2cd4a0cf2c41a34947d8a19d119
-  TencentCloudLogProducer: 980e6a4b9ed49b7b3f41779203be5e4ba1b03b95
+  TencentCloudLogProducer: 4ccf2eb45c432180351564b1447b98d9b23ca37a
 
 PODFILE CHECKSUM: 469848875513aa1180afa1e3751e2d873841a154
 

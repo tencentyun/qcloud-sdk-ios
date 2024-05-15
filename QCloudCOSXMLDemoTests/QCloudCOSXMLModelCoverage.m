@@ -14,7 +14,6 @@
 #import <QCloudCOSXML/QCloudTag.h>
 #import <QCloudCOSXML/QCloudGenerateSnapshotRotateTypeEnum.h>
 #import <QCloudCOSXML/QCloudInputJSONFileTypeEnum.h>
-#import <QCloudCOSXML/QCloudGetRecognitionResultInfo.h>
 #import <QCloudCOSXML/QCloudGenerateSnapshotInput.h>
 #import <QCloudCOSXML/QCloudCOSIncludedObjectVersionsEnum.h>
 #import <QCloudCOSXML/QCloudWebsiteRoutingRules.h>
@@ -60,31 +59,6 @@
     XCTAssert([tag performSelector:@selector(modelCustomTransformToDictionary:) withObject:inputDict]);
 }
 
-
--(void)testGetRecognitionResultInfo{
-    XCTAssert([QCloudGetRecognitionResultInfo performSelector:@selector(modelCustomPropertyMapper)]);
-    QCloudGetRecognitionResultInfo * resultInfo = [QCloudGetRecognitionResultInfo new];
-    NSDictionary *inputDict = @{
-        @"Code" : @"CodeValue",
-        @"Msg" : @"MsgValue",
-        @"HitFlag" : @"HitFlagValue",
-        @"Score" : @"ScoreValue",
-        @"Label" : @"LabelValue",
-        @"Count" : @"CountValue",
-    };;
-    id output = [resultInfo performSelector:@selector(modelCustomWillTransformFromDictionary:) withObject:nil];
-    XCTAssertNil(output);
-    NSDictionary *transOutput = [resultInfo performSelector:@selector(modelCustomWillTransformFromDictionary:) withObject:inputDict];
-    XCTAssert([transOutput[@"Code"] isEqualToString:@"CodeValue"]);
-    XCTAssert([transOutput[@"Msg"] isEqualToString:@"MsgValue"]);
-    XCTAssert([transOutput[@"HitFlag"] isEqualToString:@"HitFlagValue"]);
-    XCTAssert([transOutput[@"Score"] isEqualToString:@"ScoreValue"]);
-    XCTAssert([transOutput[@"Label"] isEqualToString:@"LabelValue"]);
-    XCTAssert([transOutput[@"Count"] isEqualToString:@"CountValue"]);
-    
-    XCTAssert([resultInfo performSelector:@selector(modelCustomTransformToDictionary:) withObject:inputDict]);
-}
-
 -(void)testGenerateSnapshotInput{
     XCTAssert([QCloudGenerateSnapshotInput performSelector:@selector(modelCustomPropertyMapper)]);
     QCloudGenerateSnapshotInput * resultInfo = [QCloudGenerateSnapshotInput new];
@@ -111,50 +85,6 @@
     XCTAssert([transOutput[@"Enabled"] isEqualToString:@"EnabledValue"]);
     
     XCTAssert([resultInfo performSelector:@selector(modelCustomTransformToDictionary:) withObject:inputDict]);
-}
-
--(void)testQCloudGetRecognitionObjectResult{
-    XCTAssert([QCloudGetRecognitionResultInfo performSelector:@selector(modelCustomPropertyMapper)]);
-    QCloudGetRecognitionResultInfo * resultInfo = [QCloudGetRecognitionResultInfo new];
-    NSDictionary *inputDict = @{
-        @"Code" : @"CodeValue",
-        @"Msg" : @"MsgValue",
-        @"HitFlag" : @"HitFlagValue",
-        @"Score" : @"ScoreValue",
-        @"Label" : @"LabelValue",
-        @"Count" : @"CountValue",
-    };;
-    id output = [resultInfo performSelector:@selector(modelCustomWillTransformFromDictionary:) withObject:nil];
-    XCTAssertNil(output);
-    NSDictionary *transOutput = [resultInfo performSelector:@selector(modelCustomWillTransformFromDictionary:) withObject:inputDict];
-    XCTAssert([transOutput[@"Code"] isEqualToString:@"CodeValue"]);
-    XCTAssert([transOutput[@"Msg"] isEqualToString:@"MsgValue"]);
-    XCTAssert([transOutput[@"HitFlag"] isEqualToString:@"HitFlagValue"]);
-    XCTAssert([transOutput[@"Score"] isEqualToString:@"ScoreValue"]);
-    XCTAssert([transOutput[@"Label"] isEqualToString:@"LabelValue"]);
-    XCTAssert([transOutput[@"Count"] isEqualToString:@"CountValue"]);
-    
-    XCTAssert([resultInfo performSelector:@selector(modelCustomTransformToDictionary:) withObject:inputDict]);
-    
-    XCTAssert([QCloudGetRecognitionObjectResult performSelector:@selector(modelCustomPropertyMapper)]);
-    QCloudGetRecognitionObjectResult * resultInfos = [QCloudGetRecognitionObjectResult new];
-    NSDictionary * inputDicts = @{
-        @"PornInfo" : resultInfo,
-        @"TerroristInfo" : resultInfo,
-        @"PoliticsInfo" : resultInfo,
-        @"AdsInfo" : resultInfo,
-    };
-    
-    id outputs = [resultInfos performSelector:@selector(modelCustomWillTransformFromDictionary:) withObject:nil];
-    XCTAssertNil(outputs);
-    NSDictionary *transOutputs = [resultInfos performSelector:@selector(modelCustomWillTransformFromDictionary:) withObject:inputDicts];
-    
-    XCTAssertNotNil(transOutputs[@"PornInfo"]);
-    XCTAssertNotNil(transOutputs[@"TerroristInfo"]);
-    XCTAssertNotNil(transOutputs[@"PoliticsInfo"]);
-    XCTAssertNotNil(transOutputs[@"AdsInfo"]);
-    
-    XCTAssert([resultInfos performSelector:@selector(modelCustomTransformToDictionary:) withObject:inputDicts]);
 }
 
 -(void)testQCloudPutObjectWatermarkResult{

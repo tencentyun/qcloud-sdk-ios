@@ -1359,4 +1359,52 @@ static QCloudBucket *sourceTestBucket;
     [[QCloudCOSXMLService defaultCOSXML] GetGenerateSnapshot:shotRequest];
     [self waitForExpectationsWithTimeout:80 handler:nil];
 }
+
+- (void)testMultiUpload1 {
+    QCloudCOSXMLUploadObjectRequest *put = [QCloudCOSXMLUploadObjectRequest new];
+    int randomNumber = arc4random() % 100;
+    NSURL *url = [NSURL fileURLWithPath:[self tempFileWithSize:0.5 * 1024 * 1024]];
+    __block NSString *object = [NSUUID UUID].UUIDString;
+    put.body = url;
+    put.object = object;
+    put.regionName = @"ap-shanghai";
+    put.bucket = @"test-callback-1251668577";
+    [put setSendProcessBlock:^(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
+        NSLog(@"upload %lld totalSend %lld aim %lld", bytesSent, totalBytesSent, totalBytesExpectedToSend);
+    }];
+
+    NSDictionary * dic = @{@"callbackUrl":@"http://114.132.67.183/index",@"callbackHost":@"114.132.67.183",@"callbackBody":@"bucket=${bucket}&object=${object}&etag=${etag}&test=test_123",@"callbackBodyType":@"application/x-www-form-urlencoded"};
+    
+    NSData *data = [[dic qcloud_modelToJSONString] dataUsingEncoding:NSUTF8StringEncoding];
+    NSString *base64String = [data base64EncodedStringWithOptions:0];
+
+    put.customHeaders = @{@"x-cos-callback":base64String}.mutableCopy;
+    XCTestExpectation *exp = [self expectationWithDescription:@"testMultiUpload upload object expectation"];
+    __block QCloudUploadObjectResult *result;
+    [put setFinishBlock:^(QCloudUploadObjectResult *result, NSError *error) {
+        if (result.CallbackResult) {
+            if (result.CallbackResult.Status.integerValue == 200) {
+                // 获取回调CallbackBody: result.CallbackResult.CallbackBody
+            }else if (result.CallbackResult.Status.integerValue == 203){
+                // 获取回调状态：Status为203时，说明Callback，返回 Error，说明回调失败信息。
+                //  result.CallbackResult.Error
+            }
+        }
+        //        [request setFinishBlock:^(id outputObject, NSError *error) {
+        //            QCloudLogInfo(@"outputObject%@",outputObject);
+        //            XCTAssertNil(error);
+        [exp fulfill];
+        //        }];
+        //        [request setDownProcessBlock:^(int64_t bytesDownload, int64_t totalBytesDownload, int64_t totalBytesExpectedToDownload) {
+        //            NSLog(@"⏬⏬⏬⏬DOWN [Total]%lld  [Downloaded]%lld [Download]%lld", totalBytesExpectedToDownload, totalBytesDownload,
+        //            bytesDownload);
+        //        }];
+        //        [[QCloudCOSXMLService defaultCOSXML] GetObject:request];
+    }];
+
+    [[QCloudCOSTransferMangerService defaultCOSTransferManager] UploadObject:put];
+    [self waitForExpectationsWithTimeout:18000
+                                 handler:^(NSError *_Nullable error) {
+                                 }];
+}
 @end

@@ -653,7 +653,6 @@
         QCloudGetBucketLocationRequest.class,
         QCloudGetBucketACLRequest.class,
         QCloudGetBucketCORSRequest.class,
-        QCloudGetRecognitionObjectRequest.class,
         QCloudListObjectVersionsRequest.class,
         QCloudListBucketMultipartUploadsRequest.class,
         QCloudGetObjectRequest.class,

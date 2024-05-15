@@ -74,5 +74,113 @@
             endingLineNumber = "117">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "261BE051-C4D9-49D0-AF67-C63851091044"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "QCloudCOSXMLDemoTests/QCloudCOSTransferTests.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1385"
+            endingLineNumber = "1385"
+            landmarkName = "-testMultiUpload1"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "261BE051-C4D9-49D0-AF67-C63851091044 - d0673aa8f01eb2f8"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__42-[QCloudCOSTransferTests testMultiUpload1]_block_invoke_2"
+                  moduleName = "QCloudCOSXMLDemoTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/garenwang/Documents/code/qcloud-sdk-ios/QCloudCOSXMLDemoTests/QCloudCOSTransferTests.m"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1385"
+                  endingLineNumber = "1385"
+                  offsetFromSymbolStart = "99">
+               </Location>
+               <Location
+                  uuid = "261BE051-C4D9-49D0-AF67-C63851091044 - d0673aa8f01eb2f8"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__42-[QCloudCOSTransferTests testMultiUpload1]_block_invoke_2"
+                  moduleName = "QCloudCOSXMLDemoTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/garenwang/Documents/code/qcloud-sdk-ios/QCloudCOSXMLDemoTests/QCloudCOSTransferTests.m"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1385"
+                  endingLineNumber = "1385"
+                  offsetFromSymbolStart = "397">
+               </Location>
+               <Location
+                  uuid = "261BE051-C4D9-49D0-AF67-C63851091044 - d0673aa8f01eb2f8"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__42-[QCloudCOSTransferTests testMultiUpload1]_block_invoke_2"
+                  moduleName = "QCloudCOSXMLDemoTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/garenwang/Documents/code/qcloud-sdk-ios/QCloudCOSXMLDemoTests/QCloudCOSTransferTests.m"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1385"
+                  endingLineNumber = "1385"
+                  offsetFromSymbolStart = "734">
+               </Location>
+               <Location
+                  uuid = "261BE051-C4D9-49D0-AF67-C63851091044 - d0673aa8f01eb2f8"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__42-[QCloudCOSTransferTests testMultiUpload1]_block_invoke_2"
+                  moduleName = "QCloudCOSXMLDemoTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/garenwang/Documents/code/qcloud-sdk-ios/QCloudCOSXMLDemoTests/QCloudCOSTransferTests.m"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1385"
+                  endingLineNumber = "1385"
+                  offsetFromSymbolStart = "813">
+               </Location>
+               <Location
+                  uuid = "261BE051-C4D9-49D0-AF67-C63851091044 - d0673aa8f01eb2f8"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__42-[QCloudCOSTransferTests testMultiUpload1]_block_invoke_2"
+                  moduleName = "QCloudCOSXMLDemoTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/garenwang/Documents/code/qcloud-sdk-ios/QCloudCOSXMLDemoTests/QCloudCOSTransferTests.m"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1385"
+                  endingLineNumber = "1385"
+                  offsetFromSymbolStart = "993">
+               </Location>
+               <Location
+                  uuid = "261BE051-C4D9-49D0-AF67-C63851091044 - d0673aa8f01eb2f8"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__42-[QCloudCOSTransferTests testMultiUpload1]_block_invoke_2"
+                  moduleName = "QCloudCOSXMLDemoTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/garenwang/Documents/code/qcloud-sdk-ios/QCloudCOSXMLDemoTests/QCloudCOSTransferTests.m"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1385"
+                  endingLineNumber = "1385"
+                  offsetFromSymbolStart = "1166">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>
