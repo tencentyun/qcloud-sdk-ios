@@ -1,5 +1,5 @@
 #import "QCloudTrackVersion.h"
-NSString * const QCloudTrackModuleVersion = @"6.3.9";
+NSString * const QCloudTrackModuleVersion = @"6.4.0";
 NSString * const QCloudTrackModuleName = @"QCloudTrack";
 @interface QCloudQCloudTrackLoad : NSObject
 @end
@@ -13,6 +13,12 @@ NSString * const QCloudTrackModuleName = @"QCloudTrack";
                                  @"name" : QCloudTrackModuleName,
                                  @"version" : QCloudTrackModuleVersion
                                  } mutableCopy];
+
+          NSString* buglyID = @"";
+          if (buglyID.length > 0) {
+              module[@"crashID"] = buglyID;
+          }
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
         id share = [cla performSelector:@selector(shareInstance)];

@@ -34,6 +34,7 @@
     if (!self) {
         return nil;
     }
+    self.objectKeySimplifyCheck = YES;
     _customHeaders = [NSMutableDictionary dictionary];
     _requestCacheArray = [NSPointerArray weakObjectsPointerArray];
     return self;
@@ -128,6 +129,7 @@
 - (void)startGetObject {
     
     QCloudGetObjectRequest *request = [QCloudGetObjectRequest new];
+    request.objectKeySimplifyCheck = self.objectKeySimplifyCheck;
     request.trafficLimit = self.trafficLimit;
     request.payload = self.payload;
     request.customHeaders = [self.customHeaders mutableCopy];

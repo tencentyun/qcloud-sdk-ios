@@ -143,6 +143,6 @@ typedef void (^QCloudHTTPRequestConfigure)(QCloudRequestSerializer *_Nonnull req
 
 -(BOOL)needChangeHost;
 
-+(BOOL)needChangeHost:(NSString *)host;
++(BOOL)needChangeHost:(NSString *_Nullable)host;
 
 @end

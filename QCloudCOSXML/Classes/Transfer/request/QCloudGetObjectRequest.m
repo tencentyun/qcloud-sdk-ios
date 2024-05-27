@@ -44,6 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
     if (!self) {
         return nil;
     }
+    self.objectKeySimplifyCheck = YES;
     return self;
 }
 - (void)configureReuqestSerializer:(QCloudRequestSerializer *)requestSerializer responseSerializer:(QCloudResponseSerializer *)responseSerializer {
@@ -73,7 +74,16 @@ NS_ASSUME_NONNULL_BEGIN
             return NO;
         }
     }
-
+    
+    if (self.objectKeySimplifyCheck && [[self simplifyPath:self.object] isEqualToString:@"/"]) {
+        if (error != NULL) {
+            *error = [NSError
+                      qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
+                      message:[NSString stringWithFormat:
+                               @"The Getobject Key is illegal"]];
+            return NO;
+        }
+    }
     
     if (!self.bucket || ([self.bucket isKindOfClass:NSString.class] && ((NSString *)self.bucket).length == 0)) {
         if (error != NULL) {
@@ -163,7 +173,7 @@ NS_ASSUME_NONNULL_BEGIN
     return fileds;
 }
 
-- (void)setFinishBlock:(void (^)(id _Nonnull result, NSError *_Nonnull error))finishBlock {
+- (void)setFinishBlock:(void (^_Nullable)(id _Nullable result, NSError *_Nullable error))finishBlock {
     
     if (finishBlock) {
         QCloudWeakSelf(self);
@@ -193,6 +203,22 @@ NS_ASSUME_NONNULL_BEGIN
     [array addObject:dic];
     return [array copy];
 }
+
+- (NSString *)simplifyPath:(NSString *)path {
+    NSArray *names = [path componentsSeparatedByString:@"/"];
+    NSMutableArray *stack = [NSMutableArray array];
+    for (NSString *name in names) {
+        if ([name isEqualToString:@".."]) {
+            if (stack.count > 0) {
+                [stack removeLastObject];
+            }
+        } else if (name.length > 0 && ![name isEqualToString:@"."]) {
+            [stack addObject:name];
+        }
+    }
+    return [@"/" stringByAppendingString:[stack componentsJoinedByString:@"/"]];
+}
+
 
 @end
 NS_ASSUME_NONNULL_END

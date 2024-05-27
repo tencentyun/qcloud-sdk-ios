@@ -7,7 +7,7 @@
 
 #import "QCloudBeaconTrackService.h"
 #import "QCloudTrackConstants.h"
-#import "COSBeaconAPI_Base/COSBeaconReport.h"
+#import <COSBeaconAPI_Base/COSBeaconReport.h>
 #import "QCloudTrackConstants.h"
 
 void QCloudTrackEnsurePathExist(NSString *path) {
