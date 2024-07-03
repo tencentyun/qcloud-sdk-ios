@@ -313,7 +313,7 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
                       object:nil
                     userInfo:@{
                         @"url" : task.originalRequest.URL ? task.originalRequest.URL
-                                                          : [NSURL URLWithString:@"http://nullurl.error.com.tencent.qcloud.network"]
+                                                          : [NSURL URLWithString:@"https://nullurl.error.com.tencent.qcloud.network"]
 
                     }];
 

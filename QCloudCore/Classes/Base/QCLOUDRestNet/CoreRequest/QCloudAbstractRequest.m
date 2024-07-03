@@ -180,6 +180,22 @@ __attribute__((noinline)) void cosWarnBlockingOperationOnMainThread(void) {
     }
     [self.condition unlock];
 }
+
+- (void)setCredential:(QCloudCredential *)credential{
+    
+    NSMutableDictionary * _payload = self.payload.mutableCopy;
+    if (!_payload) {
+        _payload = [NSMutableDictionary new];
+    }
+    if (credential) {
+        [_payload setObject:credential forKey:@"QCloudCredential"];
+    }
+    self.payload = _payload.copy;
+}
+
+- (QCloudCredential *)credential{
+    return [self.payload objectForKey:@"QCloudCredential"];
+}
 - (void)configTaskResume {
 }
 @end

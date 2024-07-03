@@ -19,6 +19,7 @@
 #import <CommonCrypto/CommonCrypto.h>
 #import "NSObject+QCloudModelTool.h"
 #import "QCloudLogger.h"
+#import "QCloudAuthentationV5Creator.h"
 NS_ASSUME_NONNULL_BEGIN
 
 QCloudResponseSerializerBlock QCloudResponseObjectSerilizerBlock(Class modelClass) {
@@ -124,15 +125,36 @@ QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilizerBlock
 
 - (BOOL)prepareInvokeURLRequest:(NSMutableURLRequest *)urlRequest error:(NSError *__autoreleasing *)error {
     
+    if (self.credential && self.credential.secretID.length > 0 && self.credential.secretKey.length > 0) {
+        QCloudAuthentationV5Creator *creator = [[QCloudAuthentationV5Creator alloc] initWithCredential:self.credential];
+        QCloudSignature *signature = [creator signatureForData:(NSMutableURLRequest *)urlRequest];
+        if (!self.isSignedInURL) {
+            [urlRequest setValue:signature.signature forHTTPHeaderField:@"Authorization"];
+        } else {
+            NSString *urlStr;
+            NSRange rangeOfQ = [urlStr rangeOfString:@"?"];
+            if (rangeOfQ.location == NSNotFound) {
+                urlStr = [NSString stringWithFormat:@"%@?%@", urlRequest.URL.absoluteString, signature.signature];
+            } else {
+                urlStr = [NSString stringWithFormat:@"%@&%@", urlRequest.URL.absoluteString, signature.signature];
+            }
+            if (signature.token) {
+                urlStr = [NSString stringWithFormat:@"%@&x-cos-security-token=%@", urlStr, signature.token];
+            }
+            urlRequest.URL = [[NSURL URLWithString:urlStr] copy];
+        }
+        return YES;
+    }
+    
     if(!self.signatureProvider){
         return YES;
     }
     
-    //    NSAssert(self.runOnService, @"RUN ON SERVICE is nil%@", self.runOnService);
     self.semaphore = dispatch_semaphore_create(0);
     self.semp_flag = 1;
     __block NSError *localError;
     __block BOOL isSigned;
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         [self.signatureProvider
             signatureWithFields:self.signatureFields

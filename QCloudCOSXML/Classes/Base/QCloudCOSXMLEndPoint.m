@@ -94,6 +94,7 @@
     QCloudLogDebug(@"serverURL:  %@", serverURL);
     return serverURL;
 }
+
 - (void)setIsPrefixURL:(BOOL)isPrefixURL {
     _isPrefixURL = isPrefixURL;
 }

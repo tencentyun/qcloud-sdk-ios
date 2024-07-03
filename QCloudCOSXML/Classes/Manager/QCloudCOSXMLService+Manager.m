@@ -287,6 +287,31 @@
         request.finishBlock(result, nil);
         return;
     }
+    
+    if (request.credential) {
+        QCloudAuthentationV5Creator *creator = [[QCloudAuthentationV5Creator alloc] initWithCredential:request.credential];
+        QCloudSignature *signature = [creator signatureForData:(NSMutableURLRequest *)urlRequest];
+        NSString *authorizatioinString = signature.signature;
+        if ([requestURLString hasSuffix:@"&"] || [requestURLString hasSuffix:@"?"]) {
+            requestURLString = [requestURLString stringByAppendingString:authorizatioinString];
+        } else if([requestURLString containsString:@"?"] && ![requestURLString hasSuffix:@"&"]){
+            requestURLString = [requestURLString stringByAppendingFormat:@"&%@", authorizatioinString];
+        }else {
+            requestURLString = [requestURLString stringByAppendingFormat:@"?%@", authorizatioinString];
+        }
+        if (signature.token) {
+            requestURLString =
+                [requestURLString stringByAppendingFormat:@"&x-cos-security-token=%@", signature.token];
+        }
+
+        QCloudGetPresignedURLResult *result = [[QCloudGetPresignedURLResult alloc] init];
+        result.presienedURL = requestURLString;
+        if (request.finishBlock) {
+            request.finishBlock(result, nil);
+        }
+        return;
+    }
+    
     [request.signatureProvider signatureWithFields:request.signatureFields
                                            request:request
                                         urlRequest:(NSMutableURLRequest *)urlRequest

@@ -44,6 +44,27 @@
 @class QCloudVoiceSynthesisTempleteResponseTemplate;
 @class QCloudVoiceSynthesisTempleteResponseTtsTpl;
 
+@class QCloudPostFileUnzipProcessJobOutput;
+@class QCloudPostFileUnzipProcessJobResponseJobsDetail;
+@class QCloudPostFileUnzipProcessJobResponseInput;
+@class QCloudPostFileUnzipProcessJobResponseOperation;
+@class QCloudFileUncompressConfig;
+@class QCloudDownloadConfig;
+@class QCloudFileUncompressResult;
+@class QCloudCreateFileZipProcessJobsResponseJobsDetail;
+@class QCloudCreateFileZipProcessJobsResponseOperation;
+@class QCloudCreateFileZipProcessJobsOutput;
+@class QCloudFileCompressConfig;
+@class QCloudFileCompressResult;
+@class QCloudPostHashProcessJobsResponseJobsDetail;
+@class QCloudPostHashProcessJobsResponseInput;
+@class QCloudPostHashProcessJobsResponseOperation;
+@class QCloudPostHashProcessJobsFileHashCodeConfig;
+@class QCloudPostHashProcessJobsFileHashCodeResult;
+@class QCloudQueueList;
+
+@class QCloudFileListContents;
+@class QCloudFileListContent;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface QCloudCallBackMqConfig : NSObject
@@ -895,6 +916,399 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 同请求体中的 Request.Emotion
 @property (nonatomic,strong) NSString * Emotion;
+
+@end
+
+@interface QCloudPostFileUnzipProcessJobOutput : NSObject
+
+/// 存储桶的地域。;是否必传：是
+@property (nonatomic,strong) NSString * Region;
+
+/// 保存解压后文件的存储桶。;是否必传：是
+@property (nonatomic,strong) NSString * Bucket;
+
+@end
+
+@interface QCloudPostFileUnzipProcessJobResponseJobsDetail : NSObject
+
+/// 错误码，只有 State 为 Failed 时有意义。
+@property (nonatomic,strong) NSString * Code;
+
+/// 错误描述，只有 State 为 Failed 时有意义。
+@property (nonatomic,strong) NSString * Message;
+
+/// 新创建任务的 ID。
+@property (nonatomic,strong) NSString * JobId;
+
+/// 表示任务的类型，文件解压默认为：FileUncompress。
+@property (nonatomic,strong) NSString * Tag;
+
+/// 任务状态Submitted：已提交，待执行Running：执行中Success：执行成功Failed：执行失败Pause：任务暂停，当暂停队列时，待执行的任务会变为暂停状态Cancel：任务被取消执行
+@property (nonatomic,strong) NSString * State;
+
+/// 任务进度百分比，范围为[0, 100]。
+@property (nonatomic,assign) NSInteger Progress;
+
+/// 任务的创建时间。
+@property (nonatomic,strong) NSString * CreationTime;
+
+/// 任务的开始时间。
+@property (nonatomic,strong) NSString * StartTime;
+
+/// 任务的结束时间。
+@property (nonatomic,strong) NSString * EndTime;
+
+/// 任务所属的 队列 ID。
+@property (nonatomic,strong) NSString * QueueId;
+
+/// 被解压文件的信息。
+@property (nonatomic,strong) QCloudPostFileUnzipProcessJobResponseInput * Input;
+
+/// 文件解压的处理规则。
+@property (nonatomic,strong) QCloudPostFileUnzipProcessJobResponseOperation * Operation;
+
+@end
+
+@interface QCloudPostFileUnzipProcessJobResponseInput : NSObject
+
+/// 存储桶所在地域。
+@property (nonatomic,strong) NSString * Region;
+
+/// 文件所在的存储桶。
+@property (nonatomic,strong) NSString * BucketId;
+
+/// 被解压文件的文件名。
+@property (nonatomic,strong) NSString * Object;
+
+@end
+
+@interface QCloudPostFileUnzipProcessJobResponseOperation : NSObject
+
+/// 透传用户信息。
+@property (nonatomic,strong) NSString * UserData;
+
+/// 同请求中的 Request.Operation.Output。
+@property (nonatomic,strong) QCloudPostFileUnzipProcessJobOutput * Output;
+
+/// 同请求中的 Request.Operation.FileUncompressConfig。
+@property (nonatomic,strong) QCloudFileUncompressConfig * FileUncompressConfig;
+
+/// 文件解压的结果，任务未完成时不返回。
+@property (nonatomic,strong) QCloudFileUncompressResult * FileUncompressResult;
+
+@end
+
+@interface QCloudFileUncompressConfig : NSObject
+
+/// 指定解压后输出文件的前缀，不填则默认保存在存储桶根路径。;是否必传：否
+@property (nonatomic,strong) NSString * Prefix;
+
+/// 解压密钥，传入时需先经过 base64编码。;是否必传：否
+@property (nonatomic,strong) NSString * UnCompressKey;
+
+/// 指定解压后的文件路径是否需要替换前缀，有效值：0：不添加额外的前缀，解压缩将保存在 Prefix 指定的路径下（不会保留压缩包的名称，仅将压缩包内的文件保存至指定的路径）1：以压缩包本身的名称作为前缀，解压缩将保存在 Prefix 指定的路径下2：以压缩包完整路径作为前缀，此时如果不指定 Prefix，就是解压到压缩包所在的当前路径（包含压缩包本身名称）默认值为0。;是否必传：否
+@property (nonatomic,strong) NSString * PrefixReplaced;
+
+/// 解压模式0：全部下载1：解压指定内容默认值为0;是否必传：否
+@property (nonatomic,strong) NSString * Mode ;
+
+/// 解压指定内容配置，当 Mode = 1 时必填;是否必传：否
+@property (nonatomic,strong) QCloudDownloadConfig * DownloadConfig;
+
+/// 指定查询任务或查看任务回调时，是否需要输出已解压的文件列表。输出的列表将在查询任务响应或回调中的<FileList>字段下展示。限制说明：仅支持展示前1000条文件，1000条以后的文件记录将被截断。如需查看更多文件，建议通过 COS GET Bucket 接口查询。;是否必传：否
+@property (nonatomic,assign) BOOL ListingFile;
+
+@end
+
+@interface QCloudDownloadConfig : NSObject
+
+/// 解压该前缀下的文件;是否必传：是
+@property (nonatomic,strong) NSString * Prefix ;
+
+/// 解压该文件，最多同时填 1000 个;是否必传：是
+@property (nonatomic,strong) NSString * Key ;
+
+@end
+
+
+@interface QCloudFileUncompressResult : NSObject
+
+/// 解压后文件保存的存储桶的地域。
+@property (nonatomic,strong) NSString * Region;
+
+/// 解压后文件保存的存储桶。
+@property (nonatomic,strong) NSString * Bucket;
+
+/// 解压后文件的个数。
+@property (nonatomic,strong) NSString * FileCount;
+
+/// 提交解压任务时指定了<ListingFile>为 true 时，并且任务状态为已成功完成时返回该节点，表示已解压的文件列表。 限制说明：仅支持展示前1000条文件，1000条以后的文件记录将被截断。 如需查看更多文件，建议通过 COS GET Bucket 接口查询。;是否必传：否
+@property (nonatomic,strong) QCloudFileListContents * FileList;
+
+@end
+
+@interface QCloudFileListContents : NSObject
+
+@property (nonatomic,assign) BOOL IsTruncated;
+
+/// 已解压的文件信息，可包含多条。;是否必传：否
+@property (nonatomic,strong)NSArray <QCloudFileListContent * > * Contents;
+
+@end
+
+@interface QCloudFileListContent : NSObject
+
+/// 文件名称。;是否必传：否
+@property (nonatomic,strong) NSString * Key;
+
+/// 文件的最近一次修改的时间。;是否必传：否
+@property (nonatomic,strong) NSString * LastModified;
+
+/// 文件大小。;是否必传：否
+@property (nonatomic,assign) NSInteger FileSize;
+
+
+@end
+
+@interface QCloudCreateFileZipProcessJobsResponseJobsDetail : NSObject
+
+/// 错误码，只有 State 为 Failed 时有意义。
+@property (nonatomic,strong) NSString * Code;
+
+/// 错误描述，只有 State 为 Failed 时有意义。
+@property (nonatomic,strong) NSString * Message;
+
+/// 新创建任务的 ID。
+@property (nonatomic,strong) NSString * JobId;
+
+/// 表示任务的类型，多文件打包压缩默认为：FileCompress。
+@property (nonatomic,strong) NSString * Tag;
+
+/// 任务状态Submitted：已提交，待执行。Running：执行中。Success：执行成功。Failed：执行失败。Pause：任务暂停，当暂停队列时，待执行的任务会变为暂停状态。Cancel：任务被取消执行。
+@property (nonatomic,strong) NSString * State;
+
+/// 任务进度百分比，范围为[0, 100]。
+@property (nonatomic,assign) NSInteger Progress;
+
+/// 任务的创建时间。
+@property (nonatomic,strong) NSString * CreationTime;
+
+/// 任务的开始时间。
+@property (nonatomic,strong) NSString * StartTime;
+
+/// 任务的结束时间。
+@property (nonatomic,strong) NSString * EndTime;
+
+/// 任务所属的 队列 ID。
+@property (nonatomic,strong) NSString * QueueId;
+
+@property (nonatomic,strong) NSString * QueueType;
+/// 多文件打包压缩的处理规则。
+@property (nonatomic,strong) QCloudCreateFileZipProcessJobsResponseOperation * Operation;
+
+@end
+
+@interface QCloudCreateFileZipProcessJobsResponseOperation : NSObject
+
+/// 透传用户信息。
+@property (nonatomic,strong) NSString * UserData;
+
+/// 同请求中的 Request.Operation.Output。
+@property (nonatomic,strong) QCloudCreateFileZipProcessJobsOutput * Output;
+
+/// 同请求中的 Request.Operation.FileCompressConfig。
+@property (nonatomic,strong) QCloudFileCompressConfig * FileCompressConfig;
+
+/// 多文件打包压缩的结果，任务未完成时不返回。
+@property (nonatomic,strong) QCloudFileCompressResult * FileCompressResult;
+
+@end
+
+@interface QCloudCreateFileZipProcessJobsOutput : NSObject
+
+/// 存储桶的地域。;是否必传：是
+@property (nonatomic,strong) NSString * Region;
+
+/// 保存压缩后文件的存储桶。;是否必传：是
+@property (nonatomic,strong) NSString * Bucket;
+
+/// 压缩后文件的文件名;是否必传：是
+@property (nonatomic,strong) NSString * Object;
+
+@end
+
+@interface QCloudFileCompressConfig : NSObject
+
+/// 文件打包时，是否需要去除源文件已有的目录结构，有效值：0：不需要去除目录结构，打包后压缩包中的文件会保留原有的目录结构；1：需要，打包后压缩包内的文件会去除原有的目录结构，所有文件都在同一层级。例如：源文件 URL 为 https://domain/source/test.mp4，则源文件路径为 source/test.mp4，如果为 1，则 ZIP 包中该文件路径为 test.mp4；如果为0， ZIP 包中该文件路径为 source/test.mp4。;是否必传：是
+@property (nonatomic,strong) NSString * Flatten;
+
+/// 打包压缩的类型，有效值：zip、tar、tar.gz。;是否必传：是
+@property (nonatomic,strong) NSString * Format;
+
+/// 压缩类型，仅在Format为tar.gz或zip时有效。faster：压缩速度较快better：压缩质量较高，体积较小default：适中的压缩方式默认值为default;是否必传：否
+@property (nonatomic,strong) NSString * Type;
+
+/// 压缩包密钥，传入时需先经过 base64 编码，编码后长度不能超过128。当 Format 为 zip 时生效。;是否必传：否
+@property (nonatomic,strong) NSString * CompressKey;
+
+/// 支持将需要打包的文件整理成索引文件，后台将根据索引文件内提供的文件 url，打包为一个压缩包文件。索引文件需要保存在当前存储桶中，本字段需要提供索引文件的对象地址，不需要带域名，填写示例：/test/index.csv索引文件格式：仅支持 CSV 文件，一行一条 URL（仅支持本存储桶文件），如有多列字段，默认取第一列作为URL。;是否必传：否
+@property (nonatomic,strong) NSString * UrlList;
+
+/// 支持对存储桶中的某个前缀进行打包，如果需要对某个目录进行打包，需要加/，例如test目录打包，则值为：test/。;是否必传：否
+@property (nonatomic,strong) NSString * Prefix;
+
+/// 支持对存储桶中的多个文件进行打包，个数不能超过 1000，如需打包更多文件，请使用UrlList或Prefix参数。;是否必传：否
+@property (nonatomic,strong) NSString * Key;
+
+/// 打包时如果单个文件出错，是否忽略错误继续打包。有效值为：ture：忽略错误继续打包后续的文件；false：遇到某个文件执行打包报错时，直接终止打包任务，不返回压缩包。默认值为false。;是否必传：否
+@property (nonatomic,strong) NSString * IgnoreError ;
+
+@end
+
+@interface QCloudFileCompressResult : NSObject
+
+/// 打包压缩后文件保存的存储桶的地域。
+@property (nonatomic,strong) NSString * Region;
+
+/// 打包压缩后文件保存的存储桶。
+@property (nonatomic,strong) NSString * Bucket;
+
+/// 打包压缩后文件的名称。
+@property (nonatomic,strong) NSString * Object;
+
+/// 打包文件的总数
+@property (nonatomic,strong) NSString * CompressFileCount  ;
+
+/// 打包时出错的文件数
+@property (nonatomic,strong) NSString * ErrorCount;
+
+@end
+
+@interface QCloudPostHashProcessJobsResponseJobsDetail : NSObject
+
+/// 错误码，只有 State 为 Failed 时有意义。
+@property (nonatomic,strong) NSString * Code;
+
+/// 错误描述，只有 State 为 Failed 时有意义。
+@property (nonatomic,strong) NSString * Message;
+
+/// 创建任务的 ID。
+@property (nonatomic,strong) NSString * JobId;
+
+/// 表示任务的类型，哈希值计算默认为：FileHashCode。
+@property (nonatomic,strong) NSString * Tag;
+
+/// 任务状态Submitted：已提交，待执行。Running：执行中。Success：执行成功。Failed：执行失败。Pause：任务暂停，当暂停队列时，待执行的任务会变为暂停状态。Cancel：任务被取消执行。
+@property (nonatomic,strong) NSString * State;
+
+/// 任务进度百分比，范围为[0, 100]。
+@property (nonatomic,assign) NSInteger Progress;
+
+/// 任务的创建时间。
+@property (nonatomic,strong) NSString * CreationTime;
+
+/// 任务的开始时间。
+@property (nonatomic,strong) NSString * StartTime;
+
+/// 任务的结束时间。
+@property (nonatomic,strong) NSString * EndTime;
+
+/// 任务所属的 队列 ID。
+@property (nonatomic,strong) NSString * QueueId;
+
+@property (nonatomic,strong) NSString * QueueType;
+
+/// 被计算哈希值的文件信息。
+@property (nonatomic,strong) QCloudPostHashProcessJobsResponseInput * Input;
+
+/// 哈希值计算的处理规则。
+@property (nonatomic,strong) QCloudPostHashProcessJobsResponseOperation * Operation;
+
+@end
+
+@interface QCloudPostHashProcessJobsResponseInput : NSObject
+
+/// 存储桶所在地域。
+@property (nonatomic,strong) NSString * Region;
+
+/// 文件所在的存储桶。
+@property (nonatomic,strong) NSString * BucketId;
+
+/// 被计算哈希值的文件名。
+@property (nonatomic,strong) NSString * Object;
+
+@end
+
+@interface QCloudPostHashProcessJobsResponseOperation : NSObject
+
+/// 透传用户信息。
+@property (nonatomic,strong) NSString * UserData;
+
+/// 同请求中的 Request.Operation.FileHashCodeConfig。
+@property (nonatomic,strong) QCloudPostHashProcessJobsFileHashCodeConfig * FileHashCodeConfig;
+
+/// 计算得到的文件 hash 值信息，任务未完成时不返回。
+@property (nonatomic,strong) QCloudPostHashProcessJobsFileHashCodeResult * FileHashCodeResult;
+
+@end
+
+@interface QCloudPostHashProcessJobsFileHashCodeConfig : NSObject
+
+/// 哈希值的算法类型，支持：MD5、SHA1、SHA256;是否必传：是
+@property (nonatomic,strong) NSString * Type;
+
+/// 是否将计算得到的哈希值添加至文件自定义header，有效值：true、false，默认值为 false。自定义 header 根据Type的值变化，例如Type值为MD5时，自定义 header 为 x-cos-meta-md5。;是否必传：否
+@property (nonatomic,strong) NSString * AddToHeader;
+
+@end
+
+@interface QCloudPostHashProcessJobsFileHashCodeResult : NSObject
+
+/// MD5 计算结果。
+@property (nonatomic,strong) NSString * MD5;
+
+/// SHA1 计算结果。
+@property (nonatomic,strong) NSString * SHA1;
+
+/// SHA256 计算结果。
+@property (nonatomic,strong) NSString * SHA256;
+
+/// 文件大小。
+@property (nonatomic,assign) NSInteger FileSize;
+
+/// 文件的最后修改时间。
+@property (nonatomic,strong) NSString * LastModified;
+
+/// 文件的Etag。
+@property (nonatomic,strong) NSString * Etag;
+
+@end
+
+@interface QCloudQueueList : NSObject
+
+/// 队列 ID
+@property (nonatomic,strong) NSString * QueueId;
+
+/// 队列名字
+@property (nonatomic,strong) NSString * Name;
+
+/// 当前状态，Active 或者 Paused
+@property (nonatomic,strong) NSString * State;
+
+/// 回调配置
+@property (nonatomic,strong) QCloudNotifyConfig * NotifyConfig;
+
+/// 队列最大长度
+@property (nonatomic,assign) NSInteger MaxSize;
+
+/// 当前队列最大并行执行的任务数
+@property (nonatomic,assign) NSInteger MaxConcurrent;
+
+/// 更新时间
+@property (nonatomic,strong) NSString * UpdateTime;
+
+/// 创建时间
+@property (nonatomic,strong) NSString * CreateTime;
 
 @end
 

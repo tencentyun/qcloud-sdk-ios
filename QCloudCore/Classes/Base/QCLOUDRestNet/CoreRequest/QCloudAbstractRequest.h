@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "QCloudHTTPRequestDelegate.h"
 #import "QCloudHttpMetrics.h"
+#import "QCloudCredential.h"
 typedef double QCloudAbstractRequestPriority;
 
 #define QCloudAbstractRequestPriorityHigh 3.0
@@ -42,6 +43,9 @@ typedef void (^QCloudRequestDownProcessWithDataBlock)(int64_t bytesDownload, int
  用于业务中携带与request关联的参数，不参与SDK内部逻辑与网络请求；
  */
 @property (nonatomic, strong ,nullable) NSDictionary * payload;
+
+
+@property (nonatomic, strong, nullable) QCloudCredential * credential;
 /**
   协议执行结果向外通知的委托（delegate）主要包括成功和失败两种情况。与Block方式并存，当两者都设置的时候都会通知。
  */

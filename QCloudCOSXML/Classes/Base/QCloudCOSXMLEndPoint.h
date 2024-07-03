@@ -36,6 +36,7 @@
 // 是否切换到旧域名
 // */
 //@property (nonatomic, assign) BOOL enableOldDomain;
+- (NSURL *)serverURLWithProductName:(NSString *)productName AppID:(NSString *)appID regionName:(NSString *)regionName;
 
 @end
 

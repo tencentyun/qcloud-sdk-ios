@@ -485,15 +485,17 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     _queueSource = dispatch_source_create(DISPATCH_SOURCE_TYPE_DATA_ADD, 0, 0, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0));
     __block int totalComplete = 0;
     dispatch_source_set_event_handler(_queueSource, ^{
-        NSUInteger value = dispatch_source_get_data(weakSelf.queueSource);
-        @synchronized(weakSelf) {
-            totalComplete += value;
-        }
-        if (totalComplete == allParts.count) {
-            if (NULL != weakSelf.queueSource) {
-                dispatch_source_cancel(weakSelf.queueSource);
+        if (weakSelf.queueSource) {
+            NSUInteger value = dispatch_source_get_data(weakSelf.queueSource);
+            @synchronized(weakSelf) {
+                totalComplete += value;
             }
-            [weakSelf finishUpload:weakSelf.uploadId];
+            if (totalComplete == allParts.count) {
+                if (NULL != weakSelf.queueSource) {
+                    dispatch_source_cancel(weakSelf.queueSource);
+                }
+                [weakSelf finishUpload:weakSelf.uploadId];
+            }
         }
     });
     dispatch_resume(_queueSource);

@@ -286,3 +286,159 @@
 @implementation QCloudVoiceSynthesisTempleteResponseTtsTpl
 
 @end
+
+
+@implementation QCloudPostFileUnzipProcessJobOutput
+
+@end
+
+@implementation QCloudPostFileUnzipProcessJobResponseJobsDetail
+
++ (NSDictionary *)modelContainerPropertyGenericClass {
+    return @{
+        @"Input" : [QCloudPostFileUnzipProcessJobResponseInput class],
+        @"Operation" : [QCloudPostFileUnzipProcessJobResponseOperation class],
+    };
+}
+
+@end
+
+@implementation QCloudPostFileUnzipProcessJobResponseInput
+
+@end
+
+@implementation QCloudPostFileUnzipProcessJobResponseOperation
+
++ (NSDictionary *)modelContainerPropertyGenericClass {
+    return @{
+        @"Output" : [QCloudPostFileUnzipProcessJobOutput class],
+        @"FileUncompressConfig" : [QCloudFileUncompressConfig class],
+        @"FileUncompressResult" : [QCloudFileUncompressResult class],
+    };
+}
+
+@end
+
+@implementation QCloudFileUncompressConfig
+
++ (NSDictionary *)modelContainerPropertyGenericClass {
+    return @{
+        @"DownloadConfig" : [QCloudDownloadConfig class],
+    };
+}
+
+@end
+
+@implementation QCloudDownloadConfig
+
+@end
+
+@implementation QCloudFileUncompressResult
+
+@end
+
+@implementation QCloudCreateFileZipProcessJobsResponseJobsDetail
+
++ (NSDictionary *)modelContainerPropertyGenericClass {
+    return @{
+        @"Operation" : [QCloudCreateFileZipProcessJobsResponseOperation class],
+    };
+}
+
+@end
+
+@implementation QCloudCreateFileZipProcessJobsResponseOperation
+
++ (NSDictionary *)modelContainerPropertyGenericClass {
+    return @{
+        @"Output" : [QCloudCreateFileZipProcessJobsOutput class],
+        @"FileCompressConfig" : [QCloudFileCompressConfig class],
+        @"FileCompressResult" : [QCloudFileCompressResult class],
+    };
+}
+
+@end
+
+@implementation QCloudCreateFileZipProcessJobsOutput
+
+@end
+
+@implementation QCloudFileCompressConfig
+
+@end
+
+@implementation QCloudFileCompressResult
+
+@end
+
+@implementation QCloudPostHashProcessJobsResponseJobsDetail
+
++ (NSDictionary *)modelContainerPropertyGenericClass {
+    return @{
+        @"Input" : [QCloudPostHashProcessJobsResponseInput class],
+        @"Operation" : [QCloudPostHashProcessJobsResponseOperation class],
+    };
+}
+
+@end
+
+@implementation QCloudPostHashProcessJobsResponseInput
+
+@end
+
+@implementation QCloudPostHashProcessJobsResponseOperation
+
++ (NSDictionary *)modelContainerPropertyGenericClass {
+    return @{
+        @"FileHashCodeConfig" : [QCloudPostHashProcessJobsFileHashCodeConfig class],
+        @"FileHashCodeResult" : [QCloudPostHashProcessJobsFileHashCodeResult class],
+    };
+}
+
+@end
+
+@implementation QCloudPostHashProcessJobsFileHashCodeConfig
+
+@end
+
+@implementation QCloudPostHashProcessJobsFileHashCodeResult
+
+@end
+
+@implementation QCloudQueueList
+
++ (NSDictionary *)modelContainerPropertyGenericClass {
+    return @{
+        @"NotifyConfig" : [QCloudNotifyConfig class],
+    };
+}
+
+@end
+
+@implementation QCloudFileListContents
+
++ (NSDictionary *)modelContainerPropertyGenericClass {
+    return @{
+        @"Contents" : [QCloudFileListContent class],
+    };
+}
+
+- (NSDictionary *)modelCustomWillTransformFromDictionary:(NSDictionary *)dic {
+
+    if (!dic) {return dic;}
+
+    if (![dic isKindOfClass:[NSDictionary class]]) {return nil;}
+
+    if (dic[@"Contents"] && [dic[@"Contents"] isKindOfClass:[NSDictionary class]]){
+        NSMutableDictionary * mdic = [NSMutableDictionary dictionaryWithDictionary:dic];
+        [mdic setValue:@[dic[@"Contents"]] forKey:@"Contents"];
+        dic = mdic.copy;
+    }
+    return dic;
+}
+
+@end
+
+@implementation QCloudFileListContent
+
+@end

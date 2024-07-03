@@ -46,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 */
 
 @interface QCloudGetPresignedURLRequest : QCloudBizHTTPRequest
-@property (nonatomic, copy) NSDate *expires;
+
 /**
  填入使用预签名请求的Bucket
  */

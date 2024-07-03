@@ -86,7 +86,7 @@
     [commonParams setObject:@"" forKey:@"os_version"];
 #endif
     [commonParams setObject:[QCloudTrackNetworkUtils single].getCurrentLocalIP ?:@"" forKey:@"client_local_ip"];
-    [commonParams setObject:[QCloudTrackNetworkUtils single].isProxy?@"true":@"false" forKey:@"client_proxy"];
+    [commonParams setObject:[QCloudTrackNetworkUtils single].isProxyUsed?@"true":@"false" forKey:@"client_proxy"];
     [commonParams setObject:[QCloudTrackNetworkUtils single].getNetWorkType ?:@"" forKey:@"network_type"];
     
     return commonParams.copy;

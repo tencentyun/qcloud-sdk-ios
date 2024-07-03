@@ -107,6 +107,17 @@
 #import "QCloudPostSoundHoundRequest.h"
 #import "QCloudVocalScoreRequest.h"
 #import "QCloudCIUploadOperationsRequest.h"
+#import "QCloudDescribeFileProcessQueuesRequest.h"
+#import "QCloudDescribeFileUnzipJobsRequest.h"
+#import "QCloudDescribeFileZipProcessJobsRequest.h"
+#import "QCloudCreateFileZipProcessJobsRequest.h"
+#import "QCloudCreateHashProcessJobsRequest.h"
+#import "QCloudDescribeHashProcessJobsRequest.h"
+#import "QCloudPostFileUnzipProcessJobRequest.h"
+#import "QCloudPostHashProcessJobsRequest.h"
+#import "QCloudUpdateFileProcessQueueRequest.h"
+#import "QCloudZipFilePreviewRequest.h"
+
 
 @implementation QCloudCOSXMLService (ImageHelper)
 
@@ -287,7 +298,31 @@
         [request onError:error];
         return;
     }
+    
     __block NSString *requestURLString = urlRequest.URL.absoluteString;
+    
+    if (request.credential) {
+        QCloudAuthentationV5Creator *creator = [[QCloudAuthentationV5Creator alloc] initWithCredential:request.credential];
+        QCloudSignature *signature = [creator signatureForData:(NSMutableURLRequest *)urlRequest];
+        NSString *authorizatioinString = signature.signature;
+        if ([requestURLString hasSuffix:@"&"] || [requestURLString hasSuffix:@"?"]) {
+            requestURLString = [requestURLString stringByAppendingString:authorizatioinString];
+        } else if([requestURLString containsString:@"?"] && ![requestURLString hasSuffix:@"&"]){
+            requestURLString = [requestURLString stringByAppendingFormat:@"&%@", authorizatioinString];
+        }else {
+            requestURLString = [requestURLString stringByAppendingFormat:@"?%@", authorizatioinString];
+        }
+        if (signature.token) {
+            requestURLString =
+                [requestURLString stringByAppendingFormat:@"&x-cos-security-token=%@", signature.token];
+        }
+
+        if (request.finishBlock) {
+            request.finishBlock(requestURLString, nil);
+        }
+        return;
+    }
+    
     [request.signatureProvider signatureWithFields:request.signatureFields
                                            request:request
                                         urlRequest:(NSMutableURLRequest *)urlRequest
@@ -581,5 +616,46 @@
     [super performRequest:(QCloudCIUploadOperationsRequest *)request];
     
 }
+
+-(void)DescribeFileProcessQueues:(QCloudDescribeFileProcessQueuesRequest *)request{
+     [super performRequest:(QCloudDescribeFileProcessQueuesRequest *)request];
+}
+
+-(void)DescribeFileUnzipJobs:(QCloudDescribeFileUnzipJobsRequest *)request{
+     [super performRequest:(QCloudDescribeFileUnzipJobsRequest *)request];
+}
+
+-(void)DescribeFileZipProcessJobs:(QCloudDescribeFileZipProcessJobsRequest *)request{
+     [super performRequest:(QCloudDescribeFileZipProcessJobsRequest *)request];
+}
+
+-(void)CreateFileZipProcessJobs:(QCloudCreateFileZipProcessJobsRequest *)request{
+     [super performRequest:(QCloudCreateFileZipProcessJobsRequest *)request];
+}
+
+-(void)CreateHashProcessJobs:(QCloudCreateHashProcessJobsRequest *)request{
+     [super performRequest:(QCloudCreateHashProcessJobsRequest *)request];
+}
+
+-(void)DescribeHashProcessJobs:(QCloudDescribeHashProcessJobsRequest *)request{
+     [super performRequest:(QCloudDescribeHashProcessJobsRequest *)request];
+}
+
+-(void)PostFileUnzipProcessJob:(QCloudPostFileUnzipProcessJobRequest *)request{
+     [super performRequest:(QCloudPostFileUnzipProcessJobRequest *)request];
+}
+
+-(void)PosthashProcessJobs:(QCloudPostHashProcessJobsRequest *)request{
+     [super performRequest:(QCloudPostHashProcessJobsRequest *)request];
+}
+
+-(void)UpdateFileProcessQueue:(QCloudUpdateFileProcessQueueRequest *)request{
+     [super performRequest:(QCloudUpdateFileProcessQueueRequest *)request];
+}
+
+-(void)ZipFilePreview:(QCloudZipFilePreviewRequest *)request{
+     [super performRequest:(QCloudZipFilePreviewRequest *)request];
+}
+
 
 @end

@@ -5,7 +5,7 @@
 
 #ifndef QCloudTrackModuleVersion_h
 #define QCloudTrackModuleVersion_h
-#define QCloudTrackModuleVersionNumber 604000
+#define QCloudTrackModuleVersionNumber 604001
 
 //dependency
 

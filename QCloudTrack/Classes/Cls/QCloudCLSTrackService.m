@@ -36,7 +36,18 @@
 
 -(void)setupCLSSDK{
     
-    LogProducerConfig * config = [[LogProducerConfig alloc]initWithCoreInfo:self.endPoint accessKeyID:self.credentialProvider.getCredentials.secretId accessKeySecret:self.credentialProvider.getCredentials.secretKey securityToken:self.credentialProvider.getCredentials.token];
+    
+    NSString *secretId = self.credentialProvider.getCredentials.secretId;
+    if (!secretId) {
+        secretId = @"";
+    }
+    
+    NSString *secretKey = self.credentialProvider.getCredentials.secretKey;
+    if (!secretKey) {
+        secretKey = @"";
+    }
+    
+    LogProducerConfig * config = [[LogProducerConfig alloc]initWithCoreInfo:self.endPoint accessKeyID:secretId accessKeySecret:secretKey securityToken:self.credentialProvider.getCredentials.token];
     [config SetTopic:self.topicId];
     [config SetPackageLogBytes:1024*1024];
     [config SetPackageLogCount:1024];

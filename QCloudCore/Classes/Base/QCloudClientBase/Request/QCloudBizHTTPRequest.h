@@ -28,6 +28,7 @@ extern _Nonnull QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilize
 @class QCloudServiceConfiguration;
 @interface QCloudBizHTTPRequest : QCloudHTTPRequest
 
+// 若 request中设置了 credential ，则不回调该代理方法。
 @property (nonatomic, strong) id<QCloudSignatureProvider> signatureProvider;
 
 

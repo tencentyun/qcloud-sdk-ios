@@ -125,6 +125,17 @@
 @class QCloudPostSoundHoundRequest;
 @class QCloudVocalScoreRequest;
 @class QCloudCIUploadOperationsRequest;
+@class QCloudDescribeFileProcessQueuesRequest;
+@class QCloudDescribeFileUnzipJobsRequest;
+@class QCloudDescribeFileZipProcessJobsRequest;
+@class QCloudCreateFileZipProcessJobsRequest;
+@class QCloudCreateHashProcessJobsRequest;
+@class QCloudDescribeHashProcessJobsRequest;
+@class QCloudPostFileUnzipProcessJobRequest;
+@class QCloudPostHashProcessJobsRequest;
+@class QCloudUpdateFileProcessQueueRequest;
+@class QCloudZipFilePreviewRequest;
+ 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface QCloudCOSXMLService (ImageHelper)
@@ -494,6 +505,46 @@ COS 文档预览方法.
 /// 提交任务
 /// 提交一个音乐评分任务
 -(void)VocalScore:(QCloudVocalScoreRequest *)request;
+
+/// 查询文件处理队列
+/// 本接口用于查询文件处理队列
+-(void)DescribeFileProcessQueues:(QCloudDescribeFileProcessQueuesRequest *)request;
+
+/// 查询文件解压结果
+/// 本接口用于主动查询指定的文件解压任务结果
+-(void)DescribeFileUnzipJobs:(QCloudDescribeFileUnzipJobsRequest *)request;
+
+/// 查询多文件打包压缩结果
+/// 本接口用于主动查询指定的多文件打包压缩任务结果
+-(void)DescribeFileZipProcessJobs:(QCloudDescribeFileZipProcessJobsRequest *)request;
+
+/// 提交多文件打包压缩任务
+/// 多文件打包压缩功能可以将您的多个文件，打包为 zip 等压缩包格式，以提交任务的方式进行多文件打包压缩，异步返回打包后的文件，该接口属于 POST 请求
+-(void)CreateFileZipProcessJobs:(QCloudCreateFileZipProcessJobsRequest *)request;
+
+/// 哈希值计算同步请求
+/// 以同步请求的方式进行文件哈希值计算，实时返回计算得到的哈希值，该接口属于 GET 请求
+-(void)CreateHashProcessJobs:(QCloudCreateHashProcessJobsRequest *)request;
+
+/// 查询哈希值计算结果
+/// 本接口用于主动查询指定的文件哈希值计算任务结果
+-(void)DescribeHashProcessJobs:(QCloudDescribeHashProcessJobsRequest *)request;
+
+/// 提交文件解压任务
+/// 以提交任务的方式进行压缩包文件的解压缩，异步返回压缩包内的全部或部分文件，该接口属于 POST 请求
+-(void)PostFileUnzipProcessJob:(QCloudPostFileUnzipProcessJobRequest *)request;
+
+/// 提交哈希值计算任务
+/// 以提交任务的方式进行文件哈希值计算，异步返回计算得到的哈希值，该接口属于 POST 请求
+-(void)PosthashProcessJobs:(QCloudPostHashProcessJobsRequest *)request;
+
+/// 更新文件处理队列
+/// 本接口用于更新文件处理的队列
+-(void)UpdateFileProcessQueue:(QCloudUpdateFileProcessQueueRequest *)request;
+
+/// 压缩包预览
+/// 该接口可以在不解压文件的情况下预览压缩包内的内容，包含文件数量、名称、文件时间等，接口为同步请求方式
+-(void)ZipFilePreview:(QCloudZipFilePreviewRequest *)request;
 
 
 
