@@ -10,10 +10,6 @@
 
 typedef void (^completionHandler)();
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
-/** 后台任务完成block */
-@property (nonatomic, copy) completionHandler handler;
 @property (strong, nonatomic) UIWindow *window;
 
-
 @end
-

@@ -45,6 +45,19 @@
 		D22FB26C246E3FBF00C04C54 /* QCCouldMyBucketCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D22FB26B246E3FBF00C04C54 /* QCCouldMyBucketCell.m */; };
 		D22FB272246E8E2100C04C54 /* QCloudFileListCtor.m in Sources */ = {isa = PBXBuildFile; fileRef = D22FB271246E8E2100C04C54 /* QCloudFileListCtor.m */; };
 		D2A14B1925948B14009F41EE /* QCloudCOSXMLModelCoverage.m in Sources */ = {isa = PBXBuildFile; fileRef = D2A14B1825948B14009F41EE /* QCloudCOSXMLModelCoverage.m */; };
+		D2AD46972C40105F009A62FA /* QCloudDownLoadNewCtorPermanent.xib in Resources */ = {isa = PBXBuildFile; fileRef = D2AD46912C40105F009A62FA /* QCloudDownLoadNewCtorPermanent.xib */; };
+		D2AD46982C40105F009A62FA /* QCloudDownLoadNewCtorPermanent.m in Sources */ = {isa = PBXBuildFile; fileRef = D2AD46922C40105F009A62FA /* QCloudDownLoadNewCtorPermanent.m */; };
+		D2AD46992C40105F009A62FA /* QCloudUploadNewCtorPermanent.m in Sources */ = {isa = PBXBuildFile; fileRef = D2AD46932C40105F009A62FA /* QCloudUploadNewCtorPermanent.m */; };
+		D2AD469A2C40105F009A62FA /* QCloudUploadNewCtorPermanent.xib in Resources */ = {isa = PBXBuildFile; fileRef = D2AD46942C40105F009A62FA /* QCloudUploadNewCtorPermanent.xib */; };
+		D2AD46A22C401074009A62FA /* QCloudDownLoadNewCtorReuse.xib in Resources */ = {isa = PBXBuildFile; fileRef = D2AD469C2C401073009A62FA /* QCloudDownLoadNewCtorReuse.xib */; };
+		D2AD46A32C401074009A62FA /* QCloudUploadNewCtorReuse.m in Sources */ = {isa = PBXBuildFile; fileRef = D2AD469D2C401073009A62FA /* QCloudUploadNewCtorReuse.m */; };
+		D2AD46A42C401074009A62FA /* QCloudUploadNewCtorReuse.xib in Resources */ = {isa = PBXBuildFile; fileRef = D2AD46A02C401074009A62FA /* QCloudUploadNewCtorReuse.xib */; };
+		D2AD46A52C401074009A62FA /* QCloudDownLoadNewCtorReuse.m in Sources */ = {isa = PBXBuildFile; fileRef = D2AD46A12C401074009A62FA /* QCloudDownLoadNewCtorReuse.m */; };
+		D2AD46AD2C401090009A62FA /* QCloudDownLoadNewCtorOnce.xib in Resources */ = {isa = PBXBuildFile; fileRef = D2AD46A72C40108F009A62FA /* QCloudDownLoadNewCtorOnce.xib */; };
+		D2AD46AE2C401090009A62FA /* QCloudUploadNewCtorOnce.m in Sources */ = {isa = PBXBuildFile; fileRef = D2AD46AA2C40108F009A62FA /* QCloudUploadNewCtorOnce.m */; };
+		D2AD46AF2C401090009A62FA /* QCloudUploadNewCtorOnce.xib in Resources */ = {isa = PBXBuildFile; fileRef = D2AD46AB2C401090009A62FA /* QCloudUploadNewCtorOnce.xib */; };
+		D2AD46B02C401090009A62FA /* QCloudDownLoadNewCtorOnce.m in Sources */ = {isa = PBXBuildFile; fileRef = D2AD46AC2C401090009A62FA /* QCloudDownLoadNewCtorOnce.m */; };
+		D2AD46B32C40109D009A62FA /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2AD46B22C40109D009A62FA /* RootViewController.m */; };
 		D2B7008624721C9600F59994 /* BucketFileItemViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B7008424721C9600F59994 /* BucketFileItemViewCell.m */; };
 		D2B7008A247220C800F59994 /* UIViewController+Loading.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B70089247220C800F59994 /* UIViewController+Loading.m */; };
 		D2B7008E2472280400F59994 /* QCloudBucketContents+Addition.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B7008D2472280400F59994 /* QCloudBucketContents+Addition.m */; };
@@ -140,6 +153,26 @@
 		D22FB270246E8E2100C04C54 /* QCloudFileListCtor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QCloudFileListCtor.h; sourceTree = "<group>"; };
 		D22FB271246E8E2100C04C54 /* QCloudFileListCtor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QCloudFileListCtor.m; sourceTree = "<group>"; };
 		D2A14B1825948B14009F41EE /* QCloudCOSXMLModelCoverage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QCloudCOSXMLModelCoverage.m; sourceTree = "<group>"; };
+		D2AD46912C40105F009A62FA /* QCloudDownLoadNewCtorPermanent.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = QCloudDownLoadNewCtorPermanent.xib; sourceTree = "<group>"; };
+		D2AD46922C40105F009A62FA /* QCloudDownLoadNewCtorPermanent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QCloudDownLoadNewCtorPermanent.m; sourceTree = "<group>"; };
+		D2AD46932C40105F009A62FA /* QCloudUploadNewCtorPermanent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QCloudUploadNewCtorPermanent.m; sourceTree = "<group>"; };
+		D2AD46942C40105F009A62FA /* QCloudUploadNewCtorPermanent.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = QCloudUploadNewCtorPermanent.xib; sourceTree = "<group>"; };
+		D2AD46952C40105F009A62FA /* QCloudUploadNewCtorPermanent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QCloudUploadNewCtorPermanent.h; sourceTree = "<group>"; };
+		D2AD46962C40105F009A62FA /* QCloudDownLoadNewCtorPermanent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QCloudDownLoadNewCtorPermanent.h; sourceTree = "<group>"; };
+		D2AD469C2C401073009A62FA /* QCloudDownLoadNewCtorReuse.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = QCloudDownLoadNewCtorReuse.xib; sourceTree = "<group>"; };
+		D2AD469D2C401073009A62FA /* QCloudUploadNewCtorReuse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QCloudUploadNewCtorReuse.m; sourceTree = "<group>"; };
+		D2AD469E2C401073009A62FA /* QCloudDownLoadNewCtorReuse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QCloudDownLoadNewCtorReuse.h; sourceTree = "<group>"; };
+		D2AD469F2C401073009A62FA /* QCloudUploadNewCtorReuse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QCloudUploadNewCtorReuse.h; sourceTree = "<group>"; };
+		D2AD46A02C401074009A62FA /* QCloudUploadNewCtorReuse.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = QCloudUploadNewCtorReuse.xib; sourceTree = "<group>"; };
+		D2AD46A12C401074009A62FA /* QCloudDownLoadNewCtorReuse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QCloudDownLoadNewCtorReuse.m; sourceTree = "<group>"; };
+		D2AD46A72C40108F009A62FA /* QCloudDownLoadNewCtorOnce.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = QCloudDownLoadNewCtorOnce.xib; sourceTree = "<group>"; };
+		D2AD46A82C40108F009A62FA /* QCloudDownLoadNewCtorOnce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QCloudDownLoadNewCtorOnce.h; sourceTree = "<group>"; };
+		D2AD46A92C40108F009A62FA /* QCloudUploadNewCtorOnce.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QCloudUploadNewCtorOnce.h; sourceTree = "<group>"; };
+		D2AD46AA2C40108F009A62FA /* QCloudUploadNewCtorOnce.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QCloudUploadNewCtorOnce.m; sourceTree = "<group>"; };
+		D2AD46AB2C401090009A62FA /* QCloudUploadNewCtorOnce.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = QCloudUploadNewCtorOnce.xib; sourceTree = "<group>"; };
+		D2AD46AC2C401090009A62FA /* QCloudDownLoadNewCtorOnce.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QCloudDownLoadNewCtorOnce.m; sourceTree = "<group>"; };
+		D2AD46B12C40109D009A62FA /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
+		D2AD46B22C40109D009A62FA /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
 		D2B7008324721C9600F59994 /* BucketFileItemViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BucketFileItemViewCell.h; sourceTree = "<group>"; };
 		D2B7008424721C9600F59994 /* BucketFileItemViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BucketFileItemViewCell.m; sourceTree = "<group>"; };
 		D2B70088247220C800F59994 /* UIViewController+Loading.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Loading.h"; sourceTree = "<group>"; };
@@ -203,6 +236,9 @@
 		1AB143EE1E601E0500830F93 /* QCloudCOSXMLDemo */ = {
 			isa = PBXGroup;
 			children = (
+				D2AD46A62C401087009A62FA /* OnceCredential */,
+				D2AD469B2C401069009A62FA /* ReuseCredential */,
+				D2AD46902C401053009A62FA /* PermanentCredential */,
 				7F2AFADA2689D05B006F2A46 /* TestUtility */,
 				D2B7008B247227A000F59994 /* Categroy */,
 				D22FB26F246E8D9600C04C54 /* BucketDetail */,
@@ -222,6 +258,8 @@
 				1AB143F31E601E0500830F93 /* AppDelegate.m */,
 				1AB143F51E601E0500830F93 /* ViewController.h */,
 				1AB143F61E601E0500830F93 /* ViewController.m */,
+				D2AD46B12C40109D009A62FA /* RootViewController.h */,
+				D2AD46B22C40109D009A62FA /* RootViewController.m */,
 				1AB143FB1E601E0500830F93 /* Assets.xcassets */,
 				1AB143FD1E601E0500830F93 /* LaunchScreen.storyboard */,
 				1AC3C2701EED368100B3151F /* Main.storyboard */,
@@ -360,6 +398,45 @@
 			name = BucketDetail;
 			sourceTree = "<group>";
 		};
+		D2AD46902C401053009A62FA /* PermanentCredential */ = {
+			isa = PBXGroup;
+			children = (
+				D2AD46962C40105F009A62FA /* QCloudDownLoadNewCtorPermanent.h */,
+				D2AD46922C40105F009A62FA /* QCloudDownLoadNewCtorPermanent.m */,
+				D2AD46912C40105F009A62FA /* QCloudDownLoadNewCtorPermanent.xib */,
+				D2AD46952C40105F009A62FA /* QCloudUploadNewCtorPermanent.h */,
+				D2AD46932C40105F009A62FA /* QCloudUploadNewCtorPermanent.m */,
+				D2AD46942C40105F009A62FA /* QCloudUploadNewCtorPermanent.xib */,
+			);
+			name = PermanentCredential;
+			sourceTree = "<group>";
+		};
+		D2AD469B2C401069009A62FA /* ReuseCredential */ = {
+			isa = PBXGroup;
+			children = (
+				D2AD469E2C401073009A62FA /* QCloudDownLoadNewCtorReuse.h */,
+				D2AD46A12C401074009A62FA /* QCloudDownLoadNewCtorReuse.m */,
+				D2AD469C2C401073009A62FA /* QCloudDownLoadNewCtorReuse.xib */,
+				D2AD469F2C401073009A62FA /* QCloudUploadNewCtorReuse.h */,
+				D2AD469D2C401073009A62FA /* QCloudUploadNewCtorReuse.m */,
+				D2AD46A02C401074009A62FA /* QCloudUploadNewCtorReuse.xib */,
+			);
+			name = ReuseCredential;
+			sourceTree = "<group>";
+		};
+		D2AD46A62C401087009A62FA /* OnceCredential */ = {
+			isa = PBXGroup;
+			children = (
+				D2AD46A82C40108F009A62FA /* QCloudDownLoadNewCtorOnce.h */,
+				D2AD46AC2C401090009A62FA /* QCloudDownLoadNewCtorOnce.m */,
+				D2AD46A72C40108F009A62FA /* QCloudDownLoadNewCtorOnce.xib */,
+				D2AD46A92C40108F009A62FA /* QCloudUploadNewCtorOnce.h */,
+				D2AD46AA2C40108F009A62FA /* QCloudUploadNewCtorOnce.m */,
+				D2AD46AB2C401090009A62FA /* QCloudUploadNewCtorOnce.xib */,
+			);
+			name = OnceCredential;
+			sourceTree = "<group>";
+		};
 		D2B7008B247227A000F59994 /* Categroy */ = {
 			isa = PBXGroup;
 			children = (
@@ -462,7 +539,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D2AD46A42C401074009A62FA /* QCloudUploadNewCtorReuse.xib in Resources */,
+				D2AD46A22C401074009A62FA /* QCloudDownLoadNewCtorReuse.xib in Resources */,
+				D2AD46AF2C401090009A62FA /* QCloudUploadNewCtorOnce.xib in Resources */,
+				D2AD46AD2C401090009A62FA /* QCloudDownLoadNewCtorOnce.xib in Resources */,
+				D2AD469A2C40105F009A62FA /* QCloudUploadNewCtorPermanent.xib in Resources */,
 				1AC3C2711EED368100B3151F /* Main.storyboard in Resources */,
+				D2AD46972C40105F009A62FA /* QCloudDownLoadNewCtorPermanent.xib in Resources */,
 				7F2923D52338ADB8008CE707 /* key.json in Resources */,
 				1AB143FF1E601E0500830F93 /* LaunchScreen.storyboard in Resources */,
 				1AB143FC1E601E0500830F93 /* Assets.xcassets in Resources */,
@@ -565,23 +648,30 @@
 				7F2AFADD2689D05B006F2A46 /* QCloudTestUtility.m in Sources */,
 				A89945CF2091CF6A00FEFF28 /* QCloudDownloadFinishViewController.m in Sources */,
 				A801AD42201990DC004D1B9A /* QCloudTestTempVariables.m in Sources */,
+				D2AD46A32C401074009A62FA /* QCloudUploadNewCtorReuse.m in Sources */,
 				D22FB26C246E3FBF00C04C54 /* QCCouldMyBucketCell.m in Sources */,
+				D2AD46A52C401074009A62FA /* QCloudDownLoadNewCtorReuse.m in Sources */,
 				A89945C9209187E500FEFF28 /* QCloudCOSXMLConfiguration.m in Sources */,
 				1AB143F71E601E0500830F93 /* ViewController.m in Sources */,
 				D2B700912472379100F59994 /* QCloudDownLoadNewCtor.m in Sources */,
 				D22FB265246E28CA00C04C54 /* QCloudCreateBucketCtor.m in Sources */,
 				D22FB272246E8E2100C04C54 /* QCloudFileListCtor.m in Sources */,
+				D2AD46982C40105F009A62FA /* QCloudDownLoadNewCtorPermanent.m in Sources */,
 				7F41127E2338A97100A3276E /* SecretStorage.m in Sources */,
 				1AB143F41E601E0500830F93 /* AppDelegate.m in Sources */,
 				A89945C62091847900FEFF28 /* QCloudSelectRegionTableViewController.m in Sources */,
+				D2AD46AE2C401090009A62FA /* QCloudUploadNewCtorOnce.m in Sources */,
 				D2B7008E2472280400F59994 /* QCloudBucketContents+Addition.m in Sources */,
+				D2AD46B32C40109D009A62FA /* RootViewController.m in Sources */,
 				D2B7008624721C9600F59994 /* BucketFileItemViewCell.m in Sources */,
 				1AB143F11E601E0500830F93 /* main.m in Sources */,
 				D22FB268246E303100C04C54 /* QCloudMyBucketListCtor.m in Sources */,
 				1AFD73241EED1EF5002A1CD2 /* QCloudUploadViewController.m in Sources */,
 				1AFD73271EED1EFF002A1CD2 /* QCloudDownloadViewController.m in Sources */,
 				A89945CC2091AEC200FEFF28 /* NSURL+FileExtension.m in Sources */,
+				D2AD46B02C401090009A62FA /* QCloudDownLoadNewCtorOnce.m in Sources */,
 				A89945C32091842B00FEFF28 /* QCloudTabBarViewController.m in Sources */,
+				D2AD46992C40105F009A62FA /* QCloudUploadNewCtorPermanent.m in Sources */,
 				A801AD41201990DC004D1B9A /* NSString+UINCategory.m in Sources */,
 				A808A89A1F25CD7600116AAC /* DownloadTableViewCell.m in Sources */,
 				D2B7008A247220C800F59994 /* UIViewController+Loading.m in Sources */,
