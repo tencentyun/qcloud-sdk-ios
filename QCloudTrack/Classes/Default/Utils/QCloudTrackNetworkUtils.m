@@ -49,7 +49,7 @@
 - (BOOL)isProxyUsed {
     NSDictionary *proxySettings = (__bridge NSDictionary *)CFNetworkCopySystemProxySettings();
     NSArray *proxies = proxySettings[(__bridge NSString *)kCFNetworkProxiesHTTPProxy];
-    if (proxies && proxies.count > 0) {
+    if (proxies) {
         return YES;
     } else {
         return NO;
