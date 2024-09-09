@@ -733,7 +733,7 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     NSMutableArray *cancelledRequestIDs = [NSMutableArray array];
     NSPointerArray *tmpRequestCacheArray = [self.requestCacheArray copy];
     for (QCloudHTTPRequest *request in tmpRequestCacheArray) {
-        if (request != nil) {
+        if (request != nil && [request respondsToSelector:@selector(requestID)]) {
             [cancelledRequestIDs addObject:[NSNumber numberWithLongLong:request.requestID]];
         }
     }
