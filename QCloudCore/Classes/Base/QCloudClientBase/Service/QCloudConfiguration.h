@@ -21,6 +21,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) BOOL enableQuic;
 
+/// 是否允许重定向 默认不允许
+@property (nonatomic, assign) BOOL enableGlobalRedirection;
+
 // 禁用主备域名切换。默认不禁用。NO:不禁用 YES:禁用
 @property (nonatomic, assign) BOOL disableChangeHost;
 
@@ -33,6 +36,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 是否全局禁用HTTPS验证，默认为NO 不禁用。
 @property (nonatomic, assign) BOOL disableGlobalAuthentication;
+
+
 @end
 
 NS_ASSUME_NONNULL_END

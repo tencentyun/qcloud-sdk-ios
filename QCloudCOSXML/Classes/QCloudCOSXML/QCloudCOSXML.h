@@ -30,6 +30,7 @@
 #import "QCloudGetBucketTaggingRequest.h"
 #import "QCloudDeleteBucketTaggingRequest.h"
 #import "QCloudPutBucketInventoryRequest.h"
+#import "QCloudPostBucketInventoryRequest.h"
 #import "QCloudGetBucketInventoryRequest.h"
 #import "QCloudDeleteBucketInventoryRequest.h"
 #import "QCloudListBucketInventoryConfigurationsRequest.h"

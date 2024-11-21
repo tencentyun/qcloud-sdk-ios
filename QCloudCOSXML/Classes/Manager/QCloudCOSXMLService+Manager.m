@@ -235,6 +235,10 @@
     [super performRequest:request];
 }
 
+- (void)PostBucketInventory:(QCloudPostBucketInventoryRequest *)request {
+    [super performRequest:request];
+}
+
 - (void)GetBucketInventory:(QCloudGetBucketInventoryRequest *)request {
     [super performRequest:request];
 }

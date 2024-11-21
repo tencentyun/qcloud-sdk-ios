@@ -213,7 +213,7 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     QCloudLogDebug(@"resume startPartNumber =   offset =  %ld %ld", startPartNumber, uploadedSize);
 }
 
-- (void)resumeUpload {
+-(void)listParts:(QCloudListPartsResult *)input finish:(void (^_Nullable)(QCloudListPartsResult *_Nullable, NSError *_Nullable))finishBlock{
     QCloudListMultipartRequest *request = [QCloudListMultipartRequest new];
     request.timeoutInterval = self.timeoutInterval;
     request.enableQuic = self.enableQuic;
@@ -222,6 +222,7 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
     request.regionName = self.regionName;
     request.bucket = self.bucket;
     request.uploadId = self.uploadId;
+    request.partNumberMarker = input.nextNumberMarker;
     request.retryPolicy.delegate = self;
     __weak typeof(request) weakRequest = request;
     __weak typeof(self) weakSelf = self;
@@ -229,11 +230,27 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
         __strong typeof(weakSelf) strongSelf = weakSelf;
         __strong typeof(weakRequest) strongRequst = weakRequest;
         [strongSelf.requstMetricArray addObject:@ { [NSString stringWithFormat:@"%@", strongRequst] : weakRequest.benchMarkMan.tastMetrics }];
-
-        [weakSelf continueMultiUpload:result];
+        if (input && input.parts.count > 0 && result && result.parts) {
+            NSMutableArray * tempParts = input.parts.mutableCopy;
+            [tempParts addObjectsFromArray:result.parts];
+            result.parts = tempParts.copy;
+        }
+        if (result.nextNumberMarker) {
+            [self listParts:result finish:finishBlock];
+        }else{
+            finishBlock(result,error);
+        }
     }];
 
     [self.transferManager.cosService ListMultipart:request];
+}
+
+- (void)resumeUpload {
+    __weak typeof(self) weakSelf = self;
+    [self listParts:nil finish:^(QCloudListPartsResult * _Nullable result, NSError * _Nullable error) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        [weakSelf continueMultiUpload:result];
+    }];
 }
 - (void)fakeStart {
     [self.benchMarkMan benginWithKey:kTaskTookTime];

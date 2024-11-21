@@ -49,7 +49,6 @@
 - (BOOL)isProxyUsed {
     NSDictionary *proxySettings = (__bridge NSDictionary *)CFNetworkCopySystemProxySettings();
     NSString *proxies = proxySettings[(__bridge NSString *)kCFNetworkProxiesHTTPProxy];
-    
     if (proxies) {
         return YES;
     } else {

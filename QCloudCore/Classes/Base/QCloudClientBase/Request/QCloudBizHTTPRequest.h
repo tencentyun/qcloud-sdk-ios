@@ -31,6 +31,8 @@ extern _Nonnull QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilize
 // 若 request中设置了 credential ，则不回调该代理方法。
 @property (nonatomic, strong) id<QCloudSignatureProvider> signatureProvider;
 
+/// 是否禁用路径检查，默认不禁用。
+@property (assign, nonatomic)  BOOL objectKeySimplifyCheck;
 
 /*
  在进行HTTP请求的时候，可以通过设置该参数来设置自定义的一些头部信息。
@@ -66,7 +68,7 @@ extern _Nonnull QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilize
 - (void)loadQCloudSignature;
 - (void)setCOSServerSideEncyption;
 - (void)setCOSServerSideEncyptionWithCustomerKey:(NSString *)customerKey;
-;
+- (NSString *)simplifyPath:(NSString *)path;
 @end
 
 NS_ASSUME_NONNULL_END

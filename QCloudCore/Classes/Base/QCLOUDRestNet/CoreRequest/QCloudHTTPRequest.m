@@ -132,6 +132,10 @@
         return nil;
     }
 
+    if (self.isRetry) {
+        [self.requestData setValue:@"true" forHTTPHeaderField:@"x-cos-sdk-retry"];
+    }
+    
     [self.benchMarkMan benginWithKey:kCalculateMD5STookTime];
     NSURLRequest *request = [self.requestSerializer requestWithData:self.requestData error:error];
     if ([request.allHTTPHeaderFields objectForKey:@"Content-MD5"]) {

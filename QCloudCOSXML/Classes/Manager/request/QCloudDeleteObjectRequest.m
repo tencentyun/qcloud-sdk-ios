@@ -43,6 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
     if (!self) {
         return nil;
     }
+    self.objectKeySimplifyCheck = YES;
     return self;
 }
 - (void)configureReuqestSerializer:(QCloudRequestSerializer *)requestSerializer responseSerializer:(QCloudResponseSerializer *)responseSerializer {
@@ -74,6 +75,17 @@ NS_ASSUME_NONNULL_BEGIN
             return NO;
         }
     }
+    
+    if (self.objectKeySimplifyCheck && [[self simplifyPath:self.object] isEqualToString:@"/"]) {
+        if (error != NULL) {
+            *error = [NSError
+                      qcloud_errorWithCode:QCloudNetworkErrorCodeParamterInvalid
+                      message:[NSString stringWithFormat:
+                               @"The Getobject Key is illegal"]];
+            return NO;
+        }
+    }
+    
     if (!self.bucket || ([self.bucket isKindOfClass:NSString.class] && ((NSString *)self.bucket).length == 0)) {
         if (error != NULL) {
             *error = [NSError

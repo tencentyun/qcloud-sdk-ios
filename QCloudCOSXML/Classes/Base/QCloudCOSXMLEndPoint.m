@@ -78,6 +78,18 @@
     } else {
         regionNametmp = self.regionName;
     }
+    
+    if ([self.serviceName isEqualToString:@"myqcloud.com"]) {
+        NSParameterAssert(regionNametmp);
+        static NSString *regularExpression = @"[a-zA-Z0-9.-]*";
+        BOOL isLegal = [regionNametmp matchesRegularExpression:regularExpression];
+        NSAssert(isLegal, @"Region name contains illegal character! It can only contains a-z, A-Z, 0-9, '.' and '-' ");
+        if (!isLegal) {
+            QCloudLogDebug(@"Region %@ contains illeagal character, setter returns immediately", regionName);
+            return nil;
+        }
+    }
+    
     NSURL *serverURL;
 
     serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@.cos.%@.%@", scheme, formattedBucketName, regionNametmp, self.serviceName]];

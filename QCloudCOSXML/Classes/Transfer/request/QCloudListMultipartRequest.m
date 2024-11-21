@@ -104,13 +104,13 @@ NS_ASSUME_NONNULL_BEGIN
     }
     [self.requestData setParameter:self.uploadId withKey:@"uploadId"];
     if (self.maxPartsCount) {
-        [self.requestData setValue:self.maxPartsCount forHTTPHeaderField:@"max-parts"];
+        [self.requestData setParameter:self.maxPartsCount withKey:@"max-parts"];
     }
     if (self.partNumberMarker) {
-        [self.requestData setValue:self.partNumberMarker forHTTPHeaderField:@"part-number-marker"];
+        [self.requestData setParameter:self.partNumberMarker withKey:@"part-number-marker"];
     }
     if (self.encodingType) {
-        [self.requestData setValue:self.encodingType forHTTPHeaderField:@"Encoding-Type"];
+        [self.requestData setParameter:self.encodingType withKey:@"Encoding-Type"];
     }
     NSMutableArray *__pathComponents = [NSMutableArray arrayWithArray:self.requestData.URIComponents];
     if (self.object)

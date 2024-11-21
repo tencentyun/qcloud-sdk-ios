@@ -132,9 +132,6 @@ RFC 2616 中定义的指定文件下载范围，以字节（bytes）为单位
 */
 @property (strong, nonatomic) NSString *object;
 
-/// 是否禁用路径检查，默认不禁用。
-@property (assign, nonatomic)  BOOL objectKeySimplifyCheck;
-
 /**
 存储桶名
 */

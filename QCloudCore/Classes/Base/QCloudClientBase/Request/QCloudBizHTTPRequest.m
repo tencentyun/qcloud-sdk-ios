@@ -247,6 +247,20 @@ NSString *EncrytNSDataMD5Base64(NSData *data) {
     self.customHeaders[@"x-cos-server-side-encryption-customer-key-MD5"] = base64md5key;
 }
 
+- (NSString *)simplifyPath:(NSString *)path {
+    NSArray *names = [path componentsSeparatedByString:@"/"];
+    NSMutableArray *stack = [NSMutableArray array];
+    for (NSString *name in names) {
+        if ([name isEqualToString:@".."]) {
+            if (stack.count > 0) {
+                [stack removeLastObject];
+            }
+        } else if (name.length > 0 && ![name isEqualToString:@"."]) {
+            [stack addObject:name];
+        }
+    }
+    return [@"/" stringByAppendingString:[stack componentsJoinedByString:@"/"]];
+}
 @end
 
 NS_ASSUME_NONNULL_END

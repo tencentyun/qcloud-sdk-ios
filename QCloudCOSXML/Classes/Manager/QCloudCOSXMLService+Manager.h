@@ -51,6 +51,7 @@
 @class QCloudDeleteBucketTaggingRequest;
 
 @class QCloudPutBucketInventoryRequest;
+@class QCloudPostBucketInventoryRequest;
 @class QCloudGetBucketInventoryRequest;
 @class QCloudDeleteBucketInventoryRequest;
 @class QCloudListBucketInventoryConfigurationsRequest;
@@ -111,6 +112,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)GetBucketWebsite:(QCloudGetBucketWebsiteRequest *)request;
 - (void)DeleteBucketWebsite:(QCloudDeleteBucketWebsiteRequest *)request;
 - (void)PutBucketInventory:(QCloudPutBucketInventoryRequest *)request;
+- (void)PostBucketInventory:(QCloudPostBucketInventoryRequest *)request;
 - (void)GetBucketInventory:(QCloudGetBucketInventoryRequest *)request;
 - (void)DeleteBucketInventory:(QCloudDeleteBucketInventoryRequest *)request;
 - (void)ListBucketInventory:(QCloudListBucketInventoryConfigurationsRequest *)request;

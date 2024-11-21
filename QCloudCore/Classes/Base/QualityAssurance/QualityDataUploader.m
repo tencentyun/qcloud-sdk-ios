@@ -387,7 +387,6 @@ static NSString * sdkBridge = @"";
     //当前网络状况
     paramter[kQCloudQualityNetworkTypeKey] = QCloudNetworkSituationToString([QCloudNetEnv shareEnv].currentNetStatus);
 #if defined(DEBUG) && DEBUG
-  
 #else
     [self startReportWithEventKey:eventKey serviceKey:nil paramters:[paramter copy]];
 #endif

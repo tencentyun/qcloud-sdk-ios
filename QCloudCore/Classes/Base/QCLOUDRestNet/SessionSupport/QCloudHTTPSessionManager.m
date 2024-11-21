@@ -227,10 +227,15 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
         
        #endif
     }
-}
+} 
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task willPerformHTTPRedirection:(NSHTTPURLResponse *)response newRequest:(NSURLRequest *)request completionHandler:(void (^)(NSURLRequest * _Nullable))completionHandler{
+    
     QCloudURLSessionTaskData *taskData = [self taskDataForTask:task];
+    if (!taskData.httpRequest.runOnService.configuration.enableGlobalRedirection) {
+        completionHandler(nil);
+        return;
+    }
     if(![taskData.httpRequest needChangeHost] || taskData.httpRequest.runOnService.configuration.disableChangeHost == YES || [response.allHeaderFields.allKeys containsObject:@"x-cos-request-id"] || [request.URL.absoluteURL.host rangeOfString:@"tencentcos.cn"].length > 0){
         completionHandler(request);
     }else{

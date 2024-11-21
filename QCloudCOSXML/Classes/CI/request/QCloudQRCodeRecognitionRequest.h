@@ -60,7 +60,7 @@ NS_ASSUME_NONNULL_BEGIN
 		// result：QCloudRecognitionQRcodeResponse 包含所有的响应；
 		// 具体查看代码注释或api文档：https://cloud.tencent.com/document/product/460/37513
 	}];
-	[[QCloudCOSXMLService defaultCOSXML] RecognitionQRcode:request];
+	[[QCloudCOSXMLService defaultCOSXML] CIQRCodeRecognition:request];
 
 
 */
