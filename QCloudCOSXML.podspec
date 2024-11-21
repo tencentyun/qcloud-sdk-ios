@@ -35,7 +35,7 @@ s.version              = "6.4.5"
   s.subspec 'Widget' do |widget|
     widget.source_files = 'QCloudCOSXML/Classes/*','QCloudCOSXML/Classes/Transfer/**/*','QCloudCOSXML/Classes/Base/**/*'
     widget.exclude_files = 'QCloudCOSXML/Classes/Base/QCloudLogManager.h','QCloudCOSXML/Classes/Base/QCloudLogManager.m'
-  widget.dependency "QCloudCore/WithoutMTA",'6.4.4'
+  widget.dependency "QCloudCore/WithoutMTA",'6.4.5'
   end
 
 end
