@@ -464,7 +464,7 @@
 				1AB143E91E601E0500830F93 /* Frameworks */,
 				1AB143EA1E601E0500830F93 /* Resources */,
 				5531753F06D2602A23691AE3 /* [CP] Copy Pods Resources */,
-				905E623E0EDCB9F5095F7201 /* [CP] Embed Pods Frameworks */,
+				B59841545FCAFF722181206F /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -601,24 +601,6 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-QCloudCOSXMLDemo/Pods-QCloudCOSXMLDemo-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		905E623E0EDCB9F5095F7201 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-QCloudCOSXMLDemo/Pods-QCloudCOSXMLDemo-frameworks.sh",
-				"${PODS_ROOT}/../QCloudQuic/Classes/QuicFramework/Tquic.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Tquic.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-QCloudCOSXMLDemo/Pods-QCloudCOSXMLDemo-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		9985684AE5A7F7B42D827A19 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -635,6 +617,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B59841545FCAFF722181206F /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-QCloudCOSXMLDemo/Pods-QCloudCOSXMLDemo-frameworks.sh",
+				"${PODS_ROOT}/../QCloudQuic/Classes/QuicFramework/Tquic.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Tquic.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-QCloudCOSXMLDemo/Pods-QCloudCOSXMLDemo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -818,6 +818,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6RL39LH4U4;
 				ENABLE_BITCODE = NO;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/QCloudCOSXMLDemo/PrefixHeader.pch";
 				INFOPLIST_FILE = QCloudCOSXMLDemo/Info.plist;
@@ -826,6 +827,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -846,6 +848,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6RL39LH4U4;
 				ENABLE_BITCODE = NO;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/QCloudCOSXMLDemo/PrefixHeader.pch";
 				INFOPLIST_FILE = QCloudCOSXMLDemo/Info.plist;
