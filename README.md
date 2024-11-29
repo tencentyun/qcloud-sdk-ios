@@ -23,10 +23,9 @@
 chmod +x xcframework_build.sh
 source xcframework_build.sh
 ```
-
-framework 说明：
-QCloudCore.xcframework 和 QCloudCOSXML.xcframework 为COS SDK核心组件，必须添加到项目中。
-QCloudTrack.xcframework、COSBeaconAPI_Base.xcframework.zip、QimeiSDK.xcframework.zip 为日志上报组件，与 COS 上传下载功能无关，可选使用。
+### framework 说明：
+* QCloudCore.xcframework 和 QCloudCOSXML.xcframework 为COS SDK核心组件，必须添加到项目中。
+* QCloudTrack.xcframework、COSBeaconAPI_Base.xcframework.zip、QimeiSDK.xcframework.zip 为日志上报组件，与 COS 上传下载功能无关，可选使用。
 
 执行结束后，可在仓库根目录看到 xcframework文件夹。
 
