@@ -1,0 +1,6 @@
+framework module QimeiSDK {
+  umbrella header "QimeiSDK.h"
+
+  export *
+  module * { export * }
+}

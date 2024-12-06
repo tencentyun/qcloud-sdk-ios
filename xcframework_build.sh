@@ -25,5 +25,7 @@ cp -R "$OUTPUT_DIR"* "../"
 
 rm -rf "$OUTPUT_DIR"
 cd ".."
+cp -R QimeiSDK.xcframework xcframework/
+cp -R COSBeaconAPI_Base.xcframework xcframework/
 echo "编译完成. xcframework地址: $OUTPUT_DIR/"
 
