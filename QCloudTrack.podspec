@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "QCloudTrack"
-s.version              = "6.4.5"
+s.version              = "6.4.6"
   s.summary          = "QCloudTrack 腾讯云iOS-SDK组件"
 
 # This description is used to generate tags and improve search results.
@@ -28,26 +28,29 @@ TODO: Add long description of the pod here.aaa
   s.source           = { :git => "https://github.com/tencentyun/qcloud-sdk-ios.git", :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
   s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
+  s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
   # s.frameworks = 'UIKit', 'MapKit'
   s.static_framework = true
-  s.ios.deployment_target = '9.0'
+  s.ios.deployment_target = '10.0'
   s.default_subspec = 'Default'
   
   s.subspec 'Default' do |default|
-    default.ios.deployment_target = '9.0'
+    default.ios.deployment_target = '10.0'
     default.osx.deployment_target = "10.12"
     default.source_files = 'QCloudTrack/Classes/*.{h,m}','QCloudTrack/Classes/Default/*.{h,m}','QCloudTrack/Classes/Default/*/*.{h,m}'
   end
   
   s.subspec 'Beacon' do |beacon|
-    beacon.ios.deployment_target = '9.0'
+    beacon.ios.deployment_target = '10.0'
     beacon.osx.deployment_target = "10.12"
     beacon.source_files = 'QCloudTrack/Classes/*.{h,m}','QCloudTrack/Classes/Default/*.{h,m}','QCloudTrack/Classes/Default/*/*.{h,m}','QCloudTrack/Classes/Beacon/*.{h,m}'
-    beacon.vendored_frameworks = 'QCloudTrack/Classes/BeaconFramework/COSBeaconAPI_Base.framework','QCloudTrack/Classes/BeaconFramework/QimeiSDK.framework'
+    beacon.vendored_frameworks = 'QCloudTrack/Classes/BeaconFramework/COSBeaconAPI_Base.xcframework','QCloudTrack/Classes/BeaconFramework/QimeiSDK.xcframework'
+    beacon.libraries = "stdc++", "resolv"
+    beacon.frameworks = "CoreTelephony", "SystemConfiguration","WebKit"
   end
   
   s.subspec 'Cls' do |cls|
-    cls.ios.deployment_target = '9.0'
+    cls.ios.deployment_target = '10.0'
     cls.source_files = 'QCloudTrack/Classes/*.{h,m}',
                       'QCloudTrack/Classes/Default/*.{h,m}',
                       'QCloudTrack/Classes/Default/*/*.{h,m}',

@@ -28,7 +28,7 @@
 #import "UIDevice+QCloudFCUUID.h"
 #import "QCloudThreadSafeMutableDictionary.h"
 #import "QCloudWeakProxy.h"
-
+#import "QCloudLoaderManager.h"
 #ifndef __IPHONE_13_0
 #define __IPHONE_13_0    130000
 #endif
@@ -104,6 +104,11 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
     } else {
         QCloudLogDebug(@"quicSession is nil");
     }
+    
+    [[[QCloudLoaderManager manager] loaders] enumerateObjectsUsingBlock:^(id <QCloudCustomLoader>  _Nonnull loader, NSUInteger idx, BOOL * _Nonnull stop) {
+        loader.session.customDelegate = self;
+    }];
+    
     _buildDataQueue = dispatch_queue_create("com.tencent.qcloud.build.data", NULL);
     _taskQueue = [NSMutableDictionary new];
     _operationQueue = [QCloudOperationQueue new];
@@ -127,8 +132,6 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
     }
 }
 
-- (void)cancelRequests:(NSArray<NSNumber *> *)requestID {
-}
 - (void)cacheTask:(NSURLSessionTask *)task data:(QCloudURLSessionTaskData *)data forSEQ:(int)seq {
     if (!task) {
         return;
@@ -312,7 +315,7 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
-    QCloudLogInfo(@"任务完成的回调 didCompleteWithError response = %@ error = ", task.response, error);
+    QCloudLogInfo(@"任务完成的回调 didCompleteWithError response = %@ error = %@", task.response, error);
     [[NSNotificationCenter defaultCenter]
         postNotificationName:kQCloudRestNetURLUsageNotification
                       object:nil
@@ -578,8 +581,10 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
     }
     NSURLSessionDataTask *task = nil;
     id quicTask = nil;
-
-    if (!httpRequest.enableQuic) {
+    id <QCloudCustomLoader> loader = [[QCloudLoaderManager manager] getAvailableLoader:httpRequest];
+    if ([QCloudLoaderManager manager].enable && loader) {
+        task = [loader.session taskWithRequset:transformRequest fromFile:uploadFileURL];
+    }else if (!httpRequest.enableQuic) {
         //如果是文件上传
         if (uploadFileURL) {
             task = [self.session uploadTaskWithRequest:transformRequest fromFile:uploadFileURL];

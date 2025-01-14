@@ -104,7 +104,7 @@
         [mparams addEntriesFromDictionary:self.businessParams];
     }
     
-    NSArray * services = self.trackServiceMap[serviceKey];
+    NSArray * services = self.trackServiceMap[serviceKey].mutableCopy;
     for (QCloudBaseTrackService * service in services) {
         [service reportWithEventCode:eventCode params:mparams.copy];
     }

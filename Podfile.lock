@@ -1,22 +1,22 @@
 PODS:
   - GMOpenSSL (2.2.9)
-  - QCloudCore (6.4.5):
-    - QCloudCore/Default (= 6.4.5)
-  - QCloudCore/Default (6.4.5):
-    - QCloudTrack/Beacon (= 6.4.5)
-  - QCloudCOSXML (6.4.5):
-    - QCloudCOSXML/Default (= 6.4.5)
-  - QCloudCOSXML/Default (6.4.5):
-    - QCloudCore (= 6.4.5)
-  - QCloudQuic (6.3.9):
-    - QCloudQuic/Default (= 6.3.9)
-  - QCloudQuic/Default (6.3.9)
-  - QCloudTrack (6.4.5):
-    - QCloudTrack/Default (= 6.4.5)
-  - QCloudTrack/Beacon (6.4.5)
-  - QCloudTrack/Cls (6.4.5):
+  - QCloudCore (6.4.6):
+    - QCloudCore/Default (= 6.4.6)
+  - QCloudCore/Default (6.4.6):
+    - QCloudTrack/Beacon (= 6.4.6)
+  - QCloudCOSXML (6.4.6):
+    - QCloudCOSXML/Default (= 6.4.6)
+  - QCloudCOSXML/Default (6.4.6):
+    - QCloudCore (= 6.4.6)
+  - QCloudQuic (6.4.1):
+    - QCloudQuic/Default (= 6.4.1)
+  - QCloudQuic/Default (6.4.1)
+  - QCloudTrack (6.4.6):
+    - QCloudTrack/Default (= 6.4.6)
+  - QCloudTrack/Beacon (6.4.6)
+  - QCloudTrack/Cls (6.4.6):
     - TencentCloudLogProducer
-  - QCloudTrack/Default (6.4.5)
+  - QCloudTrack/Default (6.4.6)
   - TencentCloudLogProducer (1.1.1):
     - TencentCloudLogProducer/Core (= 1.1.1)
   - TencentCloudLogProducer/Core (1.1.1):
@@ -47,10 +47,10 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   GMOpenSSL: d6d119ff8f00d4e03c2cdf733fb61e98e22da9c7
-  QCloudCore: a1c543624fe34c5e98c92b7faf421a23f57ad5e3
-  QCloudCOSXML: 8185a7a51c7dce6ff1a25c725907f6beb270cd01
-  QCloudQuic: 81e2c29fa8122c1d5e8323a90349683e52c8e101
-  QCloudTrack: 6bf7aaa7e870d72fb4c9c88455dc63c7c65073b7
+  QCloudCore: de90acb39acb50296e83429bb8b7e6f133234f2b
+  QCloudCOSXML: 2b34890eab32d3799a1ada7e6ed736443d84027e
+  QCloudQuic: a4f2405ccaedde33c36420d4225436b80bd5bf67
+  QCloudTrack: 86264169809cfc4a611eb918d165c39737914d9c
   TencentCloudLogProducer: 564e944491e6396c81df4c9c51470784752ff3ab
 
 PODFILE CHECKSUM: 469848875513aa1180afa1e3751e2d873841a154
