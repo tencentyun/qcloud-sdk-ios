@@ -7,9 +7,9 @@
 
 #import "QCloudLoaderManager.h"
 #import "QCloudHTTPRequest.h"
-
+#import "QCloudHTTPSessionManager.h"
 @interface  QCloudLoaderManager()
-@property (nonatomic,strong)NSMutableArray <id <QCloudCustomLoader>> * loaders;
+@property (atomic,strong)NSMutableArray <id <QCloudCustomLoader>> * loaders;
 @end
 
 @implementation QCloudLoaderManager
@@ -43,7 +43,10 @@
 }
 
 -(void)addLoader:(id <QCloudCustomLoader>)loader{
-    [self.loaders addObject:loader];
+    @synchronized (self) {
+        loader.session.customDelegate = [QCloudHTTPSessionManager shareClient];
+        [self.loaders addObject:loader];
+    }
 }
 
 @end

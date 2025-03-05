@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic,assign)BOOL enable;
 
-@property (nonatomic,strong,readonly)NSMutableArray <id <QCloudCustomLoader>> * loaders;
+@property (atomic,strong,readonly)NSMutableArray <id <QCloudCustomLoader>> * loaders;
 
 - (void)addLoader:(id <QCloudCustomLoader>)loader;
 

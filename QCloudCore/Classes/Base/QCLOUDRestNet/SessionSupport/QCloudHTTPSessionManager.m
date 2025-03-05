@@ -105,10 +105,6 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
         QCloudLogDebug(@"quicSession is nil");
     }
     
-    [[[QCloudLoaderManager manager] loaders] enumerateObjectsUsingBlock:^(id <QCloudCustomLoader>  _Nonnull loader, NSUInteger idx, BOOL * _Nonnull stop) {
-        loader.session.customDelegate = self;
-    }];
-    
     _buildDataQueue = dispatch_queue_create("com.tencent.qcloud.build.data", NULL);
     _taskQueue = [NSMutableDictionary new];
     _operationQueue = [QCloudOperationQueue new];
