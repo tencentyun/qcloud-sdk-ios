@@ -18,6 +18,8 @@
 @synthesize response = _response;
 @synthesize originalRequest = _originalRequest;
 @synthesize currentRequest = _currentRequest;
+@synthesize countOfBytesSent = _countOfBytesSent;
+@synthesize countOfBytesExpectedToSend = _countOfBytesExpectedToSend;
 
 
 - (instancetype)initWithHTTPRequest:(NSMutableURLRequest *)httpRequest

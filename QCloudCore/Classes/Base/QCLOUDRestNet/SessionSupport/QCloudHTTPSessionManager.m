@@ -367,9 +367,13 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
                             if ([task respondsToSelector:@selector(countOfBytesSent)]) {
                                 countOfBytesSent = task.countOfBytesSent;
                             }
+                            int64_t countOfBytesExpectedToSend = 0;
+                            if ([task respondsToSelector:@selector(countOfBytesExpectedToSend)]) {
+                                countOfBytesExpectedToSend = task.countOfBytesExpectedToSend;
+                            }
                             [taskData.httpRequest notifySendProgressBytesSend:-(countOfBytesSent)
                                                                totalBytesSend:countOfBytesSent
-                                                     totalBytesExpectedToSend:task.countOfBytesExpectedToSend];
+                                                     totalBytesExpectedToSend:countOfBytesExpectedToSend];
                         }
                         QCloudHTTPRequest *httpRequset = taskData.httpRequest;
                         [taskData restData];

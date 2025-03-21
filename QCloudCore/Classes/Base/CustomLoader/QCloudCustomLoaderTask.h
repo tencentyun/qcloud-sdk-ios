@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, readwrite, copy) NSHTTPURLResponse *response;
 @property (nullable, readwrite, copy) NSURLRequest *currentRequest;
 @property (nullable, readwrite, copy) NSURLRequest *originalRequest;
+@property (atomic, assign) int64_t countOfBytesSent;
+@property (atomic, assign) int64_t countOfBytesExpectedToSend;
 
 /// 子类实现，用于构建自定义task。
 /// - Parameters:
