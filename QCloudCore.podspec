@@ -42,7 +42,6 @@ QCloudCore--腾讯云iOS-SDK Foundation。提供腾讯云iOS相关SDK的基础�
   s.default_subspec = 'Default'
   s.subspec 'Default' do |default|
       default.ios.deployment_target = '10.0'
-      default.osx.deployment_target = "10.12"
       default.source_files = 'QCloudCore/Classes/Base/**/*'
       default.dependency "QCloudTrack/Beacon","6.4.6"
   end
@@ -54,6 +53,8 @@ QCloudCore--腾讯云iOS-SDK Foundation。提供腾讯云iOS相关SDK的基础�
   end
   
   s.subspec 'DNSLoader' do |tdns|
+    tdns.ios.deployment_target = '10.0'
+    tdns.osx.deployment_target = "10.12"
     tdns.ios.deployment_target = '10.0'
     tdns.dependency "MSDKDns_C11";
     tdns.dependency "QCloudCore/WithoutMTA";
