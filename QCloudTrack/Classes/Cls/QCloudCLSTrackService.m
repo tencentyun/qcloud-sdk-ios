@@ -7,6 +7,7 @@
 
 #import "QCloudCLSTrackService.h"
 #import "TencentCloudLogProducer.h"
+#import "LogProducerClient.h"
 
 @interface QCloudCLSTrackService ()
 @property (nonatomic,strong)NSString * topicId;
@@ -80,17 +81,13 @@
     if (!eventCode || !params || ![params isKindOfClass:NSDictionary.class]) {
         return;
     }
-    
-    NSData * jsonData = [NSJSONSerialization dataWithJSONObject:params options:0 error:NULL];
-    if (!jsonData) {
-        return;
-    }
-    NSString * paramsString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    if (!paramsString) {
-        return;
-    }
+
     Log* log = [[Log alloc] init];
-    [log PutContent:eventCode value:paramsString];
+    [params enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+        if (obj && key) {
+            [log PutContent:key value:obj];
+        }
+    }];
     LogProducerResult result = [self.clsClient PostLog:log];
     if (self.isDebug) {
         NSMutableArray * array = [NSMutableArray new];
@@ -99,7 +96,7 @@
         }
         NSString * mapAsString = [[NSString alloc]initWithFormat:@"{%@}",[array componentsJoinedByString:@","]];
         NSString *logString = [NSString stringWithFormat:@"cls_post_result:eventCode: %@, topicId: %@, params: %@ => result: %ld", eventCode, self.topicId, mapAsString, (long)result];
-        NSLog(@"%@", logString);
     }
+    [self.clsClient DestroyLogProducer];
 }
 @end

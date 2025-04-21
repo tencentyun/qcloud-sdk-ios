@@ -350,7 +350,7 @@
         if (nil == error) {
             result = YES;
         } else {
-            QCloudLogDebug(@" Head Object Fail!\n%@", error);
+            QCloudLogDebugE(@"Service",@"Head Object Fail!\n%@", error);
         }
         dispatch_semaphore_signal(semaphore);
     }];
@@ -369,7 +369,8 @@
         if (nil == error) {
             result = YES;
         } else {
-            QCloudLogDebug(@" Head Object Fail!\n%@", error);
+            QCloudLogDebugE(@"Service",@"Head Object Fail!\n%@", error);
+            
         }
         dispatch_semaphore_signal(semaphore);
     }];
@@ -387,7 +388,7 @@
         if (nil == error) {
             //
         } else {
-            QCloudLogDebug(@"%@", error.description);
+            QCloudLogDebugE(@"Service",@"%@", error.description);
         }
         dispatch_semaphore_signal(semaphore);
     }];
@@ -407,7 +408,7 @@
         if (nil == error) {
             //
         } else {
-            QCloudLogDebug(error.description);
+            QCloudLogDebugE(@"Service",@"%@", error.description);
         }
         dispatch_semaphore_signal(semaphore);
     }];
@@ -428,7 +429,7 @@
         if (nil == error) {
             //
         } else {
-            QCloudLogDebug(error.description);
+            QCloudLogDebugE(@"Service",@"%@", error.description);
         }
         dispatch_semaphore_signal(semaphore);
     }];
@@ -449,7 +450,7 @@
         if (nil == error) {
             //
         } else {
-            QCloudLogDebug(error.description);
+            QCloudLogDebugE(@"Service",@"%@", error.description);
         }
         dispatch_semaphore_signal(semaphore);
     }];

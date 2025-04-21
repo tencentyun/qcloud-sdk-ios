@@ -78,16 +78,23 @@ typedef NS_ENUM(NSUInteger, QCloudBucketRefererType) {
     QCloudBucketRefererTypeBlackList = 1,
     QCloudBucketRefererTypeWhiteList,
 };
+QCloudBucketRefererType QCloudBucketRefererTypeFromString(NSString *key);
+NSString *QCloudBucketRefererTypeTransferToString(QCloudBucketRefererType type);
 
 typedef NS_ENUM(NSUInteger, QCloudBucketRefererStatus) {
     QCloudBucketRefererStatusEnabled = 1,
     QCloudBucketRefererStatusDisabled,
 };
+QCloudBucketRefererStatus QCloudBucketRefererStatusFromString(NSString *key);
+NSString *QCloudBucketRefererStatusTransferToString(QCloudBucketRefererStatus type);
 
 typedef NS_ENUM(NSUInteger, QCloudBucketRefererConfiguration) {
     QCloudBucketRefererConfigurationDeny = 0,
     QCloudBucketRefererConfigurationAllow,
 };
+QCloudBucketRefererConfiguration QCloudBucketRefererConfigurationFromString(NSString *key);
+NSString *QCloudBucketRefererConfigurationTransferToString(QCloudBucketRefererConfiguration type);
+
 
 @interface QCloudPutBucketRefererRequest : QCloudBizHTTPRequest
 

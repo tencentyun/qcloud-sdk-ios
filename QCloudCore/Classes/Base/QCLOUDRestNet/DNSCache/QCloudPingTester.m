@@ -60,7 +60,7 @@
 }
 
 - (void)simplePing:(QCloudSimplePing *)pinger didFailWithError:(NSError *)error {
-    QCloudLogError(@"ping失败,error: %@", error);
+    QCloudLogError(@"[ERROR]ping失败,error: %@", error);
 }
 
 - (void)simplePing:(QCloudSimplePing *)pinger didSendPacket:(NSData *)packet sequenceNumber:(uint16_t)sequenceNumber {
@@ -71,7 +71,7 @@
     _beginDate = [NSDate date];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         if ([self.pingItems containsObject:item]) {
-            QCloudLogError(@"超时---->");
+            QCloudLogError(@"[ERROR]超时---->");
             [self.pingItems removeObject:item];
             if (self.delegate != nil && [self.delegate respondsToSelector:@selector(pingTester:didPingSucccessWithTime:withError:)]) {
                 [self.delegate pingTester:self didPingSucccessWithTime:0 withError:[NSError errorWithDomain:NSURLErrorDomain code:111 userInfo:nil]];
@@ -80,7 +80,7 @@
     });
 }
 - (void)simplePing:(QCloudSimplePing *)pinger didFailToSendPacket:(NSData *)packet sequenceNumber:(uint16_t)sequenceNumber error:(NSError *)error {
-    QCloudLogError(@"发包失败:%@", error);
+    QCloudLogError(@"[ERROR]发包失败:%@", error);
     if (self.delegate != nil && [self.delegate respondsToSelector:@selector(pingTester:didPingSucccessWithTime:withError:)]) {
         [self.delegate pingTester:self didPingSucccessWithTime:0 withError:error];
     }

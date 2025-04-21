@@ -6,8 +6,9 @@
 //
 
 #import "QCloudLoggerOutput.h"
-
+#import "QCloudLogger.h"
 @implementation QCloudLoggerOutput
+
 - (void)appendLog:(QCloudLogModel * (^)(void))logCreate {
     [NSException exceptionWithName:@"com.qcloud.logger" reason:@"You must implementation this method in subclass of QCloudLoggerOutput" userInfo:nil];
 }

@@ -378,7 +378,9 @@ NSString *const emergencyHost = @"tencentcos.cn";
 }
 
 - (void)setServerURL:(NSString *)serverURL{
-    if(self.needChangeHost){
+    if (self.endpoint) {
+        _serverURL = [self.endpoint serverURLWithBucket:self.bucket appID:self.appId regionName:self.region].absoluteString;
+    }else if(self.needChangeHost){
         _serverURL = [serverURL stringByReplacingOccurrencesOfString:@"myqcloud.com" withString:emergencyHost];
     }else{
         _serverURL = serverURL;

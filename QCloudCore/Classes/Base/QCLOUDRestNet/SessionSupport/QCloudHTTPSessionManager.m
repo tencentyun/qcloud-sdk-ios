@@ -102,7 +102,7 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
             _quicSession = func(cls, createQuicSessionSelector, self);
         }
     } else {
-        QCloudLogDebug(@"quicSession is nil");
+        QCloudLogDebugE(@"HTTP",@"quicSession is nil");
     }
     
     _buildDataQueue = dispatch_queue_create("com.tencent.qcloud.build.data", NULL);
@@ -189,6 +189,11 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
     [_operationQueue addOpreation:operation];
     return (int)request.requestID;
 }
+
+- (void)requestOperationFinishWithRequestId:(int64_t)requestID{
+    [_operationQueue requestOperationFinishWithRequestId:requestID];
+}
+
 #if TARGET_OS_IOS
 // only work at iOS 10 and up
 - (void)URLSession:(NSURLSession *)session
@@ -249,7 +254,7 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
               dataTask:(NSURLSessionDataTask *)dataTask
     didReceiveResponse:(NSURLResponse *)response
      completionHandler:(void (^)(NSURLSessionResponseDisposition))completionHandler {
-    QCloudLogDebug(@"didReceiveResponse: %@", response);
+    QCloudLogDebugR(@"HTTP",@"didReceiveResponse: %@", response);
     QCloudURLSessionTaskData *taskData = [self taskDataForTask:dataTask];
     [taskData.httpRequest.benchMarkMan benginWithKey:kReadResponseHeaderTookTime];
     taskData.response = (NSHTTPURLResponse *)response;
@@ -311,7 +316,7 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
-    QCloudLogInfo(@"任务完成的回调 didCompleteWithError response = %@ error = %@", task.response, error);
+    QCloudLogInfoR(@"HTTP",@"任务完成的回调 didCompleteWithError response = %@ error = %@", task.response, error);
     [[NSNotificationCenter defaultCenter]
         postNotificationName:kQCloudRestNetURLUsageNotification
                       object:nil
@@ -338,7 +343,7 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
     int seq = [self seqForTask:task];
     __weak typeof(self) weakSelf = self;
     if (!taskData.isTaskCancelledByStatusCodeCheck && error) {
-        QCloudLogError(@"Network Error %@", error);
+        QCloudLogErrorE(@"HTTP",@"Network Error %@", error);
         void (^EndRetryFunc)(void) = ^(void) {
             [taskData.httpRequest onReviveErrorResponse:task.response error:error];
             [weakSelf removeTask:task];
@@ -356,7 +361,7 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
             }
             if (![taskData.retryHandler
                     retryFunction:^{
-                        QCloudLogDebug(@"[%i] 错误，开始重试", seq);
+                        QCloudLogDebugP(@"HTTP",@"[%i] 错误，开始重试", seq);
                         if (error.code == -1003) {
                             [[QCloudHttpDNS shareDNS] findHealthyIpFor:hostURL.host];
                         }
@@ -429,6 +434,65 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
                 disposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
             }
         }
+    } else if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodClientCertificate]) {
+        if (taskData.httpRequest.runOnService.configuration.clientCertificateData) {
+            CFDataRef inP12Data = (__bridge CFDataRef)taskData.httpRequest.runOnService.configuration.clientCertificateData;
+            SecIdentityRef identity = NULL;
+            SecTrustRef trust = NULL;
+            OSStatus status = noErr;
+            
+            const void *keys[] = { kSecImportExportPassphrase };
+            const void *values[] = { (__bridge CFStringRef)taskData.httpRequest.runOnService.configuration.password };
+            CFDictionaryRef options = CFDictionaryCreate(NULL, keys, values, 1, NULL, NULL);
+            
+            CFArrayRef items = NULL;
+            status = SecPKCS12Import(inP12Data, options, &items);
+            
+            if (status != errSecSuccess || items == NULL || CFArrayGetCount(items) == 0) {
+                NSLog(@"SecPKCS12Import 错误: %d", (int)status);
+                if (options) CFRelease(options);
+                if (items) CFRelease(items);
+                disposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
+                completionHandler(disposition, credential);
+                return;
+            }
+            
+            CFDictionaryRef identityDict = CFArrayGetValueAtIndex(items, 0);
+            identity = (SecIdentityRef)CFDictionaryGetValue(identityDict, kSecImportItemIdentity);
+            trust = (SecTrustRef)CFDictionaryGetValue(identityDict, kSecImportItemTrust);
+            
+            if (options) CFRelease(options);
+            if (items) CFRelease(items);
+            
+            if (status == errSecSuccess && identity != NULL) {
+                SecCertificateRef certificate = NULL;
+                OSStatus certStatus = SecIdentityCopyCertificate(identity, &certificate);
+                
+                if (certStatus != errSecSuccess || certificate == NULL) {
+                    NSLog(@"SecIdentityCopyCertificate 错误: %d", (int)certStatus);
+                    disposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
+                    completionHandler(disposition, credential);
+                    return;
+                }
+                
+                const void *certs[] = { certificate };
+                CFArrayRef certArray = CFArrayCreate(NULL, certs, 1, NULL);
+                credential = [NSURLCredential credentialWithIdentity:identity
+                                                        certificates:(__bridge NSArray *)certArray
+                                                         persistence:NSURLCredentialPersistenceForSession];
+                
+                if (certArray) CFRelease(certArray);
+                if (certificate) CFRelease(certificate);
+                if (trust) CFRelease(trust);
+                
+                disposition = NSURLSessionAuthChallengeUseCredential;
+            } else {
+                NSLog(@"身份解析失败: %d", (int)status);
+                disposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
+            }
+        } else {
+            disposition = NSURLSessionAuthChallengePerformDefaultHandling;
+        }
     } else {
         disposition = NSURLSessionAuthChallengePerformDefaultHandling;
     }
@@ -486,7 +550,7 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
     if (httpRequest.requestSerializer.HTTPDNSPrefetch && !httpRequest.runOnService.configuration.disableGlobalHTTPDNSPrefetch) {
         transformRequest = [[QCloudHttpDNS shareDNS] resolveURLRequestIfCan:urlRequest];
         if (error) {
-            QCloudLogError(@"DNS转存请求失败%@", error);
+            QCloudLogErrorE(@"HTTP",@"DNS转存请求失败%@", error);
         }
     }
 
@@ -551,7 +615,7 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
                 [mutableRequest setValue:[@(fileBody.sliceLength) stringValue] forHTTPHeaderField:@"Content-Length"];
                 [handler closeFile];
                 uploadFileURL = [NSURL fileURLWithPath:tempFile];
-                QCloudLogDebug(@"uploadTempFilePath length = %lld", QCloudFileSize(tempFile));
+                QCloudLogDebugP(@"HTTP",@"uploadTempFilePath length = %lld", QCloudFileSize(tempFile));
             }
 
         } else {
@@ -635,7 +699,7 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
         }
     }
 
-    QCloudLogDebug(@"transferHttpHeader %@", transformRequest.allHTTPHeaderFields);
+    QCloudLogDebugP(@"HTTP",@"transferHttpHeader %@", transformRequest.allHTTPHeaderFields);
     taskData.httpRequest = httpRequest;
     QCloudHTTPRetryHanlder *retryHandler = httpRequest.retryPolicy;
     taskData.retryHandler = retryHandler;

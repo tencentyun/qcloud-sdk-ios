@@ -126,6 +126,7 @@ QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilizerBlock
 - (BOOL)prepareInvokeURLRequest:(NSMutableURLRequest *)urlRequest error:(NSError *__autoreleasing *)error {
     
     if (self.credential && self.credential.secretID.length > 0 && self.credential.secretKey.length > 0) {
+        QCloudLogDebugP(@"Signature",@"本次请求使用单次临时密钥:%@,secretID:%@",urlRequest.URL.absoluteString,self.credential.secretID);
         QCloudAuthentationV5Creator *creator = [[QCloudAuthentationV5Creator alloc] initWithCredential:self.credential];
         QCloudSignature *signature = [creator signatureForData:(NSMutableURLRequest *)urlRequest];
         if (!self.isSignedInURL) {
@@ -147,6 +148,7 @@ QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilizerBlock
     }
     
     if(!self.signatureProvider){
+        QCloudLogDebugP(@"Signature",@"本次请求使用匿名上传:%@",urlRequest.URL.absoluteString);
         return YES;
     }
     
@@ -161,6 +163,7 @@ QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilizerBlock
                         request:self
                      urlRequest:urlRequest
                       compelete:^(QCloudSignature *signature, NSError *error) {
+                          QCloudLogDebugP(@"Signature",@"本次请求使用临时密钥上传:%@,signature:%@",urlRequest.URL.absoluteString,signature.signature);
                           if (error) {
                               localError = error;
                           } else {

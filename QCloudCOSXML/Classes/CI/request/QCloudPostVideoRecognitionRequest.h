@@ -88,6 +88,7 @@ typedef NS_ENUM(NSUInteger, QCloudVideoRecognitionMode) {
     QCloudVideoRecognitionModeAverage,
     QCloudVideoRecognitionModeFps,
 };
+NSString *QCloudVideoRecognitionModeTransferToString(QCloudVideoRecognitionMode type);
 
 @interface QCloudPostVideoRecognitionRequest : QCloudBizHTTPRequest
 /**

@@ -10,6 +10,23 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSUInteger, QCloudRequestNetworkStrategy) {
+    /**
+     * 默认策略，即无策略。
+     */
+    QCloudRequestNetworkStrategyDefault = 0,
+    /**
+     * 激进策略
+     */
+    QCloudRequestNetworkStrategyAggressive,
+    /**
+     * 保守策略
+     */
+    QCloudRequestNetworkStrategyConservative,
+};
+
+NSString * QCloudRequestNetworkStrategyToString(QCloudRequestNetworkStrategy strategy);
+
 @interface QCloudConfiguration : NSObject
 
 /**
@@ -37,6 +54,13 @@ NS_ASSUME_NONNULL_BEGIN
 /// 是否全局禁用HTTPS验证，默认为NO 不禁用。
 @property (nonatomic, assign) BOOL disableGlobalAuthentication;
 
+@property (nonatomic, assign) QCloudRequestNetworkStrategy networkStrategy;
+
+/// 配置sdk双向认证，设置客户端证书
+@property (nonatomic,strong)NSData *clientCertificateData;
+
+/// 配置sdk双向认证，设置客户端证书密码
+@property (nonatomic,strong)NSString *password;
 
 @end
 

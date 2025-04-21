@@ -110,22 +110,34 @@ static QCloudCOSTransferMangerService *COSTransferMangerService = nil;
 
 - (void)UploadObject:(QCloudCOSXMLUploadObjectRequest *)request {
     request.transferManager = self;
-    request.enableQuic = self.configuration.enableQuic;
-    QCloudLogDebug(@"UploadObject set transferManager %@", request.transferManager);
+    if (request.networkType != QCloudRequestNetworkNone) {
+        request.enableQuic = request.networkType == QCloudRequestNetworkQuic;
+    }else{
+        request.enableQuic = self.configuration.enableQuic;
+    }
+    QCloudLogDebugP(@"Upload",@"UploadObject set transferManager %@", request.transferManager);
     QCloudFakeRequestOperation *operation = [[QCloudFakeRequestOperation alloc] initWithRequest:request];
     [self.uploadFileQueue addOpreation:operation];
 }
 
 - (void)CopyObject:(QCloudCOSXMLCopyObjectRequest *)request {
     request.transferManager = self;
-    request.enableQuic = self.configuration.enableQuic;
+    if (request.networkType != QCloudRequestNetworkNone) {
+        request.enableQuic = request.networkType == QCloudRequestNetworkQuic;
+    }else{
+        request.enableQuic = self.configuration.enableQuic;
+    }
     QCloudFakeRequestOperation *operation = [[QCloudFakeRequestOperation alloc] initWithRequest:request];
     [self.uploadFileQueue addOpreation:operation];
 }
 
 - (void)DownloadObject:(QCloudCOSXMLDownloadObjectRequest *)request {
     request.transferManager = self;
-    request.enableQuic = self.configuration.enableQuic;
+    if (request.networkType != QCloudRequestNetworkNone) {
+        request.enableQuic = request.networkType == QCloudRequestNetworkQuic;
+    }else{
+        request.enableQuic = self.configuration.enableQuic;
+    }
     QCloudFakeRequestOperation *operation = [[QCloudFakeRequestOperation alloc] initWithRequest:request];
     [self.uploadFileQueue addOpreation:operation];
 }

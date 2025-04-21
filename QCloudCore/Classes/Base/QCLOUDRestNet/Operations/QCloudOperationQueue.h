@@ -17,4 +17,5 @@
 - (void)cancelByRequestID:(int64_t)requestID;
 - (void)cancelByRequestIDs:(NSArray<NSNumber *> *)requestIDs;
 - (void)cancelAllOperation;
+- (void)requestOperationFinishWithRequestId:(int64_t)requestID;
 @end

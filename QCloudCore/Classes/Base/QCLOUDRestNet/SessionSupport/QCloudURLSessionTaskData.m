@@ -87,7 +87,7 @@
             @try {
                 [_writeFileHandler writeData:data];
             } @catch (NSException *exception) {
-                QCloudLogError(@"no space left on device");
+                QCloudLogDebugE(@"Utils",@"no space left on device");
             }
         }
     } else {

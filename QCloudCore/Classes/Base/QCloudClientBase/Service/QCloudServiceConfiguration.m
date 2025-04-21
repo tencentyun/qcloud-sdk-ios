@@ -33,7 +33,8 @@ static NSString *const QCloudServiceConfigurationUnknown = @"Unknown";
     config.disableChangeHost = self.disableChangeHost;
     config.bridge = self.bridge;
     config.disableGlobalAuthentication = self.disableGlobalAuthentication;
-    config.disableGlobalHTTPDNSPrefetch = self.disableGlobalHTTPDNSPrefetch;    
+    config.disableGlobalHTTPDNSPrefetch = self.disableGlobalHTTPDNSPrefetch;
+    config.networkStrategy = self.networkStrategy;
     return config;
 }
 @end

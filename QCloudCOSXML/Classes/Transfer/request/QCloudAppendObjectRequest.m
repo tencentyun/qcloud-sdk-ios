@@ -83,7 +83,7 @@ NS_ASSUME_NONNULL_BEGIN
             return NO;
         }
     }
-    
+
     NSURL *__serverURL = [self.runOnService.configuration.endpoint serverURLWithBucket:self.bucket
                                                                                  appID:self.runOnService.configuration.appID
                                                                             regionName:self.regionName];

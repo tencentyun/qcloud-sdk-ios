@@ -7,6 +7,19 @@
 
 #import "QCloudConfiguration.h"
 #import "QCloudConfiguration_Private.h"
+
+NSString * QCloudRequestNetworkStrategyToString(QCloudRequestNetworkStrategy strategy){
+    
+    if (strategy == QCloudRequestNetworkStrategyAggressive) {
+        return @"Aggressive";
+    }
+    
+    if (strategy == QCloudRequestNetworkStrategyConservative) {
+        return @"Conservative";
+    }
+    return nil;
+}
+
 @implementation QCloudConfiguration
 - (NSString *)userAgent {
     NSString * (^UserAgent)(NSString *productKey) = ^(NSString *productKey) {

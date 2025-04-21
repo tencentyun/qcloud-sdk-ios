@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "QCloudHTTPMultiDataStream.h"
-
+#import "QCloudEndPoint.h"
 NS_ASSUME_NONNULL_BEGIN
 extern NSString *const HTTPHeaderUserAgent;
 extern NSString *const emergencyHost;
@@ -23,6 +23,10 @@ extern NSString *const emergencyHost;
 @property (nonatomic, strong, readonly) NSDictionary *queryParamters;
 
 /**
+ 指定接口级请求域名
+ */
+@property (nonatomic, strong, nullable) QCloudEndPoint * endpoint;
+/**
  数据的编码格式
  */
 @property (nonatomic, assign) NSStringEncoding stringEncoding;
@@ -30,6 +34,12 @@ extern NSString *const emergencyHost;
    服务器地址
  */
 @property (strong, nonatomic ,nullable) NSString *serverURL;
+
+@property (strong, nonatomic ,nullable) NSString *bucket;
+
+@property (strong, nonatomic ,nullable) NSString *appId;
+
+@property (strong, nonatomic ,nullable) NSString *region;
 
 /// 重试时是否需要更换域名
 @property (assign, nonatomic) BOOL needChangeHost;

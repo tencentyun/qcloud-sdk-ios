@@ -40,7 +40,7 @@ static NSString *const QCloudClientContextKeychainInstallationIdKey = @"com.qclo
             _installationId = [keychain stringForKey:QCloudClientContextKeychainInstallationIdKey];
         }
         if (_installationId == nil) {
-            QCloudLogError(@"Failed to generate installation_id");
+            QCloudLogErrorE(@"",@"Failed to generate installation_id");
         }
 
         NSString *appVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
@@ -105,7 +105,7 @@ static NSString *const QCloudClientContextKeychainInstallationIdKey = @"com.qclo
     NSError *error = nil;
     NSData *JSONData = [NSJSONSerialization dataWithJSONObject:JSONObject options:kNilOptions error:&error];
     if (!JSONData) {
-        QCloudLogError(@"Failed to serialize JSON Data. [%@]", error);
+        QCloudLogErrorE(@"",@"Failed to serialize JSON Data. [%@]", error);
         return @"";
     }
 
@@ -120,7 +120,7 @@ static NSString *const QCloudClientContextKeychainInstallationIdKey = @"com.qclo
     if (service) {
         [self.serviceDetails setValue:details forKey:service];
     } else {
-        QCloudLogError(@"'service' cannot be nil.");
+        QCloudLogErrorE(@"",@"[ERROR]'service' cannot be nil.");
     }
 }
 

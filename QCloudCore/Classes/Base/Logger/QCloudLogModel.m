@@ -7,12 +7,14 @@
 //
 
 #import "QCloudLogModel.h"
-
+#import "NSDate+QCLOUD.h"
+#import "QCloudLogger.h"
+#import "NSObject+QCloudModel.h"
 @implementation QCloudLogModel
 ///--------------------------------------
 #pragma mark - Logging Messages
 ///--------------------------------------
-+ (NSString *)_descriptionForLogLevel:(QCloudLogLevel)logLevel {
++ (NSString *)descriptionForLogLevel:(QCloudLogLevel)logLevel {
     NSString *description = nil;
     switch (logLevel) {
         case QCloudLogLevelNone:
@@ -36,6 +38,31 @@
     return description;
 }
 
++ (NSString *)descriptionForLogCategory:(QCloudLogCategory)logCategory {
+    NSString *description = nil;
+    switch (logCategory) {
+        case QCloudLogCategoryNone:
+            description = @"";
+            break;
+        case QCloudLogCategoryProcess:
+            description = @"PROCESS";
+            break;
+        case QCloudLogCategoryResult:
+            description = @"RESULT";
+            break;
+        case QCloudLogCategoryNetwork:
+            description = @"NETWORK";
+            break;
+        case QCloudLogCategoryProbe:
+            description = @"PROBE";
+            break;
+        case QCloudLogCategoryError:
+            description = @"ERROR";
+            break;
+    }
+    return description;
+}
+
 - (NSString *)debugDescription {
     static BOOL willOutputColor = NO;
     static dispatch_once_t onceToken;
@@ -46,13 +73,22 @@
             setenv("XcodeColors", "YES", 0);
         }
     });
+
+    NSString * extInfo = @"";
+    if ([QCloudLogger sharedLogger].extendInfo && !self.simpleLog) {
+        extInfo = [NSString stringWithFormat:@",extendInfo=%@",[[QCloudLogger sharedLogger].extendInfo qcloud_modelToJSONString]];
+        extInfo = [NSString stringWithFormat:@",appVersion=%@,deviceModel=%@,deviceID=%@",[QCloudLogger sharedLogger].appVersion,[QCloudLogger sharedLogger].deviceModel,[QCloudLogger sharedLogger].deviceID];
+        self.message = [self.message stringByAppendingString:extInfo];
+    }
+    
     NSString *description;
-    if (willOutputColor) {
-        description = [NSMutableString stringWithFormat:@"%@[%@]%@%@", [QCloudLogModel consoleLogColorWithLevel:self.level],
-                                                        [QCloudLogModel _descriptionForLogLevel:self.level],
-                                                        [QCloudLogModel consoleLogColorWithLevel:self.level], self.message];
+    if (self.simpleLog) {
+        description = [NSMutableString stringWithFormat:@"%@ %@[%@][%@]%@", [NSDate qcloud_stringFromDate_24:self.date],self.tag,[QCloudLogModel descriptionForLogCategory:self.category],self.threadName,self.message];
+    }else if (willOutputColor) {
+        description = [NSMutableString stringWithFormat:@"%@%@/%@[%@][%@ %@]%@%@",[QCloudLogModel consoleLogColorWithLevel:self.level], [QCloudLogModel descriptionForLogLevel:self.level],[NSDate qcloud_stringFromDate_24:self.date],self.threadName,[QCloudLogModel descriptionForLogCategory:self.category],self.tag,[QCloudLogModel consoleLogColorWithLevel:self.level],self.message];
+        
     } else {
-        description = [NSMutableString stringWithFormat:@"[%@]%@", [QCloudLogModel _descriptionForLogLevel:self.level], self.message];
+        description = [NSMutableString stringWithFormat:@"%@/%@[%@][%@ %@]%@", [QCloudLogModel descriptionForLogLevel:self.level],[NSDate qcloud_stringFromDate_24:self.date],self.threadName,[QCloudLogModel descriptionForLogCategory:self.category],self.tag,self.message];
     }
     return description;
 }
@@ -114,7 +150,7 @@
     NSMutableString *log = [NSMutableString new];
     [log appendString:color];
     [log appendFormat:@"[%@]", self.date];
-    [log appendFormat:@"[%@]", [QCloudLogModel _descriptionForLogLevel:self.level]];
+    [log appendFormat:@"[%@]", [QCloudLogModel descriptionForLogLevel:self.level]];
     [log appendString:@"\e[0m"];
     if (self.file.length) {
         [log appendFormat:@"[%@]", [self.file componentsSeparatedByString:@"/"].lastObject];

@@ -143,7 +143,14 @@
     if(httpRequst.timeoutInterval == 0){
         httpRequst.timeoutInterval = self.configuration.timeoutInterval;
     }
-    httpRequst.enableQuic = self.configuration.enableQuic;
+    if (!httpRequst.requestRetry) {
+        if (httpRequst.networkType != QCloudRequestNetworkNone) {
+            httpRequst.enableQuic = httpRequst.networkType == QCloudRequestNetworkQuic;
+        }else{
+            httpRequst.enableQuic = self.configuration.enableQuic;
+        }
+    }
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSError *error;
         [self fillCommonParamtersForRequest:httpRequst error:&error];
@@ -158,11 +165,23 @@
     return (int)httpRequst.requestID;
 }
 
+-(void)requestFinishWithRequestId:(int64_t)requestID{
+    [[QCloudHTTPSessionManager shareClient] requestOperationFinishWithRequestId:requestID];
+}
+
 - (int)performRequest:(QCloudBizHTTPRequest *)httpRequst withFinishBlock:(QCloudRequestFinishBlock)block {
     if(httpRequst.timeoutInterval == 0){
         httpRequst.timeoutInterval = self.configuration.timeoutInterval;
     }
-    httpRequst.enableQuic = self.configuration.enableQuic;
+    
+    if (!httpRequst.requestRetry) {
+        if (httpRequst.networkType != QCloudRequestNetworkNone) {
+            httpRequst.enableQuic = httpRequst.networkType == QCloudRequestNetworkQuic;
+        }else{
+            httpRequst.enableQuic = self.configuration.enableQuic;
+        }
+    }
+    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSError *error;
         [self fillCommonParamtersForRequest:httpRequst error:&error];

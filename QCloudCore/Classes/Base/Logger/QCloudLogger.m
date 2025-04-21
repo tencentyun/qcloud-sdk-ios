@@ -64,16 +64,37 @@ NSString *const kQCloudLogExtension = @"log";
         char *level = getenv("QCloudLogLevel");
         if (NULL != level && strlen(level) > 0) {
             int logLevel = atoi(level);
-            if (logLevel >= QCloudLogLevelNone && logLevel <= QCloudLogLevelDebug) {
+            if (logLevel >= QCloudLogLevelNone && logLevel <= QCloudLogLevelVerbose) {
                 logger.logLevel = logLevel;
             } else {
-                logger.logLevel = QCloudLogLevelInfo;
+                logger.logLevel = QCloudLogLevelVerbose;
             }
         } else {
-            logger.logLevel = QCloudLogLevelInfo;
+            logger.logLevel = QCloudLogLevelVerbose;
         }
     });
+    logger.logFileLevel = QCloudLogLevelVerbose;
+    logger.logClsLevel = QCloudLogLevelVerbose;
     return logger;
+}
+
+- (NSDictionary *)extendInfo{
+    if (_extendInfo && ![_extendInfo objectForKey:@"qcloud_platform"]) {
+        NSMutableDictionary *mextendInfo = [_extendInfo mutableCopy];
+        [mextendInfo setObject:@"iOS" forKey:@"qcloud_platform"];
+        _extendInfo = mextendInfo.copy;
+    }
+    return _extendInfo;
+}
+
+-(NSMutableArray *)loggerOutputs{
+    if (!_loggerOutputs) {
+        _loggerOutputs = [NSMutableArray new];
+        _currentFileLogger = [[QCloudFileLogger alloc] initWithPath:[self avilableLogFilePath] maxSize:QCloudEachLogFileSize];
+        _currentFileLogger.delegate = self;
+        [_loggerOutputs addObject:_currentFileLogger];
+    }
+    return _loggerOutputs;
 }
 
 - (instancetype)init {
@@ -81,10 +102,7 @@ NSString *const kQCloudLogExtension = @"log";
     if (!self) {
         return self;
     }
-    _loggerOutputs = [NSMutableArray new];
-    _currentFileLogger = [[QCloudFileLogger alloc] initWithPath:[self avilableLogFilePath] maxSize:QCloudEachLogFileSize];
-    _currentFileLogger.delegate = self;
-    [_loggerOutputs addObject:_currentFileLogger];
+    
     _maxStoarageSize = 70 * 1024 * 1024;
     _keepDays = 3;
     //
@@ -146,6 +164,16 @@ NSString *const kQCloudLogExtension = @"log";
     NSString *logName = nil;
 
     NSString *lastLogPath = nil;
+    if ([QCloudLogger sharedLogger].aesKey.length &&[QCloudLogger sharedLogger].aesKey.length) {
+        readyLogName = [readyLogName stringByAppendingString:@"_encrypt"];
+        if (![lastLog containsString:@"encrypt"]) {
+            lastLog = nil;
+        }
+    }else{
+        if ([lastLog containsString:@"encrypt"]) {
+            lastLog = nil;
+        }
+    }
     if (lastLog) {
         lastLogPath = QCloudPathJoin(self.logDirctoryPath, lastLog);
     }
@@ -193,10 +221,12 @@ NSString *const kQCloudLogExtension = @"log";
 }
 
 - (void)logMessageWithLevel:(QCloudLogLevel)level
+                   category:(QCloudLogCategory)category
+                        tag:(NSString *)tag
                         cmd:(const char *)cmd
                        line:(int)line
                        file:(const char *)file
-                     format:(NSString *)format, ... NS_FORMAT_FUNCTION(5, 6) {
+                     format:(NSString *)format, ... NS_FORMAT_FUNCTION(7, 8) {
     if (level > self.logLevel || level == QCloudLogLevelNone || !format) {
         return;
     }
@@ -211,13 +241,21 @@ NSString *const kQCloudLogExtension = @"log";
         log.funciton = [NSString stringWithCString:cmd encoding:NSUTF8StringEncoding];
         log.file = [NSString stringWithCString:file encoding:NSUTF8StringEncoding];
         log.line = line;
+        log.category = category;
+        log.tag = tag;
+        if ([NSThread currentThread].name.length>0) {
+            log.threadName = [NSThread currentThread].name;
+        }else {
+            log.threadName = [NSThread isMainThread]?@"main thread":@"child thread";
+        }
         return log;
     };
-    if (level <= QCloudLogLevelDebug) {
+    if (level <= self.logLevel) {
         QCloudLogModel *model = CreateLog();
+        model.simpleLog = YES;
         NSLog(@"%@", [model debugDescription]);
     }
-    for (QCloudLoggerOutput *output in _loggerOutputs) {
+    for (QCloudLoggerOutput *output in self.loggerOutputs) {
         [output appendLog:CreateLog];
     }
     va_end(args);
@@ -227,10 +265,10 @@ NSString *const kQCloudLogExtension = @"log";
     if (!output) {
         return;
     }
-    [_loggerOutputs addObject:output];
+    [self.loggerOutputs addObject:output];
 }
 
 - (void)removeLogger:(QCloudLoggerOutput *)output {
-    [_loggerOutputs removeObject:output];
+    [self.loggerOutputs removeObject:output];
 }
 @end

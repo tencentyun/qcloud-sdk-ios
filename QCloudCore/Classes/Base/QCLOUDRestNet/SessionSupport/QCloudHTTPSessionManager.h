@@ -23,4 +23,6 @@ FOUNDATION_EXTERN QCloudThreadSafeMutableDictionary *cloudBackGroundSessionManag
 
 @property (nonatomic, assign) int maxConcurrentCountLimit;
 
+- (void)requestOperationFinishWithRequestId:(int64_t)requestID;
+
 @end

@@ -94,7 +94,7 @@ static NSDateFormatter *_internetDateTimeFormatter = nil;
                 }
             }
             if (!date)
-                QCloudLogDebug(@"Could not parse RFC822 date: \"%@\" Possible invalid format.", dateString);
+                QCloudLogDebugE(@"Utils",@"Could not parse RFC822 date: \"%@\" Possible invalid format.", dateString);
         }
     }
     // Finished with date string
@@ -132,7 +132,7 @@ static NSDateFormatter *_internetDateTimeFormatter = nil;
                 date = [dateFormatter dateFromString:RFC3339String];
             }
             if (!date)
-                QCloudLogDebug(@"Could not parse RFC3339 date: \"%@\" Possible invalid format.", dateString);
+                QCloudLogDebugE(@"Utils",@"Could not parse RFC3339 date: \"%@\" Possible invalid format.", dateString);
         }
     }
     // Finished with date string

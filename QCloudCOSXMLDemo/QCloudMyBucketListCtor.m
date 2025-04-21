@@ -106,6 +106,7 @@ NSInteger const RowHeight = 80;
     QCloudServiceConfiguration *configuration = [[QCloudCOSXMLService defaultCOSXML].configuration copy];
     configuration.endpoint.useHTTPS = NO;
     configuration.endpoint.regionName = regionName;
+    configuration.networkStrategy = QCloudRequestNetworkStrategyAggressive;
     
     if (![QCloudCOSTransferMangerService hasTransferMangerServiceForKey:regionName]) {
         [QCloudCOSTransferMangerService registerCOSTransferMangerWithConfiguration:configuration withKey:regionName];

@@ -67,9 +67,13 @@ __attribute__((noinline)) void cosWarnBlockingOperationOnMainThread(void) {
     }
     [self.benchMarkMan markFinishWithKey:kTaskTookTime];
     [self notifyError:error];
-    _finished = YES;
-    QCloudLogError(@"[%@][%lld]当前网络环境为%d 请求失败%@", [self class], self.requestID, QCloudNetworkShareEnv.currentNetStatus, error);
-    QCloudLogVerbose(@"[%@][%lld]性能监控 %@", [self class], self.requestID, [self.benchMarkMan readablityDescription]);
+    if (self.requestRetry) {
+        _finished = NO;
+    }else{
+        _finished = YES;
+    }
+    QCloudLogErrorE(@"",@"[%@][%lld]当前网络环境为%d 请求失败%@", [self class], self.requestID, QCloudNetworkShareEnv.currentNetStatus, error);
+    QCloudLogInfoN(@"",@"[%@][%lld]性能监控 %@", [self class], self.requestID, [self.benchMarkMan readablityDescription]);
 }
 
 - (void)__notifySuccess:(id)object {
@@ -102,8 +106,12 @@ __attribute__((noinline)) void cosWarnBlockingOperationOnMainThread(void) {
     }
     [self.benchMarkMan markFinishWithKey:kTaskTookTime];
     [self notifySuccess:object];
-    _finished = YES;
-    QCloudLogVerbose(@"[%@][%lld]性能监控\n%@", [self class], self.requestID, [self.benchMarkMan readablityDescription]);
+    if (self.requestRetry) {
+        _finished = NO;
+    }else{
+        _finished = YES;
+    }
+    QCloudLogInfoN(@"",@"[%@][%lld]性能监控\n%@", [self class], self.requestID, [self.benchMarkMan readablityDescription]);
 }
 
 - (void)cancel {

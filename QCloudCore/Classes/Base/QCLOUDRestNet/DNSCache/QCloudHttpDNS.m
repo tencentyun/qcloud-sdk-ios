@@ -64,7 +64,7 @@ BOOL QCloudCheckIPVaild(NSString *ip) {
         ip = [self.delegate resolveDomain:domain];
     }
     if (!ip) {
-        QCloudLogDebug(@"Cannot resolve domain %@", domain);
+        QCloudLogDebugE(@"HTTP",@"Cannot resolve domain %@", domain);
         if (NULL != error) {
             *error = [NSError qcloud_errorWithCode:kCFURLErrorDNSLookupFailed
                                            message:[NSString stringWithFormat:@"NetworkException:无法解析域名 %@", domain]];
@@ -172,12 +172,12 @@ BOOL QCloudCheckIPVaild(NSString *ip) {
 
 - (void)pingTester:(QCloudPingTester *)pingTester didPingSucccessWithTime:(float)time withError:(NSError *)error {
     if (!error) {
-        QCloudLogInfo(@"ping的延迟是--->%f", time);
+        QCloudLogInfoPB(@"HTTP",@"ping的延迟是--->%f", time);
         [pingTester stopPing];
         [self setIp:pingTester.ip forDomain:pingTester.host];
         dispatch_semaphore_signal(pingTester.sema);
     } else {
-        QCloudLogDebug(@"网络不通过ip[%@]", pingTester.ip);
+        QCloudLogInfoPB(@"HTTP",@"网络不通过ip[%@]", pingTester.ip);
         [pingTester stopPing];
         NSMutableArray *ipList = [[_ipHostMap objectForKey:pingTester.host] mutableCopy];
         if (ipList.count) {
@@ -224,7 +224,7 @@ NSArray *getIPListFromToHost(const char *mHost, const char *mPort) {
     hints.ai_socktype = SOCK_STREAM;
 
     if ((n = getaddrinfo(mHost, "http", &hints, &res0)) != 0) {
-        QCloudLogInfo(@"getaddrinfo error: %s", gai_strerror(n));
+        QCloudLogInfoPB(@"HTTP",@"getaddrinfo error: %s", gai_strerror(n));
         return NULL;
     }
 
@@ -257,7 +257,7 @@ NSArray *getIPListFromToHost(const char *mHost, const char *mPort) {
         }
 
         [ipList addObject:NewStr];
-        QCloudLogInfo(@"host[%s] ipList:%@", mHost, ipList);
+        QCloudLogInfoPB(@"HTTP",@"host[%s] ipList:%@", mHost, ipList);
     }
 
     if(res0!=NULL){

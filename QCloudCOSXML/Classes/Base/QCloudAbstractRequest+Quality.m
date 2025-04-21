@@ -10,6 +10,10 @@
 #import <QCloudCore/QualityDataUploader.h>
 #import "QCloudCOSXMLVersion.h"
 #import "QCloudCOSXMLService+Quality.h"
+
+@interface QCloudAbstractRequest ()
+@end
+
 @implementation QCloudAbstractRequest (Quality)
 + (void)load {
     static dispatch_once_t onceToken;

@@ -92,7 +92,7 @@
 }
 
 - (void)willStart {
-    QCloudLogDebug(@"[%llu] Will Start", self.requestID);
+    QCloudLogDebugP(@"HTTP",@"[%llu] Will Start", self.requestID);
 }
 
 - (void)loadRetryPolicy {
@@ -143,10 +143,10 @@
     }
 
     if (*error) {
-        QCloudLogError(@"[%@][%lld]序列化失败", self.class, self.requestID);
+        QCloudLogErrorE(@"",@"[%@][%lld]序列化失败", self.class, self.requestID);
         return nil;
     }
-    QCloudLogDebug(@"SendingRequest [%lld]\n%@\n%@ \nrequest content:%@", self.requestID, request, request.allHTTPHeaderFields,
+    QCloudLogDebugP(@"HTTP",@"SendingRequest [%lld]\n%@\n%@ \nrequest content:%@", self.requestID, request, request.allHTTPHeaderFields,
                    [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding]);
     self.urlRequest = request;
     return request;
@@ -187,7 +187,7 @@
     } else {
         // The response header does not have the 'Date' field.
         // This should not happen.
-        QCloudLogError(@"Date header does not exist. Not able to fix the time");
+        QCloudLogErrorE(@"",@"Date header does not exist. Not able to fix the time");
     }
     
     NSTimeInterval skewTime = 0;
@@ -195,7 +195,7 @@
         skewTime = [deviceTime timeIntervalSinceDate:serverTime];
     }
     // If the time difference between the device and the server is large, fix device time
-    QCloudLogDebug(@"skewTime: %f", skewTime);
+    QCloudLogDebugP(@"HTTP",@"skewTime: %f", skewTime);
     if (skewTime >= 1 * 60) {
         [NSDate qcloud_setTimeDeviation:skewTime];
     }
@@ -204,13 +204,13 @@
     if (localError) {
         localError.__originHTTPURLResponse__ = response;
         localError.__originHTTPResponseData__ = data;
-        QCloudLogError(@"[%@][%lld] %@", [self class], self.requestID, localError);
+        QCloudLogErrorE(@"HTTP",@"[%@][%lld] %@", [self class], self.requestID, localError);
         if ([self isFixTime:localError]) {
             [NSDate qcloud_setTimeDeviation:skewTime];
         }
         [self onError:localError];
     } else {
-        QCloudLogDebug(@"[%@][%lld] RESPONSE \n%@ ", [self class], self.requestID, [outputObject qcloud_modelToJSONString]);
+        QCloudLogDebugP(@"HTTP",@"[%@][%lld] RESPONSE \n%@ ", [self class], self.requestID, [outputObject qcloud_modelToJSONString]);
         [outputObject set__originHTTPURLResponse__:response];
         [outputObject set__originHTTPResponseData__:data];
         [self onSuccess:outputObject];
@@ -262,5 +262,10 @@
         return YES;
     }
     return NO;
+}
+
+- (void)setEndpoint:(QCloudEndPoint *)endpoint{
+    super.endpoint = endpoint;
+    self.requestData.endpoint = endpoint;
 }
 @end

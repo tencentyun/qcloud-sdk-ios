@@ -18,7 +18,7 @@
     }
 
     NSDictionary *dicOperations = @{ @"is_pic_info" : _is_pic_info ? @(1) : @(0), @"rules" : [self getRules] };
-    QCloudLogInfo(@"%@", [dicOperations qcloud_modelToJSONString]);
+    QCloudLogInfoP(@"",@"%@", [dicOperations qcloud_modelToJSONString]);
     return [dicOperations qcloud_modelToJSONString];
 }
 
@@ -30,7 +30,7 @@
         }
 
         if (item.fileid == nil) {
-            QCloudLogError(@"[%@]QCloudPicOperationRule的fileid不能为空", self.class);
+            QCloudLogDebugE(@"Utils",@"[%@]QCloudPicOperationRule的fileid不能为空", self.class);
             return nil;
         }
 
@@ -53,7 +53,7 @@
     }
 
     if (_type == 0 || _type > 3) {
-        QCloudLogError(@"水印类型错误");
+        QCloudLogDebugE(@"Utils",@"水印类型错误");
         return nil;
     }
     
@@ -63,7 +63,7 @@
 
     if (_type == QCloudPicOperationRuleFull || _type == QCloudPicOperationRuleHalf) {
         if (_imageURL == nil) {
-            QCloudLogError(@"[%@]生成水印错误————半盲和全盲水印必须指定图片链接", self.class);
+            QCloudLogDebugE(@"Utils",@"[%@]生成水印错误————半盲和全盲水印必须指定图片链接", self.class);
             return nil;
         }
         NSData *data = [_imageURL dataUsingEncoding:NSUTF8StringEncoding];
@@ -80,12 +80,12 @@
         }
     } else {
         if (_text == nil) {
-            QCloudLogError(@"[%@]文本型水印请传入水印文字", self.class);
+            QCloudLogDebugE(@"Utils",@"[%@]文本型水印请传入水印文字", self.class);
             return nil;
         }
 
         if (![_text matchesRegularExpression:@"[a-zA-Z0-9]+"]) {
-            QCloudLogError(@"[%@]文本型水印的文本仅支持[a-zA-Z0-9]", self.class);
+            QCloudLogDebugE(@"Utils",@"[%@]文本型水印的文本仅支持[a-zA-Z0-9]", self.class);
             return nil;
         }
 

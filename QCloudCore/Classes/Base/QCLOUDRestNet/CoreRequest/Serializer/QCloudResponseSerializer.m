@@ -49,7 +49,7 @@ QCloudResponseSerializerBlock QCloudResponseXMLSerializerBlock = ^(NSHTTPURLResp
                                                                                                                  encoding:NSUTF8StringEncoding]]];
         return (id)nil;
     }
-    NSLog(@"output =  %@", output);
+    QCloudLogDebugR(@"HTTP",@"原始数据：%@", output);
     return (id)output;
 };
 
@@ -146,10 +146,10 @@ QCloudResponseSerializerBlock QCloudResponseJSONSerilizerBlock = ^(NSHTTPURLResp
     NSDictionary *jsonObject = [NSJSONSerialization JSONObjectWithData:inputData options:0 error:error];
     if (*error || !jsonObject) {
         NSString *str = [[NSString alloc] initWithData:inputData encoding:NSUTF8StringEncoding];
-        QCloudLogError(@"response data is %@", str);
+        QCloudLogErrorE(@"HTTP",@"response data is %@", str);
         return (id)nil;
     }
-    QCloudLogDebug(@"GET JSON : \n %@", jsonObject);
+    QCloudLogDebugR(@"HTTP",@"GET JSON : \n %@", jsonObject);
     return (id)(jsonObject);
 };
 

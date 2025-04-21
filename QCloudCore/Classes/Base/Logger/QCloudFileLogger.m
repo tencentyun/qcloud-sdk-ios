@@ -17,6 +17,7 @@
 
 #import "QCloudSDKModuleManager.h"
 #import "NSObject+QCloudModel.h"
+#import <CommonCrypto/CommonCrypto.h>
 @interface QCloudFileLogger () {
     dispatch_source_t _timer;
 }
@@ -97,10 +98,14 @@
 - (void)writeCliceDataToFile {
     if (_sliceData.length) {
         @try {
-            [_fileHandler writeData:_sliceData];
+            if ([QCloudLogger sharedLogger].aesKey.length>0 && [QCloudLogger sharedLogger].aesIv.length>0) {
+                [self  appendEncryptedLogToFile:_sliceData key:[QCloudLogger sharedLogger].aesKey iv:[QCloudLogger sharedLogger].aesIv];
+            }else{
+                [_fileHandler writeData:_sliceData];
+            }
             _sliceData = [NSMutableData dataWithCapacity:(NSUInteger)_sliceSize];
         } @catch (NSException *exception) {
-            QCloudLogError(@"no space left on device");
+            NSLog(@"no space left on device");
         }
        
     }
@@ -109,19 +114,21 @@
 - (void)appendLog:(QCloudLogModel * (^)(void))logCreate {
     dispatch_async(_buildQueue, ^{
         QCloudLogModel *log = logCreate();
-        NSString *message = [NSString stringWithFormat:@"%@\n", [log fileDescription]];
-        NSData *data = [message dataUsingEncoding:NSUTF8StringEncoding];
-        self->_currentSize += data.length;
-        [self->_sliceData appendData:data];
-        //
-        if (self.currentSize >= self.maxSize) {
-            [self writeCliceDataToFile];
-            if ([self.delegate respondsToSelector:@selector(fileLoggerDidFull:)]) {
-                [self.delegate fileLoggerDidFull:self];
-            }
-        } else {
-            if (self->_sliceData.length >= self->_sliceSize) {
+        if (log.level <= [QCloudLogger sharedLogger].logFileLevel) {
+            NSString *message = [NSString stringWithFormat:@"%@\n", [log fileDescription]];
+            NSData *data = [message dataUsingEncoding:NSUTF8StringEncoding];
+            self->_currentSize += data.length;
+            [self->_sliceData appendData:data];
+            //
+            if (self.currentSize >= self.maxSize) {
                 [self writeCliceDataToFile];
+                if ([self.delegate respondsToSelector:@selector(fileLoggerDidFull:)]) {
+                    [self.delegate fileLoggerDidFull:self];
+                }
+            } else {
+                if (self->_sliceData.length >= self->_sliceSize) {
+                    [self writeCliceDataToFile];
+                }
             }
         }
     });
@@ -129,6 +136,53 @@
 
 - (BOOL)isFull {
     return self.currentSize >= self.maxSize;
+}
+
+// 加密单条日志并追加到文件
+- (BOOL)appendEncryptedLogToFile:(NSData *)messageData key:(NSData *)key iv:(NSData *)iv {
+    NSData *encryptedData = [self encryptData:messageData  key:key iv:iv];
+    if (!encryptedData) return NO;
+    if (_fileHandler) {
+        // 写入长度头（4字节大端序）
+        uint32_t length = (uint32_t)encryptedData.length;
+        uint32_t lengthBE = htonl(length);
+        [_fileHandler writeData:[NSData dataWithBytes:&lengthBE length:sizeof(lengthBE)]];
+        
+        // 写入密文
+        [_fileHandler writeData:encryptedData];
+        return YES;
+    }
+    return NO;
+}
+#pragma mark - 加解密核心
+- (NSData *)encryptData:(NSData *)data key:(NSData *)key iv:(NSData *)iv{
+    return [self cryptData:data operation:kCCEncrypt key:key iv:iv];
+}
+
+- (NSData *)cryptData:(NSData *)data operation:(CCOperation)op key:(NSData *)key iv:(NSData *)iv {
+    size_t bufferSize = data.length + kCCBlockSizeAES128;
+    void *buffer = malloc(bufferSize);
+    
+    size_t numBytesProcessed = 0;
+    CCCryptorStatus status = CCCrypt(op,
+                                     kCCAlgorithmAES,
+                                     kCCOptionPKCS7Padding,
+                                     key.bytes,
+                                     kCCKeySizeAES256,
+                                     iv.bytes,
+                                     data.bytes,
+                                     data.length,
+                                     buffer,
+                                     bufferSize,
+                                     &numBytesProcessed);
+    
+    if (status == kCCSuccess) {
+        return [NSData dataWithBytesNoCopy:buffer length:numBytesProcessed];
+    }else{
+        NSLog(@"警告：日志加密失败");
+    }
+    free(buffer);
+    return nil;
 }
 
 @end

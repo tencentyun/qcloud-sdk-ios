@@ -11,7 +11,7 @@
 @interface QCloudSDKModuleManager () {
     NSMutableArray *_modules;
 }
-
+@property (nonatomic, strong) dispatch_queue_t dispatchQueue;
 @end
 
 @implementation QCloudSDKModuleManager
@@ -29,6 +29,7 @@
     if (!self) {
         return self;
     }
+    _dispatchQueue = dispatch_queue_create("com.tencent.qcloud.sdkmodulemanager", DISPATCH_QUEUE_SERIAL);
     _modules = [NSMutableArray new];
     return self;
 }
@@ -50,11 +51,13 @@
     if (!json.count) {
         return;
     }
-    QCloudSDKModule *module = [QCloudSDKModule qcloud_modelWithJSON:json];
-    if (!module) {
-        return;
-    }
-    [self registerModule:module];
+    dispatch_async(self.dispatchQueue, ^{
+        QCloudSDKModule *module = [QCloudSDKModule qcloud_modelWithJSON:json];
+        if (!module) {
+            return;
+        }
+        [self registerModule:module];
+    });
 }
 
 @end

@@ -65,7 +65,7 @@
     BOOL isLegal = [bucket matchesRegularExpression:regularExpression];
     NSAssert(isLegal, @"bucket name contains illegal character! It can only contains a-z, A-Z, 0-9, '.' and '-' ");
     if (!isLegal) {
-        QCloudLogDebug(@"bucket %@ contains illeagal character, building service url pregress  returns immediately", bucket);
+        QCloudLogDebugE(@"Service",@"bucket %@ contains illeagal character, building service url pregress  returns immediately", bucket);
         return nil;
     }
     NSString *formattedBucketName = [self formattedBucket:bucket withAPPID:appID];
@@ -85,7 +85,7 @@
         BOOL isLegal = [regionNametmp matchesRegularExpression:regularExpression];
         NSAssert(isLegal, @"Region name contains illegal character! It can only contains a-z, A-Z, 0-9, '.' and '-' ");
         if (!isLegal) {
-            QCloudLogDebug(@"Region %@ contains illeagal character, setter returns immediately", regionName);
+            QCloudLogDebugE(@"Service",@"Region %@ contains illeagal character, setter returns immediately", regionName);
             return nil;
         }
     }
@@ -103,7 +103,7 @@
             serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@/%@", scheme, self.suffix, formattedBucketName]];
         }
     }
-    QCloudLogDebug(@"serverURL:  %@", serverURL);
+    QCloudLogDebugP(@"Service",@"serverURL:  %@", serverURL);
     return serverURL;
 }
 
@@ -118,7 +118,7 @@
         BOOL isLegal = [regionName matchesRegularExpression:regularExpression];
         NSAssert(isLegal, @"Region name contains illegal character! It can only contains a-z, A-Z, 0-9, '.' and '-' ");
         if (!isLegal) {
-            QCloudLogDebug(@"Region %@ contains illeagal character, setter returns immediately", regionName);
+            QCloudLogDebugE(@"Service",@"Region %@ contains illeagal character, setter returns immediately", regionName);
             return;
         }
     }

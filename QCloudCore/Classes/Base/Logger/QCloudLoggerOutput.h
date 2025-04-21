@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "QCloudLogModel.h"
 @class QCloudLogModel;
 @interface QCloudLoggerOutput : NSObject
 - (void)appendLog:(QCloudLogModel * (^)(void))logCreate;

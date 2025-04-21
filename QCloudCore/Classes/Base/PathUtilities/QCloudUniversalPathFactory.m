@@ -38,7 +38,7 @@ NSString *const kMediaURLPrefix = @"/var/mobile/Media/DCIM";
     NSString *strippedURL;
     NSString *absoluteString = url.absoluteString;
     if (!url && ![url isKindOfClass:NSURL.class]) {
-        QCloudLogDebug(@"Nil paramater url!");
+        QCloudLogDebugE(@"Utils",@"Nil paramater url!");
         return nil;
     }
     if ([absoluteString isMediaPath]) {
@@ -62,7 +62,7 @@ NSString *const kMediaURLPrefix = @"/var/mobile/Media/DCIM";
         result = [[QCloudUniversalFixedPath alloc] initWithStrippedURL:strippedURL];
         result.type = QCLOUD_UNIVERSAL_PATH_TYPE_FIXED;
     }
-    QCloudLogDebug(@"Origin URL is %@ , stripped URL is %@", absoluteString, strippedURL);
+    QCloudLogDebugP(@"Utils",@"Origin URL is %@ , stripped URL is %@", absoluteString, strippedURL);
     return result;
 }
 

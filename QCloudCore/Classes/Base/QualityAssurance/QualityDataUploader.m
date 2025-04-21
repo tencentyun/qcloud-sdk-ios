@@ -184,7 +184,7 @@ static NSString * sdkBridge = @"";
         );
     
     } else {
-        QCloudLogDebug(@"please pod QCloudTrack");
+        QCloudLogDebugE(@"Pod",@"please pod QCloudTrack");
     }
 }
 
@@ -273,13 +273,24 @@ static NSString * sdkBridge = @"";
         urlInfo[@"region"] = regionName?:@"";
         urlInfo[@"bucket"] = bucket;
         urlInfo[@"accelerate"] = accelerate;
-        urlInfo[@"http_method"] = bizRequest.urlRequest.HTTPMethod;
-        urlInfo[@"url"] = bizRequest.urlRequest.URL.absoluteString;
-        urlInfo[@"host"] = bizRequest.urlRequest.URL.host;
-        urlInfo[@"request_path"] = bizRequest.urlRequest.URL.absoluteString;
+        urlInfo[@"http_method"] = bizRequest.urlRequest.HTTPMethod?:@"";
+        urlInfo[@"url"] = bizRequest.urlRequest.URL.absoluteString?:@"";
+        urlInfo[@"host"] = bizRequest.urlRequest.URL.host?:@"";
+        urlInfo[@"request_path"] = bizRequest.urlRequest.URL.absoluteString?:@"";
         urlInfo[@"network_protocol"] = bizRequest.enableQuic?@"QUIC":(bizRequest.runOnService.configuration.endpoint.useHTTPS ? @"HTTPS":@"HTTP");
+        urlInfo[@"cos_config_quic"] = bizRequest.runOnService.configuration.enableQuic?@"true":@"false";
+        if (bizRequest.runOnService.configuration.networkStrategy != QCloudRequestNetworkStrategyDefault) {
+            urlInfo[@"cos_config_network_switch_strategy"] = QCloudRequestNetworkStrategyToString(bizRequest.runOnService.configuration.networkStrategy);
+            urlInfo[@"cos_config_network_is_switch"] = bizRequest.requestRetry?@"true":@"false";
+        }
+        if (bizRequest.endpoint.serverURLLiteral) {
+            urlInfo[@"cos_config_host"] = bizRequest.endpoint.serverURLLiteral;
+        }else if(bizRequest.runOnService.configuration.endpoint.serverURLLiteral){
+            urlInfo[@"cos_config_host"] = bizRequest.runOnService.configuration.endpoint.serverURLLiteral;
+        }
+        
         urlInfo[@"http_retry_times"] = @(bizRequest.retryCount).stringValue;
-        urlInfo[@"http_dns_ips"] = [[[QCloudHttpDNS shareDNS] queryIPsForHost:bizRequest.urlRequest.URL.host] componentsJoinedByString:@","];
+        urlInfo[@"http_dns_ips"] = [[[QCloudHttpDNS shareDNS] queryIPsForHost:bizRequest.urlRequest.URL.host] componentsJoinedByString:@","]?:@"";
     }
     if (sdkBridge) {
         urlInfo[@"sdk_bridge"] = sdkBridge;
@@ -317,8 +328,6 @@ static NSString * sdkBridge = @"";
         } @finally {
             
         }
-        
-     
     }
     mutableDicParams[kQCloudQualityErrorRequestNameKey] = [self getServiceNameFromClass:request.class];
     mutableDicParams[kQCloudQualityResultKey] = kQCloudRequestFailureKey;

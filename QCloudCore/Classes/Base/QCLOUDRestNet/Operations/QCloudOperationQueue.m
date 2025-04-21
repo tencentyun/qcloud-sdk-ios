@@ -72,7 +72,7 @@ static const NSInteger kWeakNetworkConcurrentCount = 1;
         [_backgroundPerformanceRequest addObject:operation];
     }
     [_dataLock unlock];
-    QCloudLogVerbose(@"[%@][%lld]请求已经缓存到队列中", [operation.request class], [operation.request requestID]);
+    QCloudLogVerboseP(@"HTTP",@"[%@][%lld]请求已经缓存到队列中", [operation.request class], [operation.request requestID]);
     //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
     [self tryStartAnyOperation];
     //    });
@@ -84,7 +84,7 @@ static const NSInteger kWeakNetworkConcurrentCount = 1;
 
     void (^ExeOperation)(QCloudRequestOperation *operation) = ^(QCloudRequestOperation *operation) {
         operation.delagte = self;
-        QCloudLogVerbose(@"[%@][%lld]请求从队列中取出，开始执行", [operation.request class], [operation.request requestID]);
+        QCloudLogVerboseP(@"HTTP",@"[%@][%lld]请求从队列中取出，开始执行", [operation.request class], [operation.request requestID]);
         [self->_runningOperationArray addObject:operation];
         [operation execute];
     };
@@ -94,7 +94,7 @@ static const NSInteger kWeakNetworkConcurrentCount = 1;
             ExeOperation(op);
             [_highPerfomanceRequest removeObject:op];
         }
-        QCloudLogDebug(@"Current max concurrent count is %i", concurrentCount);
+        QCloudLogDebugP(@"HTTP",@"Current max concurrent count is %i", concurrentCount);
         if (_runningOperationArray.count < concurrentCount) {
             if (_normalPerformanceRequest.count) {
                 QCloudRequestOperation *operation = _normalPerformanceRequest.firstObject;
@@ -119,11 +119,20 @@ static const NSInteger kWeakNetworkConcurrentCount = 1;
     [_runningOperationArray removeObject:operation];
     [_dataLock unlock];
     [self tryStartAnyOperation];
-    QCloudLogVerbose(@"[%@][%lld]执行完毕", [operation.request class], [operation.request requestID]);
+    QCloudLogVerboseP(@"HTTP",@"[%@][%lld]执行完毕", [operation.request class], [operation.request requestID]);
+}
+
+- (void)requestOperationFinishWithRequestId:(int64_t)requestID {
+    for (QCloudRequestOperation *request in _runningOperationArray) {
+        if (request.request.requestID == requestID) {
+            [self requestOperationFinish:request];
+            break;
+        }
+    }
 }
 
 - (void)cancel:(QCloudRequestOperation *)operation {
-    QCloudLogDebug(@"[%llu] cancelled by operation", operation.request.requestID);
+    QCloudLogDebugP(@"HTTP",@"[%llu] cancelled by operation", operation.request.requestID);
     [_dataLock lock];
     [_runningOperationArray removeObject:operation];
     if (operation.request.priority == QCloudAbstractRequestPriorityHigh) {
@@ -140,7 +149,7 @@ static const NSInteger kWeakNetworkConcurrentCount = 1;
 }
 
 - (void)cancelByRequestID:(int64_t)requestID {
-    QCloudLogDebug(@"[%llu] cancelled by request id ", requestID);
+    QCloudLogDebugP(@"HTTP",@"[%llu] cancelled by request id ", requestID);
     [_dataLock lock];
     [self removeRequestInQueue:requestID];
     [self tryStartAnyOperation];
@@ -153,7 +162,7 @@ static const NSInteger kWeakNetworkConcurrentCount = 1;
             for (QCloudRequestOperation *request in [array copy]) {
                 if (request.request.requestID == requestID) {
                     [array removeObject:request];
-                    QCloudLogDebug(@"[%llu] request removed successes!", requestID);
+                    QCloudLogDebugP(@"HTTP",@"[%llu] request removed successes!", requestID);
                 }
             }
         };
@@ -204,7 +213,7 @@ static const NSInteger kWeakNetworkConcurrentCount = 1;
         default:
             break;
     }
-    QCloudLogDebug(@"网络环境发生变化，当前的网络环境为：%@", descriptionString);
+    QCloudLogDebugP(@"HTTP",@"网络环境发生变化，当前的网络环境为：%@", descriptionString);
 }
 
 - (void)onHandleNetworkUploadSpeedUpadte:(NSNotification *)notification {
@@ -240,7 +249,7 @@ static const NSInteger kWeakNetworkConcurrentCount = 1;
 - (void)incresetConcurrentCount {
     int tempLimit = self.maxConcurrentCountLimit?self.maxConcurrentCountLimit:kDefaultCouncurrentCount;
     if (self.maxConcurrentCount < tempLimit) {
-        QCloudLogDebug(@"concurernt count increased! previous concurrent count is %i ", self.maxConcurrentCount);
+        QCloudLogDebugP(@"HTTP",@"concurernt count increased! previous concurrent count is %i ", self.maxConcurrentCount);
         self.maxConcurrentCount++;
     }
     return;
@@ -248,14 +257,14 @@ static const NSInteger kWeakNetworkConcurrentCount = 1;
 
 - (void)decreaseConcurrentCount {
     if (self.maxConcurrentCount > kWeakNetworkConcurrentCount) {
-        QCloudLogDebug(@"concurernt count decreased! previous concurrent count is %i ", self.maxConcurrentCount);
+        QCloudLogDebugP(@"HTTP",@"concurernt count decreased! previous concurrent count is %i ", self.maxConcurrentCount);
         self.maxConcurrentCount--;
     }
     return;
 }
 
 - (void)resetConcurrentCount {
-    QCloudLogDebug(@"Max concurrent count has beed reset!");
+    QCloudLogDebugP(@"HTTP",@"Max concurrent count has beed reset!");
     self.maxConcurrentCount = 1;
 }
 @end

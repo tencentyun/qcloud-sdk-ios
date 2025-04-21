@@ -122,8 +122,18 @@
  */
 @property (strong, nonatomic) NSString *resumableTaskFile;
 
+/**
+ 续传时，是否将续传前的进度并入进度回调中。默认 NO
+ 例如，下载一个 100m文件，已经下载20m，续传是：
+ 设置NO：则进度将会从0走到80。
+ 设置YES：则进度将会从20走到100。
+ */
+@property (assign, nonatomic) BOOL resumeLocalProcess;
+
 /// 是否使用路径检查，true为开启，false为关闭，默认为true；。
 @property (assign, nonatomic) BOOL objectKeySimplifyCheck;
+
+@property (assign, nonatomic) BOOL enablePartCrc64;
 
 //针对本次下载行流量控制的限速值，必须为数字，单位默认为 bit/s。限速值设置范围为819200 - 838860800,即100KB/s - 100MB/s，如果超出该范围将返回400错误
 @property (nonatomic, assign) NSInteger trafficLimit;

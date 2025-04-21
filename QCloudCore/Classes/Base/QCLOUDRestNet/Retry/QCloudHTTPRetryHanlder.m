@@ -83,7 +83,7 @@
     }
 
     if (_currentTryCount >= self.maxCount) {
-        QCloudLogDebug(@"超过了最大重试次数，不再重试");
+        QCloudLogDebugP(@"HTTP",@"超过了最大重试次数，不再重试");
         return NO;
     }
     

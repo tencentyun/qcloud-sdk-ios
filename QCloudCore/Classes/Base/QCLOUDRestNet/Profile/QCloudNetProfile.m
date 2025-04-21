@@ -124,8 +124,8 @@ typedef NS_ENUM(NSInteger, QCloudNetSpeedLevel) { QCloudNetSpeedLevel1s, QCloudN
 - (void)checkSpeed {
     dispatch_sync(_readWriteQueue, ^{
         for (QCloudNetProfileLevel *level in self->_sppedLevels) {
-            QCloudLogDebug(@"%f download spped %lld bytes/s", level.interval, level.downloadSpeed);
-            QCloudLogDebug(@"%f upload speed %lld bytes/s", level.interval, level.uploadSpped);
+            QCloudLogDebugN(@"",@"%f download spped %lld bytes/s", level.interval, level.downloadSpeed);
+            QCloudLogDebugN(@"",@"%f upload speed %lld bytes/s", level.interval, level.uploadSpped);
         }
     });
 }

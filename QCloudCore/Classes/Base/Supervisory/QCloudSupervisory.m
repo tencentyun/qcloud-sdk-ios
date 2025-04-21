@@ -166,7 +166,7 @@
         @try {
             [fileHandler writeData:data];
         } @catch (NSException *exception) {
-            QCloudLogError(@"no space left on device");
+            QCloudLogDebugE(@"Utils",@"no space left on device");
         }
     }
 }
@@ -220,7 +220,7 @@
         _hostIps[host] = dnsips;
         _activeSession.ips = [_hostIps copy];
     } else {
-        QCloudLogError(@"Not resolved");
+        QCloudLogDebugE(@"Utils",@"Not resolved");
     }
     CFRelease(hostRef);
 }

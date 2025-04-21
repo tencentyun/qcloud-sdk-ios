@@ -37,8 +37,6 @@
     return self;
 }
 
-
-
 - (NSURL *)serverURLLiteral {
     if (!_serverURLLiteral) {
         return nil;

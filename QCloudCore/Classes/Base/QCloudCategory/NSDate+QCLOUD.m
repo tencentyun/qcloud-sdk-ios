@@ -10,7 +10,7 @@
 static NSTimeInterval _timeDeviation = 0.0;
 @implementation NSDate (QCLOUD)
 + (NSDate *)qcloud_calibrateTime {
-    QCloudLogDebug(@"fix skew time %@", [self qcloud_stringFromDate:[[NSDate date] dateByAddingTimeInterval:-1 * _timeDeviation]]);
+    QCloudLogDebugP(@"Utils",@"fix skew time %@", [self qcloud_stringFromDate:[[NSDate date] dateByAddingTimeInterval:-1 * _timeDeviation]]);
     return [[NSDate date] dateByAddingTimeInterval:-1 * _timeDeviation];
 }
 + (void)qcloud_setTimeDeviation:(NSTimeInterval)timeDeviation {
@@ -32,6 +32,12 @@ static NSTimeInterval _timeDeviation = 0.0;
 + (NSString *)qcloud_stringFromDate_24:(NSDate *)date {
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init]; //创建一个日期格式化器
     dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";               //指定转date得日期格式化形式
+    return [dateFormatter stringFromDate:date];                      // 2015-11-20
+}
+
++ (NSString *)qcloud_stringFromDate_24SSS:(NSDate *)date {
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init]; //创建一个日期格式化器
+    dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss.SSS";               //指定转date得日期格式化形式
     return [dateFormatter stringFromDate:date];                      // 2015-11-20
 }
 

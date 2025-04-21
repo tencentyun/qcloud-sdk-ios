@@ -427,7 +427,7 @@ static void *QCloudHTTPRequestSerializerObserverContext = &QCloudHTTPRequestSeri
             @try {
                 [self removeObserver:self forKeyPath:selector];
             } @catch (NSException *exception) {
-                QCloudLogDebug(@"没有该观察者");
+                QCloudLogDebugE(@"Utils",@"没有该观察者");
             }
         }
     }
