@@ -346,7 +346,9 @@
             }
           
             if(error){
-                [self calculateCrc64:self.downloadingTempURL fileSize:currentTotalBytesDownload + strongSelf.localCacheDownloadOffset];
+                if (self.enablePartCrc64) {
+                    [self calculateCrc64:self.downloadingTempURL fileSize:currentTotalBytesDownload + strongSelf.localCacheDownloadOffset];
+                }
                 NSMutableArray *tasks = [dic[@"downloadedBlocks"] mutableCopy];
                 if(!tasks){
                     tasks = [NSMutableArray array];
