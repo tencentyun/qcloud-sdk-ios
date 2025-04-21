@@ -97,6 +97,5 @@
         NSString * mapAsString = [[NSString alloc]initWithFormat:@"{%@}",[array componentsJoinedByString:@","]];
         NSString *logString = [NSString stringWithFormat:@"cls_post_result:eventCode: %@, topicId: %@, params: %@ => result: %ld", eventCode, self.topicId, mapAsString, (long)result];
     }
-    [self.clsClient DestroyLogProducer];
 }
 @end
