@@ -227,7 +227,7 @@ NSString *const kQCloudLogExtension = @"log";
                        line:(int)line
                        file:(const char *)file
                      format:(NSString *)format, ... NS_FORMAT_FUNCTION(7, 8) {
-    if (level > self.logLevel || level == QCloudLogLevelNone || !format) {
+    if (level == QCloudLogLevelNone || !format) {
         return;
     }
     va_list args;
