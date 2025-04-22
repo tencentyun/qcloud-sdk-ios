@@ -79,8 +79,8 @@ NSString *const kQCloudLogExtension = @"log";
 }
 
 - (NSDictionary *)extendInfo{
-    if (_extendInfo && ![_extendInfo objectForKey:@"qcloud_platform"]) {
-        NSMutableDictionary *mextendInfo = [_extendInfo mutableCopy];
+    if (![_extendInfo objectForKey:@"qcloud_platform"]) {
+        NSMutableDictionary *mextendInfo = _extendInfo?[_extendInfo mutableCopy]:[NSMutableDictionary new];
         [mextendInfo setObject:@"iOS" forKey:@"qcloud_platform"];
         _extendInfo = mextendInfo.copy;
     }
