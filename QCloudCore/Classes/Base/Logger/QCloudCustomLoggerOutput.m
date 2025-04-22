@@ -28,10 +28,16 @@
         QCloudStrongSelf(self);
         QCloudLogModel *log = logCreate();
         NSMutableDictionary *params = QCloudLogger.sharedLogger.extendInfo?QCloudLogger.sharedLogger.extendInfo.mutableCopy:[NSMutableDictionary new];
-        params[@"deviceID"] = QCloudLogger.sharedLogger.deviceID?:@"";
-        params[@"deviceModel"] = QCloudLogger.sharedLogger.deviceModel?:@"";
-        params[@"appVersion"] = QCloudLogger.sharedLogger.appVersion?:@"";
-
+        if (QCloudLogger.sharedLogger.deviceID) {
+            params[@"deviceID"] = QCloudLogger.sharedLogger.deviceID;
+        }
+        if (QCloudLogger.sharedLogger.deviceModel) {
+            params[@"deviceModel"] = QCloudLogger.sharedLogger.deviceModel;
+        }
+        if (QCloudLogger.sharedLogger.appVersion) {
+            params[@"appVersion"] = QCloudLogger.sharedLogger.appVersion;
+        }
+        
         if (self.callback) {
             self.callback(log,params);
         }
