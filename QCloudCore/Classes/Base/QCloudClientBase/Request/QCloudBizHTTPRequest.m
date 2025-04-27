@@ -20,6 +20,7 @@
 #import "NSObject+QCloudModelTool.h"
 #import "QCloudLogger.h"
 #import "QCloudAuthentationV5Creator.h"
+#import "NSURLRequest+COS.h"
 NS_ASSUME_NONNULL_BEGIN
 
 QCloudResponseSerializerBlock QCloudResponseObjectSerilizerBlock(Class modelClass) {
@@ -128,6 +129,7 @@ QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilizerBlock
     if (self.credential && self.credential.secretID.length > 0 && self.credential.secretKey.length > 0) {
         QCloudLogDebugP(@"Signature",@"本次请求使用单次临时密钥:%@,secretID:%@",urlRequest.URL.absoluteString,self.credential.secretID);
         QCloudAuthentationV5Creator *creator = [[QCloudAuthentationV5Creator alloc] initWithCredential:self.credential];
+        urlRequest.shouldSignedList = self.shouldSignedList;
         QCloudSignature *signature = [creator signatureForData:(NSMutableURLRequest *)urlRequest];
         if (!self.isSignedInURL) {
             [urlRequest setValue:signature.signature forHTTPHeaderField:@"Authorization"];
@@ -158,6 +160,7 @@ QCloudResponseSerializerBlock QCloudResponseCOSNormalRSPSerilizerBlock
     __block BOOL isSigned;
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        urlRequest.shouldSignedList = self.shouldSignedList;
         [self.signatureProvider
             signatureWithFields:self.signatureFields
                         request:self

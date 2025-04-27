@@ -452,14 +452,14 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
                 NSLog(@"SecPKCS12Import 错误: %d", (int)status);
                 if (options) CFRelease(options);
                 if (items) CFRelease(items);
-                disposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
+                disposition = NSURLSessionAuthChallengePerformDefaultHandling;
                 completionHandler(disposition, credential);
                 return;
             }
             
             CFDictionaryRef identityDict = CFArrayGetValueAtIndex(items, 0);
-            identity = (SecIdentityRef)CFDictionaryGetValue(identityDict, kSecImportItemIdentity);
-            trust = (SecTrustRef)CFDictionaryGetValue(identityDict, kSecImportItemTrust);
+            identity = (SecIdentityRef)CFRetain(CFDictionaryGetValue(identityDict, kSecImportItemIdentity));
+            trust = (SecTrustRef)CFRetain(CFDictionaryGetValue(identityDict, kSecImportItemTrust));
             
             if (options) CFRelease(options);
             if (items) CFRelease(items);
@@ -470,7 +470,7 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
                 
                 if (certStatus != errSecSuccess || certificate == NULL) {
                     NSLog(@"SecIdentityCopyCertificate 错误: %d", (int)certStatus);
-                    disposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
+                    disposition = NSURLSessionAuthChallengePerformDefaultHandling;
                     completionHandler(disposition, credential);
                     return;
                 }
@@ -488,7 +488,7 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
                 disposition = NSURLSessionAuthChallengeUseCredential;
             } else {
                 NSLog(@"身份解析失败: %d", (int)status);
-                disposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
+                disposition = NSURLSessionAuthChallengePerformDefaultHandling;
             }
         } else {
             disposition = NSURLSessionAuthChallengePerformDefaultHandling;

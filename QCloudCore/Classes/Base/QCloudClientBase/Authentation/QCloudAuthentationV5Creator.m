@@ -18,6 +18,7 @@
 #import "QCloudURLHelper.h"
 #import "NSDate+QCLOUD.h"
 #import "QCloudError.h"
+#import "NSURLRequest+COS.h"
 #define DEFAULT_TOKEN_HEADER_NAME @"x-cos-security-token"
 
 @implementation NSDictionary (HeaderFilter)
@@ -131,10 +132,14 @@
     NSString *signTime = [NSString stringWithFormat:@"%lld;%lld", (int64_t)nowInterval, (int64_t)experationInterVal];
     NSDictionary *headers = [[urlrequest allHTTPHeaderFields] filteHeaders];
     NSDictionary *urlParamters = QCloudURLReadQuery(urlrequest.URL);
-    if (self.shouldSignedList) {
+    NSArray * shouldSignedList = self.shouldSignedList;
+    if (urlrequest.shouldSignedList) {
+        shouldSignedList = urlrequest.shouldSignedList;
+    }
+    if (shouldSignedList) {
         NSMutableDictionary *shouldSignedHeaderDic = [NSMutableDictionary dictionary];
         NSMutableDictionary *shouldSignedParamsDic = [NSMutableDictionary dictionary];
-        for (NSString *key in self.shouldSignedList) {
+        for (NSString *key in shouldSignedList) {
             if ([headers objectForKey:key]) {
                 shouldSignedHeaderDic[key] = [headers objectForKey:key];
             } else if ([urlParamters objectForKey:key]) {

@@ -133,6 +133,7 @@
 /// 是否使用路径检查，true为开启，false为关闭，默认为true；。
 @property (assign, nonatomic) BOOL objectKeySimplifyCheck;
 
+/// 是否开启crc64校验，默认开启。
 @property (assign, nonatomic) BOOL enablePartCrc64;
 
 //针对本次下载行流量控制的限速值，必须为数字，单位默认为 bit/s。限速值设置范围为819200 - 838860800,即100KB/s - 100MB/s，如果超出该范围将返回400错误

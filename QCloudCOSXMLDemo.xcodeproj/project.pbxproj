@@ -464,6 +464,7 @@
 				1AB143E91E601E0500830F93 /* Frameworks */,
 				1AB143EA1E601E0500830F93 /* Resources */,
 				5531753F06D2602A23691AE3 /* [CP] Copy Pods Resources */,
+				963664CB42662B588BB9382D /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -598,6 +599,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-QCloudCOSXMLDemo/Pods-QCloudCOSXMLDemo-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		963664CB42662B588BB9382D /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-QCloudCOSXMLDemo/Pods-QCloudCOSXMLDemo-frameworks.sh",
+				"${PODS_ROOT}/../QCloudQuic/Classes/QuicFramework/Tquic.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Tquic.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-QCloudCOSXMLDemo/Pods-QCloudCOSXMLDemo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		9985684AE5A7F7B42D827A19 /* [CP] Check Pods Manifest.lock */ = {

@@ -37,7 +37,6 @@
         if (QCloudLogger.sharedLogger.appVersion) {
             params[@"appVersion"] = QCloudLogger.sharedLogger.appVersion;
         }
-        
         if (self.callback) {
             self.callback(log,params);
         }

@@ -31,7 +31,7 @@
 /// 下载耗费时间
 @property(nonatomic,strong)UILabel * labDuration;
 
-@property (nonatomic,strong) QCloudGetObjectRequest * request;
+@property (nonatomic,strong) QCloudCOSXMLDownloadObjectRequest * request;
 
 @end
 
@@ -123,10 +123,12 @@
 //    在downProcessBlock 回调中 处理下载进度
 //    在FinishBlock获取结果
 //          参数：桶名称 + 文件唯一标识 + 本地下载路径
-    _request = [[QCloudGetObjectRequest alloc]init];
+    _request = [[QCloudCOSXMLDownloadObjectRequest alloc]init];
     _request.downloadingURL = [self tempFileURLWithName:[_content.key componentsSeparatedByString:@"/"].lastObject];
     _request.bucket = CURRENT_BUCKET;
     _request.object = _content.key;
+    _request.resumeLocalProcess = YES;
+    _request.resumableDownload = YES;
 
     DEF_WeakSelf(self);
     
@@ -151,7 +153,7 @@
                 
                 NSDate* after = [NSDate date];
                 NSTimeInterval timeSpent = [after timeIntervalSinceDate:before];
-                NSURL * fileUrl = [weakself tempFileURLWithName:weakself.content.key];
+                NSURL * fileUrl = [weakself tempFileURLWithName:[weakself.content.key componentsSeparatedByString:@"/"].lastObject];
                 
                 weakself.labDownloadState.text = @"下载完成";
                 weakself.labFileSize.text = [NSString stringWithFormat:@"文件大小：%@",[fileUrl fileSizeWithUnit]];
@@ -163,7 +165,7 @@
         });
     };
     
-    [CURRENT_SERVICE GetObject:_request];
+    [CURRENT_TRANSFER_MANAGER DownloadObject:_request];
 }
 
 

@@ -52,6 +52,7 @@
 #import "QCloudGetBucketPolicyRequest.h"
 #import "QCloudPutBucketPolicyRequest.h"
 #import "QCloudDeleteBucketPolicyRequest.h"
+#import "NSURLRequest+COS.h"
 
 @implementation QCloudCOSXMLService (Manager)
 
@@ -294,6 +295,7 @@
     
     if (request.credential) {
         QCloudAuthentationV5Creator *creator = [[QCloudAuthentationV5Creator alloc] initWithCredential:request.credential];
+        urlRequest.shouldSignedList = request.shouldSignedList;
         QCloudSignature *signature = [creator signatureForData:(NSMutableURLRequest *)urlRequest];
         NSString *authorizatioinString = signature.signature;
         if ([requestURLString hasSuffix:@"&"] || [requestURLString hasSuffix:@"?"]) {
@@ -315,7 +317,7 @@
         }
         return;
     }
-    
+    urlRequest.shouldSignedList = request.shouldSignedList;
     [request.signatureProvider signatureWithFields:request.signatureFields
                                            request:request
                                         urlRequest:(NSMutableURLRequest *)urlRequest

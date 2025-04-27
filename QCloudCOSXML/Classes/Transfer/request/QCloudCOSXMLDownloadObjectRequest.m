@@ -18,6 +18,7 @@
 #define CRC64PartLength 10 * 1024 * 1024
 
 @interface  QCloudCOSXMLDownloadObjectRequest()
+@property (nonatomic,assign)NSInteger retryCount;
 //存储所有的下载请求
 @property (nonatomic, strong) NSPointerArray *requestCacheArray;
 @property (nonatomic, strong) dispatch_source_t queueSource;
@@ -42,6 +43,7 @@
     if (!self) {
         return nil;
     }
+    self.enablePartCrc64 = YES;
     self.objectKeySimplifyCheck = YES;
     _customHeaders = [NSMutableDictionary dictionary];
     _partCrc64Map = [NSMutableDictionary new];
@@ -246,14 +248,6 @@
 -(void)loadLocalCrc64{
     self.crc64Start = self.localCacheDownloadOffset;
     self.crc64Complete = self.crc64Start;
-//    uint64_t crc64 = [self crc64ForFileAtPath:self.downloadingTempURL.path chunkSize:CRC64PartLength length:0];
-//    self.crc64Complete = self.crc64Start;
-//    NSString * range = [NSString stringWithFormat:@"0-%ld",(long)self.crc64Complete];
-//    [self.partCrc64Map setObject:@(crc64) forKey:range];
-//    QCloudLogDebugN(@"CRC64", @"calculateCrc64,partRang:%@,crc64:%ld",range,crc64);
-//    NSData *info =[NSJSONSerialization dataWithJSONObject:[self.partCrc64Map copy] options:NSJSONWritingPrettyPrinted error:nil];
-//    [info writeToFile:self.partCrc64Filepath options:0 error:nil];
-    
 }
 
 - (void)startGetObject {
@@ -380,27 +374,32 @@
                     }
                     return;
                 }
+                QCloudRemoveFileByPath(strongSelf.resumableTaskFile);
                 uint64_t localCrc64;
                 if (self.enablePartCrc64 == YES) {
                     [self calculateCrc64:self.downloadingURL fileSize:0];
                     localCrc64 = [self mergePartCrc64];
-                }else{
-                    localCrc64 = [strongSelf crc64ForFileAtPath:strongSelf.downloadingURL.relativePath chunkSize:CRC64PartLength length:0];
-                }
-                NSString *localCrc64Str = [NSString stringWithFormat:@"%llu",localCrc64];
-                QCloudRemoveFileByPath(strongSelf.resumableTaskFile);
-                QCloudRemoveFileByPath(strongSelf.partCrc64Filepath);
-                if(![localCrc64Str isEqualToString:dic[@"crc64ecma"]]){
-                    //下载完成之后如果crc64不一致，删除记录文件和已经下载的文件，重新开始下载
-                    if (self.enablePartCrc64 == YES) {
+                    
+                    NSString *localCrc64Str = [NSString stringWithFormat:@"%llu",localCrc64];
+                    QCloudRemoveFileByPath(strongSelf.partCrc64Filepath);
+                    if(![localCrc64Str isEqualToString:dic[@"crc64ecma"]]){
+                        //下载完成之后如果crc64不一致，删除记录文件和已经下载的文件，重新开始下载
                         self.crc64Start = 0;
                         self.crc64Complete = 0;
                         self.partCrc64Map = [NSMutableDictionary new];
                         self.localCacheDownloadOffset = 0;
+                        if (self.retryCount >= 3) {
+                            NSString * message = [NSString stringWithFormat:@"本地文件与远端文件不一致，请重新下载：远端CRC64 值:%@, 本地文件 CRC64值:%@",
+                             dic[@"crc64ecma"], localCrc64Str];
+                            strongSelf.finishBlock(nil, [NSError errorWithDomain:kQCloudNetworkDomain code:QCloudNetworkErrorCodeNotMatch userInfo:@{NSLocalizedDescriptionKey:message}]);
+                            return;
+                        }else{
+                            QCloudRemoveFileByPath(strongSelf.downloadingURL.relativePath);
+                            self.retryCount ++;
+                            [self fakeStart];
+                        }
+                        return;
                     }
-                    QCloudRemoveFileByPath(strongSelf.downloadingURL.relativePath);
-                    [self fakeStart];
-                    return;
                 }
                 if(self.finishBlock){
                     strongSelf.finishBlock(outputObject, error);

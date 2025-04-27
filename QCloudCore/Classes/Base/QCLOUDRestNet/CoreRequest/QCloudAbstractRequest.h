@@ -61,7 +61,20 @@ typedef NS_ENUM(NSUInteger, QCloudRequestNetworkType) {
  */
 @property (nonatomic, strong ,nullable) NSDictionary * payload;
 
-
+/**
+ 设置接口级参与签头部和参数。
+ 
+ 默认下方所有字段参与签名，无需设置，若指定某个字段不参与签名，则将相应的字段删除，然后将数组赋值给shouldSignedList即可。
+ @[@"Cache-Control", @"Content-Disposition", @"Content-Encoding", @"Content-Length", @"Content-MD5", @"Content-Type", @"Expect", @"Expires", @"If-Match" , @"If-Modified-Since" , @"If-None-Match" , @"If-Unmodified-Since" , @"Origin" , @"Range" , @"transfer-encoding" ,@"Host",@"Pic-Operations",@"ci-process"]
+ 
+ 示例：
+ 1、指定Host不参与签名(删除数组中的@"Host")。
+ shouldSignedList = @[@"Cache-Control", @"Content-Disposition", @"Content-Encoding", @"Content-Length", @"Content-MD5", @"Content-Type", @"Expect", @"Expires", @"If-Match" , @"If-Modified-Since" , @"If-None-Match" , @"If-Unmodified-Since" , @"Origin" , @"Range" , @"transfer-encoding" ,@"Pic-Operations",@"ci-process"];
+ 
+ 2、指定所有字段都不参与签名。
+ shouldSignedList = @[];
+ */
+@property (nonatomic, strong, nullable) NSArray *shouldSignedList;
 @property (nonatomic, strong, nullable) QCloudCredential * credential;
 /**
   协议执行结果向外通知的委托（delegate）主要包括成功和失败两种情况。与Block方式并存，当两者都设置的时候都会通知。

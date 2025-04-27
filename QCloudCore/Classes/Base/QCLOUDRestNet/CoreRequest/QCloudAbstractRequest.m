@@ -204,6 +204,22 @@ __attribute__((noinline)) void cosWarnBlockingOperationOnMainThread(void) {
 - (QCloudCredential *)credential{
     return [self.payload objectForKey:@"QCloudCredential"];
 }
+
+- (void)setShouldSignedList:(NSArray *)shouldSignedList{
+    NSMutableDictionary * _payload = self.payload.mutableCopy;
+    if (!_payload) {
+        _payload = [NSMutableDictionary new];
+    }
+    if (shouldSignedList) {
+        [_payload setObject:shouldSignedList forKey:@"shouldSignedList"];
+    }
+    self.payload = _payload.copy;
+}
+
+- (NSArray *)shouldSignedList{
+    return [self.payload objectForKey:@"shouldSignedList"];
+}
+
 - (void)configTaskResume {
 }
 @end
