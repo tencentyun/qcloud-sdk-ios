@@ -13,7 +13,7 @@
 #import "SecretStorage.h"
 #import "QCloudMyBucketListCtor.h"
 #import "QCloudTrackCLS.h"
-#import "RootViewController.h"
+#import "HomeViewController.h"
 //#import "QCloudHTTPDNSLoader.h"
 
 @interface AppDelegate () <QCloudSignatureProvider>
@@ -58,7 +58,7 @@
     
     [self setupCOSXMLShareService];
     
-    RootViewController *bucketList = [[RootViewController alloc] init];
+    HomeViewController *bucketList = [[HomeViewController alloc] init];
     _window = [[UIWindow alloc] initWithFrame:SCREEN_FRAME];
     [_window makeKeyAndVisible];
     UINavigationController *navRoot = [[UINavigationController alloc] initWithRootViewController:bucketList];

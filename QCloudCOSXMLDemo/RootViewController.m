@@ -25,7 +25,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"COS SDK 示例";
+    self.title = @"文件传输功能";
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"UITableViewCell"];
     self.dataSource = @[@"上传",@"下载",];
     self.headerSource = @[@"方式一：单次临时密钥",@"方式二：可复用临时密钥",@"方式三：永久临时密钥"];

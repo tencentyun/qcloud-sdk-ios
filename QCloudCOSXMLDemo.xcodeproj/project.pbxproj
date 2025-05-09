@@ -63,6 +63,24 @@
 		D2B7008E2472280400F59994 /* QCloudBucketContents+Addition.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B7008D2472280400F59994 /* QCloudBucketContents+Addition.m */; };
 		D2B700912472379100F59994 /* QCloudDownLoadNewCtor.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B700902472379100F59994 /* QCloudDownLoadNewCtor.m */; };
 		D2B700972472722200F59994 /* QCloudUploadNewCtor.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B700962472722200F59994 /* QCloudUploadNewCtor.m */; };
+		D2FD69B12DCDB12B0039ACBE /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2FD69B02DCDB12B0039ACBE /* HomeViewController.m */; };
+		D2FD69B92DCDDE070039ACBE /* QCloudAFLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = D2FD69B32DCDDE070039ACBE /* QCloudAFLoader.m */; };
+		D2FD69BA2DCDDE070039ACBE /* QCloudAFLoaderSession.m in Sources */ = {isa = PBXBuildFile; fileRef = D2FD69B52DCDDE070039ACBE /* QCloudAFLoaderSession.m */; };
+		D2FD69BB2DCDDE070039ACBE /* QCloudAFLoaderTask.m in Sources */ = {isa = PBXBuildFile; fileRef = D2FD69B72DCDDE070039ACBE /* QCloudAFLoaderTask.m */; };
+		D2FD69C02DCDDE5F0039ACBE /* CustomDomainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D2FD69BF2DCDDE5F0039ACBE /* CustomDomainViewController.xib */; };
+		D2FD69C12DCDDE5F0039ACBE /* CustomDomainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2FD69BE2DCDDE5F0039ACBE /* CustomDomainViewController.m */; };
+		D2FD69C62DCDF2C00039ACBE /* CustomLoaderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2FD69C42DCDF2C00039ACBE /* CustomLoaderViewController.m */; };
+		D2FD69C72DCDF2C00039ACBE /* CustomLoaderViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D2FD69C52DCDF2C00039ACBE /* CustomLoaderViewController.xib */; };
+		D2FD69CC2DCDFA470039ACBE /* CLSLogViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D2FD69CB2DCDFA470039ACBE /* CLSLogViewController.xib */; };
+		D2FD69CD2DCDFA470039ACBE /* CLSLogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2FD69CA2DCDFA470039ACBE /* CLSLogViewController.m */; };
+		D2FD69D22DCDFC3F0039ACBE /* HTTPDNSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2FD69D02DCDFC3F0039ACBE /* HTTPDNSViewController.m */; };
+		D2FD69D32DCDFC3F0039ACBE /* HTTPDNSViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D2FD69D12DCDFC3F0039ACBE /* HTTPDNSViewController.xib */; };
+		D2FD69D82DCE03E10039ACBE /* HTTPSAuthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2FD69D62DCE03E10039ACBE /* HTTPSAuthViewController.m */; };
+		D2FD69D92DCE03E10039ACBE /* HTTPSAuthViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D2FD69D72DCE03E10039ACBE /* HTTPSAuthViewController.xib */; };
+		D2FD69E02DCE16830039ACBE /* CRC64ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2FD69DD2DCE16830039ACBE /* CRC64ViewController.m */; };
+		D2FD69E12DCE16830039ACBE /* CRC64ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D2FD69DE2DCE16830039ACBE /* CRC64ViewController.xib */; };
+		D2FD69E62DCE20C00039ACBE /* OtherViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D2FD69E52DCE20C00039ACBE /* OtherViewController.xib */; };
+		D2FD69E72DCE20C00039ACBE /* OtherViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2FD69E42DCE20C00039ACBE /* OtherViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -184,6 +202,35 @@
 		D2B700952472722200F59994 /* QCloudUploadNewCtor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QCloudUploadNewCtor.h; sourceTree = "<group>"; };
 		D2B700962472722200F59994 /* QCloudUploadNewCtor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QCloudUploadNewCtor.m; sourceTree = "<group>"; };
 		D2B700CD2477BDF600F59994 /* QCloudCOSXMLContants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QCloudCOSXMLContants.h; sourceTree = "<group>"; };
+		D2FD69AF2DCDB12B0039ACBE /* HomeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HomeViewController.h; sourceTree = "<group>"; };
+		D2FD69B02DCDB12B0039ACBE /* HomeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HomeViewController.m; sourceTree = "<group>"; };
+		D2FD69B22DCDDE070039ACBE /* QCloudAFLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QCloudAFLoader.h; sourceTree = "<group>"; };
+		D2FD69B32DCDDE070039ACBE /* QCloudAFLoader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QCloudAFLoader.m; sourceTree = "<group>"; };
+		D2FD69B42DCDDE070039ACBE /* QCloudAFLoaderSession.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QCloudAFLoaderSession.h; sourceTree = "<group>"; };
+		D2FD69B52DCDDE070039ACBE /* QCloudAFLoaderSession.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QCloudAFLoaderSession.m; sourceTree = "<group>"; };
+		D2FD69B62DCDDE070039ACBE /* QCloudAFLoaderTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QCloudAFLoaderTask.h; sourceTree = "<group>"; };
+		D2FD69B72DCDDE070039ACBE /* QCloudAFLoaderTask.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QCloudAFLoaderTask.m; sourceTree = "<group>"; };
+		D2FD69BD2DCDDE5F0039ACBE /* CustomDomainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomDomainViewController.h; sourceTree = "<group>"; };
+		D2FD69BE2DCDDE5F0039ACBE /* CustomDomainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomDomainViewController.m; sourceTree = "<group>"; };
+		D2FD69BF2DCDDE5F0039ACBE /* CustomDomainViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomDomainViewController.xib; sourceTree = "<group>"; };
+		D2FD69C32DCDF2C00039ACBE /* CustomLoaderViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomLoaderViewController.h; sourceTree = "<group>"; };
+		D2FD69C42DCDF2C00039ACBE /* CustomLoaderViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomLoaderViewController.m; sourceTree = "<group>"; };
+		D2FD69C52DCDF2C00039ACBE /* CustomLoaderViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomLoaderViewController.xib; sourceTree = "<group>"; };
+		D2FD69C92DCDFA470039ACBE /* CLSLogViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CLSLogViewController.h; sourceTree = "<group>"; };
+		D2FD69CA2DCDFA470039ACBE /* CLSLogViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CLSLogViewController.m; sourceTree = "<group>"; };
+		D2FD69CB2DCDFA470039ACBE /* CLSLogViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CLSLogViewController.xib; sourceTree = "<group>"; };
+		D2FD69CF2DCDFC3F0039ACBE /* HTTPDNSViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HTTPDNSViewController.h; sourceTree = "<group>"; };
+		D2FD69D02DCDFC3F0039ACBE /* HTTPDNSViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HTTPDNSViewController.m; sourceTree = "<group>"; };
+		D2FD69D12DCDFC3F0039ACBE /* HTTPDNSViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HTTPDNSViewController.xib; sourceTree = "<group>"; };
+		D2FD69D52DCE03E10039ACBE /* HTTPSAuthViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HTTPSAuthViewController.h; sourceTree = "<group>"; };
+		D2FD69D62DCE03E10039ACBE /* HTTPSAuthViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HTTPSAuthViewController.m; sourceTree = "<group>"; };
+		D2FD69D72DCE03E10039ACBE /* HTTPSAuthViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HTTPSAuthViewController.xib; sourceTree = "<group>"; };
+		D2FD69DC2DCE16830039ACBE /* CRC64ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CRC64ViewController.h; sourceTree = "<group>"; };
+		D2FD69DD2DCE16830039ACBE /* CRC64ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CRC64ViewController.m; sourceTree = "<group>"; };
+		D2FD69DE2DCE16830039ACBE /* CRC64ViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CRC64ViewController.xib; sourceTree = "<group>"; };
+		D2FD69E32DCE20C00039ACBE /* OtherViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OtherViewController.h; sourceTree = "<group>"; };
+		D2FD69E42DCE20C00039ACBE /* OtherViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OtherViewController.m; sourceTree = "<group>"; };
+		D2FD69E52DCE20C00039ACBE /* OtherViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OtherViewController.xib; sourceTree = "<group>"; };
 		F2FFB526C25234819DB6C822 /* Pods-QCloudCOSXMLDemoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QCloudCOSXMLDemoTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-QCloudCOSXMLDemoTests/Pods-QCloudCOSXMLDemoTests.debug.xcconfig"; sourceTree = "<group>"; };
 		F3E9F7DE3343D4DD2A0004E1 /* Pods-QCloudCOSXMLDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QCloudCOSXMLDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-QCloudCOSXMLDemo/Pods-QCloudCOSXMLDemo.release.xcconfig"; sourceTree = "<group>"; };
 		F3ED2BCC59D2BD696DAAF0C1 /* Pods_QCloudCOSXMLDemoTests5_0_2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_QCloudCOSXMLDemoTests5_0_2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -236,6 +283,14 @@
 		1AB143EE1E601E0500830F93 /* QCloudCOSXMLDemo */ = {
 			isa = PBXGroup;
 			children = (
+				D2FD69E22DCE20B80039ACBE /* Other */,
+				D2FD69D42DCE03BB0039ACBE /* HTTPSAuthentication */,
+				D2FD69CE2DCDFC330039ACBE /* HTTPDNS */,
+				D2FD69C82DCDFA180039ACBE /* CLS Log */,
+				D2FD69C22DCDF19D0039ACBE /* CustomLoader */,
+				D2FD69DF2DCE16830039ACBE /* CRC64 */,
+				D2FD69BC2DCDDE230039ACBE /* CustomDomain */,
+				D2FD69B82DCDDE070039ACBE /* AFLoader */,
 				D2AD46A62C401087009A62FA /* OnceCredential */,
 				D2AD469B2C401069009A62FA /* ReuseCredential */,
 				D2AD46902C401053009A62FA /* PermanentCredential */,
@@ -260,6 +315,8 @@
 				1AB143F61E601E0500830F93 /* ViewController.m */,
 				D2AD46B12C40109D009A62FA /* RootViewController.h */,
 				D2AD46B22C40109D009A62FA /* RootViewController.m */,
+				D2FD69AF2DCDB12B0039ACBE /* HomeViewController.h */,
+				D2FD69B02DCDB12B0039ACBE /* HomeViewController.m */,
 				1AB143FB1E601E0500830F93 /* Assets.xcassets */,
 				1AB143FD1E601E0500830F93 /* LaunchScreen.storyboard */,
 				1AC3C2701EED368100B3151F /* Main.storyboard */,
@@ -452,6 +509,89 @@
 			name = Categroy;
 			sourceTree = "<group>";
 		};
+		D2FD69B82DCDDE070039ACBE /* AFLoader */ = {
+			isa = PBXGroup;
+			children = (
+				D2FD69B22DCDDE070039ACBE /* QCloudAFLoader.h */,
+				D2FD69B32DCDDE070039ACBE /* QCloudAFLoader.m */,
+				D2FD69B42DCDDE070039ACBE /* QCloudAFLoaderSession.h */,
+				D2FD69B52DCDDE070039ACBE /* QCloudAFLoaderSession.m */,
+				D2FD69B62DCDDE070039ACBE /* QCloudAFLoaderTask.h */,
+				D2FD69B72DCDDE070039ACBE /* QCloudAFLoaderTask.m */,
+			);
+			path = AFLoader;
+			sourceTree = "<group>";
+		};
+		D2FD69BC2DCDDE230039ACBE /* CustomDomain */ = {
+			isa = PBXGroup;
+			children = (
+				D2FD69BD2DCDDE5F0039ACBE /* CustomDomainViewController.h */,
+				D2FD69BE2DCDDE5F0039ACBE /* CustomDomainViewController.m */,
+				D2FD69BF2DCDDE5F0039ACBE /* CustomDomainViewController.xib */,
+			);
+			path = CustomDomain;
+			sourceTree = "<group>";
+		};
+		D2FD69C22DCDF19D0039ACBE /* CustomLoader */ = {
+			isa = PBXGroup;
+			children = (
+				D2FD69C32DCDF2C00039ACBE /* CustomLoaderViewController.h */,
+				D2FD69C42DCDF2C00039ACBE /* CustomLoaderViewController.m */,
+				D2FD69C52DCDF2C00039ACBE /* CustomLoaderViewController.xib */,
+			);
+			path = CustomLoader;
+			sourceTree = "<group>";
+		};
+		D2FD69C82DCDFA180039ACBE /* CLS Log */ = {
+			isa = PBXGroup;
+			children = (
+				D2FD69C92DCDFA470039ACBE /* CLSLogViewController.h */,
+				D2FD69CA2DCDFA470039ACBE /* CLSLogViewController.m */,
+				D2FD69CB2DCDFA470039ACBE /* CLSLogViewController.xib */,
+			);
+			path = "CLS Log";
+			sourceTree = "<group>";
+		};
+		D2FD69CE2DCDFC330039ACBE /* HTTPDNS */ = {
+			isa = PBXGroup;
+			children = (
+				D2FD69CF2DCDFC3F0039ACBE /* HTTPDNSViewController.h */,
+				D2FD69D02DCDFC3F0039ACBE /* HTTPDNSViewController.m */,
+				D2FD69D12DCDFC3F0039ACBE /* HTTPDNSViewController.xib */,
+			);
+			path = HTTPDNS;
+			sourceTree = "<group>";
+		};
+		D2FD69D42DCE03BB0039ACBE /* HTTPSAuthentication */ = {
+			isa = PBXGroup;
+			children = (
+				D2FD69D52DCE03E10039ACBE /* HTTPSAuthViewController.h */,
+				D2FD69D62DCE03E10039ACBE /* HTTPSAuthViewController.m */,
+				D2FD69D72DCE03E10039ACBE /* HTTPSAuthViewController.xib */,
+			);
+			path = HTTPSAuthentication;
+			sourceTree = "<group>";
+		};
+		D2FD69DF2DCE16830039ACBE /* CRC64 */ = {
+			isa = PBXGroup;
+			children = (
+				D2FD69DC2DCE16830039ACBE /* CRC64ViewController.h */,
+				D2FD69DD2DCE16830039ACBE /* CRC64ViewController.m */,
+				D2FD69DE2DCE16830039ACBE /* CRC64ViewController.xib */,
+			);
+			path = CRC64;
+			sourceTree = "<group>";
+		};
+		D2FD69E22DCE20B80039ACBE /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				D2FD69E32DCE20C00039ACBE /* OtherViewController.h */,
+				D2FD69E42DCE20C00039ACBE /* OtherViewController.m */,
+				D2FD69E52DCE20C00039ACBE /* OtherViewController.xib */,
+			);
+			path = Other;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -539,16 +679,23 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D2FD69E12DCE16830039ACBE /* CRC64ViewController.xib in Resources */,
+				D2FD69C72DCDF2C00039ACBE /* CustomLoaderViewController.xib in Resources */,
 				D2AD46A42C401074009A62FA /* QCloudUploadNewCtorReuse.xib in Resources */,
 				D2AD46A22C401074009A62FA /* QCloudDownLoadNewCtorReuse.xib in Resources */,
+				D2FD69E62DCE20C00039ACBE /* OtherViewController.xib in Resources */,
 				D2AD46AF2C401090009A62FA /* QCloudUploadNewCtorOnce.xib in Resources */,
+				D2FD69D32DCDFC3F0039ACBE /* HTTPDNSViewController.xib in Resources */,
 				D2AD46AD2C401090009A62FA /* QCloudDownLoadNewCtorOnce.xib in Resources */,
 				D2AD469A2C40105F009A62FA /* QCloudUploadNewCtorPermanent.xib in Resources */,
 				1AC3C2711EED368100B3151F /* Main.storyboard in Resources */,
 				D2AD46972C40105F009A62FA /* QCloudDownLoadNewCtorPermanent.xib in Resources */,
+				D2FD69CC2DCDFA470039ACBE /* CLSLogViewController.xib in Resources */,
 				7F2923D52338ADB8008CE707 /* key.json in Resources */,
 				1AB143FF1E601E0500830F93 /* LaunchScreen.storyboard in Resources */,
 				1AB143FC1E601E0500830F93 /* Assets.xcassets in Resources */,
+				D2FD69C02DCDDE5F0039ACBE /* CustomDomainViewController.xib in Resources */,
+				D2FD69D92DCE03E10039ACBE /* HTTPSAuthViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -608,10 +755,12 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-QCloudCOSXMLDemo/Pods-QCloudCOSXMLDemo-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
 				"${PODS_ROOT}/../QCloudQuic/Classes/QuicFramework/Tquic.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AFNetworking.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Tquic.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -644,21 +793,32 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D2FD69C12DCDDE5F0039ACBE /* CustomDomainViewController.m in Sources */,
 				A89945D22091D21300FEFF28 /* QCloudTaskImformation.m in Sources */,
+				D2FD69E72DCE20C00039ACBE /* OtherViewController.m in Sources */,
+				D2FD69C62DCDF2C00039ACBE /* CustomLoaderViewController.m in Sources */,
+				D2FD69D82DCE03E10039ACBE /* HTTPSAuthViewController.m in Sources */,
 				7F2AFADD2689D05B006F2A46 /* QCloudTestUtility.m in Sources */,
 				A89945CF2091CF6A00FEFF28 /* QCloudDownloadFinishViewController.m in Sources */,
 				A801AD42201990DC004D1B9A /* QCloudTestTempVariables.m in Sources */,
 				D2AD46A32C401074009A62FA /* QCloudUploadNewCtorReuse.m in Sources */,
 				D22FB26C246E3FBF00C04C54 /* QCCouldMyBucketCell.m in Sources */,
 				D2AD46A52C401074009A62FA /* QCloudDownLoadNewCtorReuse.m in Sources */,
+				D2FD69B92DCDDE070039ACBE /* QCloudAFLoader.m in Sources */,
+				D2FD69BA2DCDDE070039ACBE /* QCloudAFLoaderSession.m in Sources */,
+				D2FD69BB2DCDDE070039ACBE /* QCloudAFLoaderTask.m in Sources */,
+				D2FD69D22DCDFC3F0039ACBE /* HTTPDNSViewController.m in Sources */,
 				A89945C9209187E500FEFF28 /* QCloudCOSXMLConfiguration.m in Sources */,
 				1AB143F71E601E0500830F93 /* ViewController.m in Sources */,
+				D2FD69CD2DCDFA470039ACBE /* CLSLogViewController.m in Sources */,
 				D2B700912472379100F59994 /* QCloudDownLoadNewCtor.m in Sources */,
 				D22FB265246E28CA00C04C54 /* QCloudCreateBucketCtor.m in Sources */,
 				D22FB272246E8E2100C04C54 /* QCloudFileListCtor.m in Sources */,
+				D2FD69B12DCDB12B0039ACBE /* HomeViewController.m in Sources */,
 				D2AD46982C40105F009A62FA /* QCloudDownLoadNewCtorPermanent.m in Sources */,
 				7F41127E2338A97100A3276E /* SecretStorage.m in Sources */,
 				1AB143F41E601E0500830F93 /* AppDelegate.m in Sources */,
+				D2FD69E02DCE16830039ACBE /* CRC64ViewController.m in Sources */,
 				A89945C62091847900FEFF28 /* QCloudSelectRegionTableViewController.m in Sources */,
 				D2AD46AE2C401090009A62FA /* QCloudUploadNewCtorOnce.m in Sources */,
 				D2B7008E2472280400F59994 /* QCloudBucketContents+Addition.m in Sources */,

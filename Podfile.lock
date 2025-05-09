@@ -1,9 +1,29 @@
 PODS:
+  - AFNetworking (4.0.1):
+    - AFNetworking/NSURLSession (= 4.0.1)
+    - AFNetworking/Reachability (= 4.0.1)
+    - AFNetworking/Security (= 4.0.1)
+    - AFNetworking/Serialization (= 4.0.1)
+    - AFNetworking/UIKit (= 4.0.1)
+  - AFNetworking/NSURLSession (4.0.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (4.0.1)
+  - AFNetworking/Security (4.0.1)
+  - AFNetworking/Serialization (4.0.1)
+  - AFNetworking/UIKit (4.0.1):
+    - AFNetworking/NSURLSession
   - GMOpenSSL (2.2.9)
+  - MSDKDns_C11 (1.11.1)
   - QCloudCore (6.4.8):
     - QCloudCore/Default (= 6.4.8)
   - QCloudCore/Default (6.4.8):
     - QCloudTrack/Beacon (= 6.4.8)
+  - QCloudCore/DNSLoader (6.4.8):
+    - MSDKDns_C11
+    - QCloudCore/WithoutMTA
+  - QCloudCore/WithoutMTA (6.4.8)
   - QCloudCOSXML (6.4.8):
     - QCloudCOSXML/Default (= 6.4.8)
   - QCloudCOSXML/Default (6.4.8):
@@ -23,7 +43,9 @@ PODS:
     - GMOpenSSL (~> 2.2.6)
 
 DEPENDENCIES:
+  - AFNetworking
   - QCloudCore (from `.`)
+  - QCloudCore/DNSLoader (from `.`)
   - QCloudCOSXML (from `.`)
   - QCloudQuic (from `.`)
   - QCloudTrack (from `.`)
@@ -32,7 +54,9 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs:
+    - AFNetworking
     - GMOpenSSL
+    - MSDKDns_C11
     - TencentCloudLogProducer
 
 EXTERNAL SOURCES:
@@ -46,13 +70,15 @@ EXTERNAL SOURCES:
     :path: "."
 
 SPEC CHECKSUMS:
+  AFNetworking: 3bd23d814e976cd148d7d44c3ab78017b744cd58
   GMOpenSSL: d6d119ff8f00d4e03c2cdf733fb61e98e22da9c7
+  MSDKDns_C11: e32cd3e7115dfeffefff26e16dc354ad2ca9e025
   QCloudCore: 11cecc286015fe2efb2a5da52ccdfff9da40e4e7
   QCloudCOSXML: 69aa55501c9ff2a3fbfaf2a40558996acb4b3df9
   QCloudQuic: a4f2405ccaedde33c36420d4225436b80bd5bf67
   QCloudTrack: 6e6f92f8d83afa2d5a42c5e476d68eced20d027f
   TencentCloudLogProducer: 564e944491e6396c81df4c9c51470784752ff3ab
 
-PODFILE CHECKSUM: 469848875513aa1180afa1e3751e2d873841a154
+PODFILE CHECKSUM: 02fe1eaad672a1f86ffd8f50bd97b0efb84d34a5
 
 COCOAPODS: 1.15.2
