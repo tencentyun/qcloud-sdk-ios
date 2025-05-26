@@ -503,7 +503,7 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
     NSError *directError;
 
     NSURL *uploadFileURL = nil;
-
+    QCloudLogDebug(@"即将发起请求URL:%@。_requestId:%ld",transformRequest.URL,httpRequest.requestID);
     if (httpRequest.requestData.directBody) {
         NSMutableURLRequest *mutableRequest = [transformRequest mutableCopy];
         id body = httpRequest.requestData.directBody;

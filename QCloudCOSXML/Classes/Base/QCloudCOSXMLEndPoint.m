@@ -122,4 +122,9 @@
 //    endpoint.enableOldDomain = self.enableOldDomain;
     return endpoint;
 }
+
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"serviceName:%@;suffix:%@;serverURLLiteral:%@;", self.serviceName,self.suffix,self.serverURLLiteral];
+}
 @end

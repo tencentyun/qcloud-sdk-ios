@@ -72,6 +72,7 @@ static QCloudCOSXMLService *COSXMLService = nil;
 + (QCloudCOSXMLService *)cosxmlServiceForKey:(NSString *)key {
     QCloudCOSXMLService *cosxmlService = [QCloudCOSXMLServiceCache() objectForKey:key];
     if (!cosxmlService) {
+        QCloudLogDebug(@"QCloudCOSXMLService:您没有配置Key为%@的OCR服务配置，请配置之后再调用该方法", key);
         @throw [NSException exceptionWithName:QCloudErrorDomain
                                        reason:[NSString stringWithFormat:@"您没有配置Key为%@的OCR服务配置，请配置之后再调用该方法", key]
                                      userInfo:nil];

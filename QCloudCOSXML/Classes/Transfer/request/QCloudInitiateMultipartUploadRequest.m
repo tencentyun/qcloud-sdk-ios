@@ -89,6 +89,7 @@ NS_ASSUME_NONNULL_BEGIN
                                                                                  appID:self.runOnService.configuration.appID
                                                                             regionName:self.regionName];
     self.requestData.serverURL = __serverURL.absoluteString;
+    QCloudLogDebug(@"QCloudInitiateMultipartUploadRequest:构建URL:%@。_requestId:%ld",self.requestData.serverURL,self.requestID);
     [self.requestData setValue:__serverURL.host forHTTPHeaderField:@"Host"];
     if (self.cacheControl) {
         [self.requestData setValue:self.cacheControl forHTTPHeaderField:@"Cache-Control"];

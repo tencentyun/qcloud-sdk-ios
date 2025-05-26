@@ -77,8 +77,10 @@ static QCloudCOSTransferMangerService *COSTransferMangerService = nil;
 }
 
 + (QCloudCOSTransferMangerService *)costransfermangerServiceForKey:(NSString *)key {
+    QCloudLogDebug(@"costransfermangerServiceForKey %@", key);
     QCloudCOSTransferMangerService *costransfermangerService = [QCloudCOSTransferMangerServiceCache() objectForKey:key];
     if (!costransfermangerService) {
+        QCloudLogDebug(@"QCloudCOSTransferMangerService:您没有配置Key为%@的OCR服务配置，请配置之后再调用该方法", key);
         @throw [NSException exceptionWithName:QCloudErrorDomain
                                        reason:[NSString stringWithFormat:@"您没有配置Key为%@的OCR服务配置，请配置之后再调用该方法", key]
                                      userInfo:nil];
@@ -88,6 +90,7 @@ static QCloudCOSTransferMangerService *COSTransferMangerService = nil;
 
 + (QCloudCOSTransferMangerService *)registerCOSTransferMangerWithConfiguration:(QCloudServiceConfiguration *)configuration withKey:(NSString *)key;
 {
+    QCloudLogDebug(@"registerCOSTransferMangerWithConfiguration %@,endpoint:%@", key,configuration.endpoint);
     QCloudCOSTransferMangerService * costransfermangerService = [QCloudCOSTransferMangerServiceCache() objectForKey:key];
     if(!costransfermangerService){
         costransfermangerService = [[QCloudCOSTransferMangerService alloc] initWithConfiguration:configuration];
@@ -111,7 +114,7 @@ static QCloudCOSTransferMangerService *COSTransferMangerService = nil;
 - (void)UploadObject:(QCloudCOSXMLUploadObjectRequest *)request {
     request.transferManager = self;
     request.enableQuic = self.configuration.enableQuic;
-    QCloudLogDebug(@"UploadObject set transferManager %@", request.transferManager);
+    QCloudLogDebug(@"UploadObject set transferManager %@,endpoint:%@,requestId:%ld", request.transferManager,request.transferManager.configuration.endpoint,request.requestID);
     QCloudFakeRequestOperation *operation = [[QCloudFakeRequestOperation alloc] initWithRequest:request];
     [self.uploadFileQueue addOpreation:operation];
 }
@@ -119,6 +122,7 @@ static QCloudCOSTransferMangerService *COSTransferMangerService = nil;
 - (void)CopyObject:(QCloudCOSXMLCopyObjectRequest *)request {
     request.transferManager = self;
     request.enableQuic = self.configuration.enableQuic;
+    QCloudLogDebug(@"CopyObject set transferManager %@,endpoint:%@,requestId:%ld", request.transferManager,request.transferManager.configuration.endpoint,request.requestID);
     QCloudFakeRequestOperation *operation = [[QCloudFakeRequestOperation alloc] initWithRequest:request];
     [self.uploadFileQueue addOpreation:operation];
 }
@@ -126,6 +130,7 @@ static QCloudCOSTransferMangerService *COSTransferMangerService = nil;
 - (void)DownloadObject:(QCloudCOSXMLDownloadObjectRequest *)request {
     request.transferManager = self;
     request.enableQuic = self.configuration.enableQuic;
+    QCloudLogDebug(@"DownloadObject set transferManager %@,endpoint:%@,requestId:%ld", request.transferManager,request.transferManager.configuration.endpoint,request.requestID);
     QCloudFakeRequestOperation *operation = [[QCloudFakeRequestOperation alloc] initWithRequest:request];
     [self.uploadFileQueue addOpreation:operation];
 }
