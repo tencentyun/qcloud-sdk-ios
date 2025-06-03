@@ -85,7 +85,7 @@
     Log* log = [[Log alloc] init];
     [params enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
         if (obj && key) {
-            [log PutContent:key value:obj];
+            [log PutContent:key value:[NSString stringWithFormat:@"%@",obj]];
         }
     }];
     LogProducerResult result = [self.clsClient PostLog:log];
