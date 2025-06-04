@@ -16,27 +16,27 @@ PODS:
     - AFNetworking/NSURLSession
   - GMOpenSSL (2.2.9)
   - MSDKDns_C11 (1.11.1)
-  - QCloudCore (6.4.8):
-    - QCloudCore/Default (= 6.4.8)
-  - QCloudCore/Default (6.4.8):
-    - QCloudTrack/Beacon (= 6.4.8)
-  - QCloudCore/DNSLoader (6.4.8):
+  - QCloudCore (6.4.9):
+    - QCloudCore/Default (= 6.4.9)
+  - QCloudCore/Default (6.4.9):
+    - QCloudTrack/Beacon (= 6.4.9)
+  - QCloudCore/DNSLoader (6.4.9):
     - MSDKDns_C11
     - QCloudCore/WithoutMTA
-  - QCloudCore/WithoutMTA (6.4.8)
-  - QCloudCOSXML (6.4.8):
-    - QCloudCOSXML/Default (= 6.4.8)
-  - QCloudCOSXML/Default (6.4.8):
-    - QCloudCore (= 6.4.8)
+  - QCloudCore/WithoutMTA (6.4.9)
+  - QCloudCOSXML (6.4.9):
+    - QCloudCOSXML/Default (= 6.4.9)
+  - QCloudCOSXML/Default (6.4.9):
+    - QCloudCore (= 6.4.9)
   - QCloudQuic (6.4.1):
     - QCloudQuic/Default (= 6.4.1)
   - QCloudQuic/Default (6.4.1)
-  - QCloudTrack (6.4.8):
-    - QCloudTrack/Default (= 6.4.8)
-  - QCloudTrack/Beacon (6.4.8)
-  - QCloudTrack/Cls (6.4.8):
+  - QCloudTrack (6.4.9):
+    - QCloudTrack/Default (= 6.4.9)
+  - QCloudTrack/Beacon (6.4.9)
+  - QCloudTrack/Cls (6.4.9):
     - TencentCloudLogProducer
-  - QCloudTrack/Default (6.4.8)
+  - QCloudTrack/Default (6.4.9)
   - TencentCloudLogProducer (1.1.1):
     - TencentCloudLogProducer/Core (= 1.1.1)
   - TencentCloudLogProducer/Core (1.1.1):
@@ -73,10 +73,10 @@ SPEC CHECKSUMS:
   AFNetworking: 3bd23d814e976cd148d7d44c3ab78017b744cd58
   GMOpenSSL: d6d119ff8f00d4e03c2cdf733fb61e98e22da9c7
   MSDKDns_C11: e32cd3e7115dfeffefff26e16dc354ad2ca9e025
-  QCloudCore: 11cecc286015fe2efb2a5da52ccdfff9da40e4e7
-  QCloudCOSXML: 69aa55501c9ff2a3fbfaf2a40558996acb4b3df9
+  QCloudCore: 0e70cda608d1ac485e039e83be1c4a1197197e6b
+  QCloudCOSXML: b7f0b9cac61780a03318d40367a879f8d7eb3d86
   QCloudQuic: a4f2405ccaedde33c36420d4225436b80bd5bf67
-  QCloudTrack: 6e6f92f8d83afa2d5a42c5e476d68eced20d027f
+  QCloudTrack: cc101dd57be7f87bffc3f2fb692a781d5efeda98
   TencentCloudLogProducer: 564e944491e6396c81df4c9c51470784752ff3ab
 
 PODFILE CHECKSUM: 02fe1eaad672a1f86ffd8f50bd97b0efb84d34a5
