@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.name             = "QCloudCore"
 
 
-s.version              = "6.4.9"
+s.version              = "6.5.0"
 
 
 
@@ -43,7 +43,7 @@ QCloudCore--腾讯云iOS-SDK Foundation。提供腾讯云iOS相关SDK的基础�
   s.subspec 'Default' do |default|
       default.ios.deployment_target = '10.0'
       default.source_files = 'QCloudCore/Classes/Base/**/*'
-      default.dependency "QCloudTrack/Beacon","6.4.9"
+      default.dependency "QCloudTrack/Beacon","6.5.0"
   end
   
   s.subspec 'WithoutMTA' do |withoutMTA|

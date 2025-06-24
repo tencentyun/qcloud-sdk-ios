@@ -53,7 +53,7 @@
 #import "QCloudPutBucketPolicyRequest.h"
 #import "QCloudDeleteBucketPolicyRequest.h"
 #import "NSURLRequest+COS.h"
-
+#import "QCloudCommonRequest.h"
 @implementation QCloudCOSXMLService (Manager)
 
 - (void)PutBucketIntelligentTiering:(QCloudPutBucketIntelligentTieringRequest *)request {
@@ -273,6 +273,10 @@
 }
 
 -(void)DeleteBucketPolicy:(QCloudDeleteBucketPolicyRequest *)request{
+    [super performRequest:request];
+}
+
+- (void)request:(QCloudCommonRequest*)request{
     [super performRequest:request];
 }
 

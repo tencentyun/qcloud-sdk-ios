@@ -97,13 +97,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (QCloudSignatureFields *)signatureFields {
     QCloudSignatureFields *fileds = [QCloudSignatureFields new];
-
     return fileds;
-}
-
-- (QCloudSignature *)signature {
-    QCloudSignature *sig = [QCloudSignature new];
-    return sig;
 }
 
 - (NSArray<NSMutableDictionary *> *)scopesArray {

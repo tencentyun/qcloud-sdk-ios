@@ -91,11 +91,8 @@
     NSMutableString *URLString = [[NSMutableString alloc] init];
     [URLString appendString:[self.runOnService.configuration.endpoint serverURLWithBucket:self.bucket
                                                                                     appID:self.runOnService.configuration.appID
-                                                                               regionName:self.regionName]
-                                .absoluteString];
-    if (!self.runOnService.configuration.disableChangeHost && [QCloudHTTPRequest needChangeHost:URLString]) {
-        URLString = [[URLString stringByReplacingOccurrencesOfString:@"myqcloud.com" withString:emergencyHost] mutableCopy];
-    }
+                                                                               regionName:self.regionName].absoluteString];
+    
     if (self.object) {
         [URLString appendFormat:@"/%@", self.object];
     }
@@ -104,7 +101,6 @@
         [URLString appendFormat:@"?%@", obj];
     }];
     
-   
     if(self.signHost){
         NSURL *url = [NSURL URLWithString:URLString];
         [self.internalRequestHeaders setValue:url.host forKey:@"host"];
@@ -112,8 +108,6 @@
     [self.requestHeaders enumerateKeysAndObjectsUsingBlock:^(NSString *_Nonnull key, NSString *_Nonnull obj, BOOL *_Nonnull stop) {
         [mutableURLRequest setValue:obj forHTTPHeaderField:key];
     }];
-    
-
     
     NSString *paramters = QCloudURLEncodeParamters(self.requestParameters, NO, NSUTF8StringEncoding);
     NSString *resultURL;

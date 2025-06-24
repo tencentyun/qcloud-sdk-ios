@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "QCloudTrack"
-s.version              = "6.4.9"
+s.version              = "6.5.0"
   s.summary          = "QCloudTrack 腾讯云iOS-SDK组件"
 
 # This description is used to generate tags and improve search results.
@@ -43,7 +43,7 @@ TODO: Add long description of the pod here.aaa
   s.subspec 'Beacon' do |beacon|
     beacon.ios.deployment_target = '10.0'
     beacon.source_files = 'QCloudTrack/Classes/*.{h,m}','QCloudTrack/Classes/Default/*.{h,m}','QCloudTrack/Classes/Default/*/*.{h,m}','QCloudTrack/Classes/Beacon/*.{h,m}'
-    beacon.vendored_frameworks = 'QCloudTrack/Classes/BeaconFramework/COSBeaconAPI_Base.xcframework','QCloudTrack/Classes/BeaconFramework/QimeiSDK.xcframework'
+    beacon.vendored_frameworks = 'QCloudTrack/Classes/BeaconFramework/COSBeaconAPI_Base.xcframework'
     beacon.libraries = "stdc++", "resolv"
     beacon.frameworks = "CoreTelephony", "SystemConfiguration","WebKit"
   end

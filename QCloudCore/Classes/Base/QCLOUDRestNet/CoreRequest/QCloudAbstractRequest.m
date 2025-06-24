@@ -220,6 +220,21 @@ __attribute__((noinline)) void cosWarnBlockingOperationOnMainThread(void) {
     return [self.payload objectForKey:@"shouldSignedList"];
 }
 
+- (void)setSignature:(QCloudSignature *)signature{
+    NSMutableDictionary * _payload = self.payload.mutableCopy;
+    if (!_payload) {
+        _payload = [NSMutableDictionary new];
+    }
+    if (signature) {
+        [_payload setObject:signature forKey:@"signature"];
+    }
+    self.payload = _payload.copy;
+}
+
+- (QCloudSignature *)signature{
+    return [self.payload objectForKey:@"signature"];
+}
+
 - (void)configTaskResume {
 }
 @end

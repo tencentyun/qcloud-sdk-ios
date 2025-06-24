@@ -332,10 +332,10 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
     if (!taskData) {
         return;
     }
-    
-    if(taskData.response.statusCode > 400 && [hostURL.host rangeOfString:@"tencentcos.cn"].length == 0 && ![taskData.response.allHeaderFields.allKeys containsObject:@"x-cos-request-id"] &&
-       [taskData.httpRequest needChangeHost] &&
-       taskData.httpRequest.runOnService.configuration.disableChangeHost == NO){
+
+    if((((taskData.response.statusCode / 100 != 2) && (taskData.response.statusCode / 100 != 4) && [hostURL.host rangeOfString:@"tencentcos.cn"].length == 0 && ![taskData.response.allHeaderFields.allKeys containsObject:@"x-cos-request-id"]) &&
+        [taskData.httpRequest needChangeHost] &&
+        taskData.httpRequest.runOnService.configuration.disableChangeHost == NO) || (taskData.response.statusCode / 100 == 5)){
         error = [NSError errorWithDomain:hostURL.host code:QCloudNetworkErrorCodeDomainInvalid userInfo:@{NSLocalizedDescriptionKey: @""}];
         taskData.isTaskCancelledByStatusCodeCheck = NO;
     }
@@ -387,7 +387,12 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
                         if (QCloudFileExist(httpRequset.downloadingTempURL.path)) {
                             httpRequset.localCacheDownloadOffset = QCloudFileSize(httpRequset.downloadingTempURL.path);
                         }
-                        httpRequset.requestData.needChangeHost = [httpRequset needChangeHost] && !httpRequset.runOnService.configuration.disableChangeHost;
+                        if (taskData.response.statusCode / 100 == 5) {
+                            httpRequset.requestData.needChangeHost = [httpRequset needChangeHost] && !httpRequset.runOnService.configuration.disableChangeHost && ![taskData.response.allHeaderFields.allKeys containsObject:@"x-cos-request-id"];
+                        }else{
+                            httpRequset.requestData.needChangeHost = [httpRequset needChangeHost] && !httpRequset.runOnService.configuration.disableChangeHost;
+                        }
+                        
                         [httpRequset setValue:@(YES) forKey:@"isRetry"];
                         httpRequset.retryCount = taskData.httpRequest.retryCount + 1;
                         [weakSelf executeRestHTTPReqeust:httpRequset];

@@ -9,7 +9,6 @@
 #import "QCloudTrackConstants.h"
 #import <COSBeaconAPI_Base/COSBeaconReport.h>
 #import "QCloudTrackConstants.h"
-
 void QCloudTrackEnsurePathExist(NSString *path) {
     NSCParameterAssert(path);
     BOOL exist = [[NSFileManager defaultManager] fileExistsAtPath:path];
@@ -29,6 +28,21 @@ static BOOL isStartedBeacon;
 
 @implementation QCloudBeaconTrackService
 
+
+-(NSString *)getDeviceId{
+    NSString * deviceId = [[NSUserDefaults standardUserDefaults] objectForKey:@"COSBeaconReport_DeviceId"];
+    if (!deviceId) {
+        NSString * tempId = [NSString stringWithFormat:@"%@_%@_%ld", [NSBundle mainBundle].bundleIdentifier,NSDate.new.description,arc4random() % 100000000];
+        NSData *data = [tempId dataUsingEncoding:NSUTF8StringEncoding];
+        deviceId = [data base64EncodedStringWithOptions:0];
+        [[NSUserDefaults standardUserDefaults] setObject:deviceId forKey:@"COSBeaconReport_DeviceId"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    deviceId = [deviceId stringByReplacingOccurrencesOfString:@"=" withString:@""];
+    deviceId = [deviceId stringByReplacingOccurrencesOfString:@"+" withString:@""];
+    deviceId = [deviceId stringByReplacingOccurrencesOfString:@"/" withString:@""];
+    return deviceId;
+}
 - (instancetype)initWithBeaconKey:(NSString *)key
 {
     self = [super init];
@@ -38,6 +52,8 @@ static BOOL isStartedBeacon;
             @try {
                 @synchronized ([QCloudBeaconTrackService class]) {
                     if (!isStartedBeacon) {
+                        NSString * deviceId = [self getDeviceId];
+                        [[COSBeaconReport sharedInstance] setOStarO16:deviceId o36:deviceId];
                         [[COSBeaconReport sharedInstance] startWithAppkey:self.beaconKey config:nil];
                         isStartedBeacon = YES;
                     }
@@ -45,7 +61,6 @@ static BOOL isStartedBeacon;
             } @catch (NSException *exception) {
                 NSLog(@"%@",exception);
             }
-            
         }
     }
     return self;
@@ -57,6 +72,8 @@ static BOOL isStartedBeacon;
         @try {
             @synchronized ([QCloudBeaconTrackService class]) {
                 if (!isStartedBeacon) {
+                    NSString * deviceId = [self getDeviceId];
+                    [[COSBeaconReport sharedInstance] setOStarO16:deviceId o36:deviceId];
                     [[COSBeaconReport sharedInstance] startWithAppkey:self.beaconKey config:nil];
                     isStartedBeacon = YES;
                 }
@@ -136,6 +153,7 @@ static BOOL isStartedBeacon;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         COSBeaconReport * beaconInstance = [COSBeaconReport sharedInstance];
         COSBeaconReportResult * result = [beaconInstance reportEvent:eventObj];
+        NSLog(@"%@",result);
     });
 }
 

@@ -77,6 +77,7 @@
 @class QCloudGetBucketPolicyRequest;
 @class QCloudPutBucketPolicyRequest;
 @class QCloudDeleteBucketPolicyRequest;
+@class QCloudCommonRequest;
 NS_ASSUME_NONNULL_BEGIN
 @interface QCloudCOSXMLService (Manager)
 
@@ -141,6 +142,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)ListObjectVersions:(QCloudListObjectVersionsRequest *)request;
 - (void)getPresignedURL:(QCloudGetPresignedURLRequest *)request;
 - (void)AppendObject:(QCloudAppendObjectRequest*)request;
+- (void)request:(QCloudCommonRequest*)request;
+
 #pragma mark - Encapsulated Interface
 
 

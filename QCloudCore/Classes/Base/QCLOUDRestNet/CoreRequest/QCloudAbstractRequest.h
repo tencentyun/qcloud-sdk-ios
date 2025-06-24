@@ -11,6 +11,7 @@
 #import "QCloudHttpMetrics.h"
 #import "QCloudCredential.h"
 #import "QCloudEndPoint.h"
+#import "QCloudSignature.h"
 typedef double QCloudAbstractRequestPriority;
 
 #define QCloudAbstractRequestPriorityHigh 3.0
@@ -76,6 +77,8 @@ typedef NS_ENUM(NSUInteger, QCloudRequestNetworkType) {
  */
 @property (nonatomic, strong, nullable) NSArray *shouldSignedList;
 @property (nonatomic, strong, nullable) QCloudCredential * credential;
+
+@property (nonatomic, strong, nullable) QCloudSignature * signature;
 /**
   协议执行结果向外通知的委托（delegate）主要包括成功和失败两种情况。与Block方式并存，当两者都设置的时候都会通知。
  */
