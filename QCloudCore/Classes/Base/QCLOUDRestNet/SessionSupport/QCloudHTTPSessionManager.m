@@ -387,12 +387,7 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
                         if (QCloudFileExist(httpRequset.downloadingTempURL.path)) {
                             httpRequset.localCacheDownloadOffset = QCloudFileSize(httpRequset.downloadingTempURL.path);
                         }
-                        if (taskData.response.statusCode / 100 == 5) {
-                            httpRequset.requestData.needChangeHost = [httpRequset needChangeHost] && !httpRequset.runOnService.configuration.disableChangeHost && ![taskData.response.allHeaderFields.allKeys containsObject:@"x-cos-request-id"];
-                        }else{
-                            httpRequset.requestData.needChangeHost = [httpRequset needChangeHost] && !httpRequset.runOnService.configuration.disableChangeHost;
-                        }
-                        
+                        httpRequset.requestData.needChangeHost = !httpRequset.runOnService.configuration.disableChangeHost;
                         [httpRequset setValue:@(YES) forKey:@"isRetry"];
                         httpRequset.retryCount = taskData.httpRequest.retryCount + 1;
                         [weakSelf executeRestHTTPReqeust:httpRequset];

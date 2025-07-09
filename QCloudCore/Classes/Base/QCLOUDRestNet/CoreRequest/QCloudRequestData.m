@@ -9,6 +9,7 @@
 #import "QCloudRequestData.h"
 #import "NSError+QCloudNetworking.h"
 #import "QCloudHTTPBodyPart.h"
+#import "QCloudHTTPRequest.h"
 #if TARGET_OS_IOS
 #import <UIKit/UIKit.h>
 #endif
@@ -380,7 +381,10 @@ NSString *const emergencyHost = @"tencentcos.cn";
 - (void)setServerURL:(NSString *)serverURL{
     if (self.endpoint) {
         _serverURL = [self.endpoint serverURLWithBucket:self.bucket appID:self.appId regionName:self.region].absoluteString;
-    }else if(self.needChangeHost){
+        if (self.needChangeHost && [QCloudHTTPRequest needChangeHost:_serverURL]) {
+            _serverURL = [_serverURL stringByReplacingOccurrencesOfString:@"myqcloud.com" withString:emergencyHost];
+        }
+    }else if(self.needChangeHost && [QCloudHTTPRequest needChangeHost:serverURL]){
         _serverURL = [serverURL stringByReplacingOccurrencesOfString:@"myqcloud.com" withString:emergencyHost];
     }else{
         _serverURL = serverURL;
