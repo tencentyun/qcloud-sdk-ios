@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
   s.name             = "QCloudCOSXML"
 
 
-s.version              = "6.5.0"
+s.version              = "6.5.1"
 
 
   s.summary          = "QCloudCOSXML 腾讯云iOS-SDK组件"
@@ -21,19 +21,19 @@ s.version              = "6.5.0"
   s.subspec 'Default' do |default|
     default.ios.deployment_target = '10.0'
     default.source_files = 'QCloudCOSXML/Classes/**/*','QCloudCOSXML/Classes/QCloudCOSXML/*'
-  default.dependency "QCloudCore",'6.5.0'
+  default.dependency "QCloudCore",'6.5.1'
   end
   s.subspec 'Slim' do |slim|
     slim.ios.deployment_target = '10.0'
     slim.osx.deployment_target = "10.12"
     slim.source_files = 'QCloudCOSXML/Classes/**/*','QCloudCOSXML/Classes/QCloudCOSXML/*'
-  slim.dependency "QCloudCore/WithoutMTA",'6.5.0'
+  slim.dependency "QCloudCore/WithoutMTA",'6.5.1'
   end
   s.subspec 'Transfer' do |transfer|
     transfer.ios.deployment_target = '10.0'
     transfer.osx.deployment_target = "10.12"
     transfer.source_files = 'QCloudCOSXML/Classes/*','QCloudCOSXML/Classes/Transfer/**/*','QCloudCOSXML/Classes/Base/**/*'
-  transfer.dependency "QCloudCore/WithoutMTA",'6.5.0'
+  transfer.dependency "QCloudCore/WithoutMTA",'6.5.1'
 
   end
   
@@ -42,7 +42,7 @@ s.version              = "6.5.0"
     widget.osx.deployment_target = "10.12"
     widget.source_files = 'QCloudCOSXML/Classes/*','QCloudCOSXML/Classes/Transfer/**/*','QCloudCOSXML/Classes/Base/**/*'
     widget.exclude_files = 'QCloudCOSXML/Classes/Base/QCloudLogManager.h','QCloudCOSXML/Classes/Base/QCloudLogManager.m'
-  widget.dependency "QCloudCore/WithoutMTA",'6.5.0'
+  widget.dependency "QCloudCore/WithoutMTA",'6.5.1'
   end
 
 end
