@@ -75,12 +75,12 @@ extern BOOL COSBeaconHasStarted;
 /// 是否采集WiFiMac地址，参数为NO时不采集，默认采集，如果需要关闭则需要在初始化前设置为NO
 @property (assign) BOOL collectMacEnable DEPRECATED_MSG_ATTRIBUTE("4.2.74以后不再采集,如需使用请自行采集后通过[COSBeaconReport.sharedInstance setWifiName:/setWifiMac:]填充");
 
-/// 是否采集A51,参数为NO时不采集，默认采集，如果需要关闭则需要在初始化前设置为NO
-@property (assign) BOOL collectA51Enable DEPRECATED_MSG_ATTRIBUTE("4.2.74以后不再采集,如需使用请自行采集后通过[COSBeaconReport.sharedInstance setA51:]填充");
+/// 是否采集idfa,参数为NO时不采集，默认采集，如果需要关闭则需要在初始化前设置为NO
+@property (assign) BOOL collectIdfaEnable DEPRECATED_MSG_ATTRIBUTE("4.2.74以后不再采集,如需使用请自行采集后通过[COSBeaconReport.sharedInstance setIDFA:]填充");
 
 
-/// 是否采集A50，默认采集。无特殊情况不要关闭 ! 若关闭后务必在授权后填充A50(setA50:)
-@property (assign) BOOL collectA50Enable;
+/// 是否采集idfv，默认采集。无特殊情况不要关闭 ! 若关闭后务必在授权后填充IDFV(setIDFV:)
+@property (assign) BOOL collectIdfvEnable;
 
 /// 网络数据传输通道代理
 @property (nonatomic, weak) id<COSBeaconTransferProtocal> transferDelegate;
@@ -137,18 +137,18 @@ extern BOOL COSBeaconHasStarted;
 
 /**
  * 设置O16和O36参数
- * 填充设备id: 灯塔默认只使用A50来区分设备, 通常建议集成时填充稳定的设备ID， 比如A51,或者专门的SDK产生的设备ID
+ * 填充设备id: 灯塔默认只使用IDFV来区分设备, 通常建议集成时填充稳定的设备ID， 比如IDFA,或者专门的SDK产生的设备ID
  */
 - (void)setOStarO16:(NSString *)o16 o36:(nullable NSString *)o36;
 
 /// 把OStarSDK的版本号透传给灯塔
 - (void)setOStarVersion:(NSString *)ostarVersion;
 
-/// 默认不采集A51,由需采集A51的应用宿主填充.
-- (void)setA51:(NSString *)A51;
+/// 默认不采集idfa,由需采集idfa的应用宿主填充.
+- (void)setIDFA:(NSString *)idfa;
 
-/// 默认采集A50,业务如有关闭A50,用户同意隐私采集后,需填充给灯塔
-- (void)setA50:(NSString *)A50;
+/// 默认采集IDFV,业务如有关闭IDFV,用户同意隐私采集后,需填充给灯塔
+- (void)setIDFV:(NSString *)idfv;
 
 /// 设置wifiName. 用户授权隐私数据采集后,可统一采集后填充到灯塔
 - (void)setWifiName:(NSString *)wifiName;
@@ -167,4 +167,4 @@ extern BOOL COSBeaconHasStarted;
 
 NS_ASSUME_NONNULL_END
 
-#define BEACON_SDK_VERSION @"4.2.76.86"
+#define BEACON_SDK_VERSION @"4.2.76.52"
