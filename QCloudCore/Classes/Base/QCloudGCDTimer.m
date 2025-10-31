@@ -9,8 +9,8 @@
 NS_ASSUME_NONNULL_BEGIN
 @implementation QCloudGCDTimer
 
-static NSMutableDictionary *timers_;
-dispatch_semaphore_t semaphore_;
+static NSMutableDictionary *qCloud_timers_;
+dispatch_semaphore_t qCloud_semaphore_;
 
 /**
  load 与 initialize区别，这里选用initialize
@@ -20,8 +20,8 @@ dispatch_semaphore_t semaphore_;
     //GCD一次性函数
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        timers_ = [NSMutableDictionary dictionary];
-        semaphore_ = dispatch_semaphore_create(1);
+        qCloud_timers_ = [NSMutableDictionary dictionary];
+        qCloud_semaphore_ = dispatch_semaphore_create(1);
     });
 }
 
@@ -56,12 +56,12 @@ dispatch_semaphore_t semaphore_;
      */
     dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
     
-    dispatch_semaphore_wait(semaphore_, DISPATCH_TIME_FOREVER);
+    dispatch_semaphore_wait(qCloud_semaphore_, DISPATCH_TIME_FOREVER);
     // 定时器的唯一标识
-    NSString *timerName = [NSString stringWithFormat:@"%zd", timers_.count];
+    NSString *timerName = [NSString stringWithFormat:@"%zd", qCloud_timers_.count];
     // 存放到字典中
-    timers_[timerName] = timer;
-    dispatch_semaphore_signal(semaphore_);
+    qCloud_timers_[timerName] = timer;
+    dispatch_semaphore_signal(qCloud_semaphore_);
     
     dispatch_source_set_timer(timer, dispatch_time(DISPATCH_TIME_NOW, start * NSEC_PER_SEC), interval * NSEC_PER_SEC, 0);
     dispatch_source_set_event_handler(timer, ^{
@@ -111,17 +111,18 @@ dispatch_semaphore_t semaphore_;
         return;
     }
     
-    dispatch_semaphore_wait(semaphore_, DISPATCH_TIME_FOREVER);
+    dispatch_semaphore_wait(qCloud_semaphore_, DISPATCH_TIME_FOREVER);
     
-    dispatch_source_t timer = timers_[timerName];
+    dispatch_source_t timer = qCloud_timers_[timerName];
     if (timer) {
         dispatch_source_cancel(timer);
-        [timers_ removeObjectForKey:timerName];
+        [qCloud_timers_ removeObjectForKey:timerName];
     }
     
-    dispatch_semaphore_signal(semaphore_);
+    dispatch_semaphore_signal(qCloud_semaphore_);
 
 }
 
 @end
 NS_ASSUME_NONNULL_END
+
