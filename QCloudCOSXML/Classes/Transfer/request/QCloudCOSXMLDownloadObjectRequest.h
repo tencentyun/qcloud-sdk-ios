@@ -6,7 +6,7 @@
 //
 
 #import <QCloudCore/QCloudCore.h>
-
+#import "QCloudCOSXMLService+Transfer.h"
 @class QCloudCOSTransferMangerService;
 
 /**
@@ -136,6 +136,8 @@
 /// 是否开启crc64校验，默认开启。
 @property (assign, nonatomic) BOOL enablePartCrc64;
 
+// 指定内部Head请求使用 headRequestService 进行请求。
+@property (nonatomic, strong) QCloudCOSXMLService *headRequestService;
 //针对本次下载行流量控制的限速值，必须为数字，单位默认为 bit/s。限速值设置范围为819200 - 838860800,即100KB/s - 100MB/s，如果超出该范围将返回400错误
 @property (nonatomic, assign) NSInteger trafficLimit;
 - (void)setCOSServerSideEncyption;

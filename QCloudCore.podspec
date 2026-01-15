@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.name             = "QCloudCore"
 
 
-s.version              = "6.5.2"
+s.version              = "6.5.3"
 
 
 
@@ -35,7 +35,7 @@ QCloudCore--腾讯云iOS-SDK Foundation。提供腾讯云iOS相关SDK的基础�
   s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
   s.ios.deployment_target = '10.0'
-  s.osx.deployment_target = "10.12"
+  # s.osx.deployment_target = "10.12"
   s.frameworks ='CoreMedia', "Accelerate", "SystemConfiguration"
   s.libraries = "z","c++"
   s.static_framework = true
@@ -43,12 +43,12 @@ QCloudCore--腾讯云iOS-SDK Foundation。提供腾讯云iOS相关SDK的基础�
   s.subspec 'Default' do |default|
       default.ios.deployment_target = '10.0'
       default.source_files = 'QCloudCore/Classes/Base/**/*'
-      default.dependency "QCloudTrack/Beacon","6.5.1"
+      default.dependency "QCloudTrack/Beacon","6.5.3"
   end
   
   s.subspec 'WithoutMTA' do |withoutMTA|
       withoutMTA.ios.deployment_target = '10.0'
-      withoutMTA.osx.deployment_target = "10.12"
+      # withoutMTA.osx.deployment_target = "10.12"
       withoutMTA.source_files = 'QCloudCore/Classes/Base/**/*'
   end
   

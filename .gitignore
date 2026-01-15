@@ -1,1 +1,5 @@
 Pods
+*.xcworkspacedata
+*.xcscheme
+QCloudCOSXMLDemo/QCloudCOSXMLDemo.xcodeproj/xcshareddata/xcschemes/QCloudCOSXMLDemo.xcscheme~Stashed changes
+QCloudCOSXMLDemo/QCloudCOSXMLDemo.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist

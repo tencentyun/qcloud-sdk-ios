@@ -343,7 +343,9 @@ static NSString * sdkBridge = @"";
     paramter[kQCloudQualityRequestNameKey] = [self getServiceNameFromClass:[request class]];
     //传输性能
     for (NSString *key in [request.benchMarkMan toUploadEventParamters].allKeys) {
-        [paramter setObject:[[request.benchMarkMan toUploadEventParamters] objectForKey:key] forKey:key];
+        if ([[request.benchMarkMan toUploadEventParamters] objectForKey:key]) {
+            [paramter setObject:[[request.benchMarkMan toUploadEventParamters] objectForKey:key] forKey:key];
+        }
     }
     //地域
     if([request isKindOfClass:[QCloudHTTPRequest class]]){

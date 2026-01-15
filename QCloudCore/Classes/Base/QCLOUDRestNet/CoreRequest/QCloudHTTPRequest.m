@@ -26,6 +26,16 @@
 #import "NSDate+QCLOUD.h"
 #import "NSDate+QCloudInternetDateTime.h"
 #import "NSObject+HTTPHeadersContainer.h"
+
+#pragma mark - 域名切换相关正则表达式
+
+// COS 域名: bucket.cos.region.myqcloud.com
+static NSRegularExpression *_cosHostRegex;
+// CI 域名: *.ci.region.myqcloud.com 或 ci.region.myqcloud.com
+static NSRegularExpression *_ciHostRegex;
+// 排除域名: 加速域名和服务域名
+static NSRegularExpression *_excludeHostRegex;
+
 @interface QCloudHTTPRequest () {
     BOOL _requesting;
 }
@@ -39,6 +49,18 @@
 @implementation QCloudHTTPRequest
 @synthesize httpURLResponse = _httpURLResponse;
 @synthesize httpURLError = _httpURLError;
+
++ (void)load {
+    _cosHostRegex = [NSRegularExpression regularExpressionWithPattern:@"^[^.]+\\.cos\\.[^.]+\\.myqcloud\\.com$"
+                                                              options:NSRegularExpressionCaseInsensitive
+                                                                error:nil];
+    _ciHostRegex = [NSRegularExpression regularExpressionWithPattern:@"^([^.]+\\.)?ci\\.[^.]+\\.myqcloud\\.com$"
+                                                             options:NSRegularExpressionCaseInsensitive
+                                                               error:nil];
+    _excludeHostRegex = [NSRegularExpression regularExpressionWithPattern:@"(\\.cos\\.accelerate\\.myqcloud\\.com$|^service\\.cos\\.myqcloud\\.com$)"
+                                                                  options:NSRegularExpressionCaseInsensitive
+                                                                    error:nil];
+}
 
 - (void)__baseCommonInit {
     _requestData = [QCloudRequestData new];
@@ -165,20 +187,6 @@
 - (void)onReciveRespone:(NSHTTPURLResponse *)response data:(NSData *)data {
     _responseData = data;
     _httpURLResponse = response;
-//    //
-//    {
-//        NSUInteger headerLength = 0;
-//        NSDictionary *allHeaders = nil;
-//        if ([response respondsToSelector:@selector(allHeaderFields)]) {
-//            allHeaders = [response allHeaderFields];
-//        }
-//        if (allHeaders) {
-//            if (response.allHeaderFields) {
-//                NSData *headerData = [NSJSONSerialization dataWithJSONObject:allHeaders options:0 error:0];
-//                headerLength = headerData.length;
-//            }
-//        }
-//    }
     NSString *dateStr = [[response allHeaderFields] objectForKey:@"Date"];
     NSDate *serverTime = nil;
     NSDate *deviceTime = [NSDate date];
@@ -243,25 +251,107 @@
     return [QCloudHTTPRequest needChangeHost:host];
 }
 
-+(BOOL)needChangeHost:(NSString *)host{
-    if(!host){
+/// 判断是否为 CI 域名
+- (BOOL)isCIHost {
+    NSString * host = self.urlRequest.URL.host;
+    return [QCloudHTTPRequest isCIHost:host];
+}
+
+/// 判断是否为 COS 域名
+- (BOOL)isCOSHost {
+    NSString * host = self.urlRequest.URL.host;
+    return [QCloudHTTPRequest isCOSHost:host];
+}
+
+#pragma mark - 域名切换相关私有类方法
+
++ (BOOL)isCIHost:(NSString *)host {
+    if (!host) {
         return NO;
     }
-    if([host rangeOfString:@".cos.accelerate.myqcloud.com"].length > 0){
+    NSRange fullRange = NSMakeRange(0, host.length);
+    return [_ciHostRegex firstMatchInString:host options:0 range:fullRange] != nil;
+}
+
++ (BOOL)isCOSHost:(NSString *)host {
+    if (!host) {
+        return NO;
+    }
+    NSRange fullRange = NSMakeRange(0, host.length);
+    
+    // 先检查是否在排除列表中
+    if ([_excludeHostRegex firstMatchInString:host options:0 range:fullRange]) {
         return NO;
     }
     
-    if([host rangeOfString:@"service.cos.myqcloud.com"].length > 0){
-        return NO;
-    }
-    if([host rangeOfString:@".myqcloud.com"].length > 0 && [host rangeOfString:@"cos."].length > 0 && [host rangeOfString:@".cos."].length == 0){
+    return [_cosHostRegex firstMatchInString:host options:0 range:fullRange] != nil;
+}
+
++ (BOOL)hasValidRequestId:(NSDictionary *)responseHeaders forHost:(NSString *)host {
+    if (!responseHeaders || responseHeaders.count == 0) {
         return NO;
     }
     
-    if([host rangeOfString:@".myqcloud.com"].length > 0 && [host rangeOfString:@".cos."].length > 0){
-        return YES;
+    // 不区分大小写检查响应头
+    // CI 域名检查 x-ci-request-id，COS 域名检查 x-cos-request-id
+    NSString *requestIdKey = [self isCIHost:host] ? @"x-ci-request-id" : @"x-cos-request-id";
+    
+    for (NSString *key in responseHeaders.allKeys) {
+        if ([key isEqualToString:requestIdKey]) {
+            return YES;
+        }
     }
     return NO;
+}
+
++ (NSString *)getBackupHost:(NSString *)host {
+    if (!host) {
+        return nil;
+    }
+    
+    if ([self isCIHost:host]) {
+        // CI 域名: myqcloud.com -> tencentci.cn
+        return [host stringByReplacingOccurrencesOfString:@"myqcloud.com" withString:@"tencentci.cn"];
+    } else {
+        // COS 域名: myqcloud.com -> tencentcos.cn
+        return [host stringByReplacingOccurrencesOfString:@"myqcloud.com" withString:@"tencentcos.cn"];
+    }
+}
+
++ (BOOL)isBackupHost:(NSString *)host {
+    if (!host) {
+        return NO;
+    }
+    return [host rangeOfString:@"tencentcos.cn" options:NSCaseInsensitiveSearch].length > 0 ||
+           [host rangeOfString:@"tencentci.cn" options:NSCaseInsensitiveSearch].length > 0;
+}
+
++ (BOOL)needChangeHost:(NSString *)host responseHeaders:(NSDictionary *)responseHeaders {
+    if (!host) {
+        return NO;
+    }
+    
+    // 如果已经是备用域名，不需要再切换
+    if ([self isBackupHost:host]) {
+        return NO;
+    }
+    
+    // 检查是否匹配 COS 或 CI 域名格式
+    BOOL isSupportedHost = [self isCOSHost:host] || [self isCIHost:host];
+    if (!isSupportedHost) {
+        return NO;
+    }
+    
+    // 如果响应头中包含有效的 request-id，说明已到达服务端，不需要切换
+    if ([self hasValidRequestId:responseHeaders forHost:host]) {
+        return NO;
+    }
+    
+    return YES;
+}
+
++ (BOOL)needChangeHost:(NSString *)host {
+    return [self needChangeHost:host responseHeaders:nil];
 }
 
 - (void)setEndpoint:(QCloudEndPoint *)endpoint{

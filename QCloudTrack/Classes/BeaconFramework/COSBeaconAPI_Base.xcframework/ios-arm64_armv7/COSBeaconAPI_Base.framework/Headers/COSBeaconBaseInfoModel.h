@@ -63,10 +63,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (assign, readonly) long long romSize;
 /// openuuid 自建
 @property (copy, readonly) NSString *openUdid;
-/// idfv
-@property (copy) NSString *idfv;
-/// idfa
-@property (copy) NSString *idfa;
+/// A50
+@property (copy) NSString *A50;
+/// A51
+@property (copy) NSString *A51;
 /// 是否越狱
 @property (assign, readonly) BOOL isReet;
 /// 主通道的channelId
@@ -120,7 +120,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 启动来源
 @property (copy) NSString *launchSource;
 /// 设备名
-@property (copy, readonly) NSString *deviceName DEPRECATED_MSG_ATTRIBUTE("安全合规建设,4.2.75以后不再采集");
+@property (copy, readonly) NSString *A106 DEPRECATED_MSG_ATTRIBUTE("安全合规建设,4.2.75以后不再采集");
 /// 设备型号
 @property (copy, readonly) NSString *deviceModel;
 /// 设备类型

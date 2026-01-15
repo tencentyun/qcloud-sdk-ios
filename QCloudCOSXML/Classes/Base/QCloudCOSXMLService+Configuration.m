@@ -32,6 +32,7 @@
 #import "QCloudCOSXMLService+Configuration.h"
 #import <QCloudCore/QCloudCore.h>
 #import <QCloudCore/QCloudConfiguration_Private.h>
+#import <QCloudCore/QCloudSDKModuleManager.h>
 #import "QCloudCOSXMLService+Private.h"
 
 @implementation QCloudCOSXMLService (Configuration)
@@ -41,6 +42,8 @@
     if (!self) {
         return self;
     }
+    // 在 SDK 初始化时注册所有模块
+    [[QCloudSDKModuleManager shareInstance] registerAllModules];
     return self;
 }
 

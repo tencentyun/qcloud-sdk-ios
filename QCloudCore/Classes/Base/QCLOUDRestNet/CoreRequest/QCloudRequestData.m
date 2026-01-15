@@ -381,11 +381,11 @@ NSString *const emergencyHost = @"tencentcos.cn";
 - (void)setServerURL:(NSString *)serverURL{
     if (self.endpoint) {
         _serverURL = [self.endpoint serverURLWithBucket:self.bucket appID:self.appId regionName:self.region].absoluteString;
-        if (self.needChangeHost && [QCloudHTTPRequest needChangeHost:_serverURL]) {
-            _serverURL = [_serverURL stringByReplacingOccurrencesOfString:@"myqcloud.com" withString:emergencyHost];
+        if (self.needChangeHost && [QCloudHTTPRequest needChangeHost:serverURL responseHeaders:self.httpHeaders]) {
+            _serverURL = [QCloudHTTPRequest getBackupHost:serverURL];
         }
-    }else if(self.needChangeHost && [QCloudHTTPRequest needChangeHost:serverURL]){
-        _serverURL = [serverURL stringByReplacingOccurrencesOfString:@"myqcloud.com" withString:emergencyHost];
+    }else if(self.needChangeHost && [QCloudHTTPRequest needChangeHost:serverURL responseHeaders:self.httpHeaders]){
+        _serverURL = [QCloudHTTPRequest getBackupHost:serverURL];
     }else{
         _serverURL = serverURL;
     }

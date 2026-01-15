@@ -29,6 +29,7 @@
 #import "QCloudThreadSafeMutableDictionary.h"
 #import "QCloudWeakProxy.h"
 #import "QCloudLoaderManager.h"
+
 #ifndef __IPHONE_13_0
 #define __IPHONE_13_0    130000
 #endif
@@ -240,11 +241,15 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
         completionHandler(nil);
         return;
     }
-    if(![taskData.httpRequest needChangeHost] || taskData.httpRequest.runOnService.configuration.disableChangeHost == YES || [response.allHeaderFields.allKeys containsObject:@"x-cos-request-id"] || [request.URL.absoluteURL.host rangeOfString:@"tencentcos.cn"].length > 0){
+    
+    NSString *requestHost = request.URL.absoluteURL.host;
+    // 检查是否需要允许重定向:
+    if(taskData.httpRequest.runOnService.configuration.disableChangeHost == YES ||
+       ![QCloudHTTPRequest needChangeHost:requestHost responseHeaders:response.allHeaderFields]){
         completionHandler(request);
     }else{
         completionHandler(nil);
-        NSError *error = [NSError errorWithDomain:request.URL.host code:QCloudNetworkErrorCodeDomainInvalid userInfo:@{NSLocalizedDescriptionKey: @""}];
+        NSError *error = [NSError errorWithDomain:requestHost code:QCloudNetworkErrorCodeDomainInvalid userInfo:@{NSLocalizedDescriptionKey: @""}];
         [task cancel];
         [self URLSession:session task:task didCompleteWithError:error];
     }
@@ -333,9 +338,9 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
         return;
     }
 
-    if((((taskData.response.statusCode / 100 != 2) && (taskData.response.statusCode / 100 != 4) && [hostURL.host rangeOfString:@"tencentcos.cn"].length == 0 && ![taskData.response.allHeaderFields.allKeys containsObject:@"x-cos-request-id"]) &&
-        [taskData.httpRequest needChangeHost] &&
-        taskData.httpRequest.runOnService.configuration.disableChangeHost == NO) || (taskData.response.statusCode / 100 == 5)){
+    BOOL needRetryWithDomainChange = [self shouldRetry:taskData error:error];
+    
+    if (needRetryWithDomainChange) {
         error = [NSError errorWithDomain:hostURL.host code:QCloudNetworkErrorCodeDomainInvalid userInfo:@{NSLocalizedDescriptionKey: @""}];
         taskData.isTaskCancelledByStatusCodeCheck = NO;
     }
@@ -380,6 +385,19 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
                                                                totalBytesSend:countOfBytesSent
                                                      totalBytesExpectedToSend:countOfBytesExpectedToSend];
                         }
+                
+                        BOOL needChangeHost = NO;
+                        NSInteger statusCodeCategory = taskData.response.statusCode / 100;
+                        // 3xx: 第一次失败就换域名
+                        if (statusCodeCategory == 3) {
+                            needChangeHost = [self shouldSwitchDomain:taskData error:error];
+                        }
+                        // 5xx 或未收到回包: 最后一次重试时换域名
+                        else if (statusCodeCategory != 2 &&
+                                 taskData.httpRequest.retryCount == taskData.retryHandler.maxCount - 1) {
+                            needChangeHost = [self shouldSwitchDomain:taskData error:error];
+                        }
+                
                         QCloudHTTPRequest *httpRequset = taskData.httpRequest;
                         [taskData restData];
                         [weakSelf removeTask:task];
@@ -387,7 +405,7 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
                         if (QCloudFileExist(httpRequset.downloadingTempURL.path)) {
                             httpRequset.localCacheDownloadOffset = QCloudFileSize(httpRequset.downloadingTempURL.path);
                         }
-                        httpRequset.requestData.needChangeHost = !httpRequset.runOnService.configuration.disableChangeHost;
+                        httpRequset.requestData.needChangeHost = needChangeHost;
                         [httpRequset setValue:@(YES) forKey:@"isRetry"];
                         httpRequset.retryCount = taskData.httpRequest.retryCount + 1;
                         [weakSelf executeRestHTTPReqeust:httpRequset];
@@ -720,6 +738,129 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
     } else {
         [task resume];
     }
+}
+
+
+#pragma mark - 域名切换和重试
+
+/**
+ * 判断是否需要切换域名（支持超时错误）
+ *
+ * @param taskData 请求任务数据
+ * @param error 网络错误（用于判断超时场景）
+ * @return YES 需要切换域名，NO 不需要切换
+ */
+- (BOOL)shouldSwitchDomain:(QCloudURLSessionTaskData *)taskData error:(NSError *)error {
+    // 检查是否禁用域名切换
+    if (taskData.httpRequest.runOnService.configuration.disableChangeHost) {
+        return NO;
+    }
+    
+    NSURL *hostURL = [NSURL URLWithString:taskData.httpRequest.requestData.serverURL];
+    
+    // 超时场景：只需检查域名是否可切换，不需要检查响应头
+    if ([self isNetworkConnectionError:error]) {
+        return [QCloudHTTPRequest needChangeHost:hostURL.host];
+    }
+    
+    // 非超时场景：需要检查响应头中的 request-id
+    return [QCloudHTTPRequest needChangeHost:hostURL.host responseHeaders:taskData.response.allHeaderFields];
+}
+
+/**
+ * 判断是否为网络连接异常（超时或连接丢失）
+ *
+ * @param error 网络请求错误
+ * @return YES 表示网络连接异常，NO 表示其他错误
+ */
+- (BOOL)isNetworkConnectionError:(NSError *)error {
+    if (!error || ![error.domain isEqualToString:NSURLErrorDomain]) {
+        return NO;
+    }
+    switch (error.code) {
+        case NSURLErrorTimedOut:
+        case NSURLErrorNetworkConnectionLost:
+            return YES;
+        default:
+            return NO;
+    }
+}
+
+
+/**
+ * 判断是否需要重试（支持超时错误）
+ *
+ * @param taskData 请求任务数据
+ * @param error 网络错误（用于判断超时场景）
+ * @return YES 需要重试，NO 不需要重试
+ */
+- (BOOL)shouldRetry:(QCloudURLSessionTaskData *)taskData error:(NSError *)error {
+    BOOL needRetryWithDomainChange = NO;
+    
+    // 场景1：网络连接异常（超时或连接丢失）
+    if ([self isNetworkConnectionError:error]) {
+        needRetryWithDomainChange = YES;
+    }
+    // 场景2：根据 HTTP 状态码判断
+    else {
+        NSInteger statusCodeCategory = taskData.response.statusCode / 100;
+        if (statusCodeCategory == 2) {
+            needRetryWithDomainChange = [self hasCopyRequestError:taskData];
+        } else if (statusCodeCategory == 3) {
+            NSInteger statusCode = taskData.response.statusCode % 100;
+            if (statusCode == 1 || statusCode == 2 || statusCode == 7) {
+                needRetryWithDomainChange = [self shouldSwitchDomain:taskData error:error];
+            }
+        } else if (statusCodeCategory == 5) {
+            needRetryWithDomainChange = YES;
+        }
+    }
+    
+    // CI 域名额外条件：签名必须是 SDK 生成的
+    if ([taskData.httpRequest isCIHost]) {
+        needRetryWithDomainChange = needRetryWithDomainChange && taskData.httpRequest.signature.sourceType == QCloudSignatureSourceTypeSDK;
+    }
+    
+    return needRetryWithDomainChange;
+}
+
+/**
+ * 检查 2xx Copy 请求响应体中是否包含需要重试的错误
+ *
+ * COS Copy 请求（如 PUT Object - Copy）在 HTTP 状态码为 2xx 时，
+ * 响应体 <CopyObjectResult> 中可能仍包含错误信息。
+ *
+ * 需要重试的错误码：
+ * - InternalError: 服务端内部错误
+ * - SlowDown: 请求频率过高
+ * - ServiceUnavailable: 服务暂时不可用
+ *
+ *
+ * @param taskData 请求任务数据
+ */
+- (BOOL)hasCopyRequestError:(QCloudURLSessionTaskData *)taskData {
+    // 仅处理 2xx 响应
+    NSInteger statusCodeCategory = taskData.response.statusCode / 100;
+    if (statusCodeCategory != 2) {
+        return NO;
+    }
+    if (![taskData.httpRequest isCOSHost]) {
+        return NO;
+    }
+    
+    NSError *error = nil;
+    QCloudResponseXMLSerializerBlock(taskData.response, taskData.data, &error);
+    if (!error) {
+        return NO;
+    }
+    NSString *errorCode = error.userInfo[NSLocalizedDescriptionKey];
+    // 检查是否是需要重试的错误码
+    if ([errorCode isEqualToString:@"InternalError"] ||
+        [errorCode isEqualToString:@"SlowDown"] ||
+        [errorCode isEqualToString:@"ServiceUnavailable"]) {
+        return YES;
+    }
+    return NO;
 }
 
 - (void)dealloc {

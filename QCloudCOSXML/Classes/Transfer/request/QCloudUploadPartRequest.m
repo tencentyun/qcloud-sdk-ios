@@ -114,6 +114,8 @@ NS_ASSUME_NONNULL_BEGIN
     if (self.trafficLimit) {
         [self.requestData setValue:@(self.trafficLimit).stringValue forHTTPHeaderField:@"x-cos-traffic-limit"];
     }
+    
+    [self.requestData setValue:@"application/octet-stream" forHTTPHeaderField:@"Content-Type"];
     NSMutableArray *__pathComponents = [NSMutableArray arrayWithArray:self.requestData.URIComponents];
     if (self.object)
         [__pathComponents addObject:self.object];

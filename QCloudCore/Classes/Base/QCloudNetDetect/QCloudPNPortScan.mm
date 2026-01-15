@@ -1,0 +1,96 @@
+//
+//  QCloudPNPortScan.m
+//  PhoneNetSDK
+//
+//  Created by mediaios on 2019/2/28.
+//  Copyright © 2019 mediaios. All rights reserved.
+//
+
+#import "QCloudPNPortScan.h"
+#import "QCloudPhoneNetSDKConst.h"
+#import "QCloudPhoneNetDiagnosisHelper.h"
+#import "QCloudPNetQueue.h"
+#import "QCloudCore/QCloudLogger.h"
+
+@interface QCloudPNPortScan()
+{
+    int socket_client;
+}
+
+@property (nonatomic,assign) BOOL isStopPortScan;
+
+@end
+
+@implementation QCloudPNPortScan
+static QCloudPNPortScan *QCloudPNPortScan_instance = NULL;
+- (instancetype)init
+{
+    if (self = [super init]) {
+        _isStopPortScan = YES;
+    }
+    return self;
+}
+
++ (instancetype)shareInstance
+{
+    if (QCloudPNPortScan_instance == NULL) {
+        QCloudPNPortScan_instance = [[QCloudPNPortScan alloc] init];
+    }
+    return QCloudPNPortScan_instance;
+}
+
+- (void)startPortScan:(NSString *)host beginPort:(NSUInteger)beginPort endPort:(NSUInteger)endPort completeHandler:(NetPortScanHandler)handler
+{
+    // 获取 IP 地址
+    struct hostent * remoteHostEnt = gethostbyname([host UTF8String]);
+    if (NULL == remoteHostEnt) {
+        QCloudLogWarningPB(@"PhoneNetSDKPortScan", @"Unable to parse host");
+        handler(nil,NO,[PNError errorWithInvalidCondition:@"Unable to parse host"]);
+        return;
+    }
+    struct in_addr * remoteInAddr = (struct in_addr *)remoteHostEnt->h_addr_list[0];
+    self.isStopPortScan = NO;
+    NSUInteger port = beginPort;
+    do {
+        if (port > endPort) {
+            break;
+        }
+        socket_client = socket(AF_INET, SOCK_STREAM, 0);
+        if (-1 == socket_client) {
+            return;
+        }
+        // 设置 socket 参数
+        struct sockaddr_in socketParameters;
+        socketParameters.sin_family = AF_INET;
+        socketParameters.sin_addr = *remoteInAddr;
+        socketParameters.sin_port = htons(port);
+        int ret = connect(socket_client, (struct sockaddr *) &socketParameters, sizeof(socketParameters));
+        if (-1 == ret) {
+            close(socket_client);
+            handler([NSString stringWithFormat:@"%lu",port],NO,nil);
+            continue;
+        }
+        handler([NSString stringWithFormat:@"%lu",port],YES,nil);
+        close(socket_client);
+    } while (!self.isStopPortScan && port++ <= endPort);
+    
+    self.isStopPortScan = YES;
+}
+
+- (void)portScan:(NSString *)host beginPort:(NSUInteger)beginPort endPort:(NSUInteger)endPort completeHandler:(NetPortScanHandler)handler
+{
+    [QCloudPNetQueue pnet_async:^{
+        [self  startPortScan:host beginPort:beginPort endPort:endPort completeHandler:handler];
+    }];
+}
+
+- (BOOL)isDoingScanPort
+{
+    return !self.isStopPortScan;
+}
+
+- (void)stopPortScan
+{
+    self.isStopPortScan = YES;
+}
+@end

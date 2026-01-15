@@ -19,4 +19,7 @@
 + (QCloudSDKModuleManager *)shareInstance;
 - (void)registerModule:(QCloudSDKModule *)module;
 - (void)registerModuleByJSON:(NSDictionary *)json;
+
+/// 注册所有 SDK 模块，在 SDK 初始化时调用
+- (void)registerAllModules;
 @end

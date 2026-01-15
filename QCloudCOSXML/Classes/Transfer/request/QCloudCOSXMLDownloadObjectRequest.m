@@ -12,6 +12,7 @@
 #import "QCloudCOSXMLService+Transfer.h"
 #import "QCloudHeadObjectRequest.h"
 #import <QCloudCore/NSMutableData+QCloud_CRC.h>
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
 
@@ -137,7 +138,12 @@
             [self startGetObject];
             
         }];
-        [self.transferManager.cosService HeadObject:headReq];
+        if (self.headRequestService) {
+            [self.headRequestService HeadObject:headReq];
+        }else{
+            [self.transferManager.cosService HeadObject:headReq];
+        }
+        
       
     }
 }

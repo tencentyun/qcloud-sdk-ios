@@ -141,8 +141,25 @@ typedef void (^QCloudHTTPRequestConfigure)(QCloudRequestSerializer *_Nonnull req
 - (void)onReviveErrorResponse:(NSURLResponse *_Nullable)prsponse error:(NSError *_Nullable)error;
 - (void)onReciveRespone:(NSURLResponse *_Nullable)response data:(NSData *_Nullable)data;
 
--(BOOL)needChangeHost;
+/// 判断是否为 CI 域名
+- (BOOL)isCIHost;
 
-+(BOOL)needChangeHost:(NSString *_Nullable)host;
+/// 判断是否为 COS 域名
+- (BOOL)isCOSHost;
+
+/// 获取备份域名
++ (NSString *_Nullable)getBackupHost:(NSString *_Nullable)host;
+
+/// 判断当前请求是否需要切换域名
+- (BOOL)needChangeHost;
+
+/// 判断指定域名是否需要切换（不检查响应头）
+/// @param host 域名
++ (BOOL)needChangeHost:(NSString *_Nullable)host;
+
+/// 判断指定域名是否需要切换（检查响应头中的 request-id）
+/// @param host 域名
+/// @param responseHeaders 响应头（用于检查 x-cos-request-id 或 x-ci-request-id）
++ (BOOL)needChangeHost:(NSString *_Nullable)host responseHeaders:(NSDictionary *_Nullable)responseHeaders;
 
 @end

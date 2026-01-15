@@ -1,0 +1,12 @@
+
+[QCloudCOSXML]
+path=/Users/dongzhao/Works/QCloud/Src/iOS/Git/QCloudCOSXMLProject/Core/QCloudCOSXML/QCloudCOSXML.podspec
+commit=6933e7434c4c0783ad86351decf64461aa1737f5
+branch=s3
+sourceURL=http://git.code.oa.com/qcloud-terminal/QCloudCore
+
+[QCloudCore]
+path=/Users/dongzhao/Works/QCloud/Src/iOS/Git/QCloudCOSXMLProject/Libs/QCloudCore/QCloudCore.podspec
+commit=8ce506aa0e11cb58baa1b2c978c7e932f70faf77
+branch=s3
+sourceURL=http://git.code.oa.com/qcloud-terminal/QCloudCOSXML

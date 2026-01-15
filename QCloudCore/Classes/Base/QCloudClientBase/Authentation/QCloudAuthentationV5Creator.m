@@ -228,6 +228,7 @@
 
     QCloudSignature *signature = [QCloudSignature signatureWith1Day:authoration];
     signature.token = self.credential.token;
+    [signature setSignatureSourceType:QCloudSignatureSourceTypeSDK];
     return signature;
 }
 

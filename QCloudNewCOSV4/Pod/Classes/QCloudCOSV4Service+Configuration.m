@@ -27,6 +27,7 @@
 #import "QCloudCOSV4Service+Configuration.h"
 #import <QCloudCore/QCloudCore.h>
 #import <QCloudCore/QCloudServiceConfiguration_Private.h>
+#import <QCloudCore/QCloudSDKModuleManager.h>
 
 @implementation  QCloudCOSV4Service (Configuration)
 - (instancetype) initWithConfiguration:(QCloudServiceConfiguration *)configuration
@@ -35,6 +36,10 @@
     if (configuration.endpoint == nil) {
     }
     self = [super initWithConfiguration:configuration];
+    if (self) {
+        // 注册所有模块
+        [[QCloudSDKModuleManager shareInstance] registerAllModules];
+    }
     return self;
 }
 - (void) loadAuthorizationForBiz:(QCloudBizHTTPRequest*)bizRequest urlRequest:(NSMutableURLRequest*)urlrequest compelete:(QCloudHTTPAuthentationContinueBlock)cotinueBlock

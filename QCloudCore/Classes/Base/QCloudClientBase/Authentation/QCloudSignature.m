@@ -11,7 +11,15 @@
 #define QCloudSignatureExpiration(days) [NSDate dateWithTimeIntervalSinceNow:(days)*60 * 60 * 24]
 #define QCloudSignatureMaxExpiration QCloudSignatureExpiration(30)
 
+@interface QCloudSignature ()
+@property (nonatomic, assign, readwrite) QCloudSignatureSourceType sourceType;
+@end
+
 @implementation QCloudSignature
+
+- (void)setSignatureSourceType:(QCloudSignatureSourceType)sourceType {
+    _sourceType = sourceType;
+}
 + (QCloudSignature *)signatureWith1Day:(NSString *)signature {
     return [[self alloc] initWithSignature:signature expiration:QCloudSignatureExpiration(1)];
 }
@@ -27,6 +35,7 @@
     if (!self) {
         return self;
     }
+    _sourceType = QCloudSignatureSourceTypeServer;
     _signature = signature;
     if ([expiration qcloud_isLaterThan:QCloudSignatureMaxExpiration]) {
         expiration = QCloudSignatureMaxExpiration;

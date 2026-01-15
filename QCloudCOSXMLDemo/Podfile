@@ -1,0 +1,20 @@
+require 'pathname'
+source "https://github.com/CocoaPods/Specs"
+use_frameworks!
+
+target 'QCloudCOSXMLDemo' do
+  
+  pod "QCloudTrack", path:".."
+  pod "QCloudTrack/Beacon", path:".."
+  pod "QCloudTrack/Cls", path:".."
+  
+  pod "QCloudCOSXML", path:".."
+  pod "QCloudCore", path:".."
+  pod "QCloudQuic", path:".."
+
+
+target 'QCloudCOSXMLDemoTests' do
+  inherit! :search_paths
+end
+end
+

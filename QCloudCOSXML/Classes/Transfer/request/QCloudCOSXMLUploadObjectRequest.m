@@ -232,12 +232,15 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
         __strong typeof(weakSelf) strongSelf = weakSelf;
         __strong typeof(weakRequest) strongRequst = weakRequest;
         [strongSelf.requstMetricArray addObject:@ { [NSString stringWithFormat:@"%@", strongRequst] : weakRequest.benchMarkMan.tastMetrics }];
+        if (!result.parts) {
+            result.parts = [NSArray new];
+        }
         if (input && input.parts.count > 0 && result && result.parts) {
             NSMutableArray * tempParts = input.parts.mutableCopy;
             [tempParts addObjectsFromArray:result.parts];
             result.parts = tempParts.copy;
         }
-        if (result.nextNumberMarker) {
+        if (result.nextNumberMarker && result.isTruncated) {
             [self listParts:result finish:finishBlock];
         }else{
             finishBlock(result,error);
@@ -849,6 +852,7 @@ NSString *const QCloudUploadResumeDataKey = @"__QCloudUploadResumeDataKey__";
             abortRequest.uploadId = self.uploadId;
             abortRequest.finishBlock = finishBlock;
             abortRequest.timeoutInterval = self.timeoutInterval;
+            abortRequest.payload = self.payload;
             self.uploadId = nil;
             [self.transferManager.cosService AbortMultipfartUpload:abortRequest];
         } else {

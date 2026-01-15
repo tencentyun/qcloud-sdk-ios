@@ -54,6 +54,9 @@ NSString * QCloudRequestNetworkStrategyToString(QCloudRequestNetworkStrategy str
 /// 是否全局禁用HTTPS验证，默认为NO 不禁用。
 @property (nonatomic, assign) BOOL disableGlobalAuthentication;
 
+/// 是否全局禁用失败时网络探测功能，默认为NO 不禁用。
+@property (nonatomic, assign) BOOL disableNetworkDetect;
+
 @property (nonatomic, assign) QCloudRequestNetworkStrategy networkStrategy;
 
 /// 配置sdk双向认证，设置客户端证书
