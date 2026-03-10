@@ -520,6 +520,17 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
     }
 }
 
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task needNewBodyStream:(void (^)(NSInputStream * _Nullable))completionHandler {
+    QCloudURLSessionTaskData *taskData = [self taskDataForTask:task];
+        NSInputStream *bodyStream = taskData.bodyStream;
+        
+        if (bodyStream) {
+            completionHandler(bodyStream);
+        } else {
+            completionHandler(nil);
+        }
+}
+
 - (void)cancelRequestWithID:(int)requestID {
     NSURLSessionTask *task = [self taskForSEQ:requestID];
     [task cancel];
@@ -589,6 +600,8 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
     } else {
         taskData = [[QCloudURLSessionTaskData alloc] init];
     }
+    
+    taskData.forbidenWirteToCache = httpRequest.forbidenWirteToCahce;
 
     NSError *directError;
 
@@ -636,9 +649,24 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
                 QCloudLogDebugP(@"HTTP",@"uploadTempFilePath length = %lld", QCloudFileSize(tempFile));
             }
 
+        } else if ([body isKindOfClass:[NSInputStream class]]) {
+            // NSInputStream 作为 body 时，不能直接设置 HTTPBodyStream
+            // 必须通过 URLSession:task:needNewBodyStream: delegate 方法提供
+            // 将 inputStream 保存到 taskData 中，稍后在创建 task 时使用
+            taskData.bodyStream = (NSInputStream *)body;
+            // 注意：不能设置 mutableRequest.HTTPBodyStream
+            // uploadTaskWithStreamedRequest 要求请求不能预先包含 body 或 body stream
+            
+            // Content-Length 必须由调用方预先设置到 requestData.httpHeaders 中
+            // 如果未设置，某些服务器可能返回 411 Length Required
+            NSString *contentLength = httpRequest.requestData.httpHeaders[@"Content-Length"];
+            if (!contentLength) {
+                QCloudLogDebugP(@"HTTP", @"使用 NSInputStream 上传但未设置 Content-Length，可能导致上传失败");
+            }
+                    
         } else {
             @throw [NSException exceptionWithName:kQCloudNetworkDomain
-                                           reason:@"不支持设置该类型的body，支持的类型为NSData、QCloudFileOffsetBody、NSURL"
+                                           reason:@"不支持设置该类型的body，支持的类型为NSData、QCloudFileOffsetBody、NSURL、NSInputStream"
                                          userInfo:@{}];
         }
         transformRequest = mutableRequest;
@@ -670,6 +698,9 @@ QCloudThreadSafeMutableDictionary *QCloudBackgroundSessionManagerCache(void) {
         //如果是文件上传
         if (uploadFileURL) {
             task = [self.session uploadTaskWithRequest:transformRequest fromFile:uploadFileURL];
+        } else if (taskData.bodyStream) {
+            // 使用流上传时，必须用 uploadTaskWithStreamedRequest
+            task = [self.session uploadTaskWithStreamedRequest:transformRequest];
         } else {
             task = [self.session dataTaskWithRequest:transformRequest];
         }

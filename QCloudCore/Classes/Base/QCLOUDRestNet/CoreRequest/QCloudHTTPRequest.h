@@ -52,6 +52,11 @@ typedef void (^QCloudHTTPRequestConfigure)(QCloudRequestSerializer *_Nonnull req
 @property (nonatomic, strong , readonly) NSURL *_Nonnull downloadingTempURL;
 
 /**
+  * 是否禁止将下载的文件写入内存中（默认为NO）
+ */
+@property (nonatomic, assign) BOOL forbidenWirteToCahce;
+
+/**
  本地已经下载的数据偏移量，如果使用则会从改位置开始下载，如果不使用，则从头开始下载，如果您使用了Range参数，则需要注意改参数。
  */
 @property (nonatomic, assign) int64_t localCacheDownloadOffset;

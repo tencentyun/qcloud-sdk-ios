@@ -92,6 +92,9 @@
         }
     } else {
         @synchronized(_cacheData) {
+            if (_forbidenWirteToCache) {
+                return;
+            }
             [_cacheData appendData:data];
         }
     }

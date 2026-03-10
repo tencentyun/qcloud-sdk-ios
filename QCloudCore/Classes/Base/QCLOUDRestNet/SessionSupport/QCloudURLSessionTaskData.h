@@ -20,7 +20,9 @@
 @property (nonatomic, strong) NSHTTPURLResponse *response;
 @property (nonatomic, assign) BOOL isTaskCancelledByStatusCodeCheck;
 @property (nonatomic, strong, readonly) NSString *uploadTempFilePath;
+@property (nonatomic, strong) NSInputStream *bodyStream;
 @property (nonatomic, assign) BOOL forbidenWirteToFile;
+@property (nonatomic, assign) BOOL forbidenWirteToCache; /// 是否禁止写到缓存中（默认为NO）
 - (instancetype)init;
 - (instancetype)initWithDowndingFileHandler:(NSFileHandle *)fileHandler;
 - (void)restData;
