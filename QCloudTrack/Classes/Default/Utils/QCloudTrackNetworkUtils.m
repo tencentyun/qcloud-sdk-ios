@@ -15,7 +15,6 @@
 #import <SystemConfiguration/SCNetworkReachability.h>
 #import <sys/socket.h>
 #import <netinet/in.h>
-#import <netinet6/in6.h>
 #import <ifaddrs.h>
 #import <CFNetwork/CFNetwork.h>
 
