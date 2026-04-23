@@ -75,7 +75,9 @@ BOOL QCloudCheckIPVaild(NSString *ip) {
     if (QCloudCheckIPVaild(ip)) {
         [_hosts putDomain:domain ip:[ip stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" "]]];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:kQCloudHttpDNSCacheReady object:nil userInfo:@{ kQCloudHttpDNSHost : domain }];
+    if (domain) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:kQCloudHttpDNSCacheReady object:nil userInfo:@{ kQCloudHttpDNSHost : domain }];
+    }
     return YES;
 }
 

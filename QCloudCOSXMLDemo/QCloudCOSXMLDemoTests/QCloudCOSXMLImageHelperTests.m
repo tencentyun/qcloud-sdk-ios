@@ -2796,6 +2796,8 @@ static QCloudBucket *gImageTestBucket;
     request.input.Operation.Output.Bucket = @"tinna-media-1253960454";
     request.input.Operation.Output.Object = @"video_backgroud.${ext}";
     request.input.Operation.Output.AuObject = @"video_audio.${ext}";
+    request.input.Operation.Output.BassObject = @"bass_object.${ext}";
+    request.input.Operation.Output.DrumObject = @"drump_object.${ext}";
     request.input.CallBackFormat = @"XML";
     request.input.CallBackType = @"Url";
     

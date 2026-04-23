@@ -34,7 +34,7 @@ TODO: Add long description of the pod here.aaa
   s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
   s.ios.deployment_target = '10.0'
-  s.osx.deployment_target = "10.12"
+  s.osx.deployment_target = "10.13"
   s.static_framework = true
   s.default_subspec = 'Default'
   s.subspec 'Default' do |default|

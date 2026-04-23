@@ -163,6 +163,12 @@ NS_ASSUME_NONNULL_BEGIN
 /// 人声结果文件名，不能与 Object 同时为空
 @property (nonatomic,strong)NSString * AuObject;
 
+/// Bass 声结果文件名，是否必传：否;
+@property (nonatomic, strong) NSString *BassObject;
+
+/// 鼓声结果文件名，是否必传：否;
+@property (nonatomic, strong) NSString *DrumObject;
+
 @end
 
 @interface QCloudVoiceSeparate : NSObject
@@ -170,7 +176,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// 输出音频:
 /// IsAudio：输出人声
 /// IsBackground：输出背景声
-/// AudioAndBackground：输出人声和背景声
+//  IsAudio：输出人声
+//  IsBackground：输出背景声
+//  AudioAndBackground：输出人声和背景声
+//  MusicMode：输出人声、背景声、Bass 声、鼓声
 @property (nonatomic,strong)NSString * AudioMode;
 
 /// 音频配置
