@@ -89,6 +89,35 @@ static NSString * const kServiceStrategyConservative = @"strategy_conservative";
     return request;
 }
 
+#pragma mark - QCloudServiceConfiguration 测试
+
+- (void)testServiceConfiguration_DefaultDisableNetworkDetect {
+    QCloudServiceConfiguration *config = [QCloudServiceConfiguration new];
+
+    XCTAssertTrue(config.disableNetworkDetect);
+}
+
+- (void)testServiceConfiguration_CopyKeepsGlobalRedirectionAndNetworkDetect {
+    QCloudServiceConfiguration *config = [QCloudServiceConfiguration new];
+    config.appID = @"1253960454";
+    config.signatureProvider = (id<QCloudSignatureProvider>)self;
+    config.enableGlobalRedirection = YES;
+    config.disableNetworkDetect = NO;
+
+    QCloudCOSXMLEndPoint *endpoint = [[QCloudCOSXMLEndPoint alloc] init];
+    endpoint.regionName = @"ap-beijing";
+    config.endpoint = endpoint;
+
+    QCloudServiceConfiguration *copiedConfig = [config copy];
+
+    XCTAssertTrue(copiedConfig.enableGlobalRedirection);
+    XCTAssertFalse(copiedConfig.disableNetworkDetect);
+    XCTAssertEqualObjects(copiedConfig.appID, config.appID);
+    XCTAssertEqual(copiedConfig.signatureProvider, config.signatureProvider);
+    XCTAssertNotEqual(copiedConfig.endpoint, config.endpoint);
+    XCTAssertEqualObjects(copiedConfig.endpoint.regionName, config.endpoint.regionName);
+}
+
 #pragma mark - QCloudAbstractRequest+Quality 测试
 
 - (void)testNotifyError_WithURL {

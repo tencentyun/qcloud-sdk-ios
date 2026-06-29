@@ -21,6 +21,14 @@ NSString * QCloudRequestNetworkStrategyToString(QCloudRequestNetworkStrategy str
 }
 
 @implementation QCloudConfiguration
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _disableNetworkDetect = YES;
+    }
+    return self;
+}
+
 - (NSString *)userAgent {
     NSString * (^UserAgent)(NSString *productKey) = ^(NSString *productKey) {
         return [NSString stringWithFormat:@"%@-%@", productKey, self.productVersion];

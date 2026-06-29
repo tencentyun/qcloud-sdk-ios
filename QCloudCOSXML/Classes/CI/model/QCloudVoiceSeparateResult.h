@@ -174,8 +174,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface QCloudVoiceSeparate : NSObject
 
 /// 输出音频:
-/// IsAudio：输出人声
-/// IsBackground：输出背景声
 //  IsAudio：输出人声
 //  IsBackground：输出背景声
 //  AudioAndBackground：输出人声和背景声
