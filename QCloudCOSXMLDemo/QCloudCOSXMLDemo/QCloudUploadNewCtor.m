@@ -260,7 +260,7 @@
 //    op.is_pic_info = NO;
 //    QCloudPicOperationRule *rule = [[QCloudPicOperationRule alloc] init];
 //    rule.fileid = @"test";
-//    rule.imageURL = @"http://ci-1253653367.cos.ap-guangzhou.myqcloud.com/protection_blind_watermark_icon.png";
+//    rule.imageURL = @"http://ci-1253653367.cos.ap-guangzhou.<默认服务域名>/protection_blind_watermark_icon.png";
 //    rule.type = QCloudPicOperationRuleFull;
 //    rule.actionType =QCloudPicOperationRuleActionExtrac;
 //    op.rule = @[ rule ];

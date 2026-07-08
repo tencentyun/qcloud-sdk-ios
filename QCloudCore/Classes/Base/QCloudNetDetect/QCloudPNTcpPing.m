@@ -8,6 +8,8 @@
 
 #import "QCloudPNTcpPing.h"
 #import <arpa/inet.h>
+#import <errno.h>
+#import <fcntl.h>
 #import <netdb.h>
 #import <netinet/in.h>
 #import <sys/socket.h>
@@ -55,15 +57,6 @@
 @end
 
 
-static QCloudPNTcpPing *g_tcpPing = nil;
-void tcp_conn_handler()
-{
-    if (g_tcpPing) {
-        [g_tcpPing processLongConn];
-    }
-}
-
-
 @interface QCloudPNTcpPing()
 {
     struct sockaddr_in addr;
@@ -91,6 +84,7 @@ void tcp_conn_handler()
         _port = port;
         _count = count;
         _complete = complete;
+        sock = -1;
         _isStop = NO;
         _isSucc = YES;
     }
@@ -109,7 +103,6 @@ void tcp_conn_handler()
              complete:(QCloudPNTcpPingHandler _Nonnull)complete
 {
     QCloudPNTcpPing *tcpPing = [[QCloudPNTcpPing alloc] init:host port:port count:count complete:complete];
-    g_tcpPing = tcpPing;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [tcpPing sendAndRec];
     });
@@ -149,7 +142,7 @@ void tcp_conn_handler()
             [_pingDetails appendString:[NSString stringWithFormat:@"connect failed to %s:%lu, %f ms, error %d\n",inet_ntoa(addr.sin_addr), (unsigned long)_port, conn_time * 1000, r]];
             loss++;
         }
-        _complete(_pingDetails);
+        _complete([_pingDetails mutableCopy]);
         if (index < _count && !_isStop && r == 0) {
             usleep(1000*100);
         }
@@ -168,7 +161,7 @@ void tcp_conn_handler()
             QCloudPNTcpPingResult *pingRes  = [self constPingRes:code ip:ip durations:intervals loss:loss count:index];
             [self.pingDetails appendString:pingRes.description];
         }
-        self.complete(self.pingDetails);
+        self.complete([self.pingDetails mutableCopy]);
         free(intervals);
     });
 }
@@ -176,7 +169,10 @@ void tcp_conn_handler()
 
 - (void)processLongConn
 {
-    close(sock);
+    if (sock >= 0) {
+        close(sock);
+        sock = -1;
+    }
     _isStop = YES;
     _isSucc = NO;
 }
@@ -190,25 +186,49 @@ void tcp_conn_handler()
     setsockopt(sock, SOL_SOCKET, SO_NOSIGPIPE, &on, sizeof(on));
     setsockopt(sock, IPPROTO_TCP, TCP_NODELAY, (char *)&on, sizeof(on));
     
-    struct timeval timeout;
-    timeout.tv_sec = 10;
-    timeout.tv_usec = 0;
-    setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout));
-    setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout, sizeof(timeout));
-    
-    sigset(SIGALRM, tcp_conn_handler);
-    alarm(1);
-    int conn_res = connect(sock, (struct sockaddr *)addr, sizeof(struct sockaddr));
-    alarm(0);
-    sigrelse(SIGALRM);
-    
-    if (conn_res < 0) {
+    int flags = fcntl(sock, F_GETFL, 0);
+    if (flags == -1 || fcntl(sock, F_SETFL, flags | O_NONBLOCK) == -1) {
         int err = errno;
         close(sock);
+        sock = -1;
         return err;
     }
+    
+    int conn_res = connect(sock, (struct sockaddr *)addr, sizeof(struct sockaddr));
+    if (conn_res == 0) {
+        close(sock);
+        sock = -1;
+        return 0;
+    }
+
+    int err = errno;
+    if (err != EINPROGRESS) {
+        close(sock);
+        sock = -1;
+        return err;
+    }
+
+    fd_set writefds;
+    FD_ZERO(&writefds);
+    FD_SET(sock, &writefds);
+    struct timeval timeout;
+    timeout.tv_sec = 1;
+    timeout.tv_usec = 0;
+    conn_res = select(sock + 1, NULL, &writefds, NULL, &timeout);
+    if (conn_res > 0 && FD_ISSET(sock, &writefds)) {
+        socklen_t len = sizeof(err);
+        if (getsockopt(sock, SOL_SOCKET, SO_ERROR, &err, &len) < 0) {
+            err = errno;
+        }
+    } else if (conn_res == 0) {
+        err = ETIMEDOUT;
+    } else {
+        err = errno;
+    }
+
     close(sock);
-    return 0;
+    sock = -1;
+    return err;
 }
 
 - (NSString *)convertDomainToIp:(NSString *)host
@@ -227,7 +247,7 @@ void tcp_conn_handler()
         struct hostent *remoteHost = gethostbyname(hostaddr);
         if (remoteHost == NULL || remoteHost->h_addr == NULL) {
             [_pingDetails appendString:[NSString stringWithFormat:@"access %@ DNS error..\n",host]];
-            _complete(_pingDetails);
+            _complete([_pingDetails mutableCopy]);
             return NULL;
         }
         addr.sin_addr = *(struct in_addr *)remoteHost->h_addr;

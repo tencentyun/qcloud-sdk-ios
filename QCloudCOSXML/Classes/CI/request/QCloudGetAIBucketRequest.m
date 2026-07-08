@@ -61,7 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
         scheme = @"https://";
     }
 
-    NSURL *__serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@ci.%@.myqcloud.com",scheme,self.regionName]];
+    NSURL *__serverURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@ci.%@.%@",scheme,self.regionName,QCloudDomainMyQCloud()]];
     self.requestData.serverURL = __serverURL.absoluteString;
     
     [self.requestData setValue:__serverURL.host forHTTPHeaderField:@"Host"];

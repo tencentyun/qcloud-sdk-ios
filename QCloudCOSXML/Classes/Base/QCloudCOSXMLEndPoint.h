@@ -22,7 +22,7 @@
 @property (nonatomic, copy) QCloudRegion regionName;
 @property (nonatomic, assign) BOOL isPrefixURL;
 /**
- 服务的基础名称, 默认值为:  myqcloud.com
+ 服务的基础名称，默认值为 COS 默认服务域名
  */
 @property (nonatomic, copy) QCloudServiceName serviceName;
 

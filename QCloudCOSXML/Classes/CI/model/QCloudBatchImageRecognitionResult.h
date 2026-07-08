@@ -144,7 +144,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong)NSString * Object;
 
 ///  图片文件的链接地址，
-///  例如 http://a-1250000.cos.ap-shanghai.myqcloud.com/image.jpg。Object 和 Url 只能选择其中一种。
+///  例如默认 COS 服务域名下的图片文件 URL。Object 和 Url 只能选择其中一种。
 @property (nonatomic,strong)NSString * Url;
 
 /// 图片文件的内容，需要先经过 base64 编码。Content，Object 和 Url 只能选择其中一种，传入多个时仅一个生效，按 Content，Object， Url 顺序。

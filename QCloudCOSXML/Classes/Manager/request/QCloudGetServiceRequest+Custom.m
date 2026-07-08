@@ -31,6 +31,7 @@
 
 #import "QCloudGetServiceRequest+Custom.h"
 #import "QCloudCOSXMLEndPoint.h"
+
 @implementation QCloudGetServiceRequest (Custom)
 - (BOOL)customBuildRequestData:(NSError *__autoreleasing *)error {
     if (![super customBuildRequestData:error]) {
@@ -38,8 +39,8 @@
     }
    
     NSString *scheme = self.runOnService.configuration.endpoint.useHTTPS ? @"https" : @"http";
-    self.requestData.serverURL = [NSString stringWithFormat:@"%@://service.cos.myqcloud.com", scheme];
-    if (![self.runOnService.configuration.endpoint.serviceName isEqualToString:@"myqcloud.com"]) {
+    self.requestData.serverURL = [NSString stringWithFormat:@"%@://service.cos.%@", scheme, QCloudDomainMyQCloud()];
+    if (![self.runOnService.configuration.endpoint.serviceName isEqualToString:QCloudDomainMyQCloud()]) {
         if (self.runOnService.configuration.endpoint.regionName) {
             self.requestData.serverURL =
                 [NSString stringWithFormat:@"%@://service.cos.%@.%@", scheme, self.runOnService.configuration.endpoint.regionName,

@@ -44,7 +44,7 @@
 //        NSLog(@"%@",pingres);
 //    }];
     
-//    [[PhoneNetManager shareInstance] netStartTraceroute:@"mobile-1253960454.cos.ap-guangzhou.myqcloud.com" tracerouteResultHandler:^(NSString * _Nullable tracertRes, NSString * _Nullable destIp) {
+//    [[PhoneNetManager shareInstance] netStartTraceroute:@"mobile-1253960454.cos.ap-guangzhou.<默认服务域名>" tracerouteResultHandler:^(NSString * _Nullable tracertRes, NSString * _Nullable destIp) {
 //        NSLog(@"%@_%@",tracertRes,destIp);
 //     }];
     

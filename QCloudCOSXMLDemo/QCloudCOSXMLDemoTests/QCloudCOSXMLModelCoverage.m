@@ -168,6 +168,44 @@
 #import "QCloudPostVoiceSynthesisResponse.h"
 #import "QCloudRecognitionQRcodeResponse.h"
 #import "QCloudGetSearchImageResponse.h"
+#import "QCloudBatchimageRecognitionRequest.h"
+#import "QCloudGetGenerateSnapshotRequest.h"
+#import "QCloudPostBucketInventoryRequest.h"
+#import "QCloudCommonRequest.h"
+#import "QCloudGetPresignedURLRequest.h"
+#import "QCloudPostVideoTagResult.h"
+#import "QCloudPostSpeechRecognitionResponse.h"
+#import "QCloudPostVideoTargetRecResponse.h"
+#import "QCloudWorkflowexecutionResult.h"
+#import "QCloudBatchImageRecognitionResult.h"
+#import "QCloudVideoRecognitionResult.h"
+#import "QCloudPostVideoRecognitionRequest.h"
+#import "QCloudPostAudioRecognitionRequest.h"
+#import "QCloudGetDiscernMediaJobsRequest.h"
+#import "QCloudSyncImageRecognitionRequest.h"
+#import "QCloudCIPicRecognitionRequest.h"
+#import "QCloudPutBucketRefererRequest.h"
+#import "QCloudCICommonModel.h"
+#import "QCloudGetFilePreviewHtmlRequest.h"
+#import "QCloudCICloudDataOperationsRequest.h"
+#import "QCloudCIFaceEffectRequest.h"
+#import "QCloudGetMediaInfoRequest.h"
+#import "QCloudCancelLiveVideoRecognitionRequest.h"
+#import "QCloudGetPrivateM3U8Request.h"
+#import "QCloudGetAudioDiscernOpenBucketListRequest.h"
+#import "QCloudPostTextRecognitionRequest.h"
+#import "QCloudGetGenerateSnapshotRequest.h"
+#import "QCloudBatchGetAudioDiscernTaskRequest.h"
+#import "QCloudCIUploadOperationsRequest.h"
+#import "QCloudPutObjectWatermarkRequest.h"
+#import "QCloudBucketRefererInfo.h"
+#import "QCloudPostBucketInventoryRequest.h"
+
+static NSString * const kQCloudModelCoverageServiceKey = @"model_coverage_service";
+
+static NSString *QCloudModelCOSHost(NSString *bucket, NSString *region) {
+    return [NSString stringWithFormat:@"%@.cos.%@.%@", bucket, region, QCloudDomainMyQCloud()];
+}
 
 @interface QCloudCOSXMLModelCoverage : XCTestCase
 
@@ -177,6 +215,18 @@
 
 - (void)setUp {
     // Put setup code here. This method is called before the invocation of each test method in the class.
+}
+
+- (QCloudCOSXMLService *)modelCoverageService {
+    if (![QCloudCOSXMLService hasCosxmlServiceForKey:kQCloudModelCoverageServiceKey]) {
+        QCloudServiceConfiguration *configuration = [QCloudServiceConfiguration new];
+        configuration.appID = @"1253960454";
+        QCloudCOSXMLEndPoint *endpoint = [[QCloudCOSXMLEndPoint alloc] init];
+        endpoint.regionName = @"ap-beijing";
+        configuration.endpoint = endpoint;
+        [QCloudCOSXMLService registerCOSXMLWithConfiguration:configuration withKey:kQCloudModelCoverageServiceKey];
+    }
+    return [QCloudCOSXMLService cosxmlServiceForKey:kQCloudModelCoverageServiceKey];
 }
 
 - (void)tearDown {
@@ -3348,7 +3398,7 @@
     // 测试属性设置和获取
     QCloudCIOriginalInfo *obj = [QCloudCIOriginalInfo new];
     obj.key = @"test-image.jpg";
-    obj.location = @"bucket-1250000000.cos.ap-guangzhou.myqcloud.com/test-image.jpg";
+    obj.location = [NSString stringWithFormat:@"%@/test-image.jpg", QCloudModelCOSHost(@"bucket-1250000000", @"ap-guangzhou")];
     
     QCloudCIImageInfo *imageInfo = [QCloudCIImageInfo new];
     imageInfo.format = @"jpeg";
@@ -3357,7 +3407,8 @@
     obj.imageInfo = imageInfo;
     
     XCTAssertEqualObjects(obj.key, @"test-image.jpg");
-    XCTAssertEqualObjects(obj.location, @"bucket-1250000000.cos.ap-guangzhou.myqcloud.com/test-image.jpg");
+    NSString *expectedLocation = [NSString stringWithFormat:@"%@/test-image.jpg", QCloudModelCOSHost(@"bucket-1250000000", @"ap-guangzhou")];
+    XCTAssertEqualObjects(obj.location, expectedLocation);
     XCTAssertEqualObjects(obj.imageInfo.format, @"jpeg");
     XCTAssertEqualObjects(obj.imageInfo.width, @"1920");
     XCTAssertEqualObjects(obj.imageInfo.height, @"1080");
@@ -3373,9 +3424,10 @@
     XCTAssertNil(result);
     
     // 测试 modelCustomWillTransformFromDictionary - 有效字典
+    NSString *inputLocation = [NSString stringWithFormat:@"%@/original.png", QCloudModelCOSHost(@"bucket", @"ap-beijing")];
     NSDictionary *inputDict = @{
         @"Key": @"original.png",
-        @"Location": @"bucket.cos.ap-beijing.myqcloud.com/original.png",
+        @"Location": inputLocation,
         @"ImageInfo": @{@"Format": @"png", @"Width": @"800", @"Height": @"600"}
     };
     result = [obj performSelector:@selector(modelCustomWillTransformFromDictionary:) withObject:inputDict];
@@ -3777,6 +3829,1261 @@
     NSDictionary *emptyDict = @{};
     NSDictionary *result = [obj performSelector:@selector(modelCustomWillTransformFromDictionary:) withObject:emptyDict];
     XCTAssertNotNil(result);
+}
+
+- (void)testLowCoverageCIRequestsBuildValidRequestData {
+    QCloudCOSXMLService *service = [self modelCoverageService];
+    NSError *error = nil;
+
+    QCloudPostVideoRecognitionRequest *videoRequest = [QCloudPostVideoRecognitionRequest new];
+    videoRequest.runOnService = service;
+    videoRequest.bucket = @"video-bucket-1253960454";
+    videoRequest.object = @"media/video.mp4";
+    videoRequest.mode = QCloudVideoRecognitionModeFps;
+    videoRequest.timeInterval = 1;
+    videoRequest.count = 3;
+    videoRequest.detectContent = YES;
+    videoRequest.dataId = @"video-data-id";
+    videoRequest.userInfo = [QCloudBatchRecognitionUserInfo new];
+    videoRequest.Encryption = [QCloudBatchRecognitionEncryption new];
+    videoRequest.pornScore = 80;
+    videoRequest.adsScore = 70;
+    videoRequest.terrorismScore = 60;
+    videoRequest.politicsScore = 50;
+    videoRequest.callback = @"https://callback.example.com/video";
+    videoRequest.bizType = @"video-biz";
+    videoRequest.callbackType = 2;
+    XCTAssertTrue([videoRequest buildRequestData:&error]);
+    XCTAssertNil(error);
+    XCTAssertTrue([videoRequest.requestData.serverURL containsString:@".ci."]);
+    XCTAssertTrue([videoRequest.requestData.URIComponents containsObject:@"video/auditing"]);
+    NSDictionary *videoPayload = [videoRequest.requestData paramterForKey:@"Request"];
+    XCTAssertEqualObjects(videoPayload[@"Input"][@"Object"], @"media/video.mp4");
+    XCTAssertEqualObjects(videoPayload[@"Conf"][@"Snapshot"][@"Mode"], @"Fps");
+    XCTAssertEqualObjects(videoPayload[@"Conf"][@"Freeze"][@"PornScore"], @"80");
+    XCTAssertEqualObjects(videoPayload[@"Conf"][@"Callback"], @"https://callback.example.com/video");
+
+    QCloudPostVideoRecognitionRequest *urlVideoRequest = [QCloudPostVideoRecognitionRequest new];
+    urlVideoRequest.runOnService = service;
+    urlVideoRequest.bucket = @"video-bucket-1253960454";
+    urlVideoRequest.url = @"https://example.com/video.mp4";
+    urlVideoRequest.mode = QCloudVideoRecognitionModeAverage;
+    urlVideoRequest.count = 1;
+    XCTAssertTrue([urlVideoRequest buildRequestData:&error]);
+    NSDictionary *urlVideoPayload = [urlVideoRequest.requestData paramterForKey:@"Request"];
+    XCTAssertEqualObjects(urlVideoPayload[@"Input"][@"Url"], @"https://example.com/video.mp4");
+
+    QCloudBatchRecognitionImageInfo *imageInfo = [QCloudBatchRecognitionImageInfo new];
+    imageInfo.Url = @"https://example.com/image.jpg";
+    imageInfo.Object = @"images/object.jpg";
+    imageInfo.Content = @"base64-content";
+    imageInfo.Interval = 2;
+    imageInfo.MaxFrames = 5;
+    imageInfo.LargeImageDetect = 1;
+    imageInfo.DataId = @"image-data-id";
+    imageInfo.UserInfo = [QCloudBatchRecognitionUserInfo new];
+    imageInfo.Encryption = [QCloudBatchRecognitionEncryption new];
+
+    QCloudBatchimageRecognitionRequest *batchImageRequest = [QCloudBatchimageRecognitionRequest new];
+    batchImageRequest.runOnService = service;
+    batchImageRequest.bucket = @"image-bucket-1253960454";
+    batchImageRequest.input = @[imageInfo];
+    batchImageRequest.bizType = @"image-biz";
+    batchImageRequest.async = YES;
+    batchImageRequest.callback = @"https://callback.example.com/image";
+    batchImageRequest.callbackType = 2;
+    batchImageRequest.pornScore = 11;
+    batchImageRequest.adsScore = 22;
+    batchImageRequest.terrorismScore = 33;
+    batchImageRequest.politicsScore = 44;
+    XCTAssertTrue([batchImageRequest buildRequestData:&error]);
+    XCTAssertTrue([batchImageRequest.requestData.serverURL containsString:@".ci."]);
+    XCTAssertTrue([batchImageRequest.requestData.URIComponents containsObject:@"image/auditing"]);
+    NSDictionary *imagePayload = [batchImageRequest.requestData paramterForKey:@"Request"];
+    NSDictionary *firstInput = [imagePayload[@"Input"] firstObject];
+    XCTAssertEqualObjects(firstInput[@"Url"], @"https://example.com/image.jpg");
+    XCTAssertEqualObjects(firstInput[@"Object"], @"images/object.jpg");
+    XCTAssertEqualObjects(imagePayload[@"Conf"][@"BizType"], @"image-biz");
+    XCTAssertEqualObjects(imagePayload[@"Conf"][@"Freeze"][@"AdsScore"], @"22");
+}
+
+- (void)testLowCoverageManagerRequestsBuildValidRequestData {
+    QCloudCOSXMLService *service = [self modelCoverageService];
+    NSError *error = nil;
+
+    QCloudGetGenerateSnapshotRequest *snapshotRequest = [QCloudGetGenerateSnapshotRequest new];
+    snapshotRequest.runOnService = service;
+    snapshotRequest.bucket = @"media-bucket-1253960454";
+    snapshotRequest.object = @"video/source.mp4";
+    snapshotRequest.generateSnapshotConfiguration = [QCloudGenerateSnapshotConfiguration new];
+    snapshotRequest.generateSnapshotConfiguration.time = 3.5;
+    snapshotRequest.generateSnapshotConfiguration.width = 640;
+    snapshotRequest.generateSnapshotConfiguration.height = 360;
+    snapshotRequest.generateSnapshotConfiguration.format = QCloudGenerateSnapshotFormatJPG;
+    snapshotRequest.generateSnapshotConfiguration.rotate = QCloudGenerateSnapshotRotateTypeAuto;
+    snapshotRequest.generateSnapshotConfiguration.mode = QCloudGenerateSnapshotModeExactframe;
+    XCTAssertTrue([snapshotRequest buildRequestData:&error]);
+    XCTAssertEqualObjects(snapshotRequest.requestData.queryParamters[@"ci-process"], @"snapshot");
+    XCTAssertEqualObjects(snapshotRequest.requestData.queryParamters[@"width"], @"640");
+    XCTAssertTrue([snapshotRequest.requestData.URIComponents containsObject:@"video/source.mp4"]);
+
+    QCloudPostBucketInventoryRequest *inventoryRequest = [QCloudPostBucketInventoryRequest new];
+    inventoryRequest.runOnService = service;
+    inventoryRequest.bucket = @"inventory-bucket-1253960454";
+    inventoryRequest.inventoryID = @"inventory-id";
+    QCloudInventoryConfiguration *inventoryConfiguration = [QCloudInventoryConfiguration new];
+    inventoryConfiguration.identifier = @"inventory-id";
+    inventoryConfiguration.isEnabled = @"True";
+    inventoryConfiguration.includedObjectVersions = QCloudCOSIncludedObjectVersionsAll;
+    inventoryRequest.inventoryConfiguration = inventoryConfiguration;
+    XCTAssertTrue([inventoryRequest buildRequestData:&error]);
+    XCTAssertEqualObjects(inventoryRequest.requestData.URIMethod, @"inventory");
+    XCTAssertEqualObjects(inventoryRequest.requestData.queryParamters[@"id"], @"inventory-id");
+    XCTAssertNotNil([inventoryRequest.requestData paramterForKey:@"InventoryConfiguration"]);
+
+    QCloudCommonRequest *jsonRequest = [QCloudCommonRequest new];
+    jsonRequest.URL = @"https://example.com/common";
+    jsonRequest.method = @"post";
+    jsonRequest.headers = @{@"x-cos-meta-test": @"header-value"};
+    jsonRequest.queries = @{@"page": @"1"};
+    jsonRequest.body = @{@"name": @"cos"};
+    jsonRequest.requestContentType = QCloudContentJSON;
+    jsonRequest.responseContentType = QCloudContentJSON;
+    jsonRequest.responseContentClass = NSDictionary.class;
+    XCTAssertTrue([jsonRequest buildRequestData:&error]);
+    XCTAssertFalse(jsonRequest.requestData.needChangeHost);
+    XCTAssertEqualObjects(jsonRequest.requestData.serverURL, @"https://example.com/common");
+    XCTAssertEqualObjects([jsonRequest.requestData valueForHttpKey:@"Host"], @"example.com");
+    XCTAssertEqualObjects([jsonRequest.requestData valueForHttpKey:@"x-cos-meta-test"], @"header-value");
+    XCTAssertEqualObjects(jsonRequest.requestData.queryParamters[@"page"], @"1");
+    XCTAssertNotNil(jsonRequest.requestData.directBody);
+
+    QCloudCommonRequest *streamRequest = [QCloudCommonRequest new];
+    streamRequest.URL = @"https://example.com/upload";
+    streamRequest.body = [@"stream-body" dataUsingEncoding:NSUTF8StringEncoding];
+    streamRequest.responseContentType = QCloudContentStream;
+    XCTAssertTrue([streamRequest buildRequestData:&error]);
+    XCTAssertEqualObjects(streamRequest.requestData.directBody, streamRequest.body);
+}
+
+- (void)testLowCoveragePresignedURLBuildURLRequestBranches {
+    QCloudGetPresignedURLRequest *request = [QCloudGetPresignedURLRequest new];
+    NSError *error = nil;
+    XCTAssertNil([request buildURLRequest:&error]);
+    XCTAssertNotNil(error);
+
+    QCloudCOSXMLService *service = [self modelCoverageService];
+    request.runOnService = service;
+    request.bucket = @"presigned-bucket-1253960454";
+    error = nil;
+    XCTAssertNil([request buildURLRequest:&error]);
+    XCTAssertNotNil(error);
+
+    request.object = @"dir/中文 文件.txt";
+    request.HTTPMethod = @"GET";
+    [request setValue:@"text/plain" forRequestHeader:@"Content-Type"];
+    [request setValue:@"content-md5" forRequestHeader:@"Content-MD5"];
+    [request setValue:@"bar" forRequestParameter:@"foo"];
+    [request setURICompnent:@"acl"];
+    error = nil;
+    NSURLRequest *urlRequest = [request buildURLRequest:&error];
+    XCTAssertNil(error);
+    XCTAssertEqualObjects(urlRequest.HTTPMethod, @"GET");
+    XCTAssertEqualObjects([urlRequest valueForHTTPHeaderField:@"Content-Type"], @"text/plain");
+    XCTAssertEqualObjects(request.contentType, @"text/plain");
+    XCTAssertEqualObjects(request.contentMD5, @"content-md5");
+    XCTAssertTrue([urlRequest.URL.absoluteString containsString:@"acl"]);
+    XCTAssertTrue([urlRequest.URL.absoluteString containsString:@"foo=bar"]);
+    XCTAssertTrue([request.requestHeaders[@"host"] containsString:@"cos.ap-beijing"]);
+
+    request.signHost = NO;
+    [request setValue:nil forRequestHeader:@"host"];
+    NSURLRequest *unsignedHostRequest = [request buildURLRequest:&error];
+    XCTAssertNotNil(unsignedHostRequest);
+    XCTAssertNil(request.requestHeaders[@"host"]);
+}
+
+#pragma mark - CI Model Serialization Coverage
+
+static NSDictionary *qcloudGenericClass(Class cls) {
+    return [cls performSelector:@selector(modelContainerPropertyGenericClass)];
+}
+
+static NSDictionary *qcloudTransform(id obj, NSDictionary *dict) {
+    return [obj performSelector:@selector(modelCustomWillTransformFromDictionary:) withObject:dict];
+}
+
+- (void)testCICommonModelSerialization {
+    QCloudMediaResultOutputFile *outputFile = [QCloudMediaResultOutputFile new];
+    NSDictionary *outputFileGeneric = qcloudGenericClass([QCloudMediaResultOutputFile class]);
+    XCTAssertNotNil(outputFileGeneric[@"Md5Info"]);
+
+    NSDictionary *singleMd5 = @{@"Md5Info": @{@"key": @"val"}};
+    NSDictionary *result = qcloudTransform(outputFile, singleMd5);
+    XCTAssertTrue([result[@"Md5Info"] isKindOfClass:[NSArray class]]);
+
+    NSDictionary *arrayMd5 = @{@"Md5Info": @[@{@"key": @"val"}]};
+    NSDictionary *arrayResult = qcloudTransform(outputFile, arrayMd5);
+    XCTAssertTrue([arrayResult[@"Md5Info"] isKindOfClass:[NSArray class]]);
+
+    XCTAssertNil(qcloudTransform(outputFile, nil));
+    XCTAssertNil(qcloudTransform(outputFile, @"notdict"));
+
+    QCloudCreateWorkflowResponseMediaWorkflow *workflow = [QCloudCreateWorkflowResponseMediaWorkflow new];
+    NSDictionary *singleTopology = @{@"Topology": @{@"key": @"val"}};
+    NSDictionary *workflowResult = qcloudTransform(workflow, singleTopology);
+    XCTAssertTrue([workflowResult[@"Topology"] isKindOfClass:[NSArray class]]);
+    XCTAssertNil(qcloudTransform(workflow, nil));
+    XCTAssertNil(qcloudTransform(workflow, @"notdict"));
+
+    QCloudFileListContents *fileList = [QCloudFileListContents new];
+    NSDictionary *singleContent = @{@"Contents": @{@"key": @"val"}};
+    NSDictionary *fileResult = qcloudTransform(fileList, singleContent);
+    XCTAssertTrue([fileResult[@"Contents"] isKindOfClass:[NSArray class]]);
+    XCTAssertNil(qcloudTransform(fileList, nil));
+
+    QCloudTemplateContainer *templateContainer = [QCloudTemplateContainer new];
+    NSDictionary *tcGeneric = qcloudGenericClass([QCloudTemplateContainer class]);
+    XCTAssertNotNil(tcGeneric[@"ClipConfig"]);
+
+    QCloudContainerTransConfig *transConfig = [QCloudContainerTransConfig new];
+    NSDictionary *tcGeneric2 = qcloudGenericClass([QCloudContainerTransConfig class]);
+    XCTAssertNotNil(tcGeneric2[@"HlsEncrypt"]);
+    XCTAssertNotNil(tcGeneric2[@"DashEncrypt"]);
+
+    QCloudContainerSnapshot *snapshot = [QCloudContainerSnapshot new];
+    NSDictionary *snapGeneric = qcloudGenericClass([QCloudContainerSnapshot class]);
+    XCTAssertNotNil(snapGeneric[@"SpriteSnapshotConfig"]);
+
+    QCloudQueueList *queueList = [QCloudQueueList new];
+    NSDictionary *qlGeneric = qcloudGenericClass([QCloudQueueList class]);
+    XCTAssertNotNil(qlGeneric[@"NotifyConfig"]);
+
+    QCloudJobsDetailMix *jobsDetailMix = [QCloudJobsDetailMix new];
+    NSDictionary *jdmGeneric = qcloudGenericClass([QCloudJobsDetailMix class]);
+    XCTAssertNotNil(jdmGeneric[@"EffectConfig"]);
+
+    QCloudInputPostTranscodeWatermark *watermark = [QCloudInputPostTranscodeWatermark new];
+    NSDictionary *wGeneric = qcloudGenericClass([QCloudInputPostTranscodeWatermark class]);
+    XCTAssertNotNil(wGeneric[@"SlideConfig"]);
+    XCTAssertNotNil(wGeneric[@"Image"]);
+    XCTAssertNotNil(wGeneric[@"Text"]);
+
+    QCloudAudioMix *audioMix = [QCloudAudioMix new];
+    NSDictionary *amGeneric = qcloudGenericClass([QCloudAudioMix class]);
+    XCTAssertNotNil(amGeneric[@"EffectConfig"]);
+
+    QCloudCreateWorkflowMediaWorkflow *createWorkflow = [QCloudCreateWorkflowMediaWorkflow new];
+    NSDictionary *cwGeneric = qcloudGenericClass([QCloudCreateWorkflowMediaWorkflow class]);
+    XCTAssertNotNil(cwGeneric[@"Topology"]);
+
+    QCloudNoiseReductionTempleteResponseTemplate *nrTemplate = [QCloudNoiseReductionTempleteResponseTemplate new];
+    NSDictionary *nrGeneric = qcloudGenericClass([QCloudNoiseReductionTempleteResponseTemplate class]);
+    XCTAssertNotNil(nrGeneric[@"NoiseReduction"]);
+
+    QCloudSpeechRecognitionTempleteResponseTemplate *srTemplate = [QCloudSpeechRecognitionTempleteResponseTemplate new];
+    NSDictionary *srGeneric = qcloudGenericClass([QCloudSpeechRecognitionTempleteResponseTemplate class]);
+    XCTAssertNotNil(srGeneric[@"SpeechRecognition"]);
+
+    QCloudVideoTargetTempleteResponseTemplate *vtTemplate = [QCloudVideoTargetTempleteResponseTemplate new];
+    NSDictionary *vtGeneric = qcloudGenericClass([QCloudVideoTargetTempleteResponseTemplate class]);
+    XCTAssertNotNil(vtGeneric[@"VideoTargetRec"]);
+
+    QCloudVoiceSeparateTempleteResponseTemplate *vsTemplate = [QCloudVoiceSeparateTempleteResponseTemplate new];
+    NSDictionary *vsGeneric = qcloudGenericClass([QCloudVoiceSeparateTempleteResponseTemplate class]);
+    XCTAssertNotNil(vsGeneric[@"VoiceSeparate"]);
+
+    QCloudVoiceSynthesisTempleteResponseTemplate *vstTemplate = [QCloudVoiceSynthesisTempleteResponseTemplate new];
+    NSDictionary *vstGeneric = qcloudGenericClass([QCloudVoiceSynthesisTempleteResponseTemplate class]);
+    XCTAssertNotNil(vstGeneric[@"TtsTpl"]);
+
+    QCloudPostFileUnzipProcessJobResponseJobsDetail *unzipDetail = [QCloudPostFileUnzipProcessJobResponseJobsDetail new];
+    NSDictionary *udGeneric = qcloudGenericClass([QCloudPostFileUnzipProcessJobResponseJobsDetail class]);
+    XCTAssertNotNil(udGeneric[@"Input"]);
+    XCTAssertNotNil(udGeneric[@"Operation"]);
+
+    QCloudPostFileUnzipProcessJobResponseOperation *unzipOp = [QCloudPostFileUnzipProcessJobResponseOperation new];
+    NSDictionary *uoGeneric = qcloudGenericClass([QCloudPostFileUnzipProcessJobResponseOperation class]);
+    XCTAssertNotNil(uoGeneric[@"Output"]);
+    XCTAssertNotNil(uoGeneric[@"FileUncompressConfig"]);
+    XCTAssertNotNil(uoGeneric[@"FileUncompressResult"]);
+
+    QCloudFileUncompressConfig *uncompressConfig = [QCloudFileUncompressConfig new];
+    NSDictionary *ucGeneric = qcloudGenericClass([QCloudFileUncompressConfig class]);
+    XCTAssertNotNil(ucGeneric[@"DownloadConfig"]);
+
+    QCloudCreateFileZipProcessJobsResponseJobsDetail *zipDetail = [QCloudCreateFileZipProcessJobsResponseJobsDetail new];
+    NSDictionary *zdGeneric = qcloudGenericClass([QCloudCreateFileZipProcessJobsResponseJobsDetail class]);
+    XCTAssertNotNil(zdGeneric[@"Operation"]);
+
+    QCloudCreateFileZipProcessJobsResponseOperation *zipOp = [QCloudCreateFileZipProcessJobsResponseOperation new];
+    NSDictionary *zoGeneric = qcloudGenericClass([QCloudCreateFileZipProcessJobsResponseOperation class]);
+    XCTAssertNotNil(zoGeneric[@"Output"]);
+    XCTAssertNotNil(zoGeneric[@"FileCompressConfig"]);
+    XCTAssertNotNil(zoGeneric[@"FileCompressResult"]);
+
+    QCloudPostHashProcessJobsResponseJobsDetail *hashDetail = [QCloudPostHashProcessJobsResponseJobsDetail new];
+    NSDictionary *hdGeneric = qcloudGenericClass([QCloudPostHashProcessJobsResponseJobsDetail class]);
+    XCTAssertNotNil(hdGeneric[@"Input"]);
+    XCTAssertNotNil(hdGeneric[@"Operation"]);
+
+    QCloudPostHashProcessJobsResponseOperation *hashOp = [QCloudPostHashProcessJobsResponseOperation new];
+    NSDictionary *hoGeneric = qcloudGenericClass([QCloudPostHashProcessJobsResponseOperation class]);
+    XCTAssertNotNil(hoGeneric[@"FileHashCodeConfig"]);
+    XCTAssertNotNil(hoGeneric[@"FileHashCodeResult"]);
+}
+
+- (void)testPostVideoTagResultSerialization {
+    QCloudPostVideoTagResult *result = [QCloudPostVideoTagResult new];
+    NSDictionary *generic = qcloudGenericClass([QCloudPostVideoTagResult class]);
+    XCTAssertNotNil(generic[@"JobsDetail"]);
+
+    QCloudPostVideoTagResultJobsDetail *jobsDetail = [QCloudPostVideoTagResultJobsDetail new];
+    NSDictionary *jdGeneric = qcloudGenericClass([QCloudPostVideoTagResultJobsDetail class]);
+    XCTAssertNotNil(jdGeneric[@"Input"]);
+    XCTAssertNotNil(jdGeneric[@"Operation"]);
+
+    QCloudPostVideoTagResultOperation *operation = [QCloudPostVideoTagResultOperation new];
+    NSDictionary *opGeneric = qcloudGenericClass([QCloudPostVideoTagResultOperation class]);
+    XCTAssertNotNil(opGeneric[@"VideoTag"]);
+    XCTAssertNotNil(opGeneric[@"VideoTagResult"]);
+
+    QCloudPostVideoTagResultVideoTagResult *videoTagResult = [QCloudPostVideoTagResultVideoTagResult new];
+    NSDictionary *vtrGeneric = qcloudGenericClass([QCloudPostVideoTagResultVideoTagResult class]);
+    XCTAssertNotNil(vtrGeneric[@"StreamData"]);
+
+    QCloudPostVideoTagResultStreamData *streamData = [QCloudPostVideoTagResultStreamData new];
+    NSDictionary *sdGeneric = qcloudGenericClass([QCloudPostVideoTagResultStreamData class]);
+    XCTAssertNotNil(sdGeneric[@"Data"]);
+
+    QCloudPostVideoTagResultData *data = [QCloudPostVideoTagResultData new];
+    NSDictionary *dGeneric = qcloudGenericClass([QCloudPostVideoTagResultData class]);
+    XCTAssertNotNil(dGeneric[@"Tags"]);
+    XCTAssertNotNil(dGeneric[@"PersonTags"]);
+    XCTAssertNotNil(dGeneric[@"PlaceTags"]);
+    XCTAssertNotNil(dGeneric[@"ActionTags"]);
+    XCTAssertNotNil(dGeneric[@"ObjectTags"]);
+
+    // Test modelCustomWillTransformFromDictionary: branches
+    XCTAssertNil(qcloudTransform(data, nil));
+    XCTAssertNil(qcloudTransform(data, @"notdict"));
+
+    NSDictionary *singlePersonTags = @{@"PersonTags": @{@"key": @"val"}};
+    NSDictionary *personResult = qcloudTransform(data, singlePersonTags);
+    XCTAssertTrue([personResult[@"PersonTags"] isKindOfClass:[NSArray class]]);
+
+    NSDictionary *singlePlaceTags = @{@"PlaceTags": @{@"key": @"val"}};
+    NSDictionary *placeResult = qcloudTransform(data, singlePlaceTags);
+    XCTAssertTrue([placeResult[@"PlaceTags"] isKindOfClass:[NSArray class]]);
+
+    NSDictionary *singleActionTags = @{@"ActionTags": @{@"key": @"val"}};
+    NSDictionary *actionResult = qcloudTransform(data, singleActionTags);
+    XCTAssertTrue([actionResult[@"ActionTags"] isKindOfClass:[NSArray class]]);
+
+    NSDictionary *singleObjectTags = @{@"ObjectTags": @{@"key": @"val"}};
+    NSDictionary *objectResult = qcloudTransform(data, singleObjectTags);
+    XCTAssertTrue([objectResult[@"ObjectTags"] isKindOfClass:[NSArray class]]);
+
+    QCloudPostVideoTagResultPlaceTags *placeTags = [QCloudPostVideoTagResultPlaceTags new];
+    NSDictionary *ptGeneric = qcloudGenericClass([QCloudPostVideoTagResultPlaceTags class]);
+    XCTAssertNotNil(ptGeneric[@"Tags"]);
+
+    NSDictionary *singleTags = @{@"Tags": @{@"key": @"val"}};
+    NSDictionary *tagsResult = qcloudTransform(placeTags, singleTags);
+    XCTAssertTrue([tagsResult[@"Tags"] isKindOfClass:[NSArray class]]);
+    XCTAssertNil(qcloudTransform(placeTags, nil));
+
+    QCloudPostVideoTagResultPersonTags *personTags = [QCloudPostVideoTagResultPersonTags new];
+    NSDictionary *persGeneric = qcloudGenericClass([QCloudPostVideoTagResultPersonTags class]);
+    XCTAssertNotNil(persGeneric[@"DetailPerSecond"]);
+
+    NSDictionary *singleDetail = @{@"DetailPerSecond": @{@"key": @"val"}};
+    NSDictionary *detailResult = qcloudTransform(personTags, singleDetail);
+    XCTAssertTrue([detailResult[@"DetailPerSecond"] isKindOfClass:[NSArray class]]);
+    XCTAssertNil(qcloudTransform(personTags, nil));
+
+    QCloudPostVideoTagResultActionTags *actionTags = [QCloudPostVideoTagResultActionTags new];
+    NSDictionary *atGeneric = qcloudGenericClass([QCloudPostVideoTagResultActionTags class]);
+    XCTAssertNotNil(atGeneric[@"Tags"]);
+
+    NSDictionary *singleActionTagsDict = @{@"Tags": @{@"key": @"val"}};
+    NSDictionary *atResult = qcloudTransform(actionTags, singleActionTagsDict);
+    XCTAssertTrue([atResult[@"Tags"] isKindOfClass:[NSArray class]]);
+    XCTAssertNil(qcloudTransform(actionTags, nil));
+
+    QCloudPostVideoTagResultObjectTags *objectTags = [QCloudPostVideoTagResultObjectTags new];
+    NSDictionary *otGeneric = qcloudGenericClass([QCloudPostVideoTagResultObjectTags class]);
+    XCTAssertNotNil(otGeneric[@"Objects"]);
+
+    NSDictionary *singleObjects = @{@"Objects": @{@"key": @"val"}};
+    NSDictionary *objResult = qcloudTransform(objectTags, singleObjects);
+    XCTAssertTrue([objResult[@"Objects"] isKindOfClass:[NSArray class]]);
+    XCTAssertNil(qcloudTransform(objectTags, nil));
+
+    QCloudPostVideoTagResultObjects *objects = [QCloudPostVideoTagResultObjects new];
+    NSDictionary *objsGeneric = qcloudGenericClass([QCloudPostVideoTagResultObjects class]);
+    XCTAssertNotNil(objsGeneric[@"BBox"]);
+
+    NSDictionary *singleBBox = @{@"BBox": @{@"key": @"val"}};
+    NSDictionary *bboxResult = qcloudTransform(objects, singleBBox);
+    XCTAssertTrue([bboxResult[@"BBox"] isKindOfClass:[NSArray class]]);
+    XCTAssertNil(qcloudTransform(objects, nil));
+
+    QCloudPostVideoTagResultDetailPerSecond *detailPerSecond = [QCloudPostVideoTagResultDetailPerSecond new];
+    NSDictionary *dpsGeneric = qcloudGenericClass([QCloudPostVideoTagResultDetailPerSecond class]);
+    XCTAssertNotNil(dpsGeneric[@"BBox"]);
+
+    NSDictionary *singleDpsBBox = @{@"BBox": @{@"key": @"val"}};
+    NSDictionary *dpsResult = qcloudTransform(detailPerSecond, singleDpsBBox);
+    XCTAssertTrue([dpsResult[@"BBox"] isKindOfClass:[NSArray class]]);
+    XCTAssertNil(qcloudTransform(detailPerSecond, nil));
+
+    QCloudPostVideoTag *postVideoTag = [QCloudPostVideoTag new];
+    NSDictionary *pvtGeneric = qcloudGenericClass([QCloudPostVideoTag class]);
+    XCTAssertNotNil(pvtGeneric[@"Input"]);
+    XCTAssertNotNil(pvtGeneric[@"Operation"]);
+    XCTAssertNotNil(pvtGeneric[@"CallBackMqConfig"]);
+
+    QCloudPostVideoTagOperation *postOp = [QCloudPostVideoTagOperation new];
+    NSDictionary *poGeneric = qcloudGenericClass([QCloudPostVideoTagOperation class]);
+    XCTAssertNotNil(poGeneric[@"VideoTag"]);
+}
+
+- (void)testPostSpeechRecognitionResponseSerialization {
+    QCloudPostSpeechRecognitionResponse *response = [QCloudPostSpeechRecognitionResponse new];
+    NSDictionary *generic = qcloudGenericClass([QCloudPostSpeechRecognitionResponse class]);
+    XCTAssertNotNil(generic[@"JobsDetail"]);
+
+    NSDictionary *singleJobsDetail = @{@"JobsDetail": @{@"key": @"val"}};
+    NSDictionary *result = qcloudTransform(response, singleJobsDetail);
+    XCTAssertTrue([result[@"JobsDetail"] isKindOfClass:[NSArray class]]);
+    XCTAssertNil(qcloudTransform(response, nil));
+    XCTAssertNil(qcloudTransform(response, @"notdict"));
+
+    QCloudPostSpeechRecognitionResponseJobsDetail *jobsDetail = [QCloudPostSpeechRecognitionResponseJobsDetail new];
+    NSDictionary *jdGeneric = qcloudGenericClass([QCloudPostSpeechRecognitionResponseJobsDetail class]);
+    XCTAssertNotNil(jdGeneric[@"Input"]);
+    XCTAssertNotNil(jdGeneric[@"Operation"]);
+
+    QCloudPostSpeechRecognitionResponseOperation *operation = [QCloudPostSpeechRecognitionResponseOperation new];
+    NSDictionary *opGeneric = qcloudGenericClass([QCloudPostSpeechRecognitionResponseOperation class]);
+    XCTAssertNotNil(opGeneric[@"SpeechRecognition"]);
+    XCTAssertNotNil(opGeneric[@"Output"]);
+    XCTAssertNotNil(opGeneric[@"SpeechRecognitionResult"]);
+
+    QCloudPostSpeechRecognitionResponseSpeechRecognitionResult *srResult = [QCloudPostSpeechRecognitionResponseSpeechRecognitionResult new];
+    NSDictionary *srGeneric = qcloudGenericClass([QCloudPostSpeechRecognitionResponseSpeechRecognitionResult class]);
+    XCTAssertNotNil(srGeneric[@"FlashResult"]);
+    XCTAssertNotNil(srGeneric[@"ResultDetail"]);
+
+    NSDictionary *singleFlash = @{@"FlashResult": @{@"key": @"val"}};
+    NSDictionary *flashResult = qcloudTransform(srResult, singleFlash);
+    XCTAssertTrue([flashResult[@"FlashResult"] isKindOfClass:[NSArray class]]);
+
+    NSDictionary *singleResultDetail = @{@"ResultDetail": @{@"key": @"val"}};
+    NSDictionary *rdResult = qcloudTransform(srResult, singleResultDetail);
+    XCTAssertTrue([rdResult[@"ResultDetail"] isKindOfClass:[NSArray class]]);
+    XCTAssertNil(qcloudTransform(srResult, nil));
+
+    QCloudPostSpeechRecognitionResponseFlashResult *flashResult2 = [QCloudPostSpeechRecognitionResponseFlashResult new];
+    NSDictionary *frGeneric = qcloudGenericClass([QCloudPostSpeechRecognitionResponseFlashResult class]);
+    XCTAssertNotNil(frGeneric[@"sentence_list"]);
+
+    NSDictionary *singleSentence = @{@"sentence_list": @{@"key": @"val"}};
+    NSDictionary *sentenceResult = qcloudTransform(flashResult2, singleSentence);
+    XCTAssertTrue([sentenceResult[@"sentence_list"] isKindOfClass:[NSArray class]]);
+    XCTAssertNil(qcloudTransform(flashResult2, nil));
+
+    QCloudPostSpeechRecognitionResponsesentence_list *sentenceList = [QCloudPostSpeechRecognitionResponsesentence_list new];
+    NSDictionary *slGeneric = qcloudGenericClass([QCloudPostSpeechRecognitionResponsesentence_list class]);
+    XCTAssertNotNil(slGeneric[@"word_list"]);
+
+    NSDictionary *singleWord = @{@"word_list": @{@"key": @"val"}};
+    NSDictionary *wordResult = qcloudTransform(sentenceList, singleWord);
+    XCTAssertTrue([wordResult[@"word_list"] isKindOfClass:[NSArray class]]);
+    XCTAssertNil(qcloudTransform(sentenceList, nil));
+
+    QCloudPostSpeechRecognitionResponseResultDetail *resultDetail = [QCloudPostSpeechRecognitionResponseResultDetail new];
+    NSDictionary *rdGeneric2 = qcloudGenericClass([QCloudPostSpeechRecognitionResponseResultDetail class]);
+    XCTAssertNotNil(rdGeneric2[@"Words"]);
+
+    NSDictionary *singleWords = @{@"Words": @{@"key": @"val"}};
+    NSDictionary *wordsResult = qcloudTransform(resultDetail, singleWords);
+    XCTAssertTrue([wordsResult[@"Words"] isKindOfClass:[NSArray class]]);
+    XCTAssertNil(qcloudTransform(resultDetail, nil));
+
+    QCloudPostSpeechRecognition *speechRecognition = [QCloudPostSpeechRecognition new];
+    NSDictionary *spGeneric = qcloudGenericClass([QCloudPostSpeechRecognition class]);
+    XCTAssertNotNil(spGeneric[@"Input"]);
+    XCTAssertNotNil(spGeneric[@"Operation"]);
+    XCTAssertNotNil(spGeneric[@"CallBackMqConfig"]);
+
+    QCloudPostSpeechRecognitionOperation *spOperation = [QCloudPostSpeechRecognitionOperation new];
+    NSDictionary *spoGeneric = qcloudGenericClass([QCloudPostSpeechRecognitionOperation class]);
+    XCTAssertNotNil(spoGeneric[@"SpeechRecognition"]);
+    XCTAssertNotNil(spoGeneric[@"Output"]);
+}
+
+- (void)testPostVideoTargetRecResponseSerialization {
+    QCloudPostVideoTargetRecResponse *response = [QCloudPostVideoTargetRecResponse new];
+    NSDictionary *generic = qcloudGenericClass([QCloudPostVideoTargetRecResponse class]);
+    XCTAssertNotNil(generic[@"JobsDetail"]);
+
+    NSDictionary *singleJobsDetail = @{@"JobsDetail": @{@"key": @"val"}};
+    NSDictionary *result = qcloudTransform(response, singleJobsDetail);
+    XCTAssertTrue([result[@"JobsDetail"] isKindOfClass:[NSArray class]]);
+    XCTAssertNil(qcloudTransform(response, nil));
+    XCTAssertNil(qcloudTransform(response, @"notdict"));
+
+    QCloudPostVideoTargetRecResponseJobsDetail *jobsDetail = [QCloudPostVideoTargetRecResponseJobsDetail new];
+    NSDictionary *jdGeneric = qcloudGenericClass([QCloudPostVideoTargetRecResponseJobsDetail class]);
+    XCTAssertNotNil(jdGeneric[@"Operation"]);
+
+    QCloudPostVideoTargetRecResponseOperation *operation = [QCloudPostVideoTargetRecResponseOperation new];
+    NSDictionary *opGeneric = qcloudGenericClass([QCloudPostVideoTargetRecResponseOperation class]);
+    XCTAssertNotNil(opGeneric[@"VideoTargetRec"]);
+    XCTAssertNotNil(opGeneric[@"VideoTargetRecResult"]);
+
+    QCloudPostVideoTargetRecResponseVideoTargetRecResult *vtResult = [QCloudPostVideoTargetRecResponseVideoTargetRecResult new];
+    NSDictionary *vtGeneric = qcloudGenericClass([QCloudPostVideoTargetRecResponseVideoTargetRecResult class]);
+    XCTAssertNotNil(vtGeneric[@"BodyRecognition"]);
+    XCTAssertNotNil(vtGeneric[@"PetRecognition"]);
+    XCTAssertNotNil(vtGeneric[@"CarRecognition"]);
+
+    NSDictionary *singleBody = @{@"BodyRecognition": @{@"key": @"val"}};
+    NSDictionary *bodyResult = qcloudTransform(vtResult, singleBody);
+    XCTAssertTrue([bodyResult[@"BodyRecognition"] isKindOfClass:[NSArray class]]);
+
+    NSDictionary *singlePet = @{@"PetRecognition": @{@"key": @"val"}};
+    NSDictionary *petResult = qcloudTransform(vtResult, singlePet);
+    XCTAssertTrue([petResult[@"PetRecognition"] isKindOfClass:[NSArray class]]);
+
+    NSDictionary *singleCar = @{@"CarRecognition": @{@"key": @"val"}};
+    NSDictionary *carResult = qcloudTransform(vtResult, singleCar);
+    XCTAssertTrue([carResult[@"CarRecognition"] isKindOfClass:[NSArray class]]);
+    XCTAssertNil(qcloudTransform(vtResult, nil));
+
+    QCloudPostVideoTargetRecResponseCarRecognition *carRecog = [QCloudPostVideoTargetRecResponseCarRecognition new];
+    NSDictionary *crGeneric = qcloudGenericClass([QCloudPostVideoTargetRecResponseCarRecognition class]);
+    XCTAssertNotNil(crGeneric[@"CarInfo"]);
+
+    NSDictionary *singleCarInfo = @{@"CarInfo": @{@"key": @"val"}};
+    NSDictionary *ciResult = qcloudTransform(carRecog, singleCarInfo);
+    XCTAssertTrue([ciResult[@"CarInfo"] isKindOfClass:[NSArray class]]);
+    XCTAssertNil(qcloudTransform(carRecog, nil));
+
+    QCloudPostVideoTargetRecResponsePetRecognition *petRecog = [QCloudPostVideoTargetRecResponsePetRecognition new];
+    NSDictionary *prGeneric = qcloudGenericClass([QCloudPostVideoTargetRecResponsePetRecognition class]);
+    XCTAssertNotNil(prGeneric[@"PetInfo"]);
+
+    NSDictionary *singlePetInfo = @{@"PetInfo": @{@"key": @"val"}};
+    NSDictionary *piResult = qcloudTransform(petRecog, singlePetInfo);
+    XCTAssertTrue([piResult[@"PetInfo"] isKindOfClass:[NSArray class]]);
+    XCTAssertNil(qcloudTransform(petRecog, nil));
+
+    QCloudPostVideoTargetRecResponseBodyRecognition *bodyRecog = [QCloudPostVideoTargetRecResponseBodyRecognition new];
+    NSDictionary *brGeneric = qcloudGenericClass([QCloudPostVideoTargetRecResponseBodyRecognition class]);
+    XCTAssertNotNil(brGeneric[@"BodyInfo"]);
+
+    QCloudPostVideoTargetRec *videoTargetRec = [QCloudPostVideoTargetRec new];
+    NSDictionary *vtrGeneric = qcloudGenericClass([QCloudPostVideoTargetRec class]);
+    XCTAssertNotNil(vtrGeneric[@"Operation"]);
+    XCTAssertNotNil(vtrGeneric[@"Input"]);
+    XCTAssertNotNil(vtrGeneric[@"CallBackMqConfig"]);
+}
+
+- (void)testWorkflowexecutionResultSerialization {
+    QCloudWorkflowexecutionResult *result = [QCloudWorkflowexecutionResult new];
+    NSDictionary *generic = qcloudGenericClass([QCloudWorkflowexecutionResult class]);
+    XCTAssertNotNil(generic[@"WorkflowExecution"]);
+
+    QCloudWorkflowexecutionResultWE *we = [QCloudWorkflowexecutionResultWE new];
+    NSDictionary *weGeneric = qcloudGenericClass([QCloudWorkflowexecutionResultWE class]);
+    XCTAssertNotNil(weGeneric[@"Topology"]);
+    XCTAssertNotNil(weGeneric[@"Tasks"]);
+
+    NSDictionary *singleTasks = @{@"Tasks": @{@"key": @"val"}};
+    NSDictionary *tasksResult = qcloudTransform(we, singleTasks);
+    XCTAssertTrue([tasksResult[@"Tasks"] isKindOfClass:[NSArray class]]);
+    XCTAssertNil(qcloudTransform(we, nil));
+    XCTAssertNil(qcloudTransform(we, @"notdict"));
+
+    QCloudWorkflowexecutionResultTasks *tasks = [QCloudWorkflowexecutionResultTasks new];
+    NSDictionary *tGeneric = qcloudGenericClass([QCloudWorkflowexecutionResultTasks class]);
+    XCTAssertNotNil(tGeneric[@"ResultInfo"]);
+    XCTAssertNotNil(tGeneric[@"JudgementInfo"]);
+    XCTAssertNotNil(tGeneric[@"FileInfo"]);
+
+    NSDictionary *singleFileInfo = @{@"FileInfo": @{@"key": @"val"}};
+    NSDictionary *fiResult = qcloudTransform(tasks, singleFileInfo);
+    XCTAssertTrue([fiResult[@"FileInfo"] isKindOfClass:[NSArray class]]);
+    XCTAssertNil(qcloudTransform(tasks, nil));
+
+    QCloudWorkflowFileInfo *fileInfo = [QCloudWorkflowFileInfo new];
+    NSDictionary *fiGeneric = qcloudGenericClass([QCloudWorkflowFileInfo class]);
+    XCTAssertNotNil(fiGeneric[@"BasicInfo"]);
+    XCTAssertNotNil(fiGeneric[@"MediaInfo"]);
+    XCTAssertNotNil(fiGeneric[@"ImageInfo"]);
+
+    QCloudWorkflowResultInfo *resultInfo = [QCloudWorkflowResultInfo new];
+    NSDictionary *riGeneric = qcloudGenericClass([QCloudWorkflowResultInfo class]);
+    XCTAssertNotNil(riGeneric[@"ObjectInfo"]);
+    XCTAssertNotNil(riGeneric[@"SpriteObjectInfo"]);
+
+    NSDictionary *singleObjectInfo = @{@"ObjectInfo": @{@"key": @"val"}};
+    NSDictionary *oiResult = qcloudTransform(resultInfo, singleObjectInfo);
+    XCTAssertTrue([oiResult[@"ObjectInfo"] isKindOfClass:[NSArray class]]);
+
+    NSDictionary *singleSpriteObjectInfo = @{@"SpriteObjectInfo": @{@"key": @"val"}};
+    NSDictionary *soiResult = qcloudTransform(resultInfo, singleSpriteObjectInfo);
+    XCTAssertTrue([soiResult[@"SpriteObjectInfo"] isKindOfClass:[NSArray class]]);
+    XCTAssertNil(qcloudTransform(resultInfo, nil));
+
+    QCloudWorkflowJudgementInfo *judgementInfo = [QCloudWorkflowJudgementInfo new];
+    NSDictionary *jiGeneric = qcloudGenericClass([QCloudWorkflowJudgementInfo class]);
+    XCTAssertNotNil(jiGeneric[@"JudgementResult"]);
+
+    NSDictionary *singleJudgementResult = @{@"JudgementResult": @{@"key": @"val"}};
+    NSDictionary *jrResult = qcloudTransform(judgementInfo, singleJudgementResult);
+    XCTAssertTrue([jrResult[@"JudgementResult"] isKindOfClass:[NSArray class]]);
+    XCTAssertNil(qcloudTransform(judgementInfo, nil));
+
+    QCloudWorkflowJudgementResult *jrObj = [QCloudWorkflowJudgementResult new];
+    NSDictionary *jrGeneric = qcloudGenericClass([QCloudWorkflowJudgementResult class]);
+    XCTAssertNotNil(jrGeneric[@"InputObjectInfo"]);
+
+    QCloudWorkflowMediaInfo *mediaInfo = [QCloudWorkflowMediaInfo new];
+    NSDictionary *miGeneric = qcloudGenericClass([QCloudWorkflowMediaInfo class]);
+    XCTAssertNotNil(miGeneric[@"Video"]);
+    XCTAssertNotNil(miGeneric[@"Audio"]);
+    XCTAssertNotNil(miGeneric[@"Format"]);
+}
+
+- (void)testBatchImageRecognitionResultSerialization {
+    QCloudBatchImageRecognitionResult *result = [QCloudBatchImageRecognitionResult new];
+    NSDictionary *generic = qcloudGenericClass([QCloudBatchImageRecognitionResult class]);
+    XCTAssertNotNil(generic[@"JobsDetail"]);
+
+    // nil input
+    XCTAssertNil(qcloudTransform(result, nil));
+
+    // JobsDetail is NSDictionary -> wrap in array
+    NSDictionary *singleJobsDetail = @{@"JobsDetail": @{@"key": @"val"}};
+    NSDictionary *singleResult = qcloudTransform(result, singleJobsDetail);
+    XCTAssertTrue([singleResult[@"JobsDetail"] isKindOfClass:[NSArray class]]);
+
+    // JobsDetail is NSArray -> return as-is
+    NSDictionary *arrayJobsDetail = @{@"JobsDetail": @[@{@"key": @"val"}]};
+    NSDictionary *arrayResult = qcloudTransform(result, arrayJobsDetail);
+    XCTAssertTrue([arrayResult[@"JobsDetail"] isKindOfClass:[NSArray class]]);
+
+    // No JobsDetail key
+    NSDictionary *noJobsDetail = @{@"other": @"val"};
+    NSDictionary *noResult = qcloudTransform(result, noJobsDetail);
+    XCTAssertNotNil(noResult);
+
+    QCloudBatchImageRecognitionResultItem *item = [QCloudBatchImageRecognitionResultItem new];
+    NSDictionary *itemGeneric = qcloudGenericClass([QCloudBatchImageRecognitionResultItem class]);
+    XCTAssertNotNil(itemGeneric[@"AdsInfo"]);
+    XCTAssertNotNil(itemGeneric[@"PornInfo"]);
+    XCTAssertNotNil(itemGeneric[@"TerrorismInfo"]);
+    XCTAssertNotNil(itemGeneric[@"PoliticsInfo"]);
+    XCTAssertNotNil(itemGeneric[@"UserInfo"]);
+    XCTAssertNotNil(itemGeneric[@"ListInfo"]);
+
+    QCloudBatchImageRecognitionResultInfo *info = [QCloudBatchImageRecognitionResultInfo new];
+    NSDictionary *infoGeneric = qcloudGenericClass([QCloudBatchImageRecognitionResultInfo class]);
+    XCTAssertNotNil(infoGeneric[@"OcrResults"]);
+    XCTAssertNotNil(infoGeneric[@"ObjectResults"]);
+    XCTAssertNotNil(infoGeneric[@"LibResults"]);
+
+    // modelCustomWillTransformFromDictionary: branches
+    XCTAssertNil(qcloudTransform(info, nil));
+
+    NSDictionary *singleOcr = @{@"OcrResults": @{@"key": @"val"}};
+    NSDictionary *ocrResult = qcloudTransform(info, singleOcr);
+    XCTAssertTrue([ocrResult[@"OcrResults"] isKindOfClass:[NSArray class]]);
+
+    NSDictionary *singleObject = @{@"ObjectResults": @{@"key": @"val"}};
+    NSDictionary *objResult = qcloudTransform(info, singleObject);
+    XCTAssertTrue([objResult[@"ObjectResults"] isKindOfClass:[NSArray class]]);
+
+    NSDictionary *singleLib = @{@"LibResults": @{@"key": @"val"}};
+    NSDictionary *libResult = qcloudTransform(info, singleLib);
+    XCTAssertTrue([libResult[@"LibResults"] isKindOfClass:[NSArray class]]);
+
+    QCloudBatchRecognitionImageInfo *imageInfo = [QCloudBatchRecognitionImageInfo new];
+    NSDictionary *iiGeneric = qcloudGenericClass([QCloudBatchRecognitionImageInfo class]);
+    XCTAssertNotNil(iiGeneric[@"UserInfo"]);
+    XCTAssertNotNil(iiGeneric[@"Encryption"]);
+
+    QCloudBatchRecognitionListInfo *listInfo = [QCloudBatchRecognitionListInfo new];
+    NSDictionary *liGeneric = qcloudGenericClass([QCloudBatchRecognitionListInfo class]);
+    XCTAssertNotNil(liGeneric[@"ListResults"]);
+
+    NSDictionary *singleList = @{@"ListResults": @{@"key": @"val"}};
+    NSDictionary *listResult = qcloudTransform(listInfo, singleList);
+    XCTAssertTrue([listResult[@"ListResults"] isKindOfClass:[NSArray class]]);
+    XCTAssertNil(qcloudTransform(listInfo, nil));
+}
+
+#pragma mark - CI Request Build Coverage
+
+- (void)testPostVideoRecognitionRequestBuildRequestData {
+    QCloudCOSXMLService *service = [self modelCoverageService];
+    NSError *error = nil;
+
+    // Error path: no object and no url
+    QCloudPostVideoRecognitionRequest *request = [QCloudPostVideoRecognitionRequest new];
+    request.runOnService = service;
+    request.bucket = @"video-bucket-1253960454";
+    request.mode = QCloudVideoRecognitionModeInterval;
+    request.count = 5;
+    XCTAssertFalse([request buildRequestData:&error]);
+    XCTAssertNotNil(error);
+
+    // Error path: no bucket
+    error = nil;
+    QCloudPostVideoRecognitionRequest *request2 = [QCloudPostVideoRecognitionRequest new];
+    request2.runOnService = service;
+    request2.object = @"test/video.mp4";
+    XCTAssertFalse([request2 buildRequestData:&error]);
+    XCTAssertNotNil(error);
+
+    // Error path: mode == 0
+    error = nil;
+    QCloudPostVideoRecognitionRequest *request3 = [QCloudPostVideoRecognitionRequest new];
+    request3.runOnService = service;
+    request3.object = @"test/video.mp4";
+    request3.bucket = @"video-bucket-1253960454";
+    XCTAssertFalse([request3 buildRequestData:&error]);
+    XCTAssertNotNil(error);
+
+    // Success path: Interval mode
+    error = nil;
+    QCloudPostVideoRecognitionRequest *request4 = [QCloudPostVideoRecognitionRequest new];
+    request4.runOnService = service;
+    request4.bucket = @"video-bucket-1253960454";
+    request4.object = @"test/video.mp4";
+    request4.mode = QCloudVideoRecognitionModeInterval;
+    request4.count = 10;
+    request4.timeInterval = 2;
+    request4.detectContent = YES;
+    request4.bizType = @"biz";
+    request4.callback = @"http://callback.com";
+    request4.dataId = @"data-id";
+    request4.pornScore = 80;
+    request4.adsScore = 60;
+    request4.terrorismScore = 70;
+    request4.politicsScore = 90;
+    XCTAssertTrue([request4 buildRequestData:&error]);
+    XCTAssertNil(error);
+    XCTAssertTrue([request4.requestData.serverURL containsString:@".ci."]);
+    XCTAssertTrue([request4.requestData.URIComponents containsObject:@"video/auditing"]);
+
+    // Success path: Fps mode
+    error = nil;
+    QCloudPostVideoRecognitionRequest *request5 = [QCloudPostVideoRecognitionRequest new];
+    request5.runOnService = service;
+    request5.bucket = @"video-bucket-1253960454";
+    request5.url = @"http://example.com/video.mp4";
+    request5.mode = QCloudVideoRecognitionModeFps;
+    request5.count = 10;
+    request5.timeInterval = 5;
+    XCTAssertTrue([request5 buildRequestData:&error]);
+    XCTAssertNil(error);
+
+    // Error path: Fps mode with count == 0
+    error = nil;
+    QCloudPostVideoRecognitionRequest *request6 = [QCloudPostVideoRecognitionRequest new];
+    request6.runOnService = service;
+    request6.bucket = @"video-bucket-1253960454";
+    request6.object = @"test/video.mp4";
+    request6.mode = QCloudVideoRecognitionModeFps;
+    request6.count = 0;
+    request6.timeInterval = 0;
+    XCTAssertFalse([request6 buildRequestData:&error]);
+    XCTAssertNotNil(error);
+
+    // Test enum conversion
+    XCTAssertEqualObjects(QCloudVideoRecognitionModeTransferToString(QCloudVideoRecognitionModeInterval), @"Interval");
+    XCTAssertEqualObjects(QCloudVideoRecognitionModeTransferToString(QCloudVideoRecognitionModeAverage), @"Average");
+    XCTAssertEqualObjects(QCloudVideoRecognitionModeTransferToString(QCloudVideoRecognitionModeFps), @"Fps");
+}
+
+- (void)testPostAudioRecognitionRequestBuildRequestData {
+    QCloudCOSXMLService *service = [self modelCoverageService];
+    NSError *error = nil;
+
+    // Error path: no object and no url
+    QCloudPostAudioRecognitionRequest *request = [QCloudPostAudioRecognitionRequest new];
+    request.runOnService = service;
+    request.bucket = @"audio-bucket-1253960454";
+    XCTAssertFalse([request buildRequestData:&error]);
+    XCTAssertNotNil(error);
+
+    // Error path: no bucket
+    error = nil;
+    QCloudPostAudioRecognitionRequest *request2 = [QCloudPostAudioRecognitionRequest new];
+    request2.runOnService = service;
+    request2.object = @"test/audio.mp3";
+    XCTAssertFalse([request2 buildRequestData:&error]);
+    XCTAssertNotNil(error);
+
+    // Success path with object
+    error = nil;
+    QCloudPostAudioRecognitionRequest *request3 = [QCloudPostAudioRecognitionRequest new];
+    request3.runOnService = service;
+    request3.bucket = @"audio-bucket-1253960454";
+    request3.object = @"test/audio.mp3";
+    request3.bizType = @"biz";
+    request3.callback = @"http://callback.com";
+    request3.dataId = @"data-id";
+    request3.pornScore = 80;
+    request3.adsScore = 60;
+    request3.terrorismScore = 70;
+    request3.politicsScore = 90;
+    XCTAssertTrue([request3 buildRequestData:&error]);
+    XCTAssertNil(error);
+    XCTAssertTrue([request3.requestData.serverURL containsString:@".ci."]);
+    XCTAssertTrue([request3.requestData.URIComponents containsObject:@"audio/auditing"]);
+
+    // Success path with url
+    error = nil;
+    QCloudPostAudioRecognitionRequest *request4 = [QCloudPostAudioRecognitionRequest new];
+    request4.runOnService = service;
+    request4.bucket = @"audio-bucket-1253960454";
+    request4.url = @"http://example.com/audio.mp3";
+    XCTAssertTrue([request4 buildRequestData:&error]);
+    XCTAssertNil(error);
+}
+
+- (void)testGetDiscernMediaJobsRequestBuildRequestData {
+    QCloudCOSXMLService *service = [self modelCoverageService];
+    NSError *error = nil;
+
+    // Error path: no tag
+    QCloudGetDiscernMediaJobsRequest *request = [QCloudGetDiscernMediaJobsRequest new];
+    request.runOnService = service;
+    request.bucket = @"discern-bucket-1253960454";
+    XCTAssertFalse([request buildRequestData:&error]);
+    XCTAssertNotNil(error);
+
+    // Success path with all optional params
+    error = nil;
+    QCloudGetDiscernMediaJobsRequest *request2 = [QCloudGetDiscernMediaJobsRequest new];
+    request2.runOnService = service;
+    request2.bucket = @"discern-bucket-1253960454";
+    request2.tag = @"SpeechRecognition";
+    request2.queueId = @"queue-id";
+    request2.orderByTime = 1;
+    request2.size = 20;
+    request2.nextToken = @"next-token";
+    request2.startCreationTime = @"2024-01-01T00:00:00+08:00";
+    request2.endCreationTime = @"2024-12-31T23:59:59+08:00";
+    request2.workflowId = @"workflow-id";
+    request2.inventoryTriggerJobId = @"inventory-job-id";
+    request2.inputObject = @"input/object.mp4";
+    XCTAssertTrue([request2 buildRequestData:&error]);
+    XCTAssertNil(error);
+    XCTAssertTrue([request2.requestData.serverURL containsString:@".ci."]);
+    XCTAssertTrue([request2.requestData.URIComponents containsObject:@"jobs"]);
+
+    // Success path with orderByTime = 0 (Desc)
+    error = nil;
+    QCloudGetDiscernMediaJobsRequest *request3 = [QCloudGetDiscernMediaJobsRequest new];
+    request3.runOnService = service;
+    request3.bucket = @"discern-bucket-1253960454";
+    request3.tag = @"SpeechRecognition";
+    request3.orderByTime = 0;
+    XCTAssertTrue([request3 buildRequestData:&error]);
+    XCTAssertNil(error);
+}
+
+- (void)testSyncImageRecognitionRequestBuildRequestData {
+    QCloudCOSXMLService *service = [self modelCoverageService];
+    NSError *error = nil;
+
+    // Success path with object
+    QCloudSyncImageRecognitionRequest *request = [QCloudSyncImageRecognitionRequest new];
+    request.runOnService = service;
+    request.bucket = @"sync-bucket-1253960454";
+    request.object = @"test/image.jpg";
+    request.bizType = @"biz";
+    request.interval = 5;
+    request.maxFrames = 10;
+    request.largeImageDetect = 1;
+    request.async = YES;
+    request.callback = @"http://callback.com";
+    XCTAssertTrue([request buildRequestData:&error]);
+    XCTAssertNil(error);
+
+    // Success path with detectUrl
+    error = nil;
+    QCloudSyncImageRecognitionRequest *request2 = [QCloudSyncImageRecognitionRequest new];
+    request2.runOnService = service;
+    request2.bucket = @"sync-bucket-1253960454";
+    request2.detectUrl = @"http://example.com/image.jpg";
+    XCTAssertTrue([request2 buildRequestData:&error]);
+    XCTAssertNil(error);
+}
+
+- (void)testCIPicRecognitionRequestBuildRequestData {
+    QCloudCOSXMLService *service = [self modelCoverageService];
+    NSError *error = nil;
+
+    // Error path: no object
+    QCloudCIPicRecognitionRequest *request = [QCloudCIPicRecognitionRequest new];
+    request.runOnService = service;
+    request.bucket = @"pic-bucket-1253960454";
+    XCTAssertFalse([request buildRequestData:&error]);
+    XCTAssertNotNil(error);
+
+    // Error path: no bucket
+    error = nil;
+    QCloudCIPicRecognitionRequest *request2 = [QCloudCIPicRecognitionRequest new];
+    request2.runOnService = service;
+    request2.object = @"test/image.jpg";
+    XCTAssertFalse([request2 buildRequestData:&error]);
+    XCTAssertNotNil(error);
+
+    // Success path
+    error = nil;
+    QCloudCIPicRecognitionRequest *request3 = [QCloudCIPicRecognitionRequest new];
+    request3.runOnService = service;
+    request3.bucket = @"pic-bucket-1253960454";
+    request3.object = @"test/image.jpg";
+    XCTAssertTrue([request3 buildRequestData:&error]);
+    XCTAssertNil(error);
+}
+
+- (void)testPutBucketRefererRequestBuildRequestData {
+    QCloudCOSXMLService *service = [self modelCoverageService];
+    NSError *error = nil;
+
+    // Error path: refererType == 0
+    QCloudPutBucketRefererRequest *request = [QCloudPutBucketRefererRequest new];
+    request.runOnService = service;
+    request.bucket = @"referer-bucket-1253960454";
+    request.status = QCloudBucketRefererStatusEnabled;
+    request.domainList = @[@"*.qq.com"];
+    XCTAssertFalse([request buildRequestData:&error]);
+    XCTAssertNotNil(error);
+
+    // Error path: status == 0
+    error = nil;
+    QCloudPutBucketRefererRequest *request2 = [QCloudPutBucketRefererRequest new];
+    request2.runOnService = service;
+    request2.bucket = @"referer-bucket-1253960454";
+    request2.refererType = QCloudBucketRefererTypeBlackList;
+    request2.domainList = @[@"*.qq.com"];
+    XCTAssertFalse([request2 buildRequestData:&error]);
+    XCTAssertNotNil(error);
+
+    // Error path: domainList empty
+    error = nil;
+    QCloudPutBucketRefererRequest *request3 = [QCloudPutBucketRefererRequest new];
+    request3.runOnService = service;
+    request3.bucket = @"referer-bucket-1253960454";
+    request3.refererType = QCloudBucketRefererTypeBlackList;
+    request3.status = QCloudBucketRefererStatusEnabled;
+    XCTAssertFalse([request3 buildRequestData:&error]);
+    XCTAssertNotNil(error);
+
+    // Success path
+    error = nil;
+    QCloudPutBucketRefererRequest *request4 = [QCloudPutBucketRefererRequest new];
+    request4.runOnService = service;
+    request4.bucket = @"referer-bucket-1253960454";
+    request4.refererType = QCloudBucketRefererTypeWhiteList;
+    request4.status = QCloudBucketRefererStatusEnabled;
+    request4.configuration = QCloudBucketRefererConfigurationAllow;
+    request4.domainList = @[@"*.qq.com", @"*.tencent.com"];
+    XCTAssertTrue([request4 buildRequestData:&error]);
+    XCTAssertNil(error);
+    XCTAssertEqualObjects(request4.requestData.URIMethod, @"referer");
+
+    // Test enum conversions
+    XCTAssertEqual(QCloudBucketRefererTypeFromString(@"Black-List"), QCloudBucketRefererTypeBlackList);
+    XCTAssertEqual(QCloudBucketRefererTypeFromString(@"White-List"), QCloudBucketRefererTypeWhiteList);
+    XCTAssertEqual(QCloudBucketRefererTypeFromString(@"Unknown"), 0);
+    XCTAssertEqualObjects(QCloudBucketRefererTypeTransferToString(QCloudBucketRefererTypeBlackList), @"Black-List");
+    XCTAssertEqualObjects(QCloudBucketRefererTypeTransferToString(QCloudBucketRefererTypeWhiteList), @"White-List");
+    XCTAssertNil(QCloudBucketRefererTypeTransferToString(0));
+
+    XCTAssertEqual(QCloudBucketRefererStatusFromString(@"Enabled"), QCloudBucketRefererStatusEnabled);
+    XCTAssertEqual(QCloudBucketRefererStatusFromString(@"Disabled"), QCloudBucketRefererStatusDisabled);
+    XCTAssertEqual(QCloudBucketRefererStatusFromString(@"Unknown"), 0);
+    XCTAssertEqualObjects(QCloudBucketRefererStatusTransferToString(QCloudBucketRefererStatusEnabled), @"Enabled");
+    XCTAssertEqualObjects(QCloudBucketRefererStatusTransferToString(QCloudBucketRefererStatusDisabled), @"Disabled");
+    XCTAssertNil(QCloudBucketRefererStatusTransferToString(0));
+
+    XCTAssertEqual(QCloudBucketRefererConfigurationFromString(@"Allow"), QCloudBucketRefererConfigurationAllow);
+    XCTAssertEqual(QCloudBucketRefererConfigurationFromString(@"Deny"), QCloudBucketRefererConfigurationDeny);
+    XCTAssertEqual(QCloudBucketRefererConfigurationFromString(@"Unknown"), 0);
+    XCTAssertEqualObjects(QCloudBucketRefererConfigurationTransferToString(QCloudBucketRefererConfigurationAllow), @"Allow");
+    XCTAssertEqualObjects(QCloudBucketRefererConfigurationTransferToString(QCloudBucketRefererConfigurationDeny), @"Deny");
+    XCTAssertNil(QCloudBucketRefererConfigurationTransferToString(99));
+}
+
+- (void)testGetFilePreviewHtmlRequestBuildRequestData {
+    QCloudCOSXMLService *service = [self modelCoverageService];
+    NSError *error = nil;
+
+    // Error path: no object
+    QCloudGetFilePreviewHtmlRequest *request = [QCloudGetFilePreviewHtmlRequest new];
+    request.runOnService = service;
+    request.bucket = @"preview-bucket-1253960454";
+    XCTAssertFalse([request buildRequestData:&error]);
+    XCTAssertNotNil(error);
+
+    // Success path with all options
+    error = nil;
+    QCloudGetFilePreviewHtmlRequest *request2 = [QCloudGetFilePreviewHtmlRequest new];
+    request2.runOnService = service;
+    request2.bucket = @"preview-bucket-1253960454";
+    request2.object = @"test/document.docx";
+    request2.dstType = @"pdf";
+    request2.weboffice_url = YES;
+    request2.disCopyable = YES;
+    request2.htmlwaterword = @"watermark";
+    request2.htmlfillstyle = @"rgba(0,0,0,0.5)";
+    request2.htmlfront = @"Arial";
+    request2.htmlrotate = 45;
+    request2.htmlhorizontal = 100;
+    request2.htmlvertical = 200;
+    request2.versionID = @"version-id";
+    XCTAssertTrue([request2 buildRequestData:&error]);
+    XCTAssertNil(error);
+
+    // Success path with default dstType
+    error = nil;
+    QCloudGetFilePreviewHtmlRequest *request3 = [QCloudGetFilePreviewHtmlRequest new];
+    request3.runOnService = service;
+    request3.bucket = @"preview-bucket-1253960454";
+    request3.object = @"test/document.docx";
+    request3.disCopyable = NO;
+    XCTAssertTrue([request3 buildRequestData:&error]);
+    XCTAssertNil(error);
+}
+
+- (void)testCIFaceEffectRequestBuildRequestData {
+    QCloudCOSXMLService *service = [self modelCoverageService];
+    NSError *error = nil;
+
+    // Error path: no object
+    QCloudCIFaceEffectRequest *request = [QCloudCIFaceEffectRequest new];
+    request.runOnService = service;
+    request.bucket = @"face-bucket-1253960454";
+    XCTAssertFalse([request buildRequestData:&error]);
+    XCTAssertNotNil(error);
+
+    // Error path: no bucket
+    error = nil;
+    QCloudCIFaceEffectRequest *request2 = [QCloudCIFaceEffectRequest new];
+    request2.runOnService = service;
+    request2.object = @"test/face.jpg";
+    XCTAssertFalse([request2 buildRequestData:&error]);
+    XCTAssertNotNil(error);
+
+    // Success path
+    error = nil;
+    QCloudCIFaceEffectRequest *request3 = [QCloudCIFaceEffectRequest new];
+    request3.runOnService = service;
+    request3.bucket = @"face-bucket-1253960454";
+    request3.object = @"test/face.jpg";
+    request3.type = QCloudFaceEffectBeautify;
+    XCTAssertTrue([request3 buildRequestData:&error]);
+    XCTAssertNil(error);
+}
+
+- (void)testGetMediaInfoRequestBuildRequestData {
+    QCloudCOSXMLService *service = [self modelCoverageService];
+    NSError *error = nil;
+
+    // Error path: no object
+    QCloudGetMediaInfoRequest *request = [QCloudGetMediaInfoRequest new];
+    request.runOnService = service;
+    request.bucket = @"media-bucket-1253960454";
+    XCTAssertFalse([request buildRequestData:&error]);
+    XCTAssertNotNil(error);
+
+    // Success path
+    error = nil;
+    QCloudGetMediaInfoRequest *request2 = [QCloudGetMediaInfoRequest new];
+    request2.runOnService = service;
+    request2.bucket = @"media-bucket-1253960454";
+    request2.object = @"test/video.mp4";
+    XCTAssertTrue([request2 buildRequestData:&error]);
+    XCTAssertNil(error);
+}
+
+- (void)testCancelLiveVideoRecognitionRequestBuildRequestData {
+    QCloudCOSXMLService *service = [self modelCoverageService];
+    NSError *error = nil;
+
+    // Error path: no jobID
+    QCloudCancelLiveVideoRecognitionRequest *request = [QCloudCancelLiveVideoRecognitionRequest new];
+    request.runOnService = service;
+    request.bucket = @"live-bucket-1253960454";
+    XCTAssertFalse([request buildRequestData:&error]);
+    XCTAssertNotNil(error);
+
+    // Success path
+    error = nil;
+    QCloudCancelLiveVideoRecognitionRequest *request2 = [QCloudCancelLiveVideoRecognitionRequest new];
+    request2.runOnService = service;
+    request2.bucket = @"live-bucket-1253960454";
+    request2.jobId = @"job-id-123";
+    XCTAssertTrue([request2 buildRequestData:&error]);
+    XCTAssertNil(error);
+}
+
+- (void)testGetPrivateM3U8RequestBuildRequestData {
+    QCloudCOSXMLService *service = [self modelCoverageService];
+    NSError *error = nil;
+
+    // Error path: no object
+    QCloudGetPrivateM3U8Request *request = [QCloudGetPrivateM3U8Request new];
+    request.runOnService = service;
+    request.bucket = @"m3u8-bucket-1253960454";
+    XCTAssertFalse([request buildRequestData:&error]);
+    XCTAssertNotNil(error);
+
+    // Success path
+    error = nil;
+    QCloudGetPrivateM3U8Request *request2 = [QCloudGetPrivateM3U8Request new];
+    request2.runOnService = service;
+    request2.bucket = @"m3u8-bucket-1253960454";
+    request2.object = @"test/video.m3u8";
+    request2.expires = 3600;
+    XCTAssertTrue([request2 buildRequestData:&error]);
+    XCTAssertNil(error);
+}
+
+- (void)testGetAudioDiscernOpenBucketListRequestBuildRequestData {
+    QCloudCOSXMLService *service = [self modelCoverageService];
+    NSError *error = nil;
+
+    // Success path with all params
+    QCloudGetAudioDiscernOpenBucketListRequest *request = [QCloudGetAudioDiscernOpenBucketListRequest new];
+    request.runOnService = service;
+    request.regionName = @"ap-beijing";
+    request.regions = @"ap-beijing";
+    request.bucketNames = @"discern-open-bucket-1253960454";
+    request.bucketName = @"discern-open-bucket-1253960454";
+    request.pageNumber = 1;
+    request.pageSize = 10;
+    XCTAssertTrue([request buildRequestData:&error]);
+    XCTAssertNil(error);
+}
+
+- (void)testBatchGetAudioDiscernTaskRequestBuildRequestData {
+    QCloudCOSXMLService *service = [self modelCoverageService];
+    NSError *error = nil;
+
+    // Error path: no jobID
+    QCloudBatchGetAudioDiscernTaskRequest *request = [QCloudBatchGetAudioDiscernTaskRequest new];
+    request.runOnService = service;
+    request.bucket = @"batch-discern-bucket-1253960454";
+    XCTAssertFalse([request buildRequestData:&error]);
+    XCTAssertNotNil(error);
+
+    // Success path
+    error = nil;
+    QCloudBatchGetAudioDiscernTaskRequest *request2 = [QCloudBatchGetAudioDiscernTaskRequest new];
+    request2.runOnService = service;
+    request2.bucket = @"batch-discern-bucket-1253960454";
+    request2.tag = @"SpeechRecognition";
+    request2.queueId = @"queue-id";
+    request2.orderByTime = 1;
+    request2.size = 10;
+    request2.nextToken = @"next-token";
+    request2.states = QCloudTaskStatesAll;
+    XCTAssertTrue([request2 buildRequestData:&error]);
+    XCTAssertNil(error);
+}
+
+- (void)testGetGenerateSnapshotRequestBuildRequestData {
+    QCloudCOSXMLService *service = [self modelCoverageService];
+    NSError *error = nil;
+
+    // Error path: no object
+    QCloudGetGenerateSnapshotRequest *request = [QCloudGetGenerateSnapshotRequest new];
+    request.runOnService = service;
+    request.bucket = @"snapshot-bucket-1253960454";
+    XCTAssertFalse([request buildRequestData:&error]);
+    XCTAssertNotNil(error);
+
+    // Success path
+    error = nil;
+    QCloudGetGenerateSnapshotRequest *request2 = [QCloudGetGenerateSnapshotRequest new];
+    request2.runOnService = service;
+    request2.bucket = @"snapshot-bucket-1253960454";
+    request2.object = @"test/video.mp4";
+    QCloudGenerateSnapshotConfiguration *config = [QCloudGenerateSnapshotConfiguration new];
+    config.time = 5;
+    request2.generateSnapshotConfiguration = config;
+    XCTAssertTrue([request2 buildRequestData:&error]);
+    XCTAssertNil(error);
+}
+
+- (void)testCIUploadOperationsRequestBuildRequestData {
+    QCloudCOSXMLService *service = [self modelCoverageService];
+    NSError *error = nil;
+
+    // Success path
+    QCloudCIUploadOperationsRequest *request = [QCloudCIUploadOperationsRequest new];
+    request.runOnService = service;
+    request.bucket = @"upload-ops-bucket-1253960454";
+    request.object = @"test/object.jpg";
+    QCloudPicOperations *picOps = [QCloudPicOperations new];
+    request.picOperations = picOps;
+    XCTAssertTrue([request buildRequestData:&error]);
+    XCTAssertNil(error);
+}
+
+- (void)testCICloudDataOperationsRequestBuildRequestData {
+    QCloudCOSXMLService *service = [self modelCoverageService];
+    NSError *error = nil;
+
+    // Success path
+    QCloudCICloudDataOperationsRequest *request = [QCloudCICloudDataOperationsRequest new];
+    request.runOnService = service;
+    request.bucket = @"cloud-data-bucket-1253960454";
+    request.object = @"test/object.jpg";
+    QCloudPicOperations *picOps = [QCloudPicOperations new];
+    request.picOperations = picOps;
+    XCTAssertTrue([request buildRequestData:&error]);
+    XCTAssertNil(error);
+}
+
+- (void)testPostTextRecognitionRequestBuildRequestData {
+    QCloudCOSXMLService *service = [self modelCoverageService];
+    NSError *error = nil;
+
+    // Success path
+    QCloudPostTextRecognitionRequest *request = [QCloudPostTextRecognitionRequest new];
+    request.runOnService = service;
+    request.bucket = @"text-bucket-1253960454";
+    request.object = @"test/text.txt";
+    request.bizType = @"biz";
+    XCTAssertTrue([request buildRequestData:&error]);
+    XCTAssertNil(error);
+}
+
+- (void)testPutObjectWatermarkRequestBuildRequestData {
+    QCloudCOSXMLService *service = [self modelCoverageService];
+    NSError *error = nil;
+
+    // Success path
+    QCloudPutObjectWatermarkRequest *request = [QCloudPutObjectWatermarkRequest new];
+    request.runOnService = service;
+    request.bucket = @"watermark-bucket-1253960454";
+    request.object = @"test/image.jpg";
+    request.picOperations = [QCloudPicOperations new];
+    XCTAssertTrue([request buildRequestData:&error]);
+    XCTAssertNil(error);
 }
 
 @end

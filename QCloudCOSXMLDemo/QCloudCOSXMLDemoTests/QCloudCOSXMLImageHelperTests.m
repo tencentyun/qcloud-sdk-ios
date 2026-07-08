@@ -122,6 +122,14 @@
 #import "QCloudPostBucketInventoryRequest.h"
 #import "QCloudDescribeFileZipProcessJobsRequest.h"
 
+static NSString *QCloudImageCOSURL(NSString *bucket, NSString *region, NSString *path) {
+    return [NSString stringWithFormat:@"https://%@.cos.%@.%@/%@", bucket, region, QCloudDomainMyQCloud(), path];
+}
+
+static NSString *QCloudImageCOSHTTPURL(NSString *bucket, NSString *region, NSString *path) {
+    return [NSString stringWithFormat:@"http://%@.cos.%@.%@/%@", bucket, region, QCloudDomainMyQCloud(), path];
+}
+
 @interface QCloudCOSXMLImageHelperTests : XCTestCase <QCloudSignatureProvider>
 @property (nonatomic, strong) NSString *appID;
 @property (nonatomic, strong) NSString *ownerID;
@@ -581,7 +589,7 @@ static QCloudBucket *gImageTestBucket;
     op.is_pic_info = NO;
     QCloudPicOperationRule *rule = [[QCloudPicOperationRule alloc] init];
     rule.fileid = @"test";
-    rule.imageURL = @"http://ci-1253960454.cos.ap-beijing.myqcloud.com/protection_blind_watermark_icon.png";
+    rule.imageURL = QCloudImageCOSHTTPURL(@"ci-1253960454", @"ap-beijing", @"protection_blind_watermark_icon.png");
     rule.type = QCloudPicOperationRuleFull;
     rule.actionType =QCloudPicOperationRuleActionPut;
     op.rule = @[ rule ];
@@ -643,7 +651,7 @@ static QCloudBucket *gImageTestBucket;
     op.is_pic_info = NO;
     QCloudPicOperationRule *rule = [[QCloudPicOperationRule alloc] init];
     rule.fileid = @"watermark.png";
-    rule.imageURL = @"http://ci-1253960454.cos.ap-beijing.myqcloud.com/protection_blind_watermark_icon.png";
+    rule.imageURL = QCloudImageCOSHTTPURL(@"ci-1253960454", @"ap-beijing", @"protection_blind_watermark_icon.png");
     rule.type = QCloudPicOperationRuleFull;
     rule.actionType =QCloudPicOperationRuleActionPut;
     op.rule = @[ rule ];
@@ -1509,7 +1517,7 @@ static QCloudBucket *gImageTestBucket;
 
     QCloudPostImageAuditReport * input = [QCloudPostImageAuditReport new];
     input.ContentType = 2;
-    input.Url = @"https://ci-auditing-sample-1253960454.cos.ap-guangzhou.myqcloud.com/test.png";
+    input.Url = QCloudImageCOSURL(@"ci-auditing-sample-1253960454", @"ap-guangzhou", @"test.png");
     input.Label = @"Porn";
     input.SuggestedLabel = @"Normal";
     request.input = input;

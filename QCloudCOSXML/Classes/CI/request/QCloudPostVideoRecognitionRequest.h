@@ -97,7 +97,7 @@ NSString *QCloudVideoRecognitionModeTransferToString(QCloudVideoRecognitionMode 
 @property (strong, nonatomic) NSString *object;
 
 
-/// 视频文件的链接地址，例如 http://examplebucket-1250000000.cos.ap-shanghai.myqcloud.com/test.mp4。Object 和 Url 只能选择其中一种。
+/// 视频文件的链接地址，例如默认 COS 服务域名下的视频文件 URL。Object 和 Url 只能选择其中一种。
 @property (strong, nonatomic) NSString *url;
 /**
  存储桶名

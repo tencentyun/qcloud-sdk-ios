@@ -18,7 +18,19 @@ static NSString * const kServiceStrategyDefault = @"strategy_default";
 static NSString * const kServiceStrategyAggressive = @"strategy_aggressive";
 static NSString * const kServiceStrategyConservative = @"strategy_conservative";
 
+static NSString *QCloudTestCOSHost(NSString *bucket, NSString *region) {
+    return [NSString stringWithFormat:@"%@.cos.%@.%@", bucket, region, QCloudDomainMyQCloud()];
+}
+
+static NSString *QCloudTestURL(NSString *scheme, NSString *host, NSString *pathAndQuery) {
+    return [NSString stringWithFormat:@"%@://%@%@", scheme, host, pathAndQuery];
+}
+
 @interface QCloudCOSXMLBaseTests : XCTestCase <QCloudSignatureProvider>
+@end
+
+@interface QCloudHTTPRequest (QCloudCOSXMLBaseTests)
+- (BOOL)isFixTime:(NSError *)error;
 @end
 
 @implementation QCloudCOSXMLBaseTests
@@ -122,7 +134,8 @@ static NSString * const kServiceStrategyConservative = @"strategy_conservative";
 
 - (void)testNotifyError_WithURL {
     QCloudGetObjectRequest *request = [self createRequestWithService:[QCloudCOSXMLService cosxmlServiceForKey:kServiceWithDetect]];
-    NSError *error = [self mockErrorWithCode:500 url:[NSURL URLWithString:@"https://tfbtcbd174010922223-1253960454.cos.ap-beijing.myqcloud.com/5B9F68EE-25B9-4371-B463-1A61A010B42B?tagging&VersionId="]];
+    NSString *host = QCloudTestCOSHost(@"tfbtcbd174010922223-1253960454", @"ap-beijing");
+    NSError *error = [self mockErrorWithCode:500 url:[NSURL URLWithString:QCloudTestURL(@"https", host, @"/5B9F68EE-25B9-4371-B463-1A61A010B42B?tagging&VersionId=")]];
     
     XCTestExpectation *exp = [self expectationWithDescription:@"testNotifyError_WithURL"];
     [request setFinishBlock:^(id outputObject, NSError *error) {
@@ -137,7 +150,8 @@ static NSString * const kServiceStrategyConservative = @"strategy_conservative";
 
 - (void)testNotifyError_NoURL {
     QCloudGetObjectRequest *request = [self createRequestWithService:[QCloudCOSXMLService cosxmlServiceForKey:kServiceWithDetect]];
-    NSError *error = [self mockErrorWithCode:500 url:[NSURL URLWithString:@"file://tfbtcbd174010922223-1253960454.xxx.aaa-beijing.myqcloud.com/5B9F68EE-25B9-4371-B463-1A61A010B42B?tagging&VersionId="]];
+    NSString *host = [NSString stringWithFormat:@"tfbtcbd174010922223-1253960454.xxx.aaa-beijing.%@", QCloudDomainMyQCloud()];
+    NSError *error = [self mockErrorWithCode:500 url:[NSURL URLWithString:QCloudTestURL(@"file", host, @"/5B9F68EE-25B9-4371-B463-1A61A010B42B?tagging&VersionId=")]];
     
     XCTestExpectation *exp = [self expectationWithDescription:@"testNotifyError_NoURL"];
     [request setFinishBlock:^(id outputObject, NSError *error) {
@@ -282,7 +296,7 @@ static NSString * const kServiceStrategyConservative = @"strategy_conservative";
     QCloudCOSXMLEndPoint *endpoint = [[QCloudCOSXMLEndPoint alloc] init];
     
     XCTAssertTrue(endpoint.isPrefixURL);
-    XCTAssertEqualObjects(endpoint.serviceName, @"myqcloud.com");
+    XCTAssertEqualObjects(endpoint.serviceName, QCloudDomainMyQCloud());
     XCTAssertTrue(endpoint.useHTTPS);  // 父类默认值
 }
 
@@ -304,7 +318,8 @@ static NSString * const kServiceStrategyConservative = @"strategy_conservative";
     
     NSURL *result = [endpoint serverURLWithBucket:@"test-bucket" appID:@"1253960454" regionName:nil];
     
-    XCTAssertEqualObjects(result.absoluteString, @"https://test-bucket-1253960454.cos.ap-beijing.myqcloud.com");
+    NSString *expectedURL = QCloudTestURL(@"https", QCloudTestCOSHost(@"test-bucket-1253960454", @"ap-beijing"), @"");
+    XCTAssertEqualObjects(result.absoluteString, expectedURL);
 }
 
 /// 测试非前缀 URL 构建 (isPrefixURL = NO)
@@ -315,7 +330,8 @@ static NSString * const kServiceStrategyConservative = @"strategy_conservative";
     
     NSURL *result = [endpoint serverURLWithBucket:@"test-bucket" appID:@"1253960454" regionName:nil];
     
-    XCTAssertEqualObjects(result.absoluteString, @"https://ap-beijing.cos.myqcloud.com/test-bucket-1253960454");
+    NSString *expectedURL = QCloudTestURL(@"https", [NSString stringWithFormat:@"ap-beijing.cos.%@", QCloudDomainMyQCloud()], @"/test-bucket-1253960454");
+    XCTAssertEqualObjects(result.absoluteString, expectedURL);
 }
 
 /// 测试 HTTP 协议
@@ -361,7 +377,8 @@ static NSString * const kServiceStrategyConservative = @"strategy_conservative";
     NSURL *result = [endpoint serverURLWithBucket:@"test-bucket-1253960454" appID:@"1253960454" regionName:nil];
     
     // 应该不会重复添加 appID
-    XCTAssertEqualObjects(result.absoluteString, @"https://test-bucket-1253960454.cos.ap-beijing.myqcloud.com");
+    NSString *expectedURL = QCloudTestURL(@"https", QCloudTestCOSHost(@"test-bucket-1253960454", @"ap-beijing"), @"");
+    XCTAssertEqualObjects(result.absoluteString, expectedURL);
 }
 
 /// 测试使用参数中的 regionName 而非 endpoint 的 regionName
@@ -381,7 +398,8 @@ static NSString * const kServiceStrategyConservative = @"strategy_conservative";
     
     NSURL *result = [endpoint serverURLWithBucket:@"test-bucket" appID:nil regionName:nil];
     
-    XCTAssertEqualObjects(result.absoluteString, @"https://test-bucket.cos.ap-beijing.myqcloud.com");
+    NSString *expectedURL = QCloudTestURL(@"https", QCloudTestCOSHost(@"test-bucket", @"ap-beijing"), @"");
+    XCTAssertEqualObjects(result.absoluteString, expectedURL);
 }
 
 /// 测试 copyWithZone
@@ -402,15 +420,15 @@ static NSString * const kServiceStrategyConservative = @"strategy_conservative";
     XCTAssertFalse(copied.useHTTPS);
 }
 
-/// 测试非 myqcloud.com 的 serviceName 不校验 regionName
+/// 测试非默认域名的 serviceName 不校验 regionName
 - (void)testEndPoint_CustomServiceName {
     QCloudCOSXMLEndPoint *endpoint = [[QCloudCOSXMLEndPoint alloc] init];
-    endpoint.serviceName = @"tencentcos.cn";
+    endpoint.serviceName = QCloudDomainTencentCOS();
     endpoint.regionName = @"ap-beijing";
     
     NSURL *result = [endpoint serverURLWithBucket:@"test-bucket" appID:@"1253960454" regionName:nil];
     
-    XCTAssertTrue([result.absoluteString containsString:@"tencentcos.cn"]);
+    XCTAssertTrue([result.absoluteString containsString:QCloudDomainTencentCOS()]);
 }
 
 /// 测试非法 regionName (setRegionName: 断言校验)
@@ -439,12 +457,12 @@ static NSString * const kServiceStrategyConservative = @"strategy_conservative";
     XCTAssertThrows([endpoint serverURLWithBucket:@"test-bucket" appID:@"1253960454" regionName:@"ap-shanghai@#$"], @"非法参数 regionName 应触发断言");
 }
 
-/// 测试非 myqcloud.com 时不校验非法 regionName
+/// 测试非默认域名时不校验非法 regionName
 - (void)testEndPoint_CustomServiceName_IllegalRegion {
     QCloudCOSXMLEndPoint *endpoint = [[QCloudCOSXMLEndPoint alloc] init];
-    endpoint.serviceName = @"tencentcos.cn";
+    endpoint.serviceName = QCloudDomainTencentCOS();
     
-    // 非 myqcloud.com 时，setter 不校验 regionName
+    // 非默认域名时，setter 不校验 regionName
     endpoint.regionName = @"custom-region@test";
     
     // regionName 应该被设置成功
@@ -476,7 +494,8 @@ static NSString * const kServiceWithSignatureProvider = @"service_with_signature
     request.bucket = @"test-bucket-1253960454";
     request.object = @"test-object";
     
-    NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://test.cos.ap-beijing.myqcloud.com/test"]];
+    NSString *requestURL = QCloudTestURL(@"https", QCloudTestCOSHost(@"test", @"ap-beijing"), @"/test");
+    NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:requestURL]];
     
     // 无 signatureProvider 时会触发断言
     XCTAssertThrows([service loadAuthorizationForBiz:request urlRequest:urlRequest compelete:^(QCloudSignature *signature, NSError *error) {
@@ -507,7 +526,8 @@ static NSString * const kServiceWithSignatureProvider = @"service_with_signature
     request.bucket = @"test-bucket-1253960454";
     request.object = @"test-object";
     
-    NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://test.cos.ap-beijing.myqcloud.com/test"]];
+    NSString *requestURL = QCloudTestURL(@"https", QCloudTestCOSHost(@"test", @"ap-beijing"), @"/test");
+    NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:requestURL]];
     
     XCTestExpectation *exp = [self expectationWithDescription:@"loadAuthorization"];
     
@@ -663,7 +683,7 @@ static NSString * const kServiceCustomTencentcos = @"service_custom_tencentcos";
 static NSString * const kServiceCustomTencentcosWithRegion = @"service_custom_tencentcos_region";
 static NSString * const kServiceCustomHTTP = @"service_custom_http";
 
-/// 测试默认 myqcloud.com 服务名 - HTTPS
+/// 测试默认服务名 - HTTPS
 - (void)testGetServiceRequest_Custom_DefaultMyqcloud_HTTPS {
     NSString *testKey = kServiceCustomMyqcloud;
     if ([QCloudCOSXMLService hasCosxmlServiceForKey:testKey]) {
@@ -675,7 +695,7 @@ static NSString * const kServiceCustomHTTP = @"service_custom_http";
     QCloudCOSXMLEndPoint *endpoint = [[QCloudCOSXMLEndPoint alloc] init];
     endpoint.regionName = @"ap-beijing";
     endpoint.useHTTPS = YES;
-    // serviceName 默认为 myqcloud.com
+    // serviceName 默认为默认服务域名
     config.endpoint = endpoint;
     config.signatureProvider = (id<QCloudSignatureProvider>)self;
     
@@ -689,13 +709,14 @@ static NSString * const kServiceCustomHTTP = @"service_custom_http";
     
     XCTAssertTrue(result);
     XCTAssertNil(error);
-    // 默认 myqcloud.com 应该使用 service.cos.myqcloud.com
-    XCTAssertEqualObjects(request.requestData.serverURL, @"https://service.cos.myqcloud.com");
+    // 默认服务名应该使用 service.cos.{默认服务域名}
+    NSString *expectedURL = QCloudTestURL(@"https", [NSString stringWithFormat:@"service.cos.%@", QCloudDomainMyQCloud()], @"");
+    XCTAssertEqualObjects(request.requestData.serverURL, expectedURL);
     
     [QCloudCOSXMLService removeCosxmlServiceWithKey:testKey];
 }
 
-/// 测试默认 myqcloud.com 服务名 - HTTP
+/// 测试默认服务名 - HTTP
 - (void)testGetServiceRequest_Custom_DefaultMyqcloud_HTTP {
     NSString *testKey = kServiceCustomHTTP;
     if ([QCloudCOSXMLService hasCosxmlServiceForKey:testKey]) {
@@ -721,12 +742,13 @@ static NSString * const kServiceCustomHTTP = @"service_custom_http";
     XCTAssertTrue(result);
     XCTAssertNil(error);
     // HTTP 协议
-    XCTAssertEqualObjects(request.requestData.serverURL, @"http://service.cos.myqcloud.com");
+    NSString *expectedURL = QCloudTestURL(@"http", [NSString stringWithFormat:@"service.cos.%@", QCloudDomainMyQCloud()], @"");
+    XCTAssertEqualObjects(request.requestData.serverURL, expectedURL);
     
     [QCloudCOSXMLService removeCosxmlServiceWithKey:testKey];
 }
 
-/// 测试自定义 serviceName (非 myqcloud.com) + 有 regionName
+/// 测试自定义 serviceName (非默认域名) + 有 regionName
 - (void)testGetServiceRequest_Custom_TencentcosWithRegion {
     NSString *testKey = kServiceCustomTencentcosWithRegion;
     if ([QCloudCOSXMLService hasCosxmlServiceForKey:testKey]) {
@@ -736,7 +758,7 @@ static NSString * const kServiceCustomHTTP = @"service_custom_http";
     QCloudServiceConfiguration *config = [QCloudServiceConfiguration new];
     config.appID = @"1253960454";
     QCloudCOSXMLEndPoint *endpoint = [[QCloudCOSXMLEndPoint alloc] init];
-    endpoint.serviceName = @"tencentcos.cn";  // 非 myqcloud.com
+    endpoint.serviceName = QCloudDomainTencentCOS();  // 非默认域名
     endpoint.regionName = @"ap-beijing";
     endpoint.useHTTPS = YES;
     config.endpoint = endpoint;
@@ -752,13 +774,14 @@ static NSString * const kServiceCustomHTTP = @"service_custom_http";
     
     XCTAssertTrue(result);
     XCTAssertNil(error);
-    // 非 myqcloud.com + 有 regionName: service.cos.{region}.{serviceName}
-    XCTAssertEqualObjects(request.requestData.serverURL, @"https://service.cos.ap-beijing.tencentcos.cn");
+    // 非默认域名 + 有 regionName: service.cos.{region}.{serviceName}
+    NSString *expectedURL = [NSString stringWithFormat:@"https://service.cos.ap-beijing.%@", QCloudDomainTencentCOS()];
+    XCTAssertEqualObjects(request.requestData.serverURL, expectedURL);
     
     [QCloudCOSXMLService removeCosxmlServiceWithKey:testKey];
 }
 
-/// 测试自定义 serviceName (非 myqcloud.com) + 无 regionName
+/// 测试自定义 serviceName (非默认域名) + 无 regionName
 - (void)testGetServiceRequest_Custom_TencentcosWithoutRegion {
     NSString *testKey = kServiceCustomTencentcos;
     if ([QCloudCOSXMLService hasCosxmlServiceForKey:testKey]) {
@@ -768,7 +791,7 @@ static NSString * const kServiceCustomHTTP = @"service_custom_http";
     QCloudServiceConfiguration *config = [QCloudServiceConfiguration new];
     config.appID = @"1253960454";
     QCloudCOSXMLEndPoint *endpoint = [[QCloudCOSXMLEndPoint alloc] init];
-    endpoint.serviceName = @"tencentcos.cn";  // 非 myqcloud.com
+    endpoint.serviceName = QCloudDomainTencentCOS();  // 非默认域名
     // 不设置 regionName
     endpoint.useHTTPS = YES;
     config.endpoint = endpoint;
@@ -784,8 +807,9 @@ static NSString * const kServiceCustomHTTP = @"service_custom_http";
     
     XCTAssertTrue(result);
     XCTAssertNil(error);
-    // 非 myqcloud.com + 无 regionName: service.cos.{serviceName}
-    XCTAssertEqualObjects(request.requestData.serverURL, @"https://service.cos.tencentcos.cn");
+    // 非默认域名 + 无 regionName: service.cos.{serviceName}
+    NSString *expectedURL = [NSString stringWithFormat:@"https://service.cos.%@", QCloudDomainTencentCOS()];
+    XCTAssertEqualObjects(request.requestData.serverURL, expectedURL);
     
     [QCloudCOSXMLService removeCosxmlServiceWithKey:testKey];
 }
@@ -800,7 +824,7 @@ static NSString * const kServiceCustomHTTP = @"service_custom_http";
     QCloudServiceConfiguration *config = [QCloudServiceConfiguration new];
     config.appID = @"1253960454";
     QCloudCOSXMLEndPoint *endpoint = [[QCloudCOSXMLEndPoint alloc] init];
-    endpoint.serviceName = @"tencentcos.cn";
+    endpoint.serviceName = QCloudDomainTencentCOS();
     endpoint.regionName = @"ap-shanghai";
     endpoint.useHTTPS = NO;  // HTTP
     config.endpoint = endpoint;
@@ -816,10 +840,152 @@ static NSString * const kServiceCustomHTTP = @"service_custom_http";
     
     XCTAssertTrue(result);
     XCTAssertNil(error);
-    // HTTP + 非 myqcloud.com + 有 regionName
-    XCTAssertEqualObjects(request.requestData.serverURL, @"http://service.cos.ap-shanghai.tencentcos.cn");
+    // HTTP + 非默认域名 + 有 regionName
+    NSString *expectedURL = [NSString stringWithFormat:@"http://service.cos.ap-shanghai.%@", QCloudDomainTencentCOS()];
+    XCTAssertEqualObjects(request.requestData.serverURL, expectedURL);
     
     [QCloudCOSXMLService removeCosxmlServiceWithKey:testKey];
+}
+
+#pragma mark - QCloudHTTPRequest 基础分支测试
+
+- (void)testHTTPRequest_DefaultBranchesAndHostPredicates {
+    QCloudHTTPRequest *request = [QCloudHTTPRequest new];
+    NSError *error = nil;
+    XCTAssertTrue([request buildRequestData:&error]);
+    XCTAssertTrue([request prepareInvokeURLRequest:[NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://example.com"]] error:&error]);
+    XCTAssertEqual([request reciveResponse:nil], NSURLSessionResponseAllow);
+    XCTAssertNil(request.downloadingTempURL);
+    
+    NSURL *downloadURL = [NSURL URLWithString:@"file:///tmp/qcloud-test-object"];
+    request.downloadingURL = downloadURL;
+    XCTAssertEqualObjects(request.downloadingTempURL.absoluteString, @"file:///tmp/qcloud-test-object.downloading");
+    
+    NSError *skewError = [NSError errorWithDomain:@"QCloudTest" code:403 userInfo:@{@"Code": @"RequestTimeTooSkewed"}];
+    XCTAssertTrue([request isFixTime:skewError]);
+    NSError *expiredError = [NSError errorWithDomain:@"QCloudTest" code:403 userInfo:@{@"Code": @"AccessDenied", @"Message": @"Request has expired"}];
+    XCTAssertTrue([request isFixTime:expiredError]);
+    NSError *normalError = [NSError errorWithDomain:@"QCloudTest" code:500 userInfo:@{@"Code": @"InternalError"}];
+    XCTAssertFalse([request isFixTime:normalError]);
+    
+    NSMutableURLRequest *cosURLRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:QCloudTestURL(@"https", QCloudTestCOSHost(@"bucket", @"ap-beijing"), @"/object")]];
+    [request setValue:cosURLRequest forKey:@"urlRequest"];
+    XCTAssertTrue([request isCOSHost]);
+    XCTAssertFalse([request isCIHost]);
+    XCTAssertTrue([request needChangeHost]);
+    
+    NSString *ciHost = [NSString stringWithFormat:@"bucket.ci.ap-beijing.%@", QCloudDomainMyQCloud()];
+    NSMutableURLRequest *ciURLRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:QCloudTestURL(@"https", ciHost, @"/job")]];
+    [request setValue:ciURLRequest forKey:@"urlRequest"];
+    XCTAssertFalse([request isCOSHost]);
+    XCTAssertTrue([request isCIHost]);
+}
+
+#pragma mark - QCloudRequestData 测试
+
+- (void)testRequestData_DomainDecodeHelpers {
+    XCTAssertEqualObjects(QCloudDomainMyQCloud(), @"myqcloud.com");
+    XCTAssertEqualObjects(QCloudDomainTencentCOS(), @"tencentcos.cn");
+    XCTAssertEqualObjects(QCloudDomainTencentCI(), @"tencentci.cn");
+    XCTAssertEqualObjects(emergencyHost, QCloudDomainTencentCOS());
+}
+
+- (void)testRequestData_ParameterHeadersCookiesAndClean {
+    QCloudRequestData *data = [QCloudRequestData new];
+    XCTAssertEqualObjects(data.URIMethod, @"");
+    XCTAssertNotNil(data.httpHeaders[HTTPHeaderUserAgent]);
+    
+    [data setParameter:@"value" withKey:@"key"];
+    [data setParameter:NSNull.null withKey:@"nullKey"];
+    [data setNumberParamter:@42 withKey:@"numberKey"];
+    [data setParametersInDictionary:@{@"dictKey": @"dictValue"}];
+    [data setParamatersWithString:@"a=1&b=2&invalid&c=3"];
+    
+    XCTAssertEqualObjects([data paramterForKey:@"key"], @"value");
+    XCTAssertNil([data paramterForKey:@"nullKey"]);
+    XCTAssertEqualObjects([data paramterForKey:@"numberKey"], @"42");
+    XCTAssertEqualObjects([data paramterForKey:@"dictKey"], @"dictValue");
+    XCTAssertEqualObjects([data paramterForKey:@"a"], @"1");
+    XCTAssertEqualObjects([data paramterForKey:@"b"], @"2");
+    XCTAssertNil([data paramterForKey:@"invalid"]);
+    XCTAssertEqualObjects([data paramterForKey:@"c"], @"3");
+    
+    [data setQueryStringParamter:@"queryValue" withKey:@"queryKey"];
+    [data setQueryStringParamter:(id)@100 withKey:@"numericQuery"];
+    [data setQueryStringParamter:(id)NSNull.null withKey:@"emptyQuery"];
+    XCTAssertEqualObjects(data.queryParamters[@"queryKey"], @"queryValue");
+    XCTAssertEqualObjects(data.queryParamters[@"numericQuery"], @"100");
+    XCTAssertEqualObjects(data.queryParamters[@"emptyQuery"], @"");
+    
+    [data setValue:@"headerValue" forHTTPHeaderField:@"X-Test-Header"];
+    XCTAssertEqualObjects([data valueForHttpKey:@"X-Test-Header"], @"headerValue");
+    [data removeHTTPHeaderForKey:nil];
+    [data removeHTTPHeaderForKey:@"X-Test-Header"];
+    XCTAssertNil([data valueForHttpKey:@"X-Test-Header"]);
+    
+    [data addCookieWithDomain:@"example.com" path:@"/" name:@"token" value:@"old"];
+    [data addCookieWithDomain:@"example.com" path:@"/" name:@"token" value:@"new"];
+    XCTAssertEqual(data.cookies.count, 1);
+    NSHTTPCookie *cookie = data.cookies.firstObject;
+    XCTAssertEqualObjects(cookie.value, @"new");
+    
+    XCTAssertTrue([data.description containsString:@"[PARAMTERS]"]);
+    [data clean];
+    XCTAssertNil([data paramterForKey:@"key"]);
+    XCTAssertEqualObjects(data.URIMethod, @"");
+    XCTAssertNotNil(data.httpHeaders[HTTPHeaderUserAgent]);
+}
+
+- (void)testRequestData_FormDataAndFileParts {
+    QCloudRequestData *data = [QCloudRequestData new];
+    XCTAssertFalse(data.multiDataStream.hasData);
+    XCTAssertTrue([data appendFormDataKey:@"name" value:(id)@"value"]);
+    XCTAssertTrue(data.multiDataStream.hasData);
+    XCTAssertTrue([data.description containsString:@"[MULTIDATA]"]);
+    
+    NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[[NSUUID UUID].UUIDString stringByAppendingPathExtension:@"txt"]];
+    NSURL *fileURL = [NSURL fileURLWithPath:filePath];
+    XCTAssertTrue([@"request-data-file" writeToURL:fileURL atomically:YES encoding:NSUTF8StringEncoding error:nil]);
+    
+    NSError *error = nil;
+    XCTAssertTrue([data appendPartWithFileURL:fileURL name:@"file" fileName:@"file.txt" mimeType:@"text/plain" headerParamters:@{@"x-test": @"1"} error:&error]);
+    XCTAssertNil(error);
+    
+    error = nil;
+    XCTAssertTrue([data appendPartWithFileURL:fileURL name:@"slice" fileName:@"file.txt" offset:0 sliceLength:4 mimeType:@"text/plain" headerParamters:nil error:&error]);
+    XCTAssertNil(error);
+    
+    error = nil;
+    XCTAssertFalse([data appendPartWithFileURL:[NSURL URLWithString:@"https://example.com/file.txt"] name:@"bad" fileName:@"bad.txt" mimeType:@"text/plain" headerParamters:nil error:&error]);
+    XCTAssertNotNil(error);
+    
+    [[NSFileManager defaultManager] removeItemAtURL:fileURL error:nil];
+}
+
+- (void)testRequestData_ServerURLHostSwitching {
+    NSString *cosHost = QCloudTestCOSHost(@"bucket", @"ap-beijing");
+    NSString *backupHost = [cosHost stringByReplacingOccurrencesOfString:QCloudDomainMyQCloud() withString:QCloudDomainTencentCOS()];
+    
+    QCloudRequestData *data = [QCloudRequestData new];
+    data.needChangeHost = YES;
+    data.serverURL = cosHost;
+    XCTAssertEqualObjects(data.serverURL, backupHost);
+    
+    data = [QCloudRequestData new];
+    data.needChangeHost = YES;
+    [data setValue:@"request-id" forHTTPHeaderField:@"x-cos-request-id"];
+    data.serverURL = cosHost;
+    XCTAssertEqualObjects(data.serverURL, cosHost);
+    
+    data = [QCloudRequestData new];
+    QCloudCOSXMLEndPoint *endpoint = [[QCloudCOSXMLEndPoint alloc] init];
+    endpoint.regionName = @"ap-shanghai";
+    data.endpoint = endpoint;
+    data.bucket = @"bucket";
+    data.appId = @"1250000000";
+    data.region = @"ap-guangzhou";
+    data.serverURL = @"ignored-host";
+    XCTAssertEqualObjects(data.serverURL, QCloudTestURL(@"https", QCloudTestCOSHost(@"bucket-1250000000", @"ap-guangzhou"), @""));
 }
 
 @end

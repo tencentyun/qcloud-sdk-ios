@@ -9,6 +9,7 @@
 #import "QCloudPNUdpTraceroute.h"
 #include <AssertMacros.h>
 #import <arpa/inet.h>
+#import <errno.h>
 #import <netdb.h>
 #import <netinet/in.h>
 #import <sys/socket.h>
@@ -99,12 +100,14 @@
         _host = host == nil ? @"" : host;
         _maxTtl = maxTtl;
         _complete = complete;
+        socket_send = -1;
+        socket_recv = -1;
         _isStop = NO;
     }
     return self;
 }
 
-- (void)settingUHostSocketAddressWithHost:(NSString *)host
+- (BOOL)settingUHostSocketAddressWithHost:(NSString *)host
 {
     const char *hostaddr = [host UTF8String];
     memset(&remote_addr, 0, sizeof(remote_addr));
@@ -117,8 +120,8 @@
         if (remoteHost == NULL || remoteHost->h_addr == NULL) {
 //            NSLog(@"access DNS error..");
             [_traceDetails appendString:@"access DNS error..\n"];
-            _complete(_traceDetails);
-            return;
+            _complete([_traceDetails mutableCopy]);
+            return NO;
         }
         
         remote_addr.sin_addr = *(struct in_addr *)remoteHost->h_addr;
@@ -128,15 +131,32 @@
     }
     socket_recv = socket(AF_INET,SOCK_DGRAM,IPPROTO_ICMP);
     socket_send = socket(AF_INET, SOCK_DGRAM, 0);
+    if (socket_recv < 0 || socket_send < 0) {
+        int err = errno;
+        if (socket_recv >= 0) {
+            close(socket_recv);
+            socket_recv = -1;
+        }
+        if (socket_send >= 0) {
+            close(socket_send);
+            socket_send = -1;
+        }
+        [_traceDetails appendString:[NSString stringWithFormat:@"create socket failed, error %d\n", err]];
+        _complete([_traceDetails mutableCopy]);
+        return NO;
+    }
+    return YES;
 }
 
 - (void)sendAndRec
 {
     _traceDetails = [NSMutableString stringWithString:@"\n"];
-    [self settingUHostSocketAddressWithHost:_host];
+    if (![self settingUHostSocketAddressWithHost:_host]) {
+        return;
+    }
     int ttl = 1;
     in_addr_t ip = 0;
-    static NSUInteger conuntinueUnreachableRoutes = 0;
+    NSUInteger conuntinueUnreachableRoutes = 0;
     
     // 如果连续5个路由节点无响应，则终止traceroute.
     do {
@@ -153,15 +173,21 @@
         
     } while (++ttl <= _maxTtl && ip != remote_addr.sin_addr.s_addr && !_isStop && conuntinueUnreachableRoutes < 10);
     
-    close(socket_send);
-    close(socket_recv);
+    if (socket_send >= 0) {
+        close(socket_send);
+        socket_send = -1;
+    }
+    if (socket_recv >= 0) {
+        close(socket_recv);
+        socket_recv = -1;
+    }
     
     if (!_isStop) {
         _isStop = YES;
     }
     
     [_traceDetails appendString:@"udp traceroute complete...\n"];
-    _complete(_traceDetails);
+    _complete([_traceDetails mutableCopy]);
 //    NSLog(@"udp traceroute complete...");
 }
 
@@ -213,7 +239,7 @@
     
     [_traceDetails appendString:trace.description];
     [_traceDetails appendString:@"\n"];
-    _complete(_traceDetails);
+    _complete([_traceDetails mutableCopy]);
     return trace;
 }
 

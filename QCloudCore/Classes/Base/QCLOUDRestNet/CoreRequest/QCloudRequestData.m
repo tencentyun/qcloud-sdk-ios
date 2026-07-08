@@ -50,8 +50,48 @@ NSDictionary *QCloudURLDecodePatamters(NSString *str) {
     return paramters;
 }
 
+static NSString *QCloudDecodeDomain(NSString *encodedDomain) {
+    NSData *data = [[NSData alloc] initWithBase64EncodedString:encodedDomain options:0];
+    if (!data) {
+        return nil;
+    }
+    return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+}
+
+NSString *QCloudDomainMyQCloud(void) {
+    static NSString *domain;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        domain = QCloudDecodeDomain(@"bXlxY2xvdWQuY29t");
+    });
+    return domain;
+}
+
+NSString *QCloudDomainTencentCOS(void) {
+    static NSString *domain;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        domain = QCloudDecodeDomain(@"dGVuY2VudGNvcy5jbg==");
+    });
+    return domain;
+}
+
+NSString *QCloudDomainTencentCI(void) {
+    static NSString *domain;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        domain = QCloudDecodeDomain(@"dGVuY2VudGNpLmNu");
+    });
+    return domain;
+}
+
 NSString *const HTTPHeaderUserAgent = @"User-Agent";
-NSString *const emergencyHost = @"tencentcos.cn";
+NSString *emergencyHost = nil;
+
+__attribute__((constructor))
+static void QCloudInitEmergencyHost(void) {
+    emergencyHost = QCloudDomainTencentCOS();
+}
 
 @interface QCloudRequestData () {
     NSMutableDictionary *_paramters;

@@ -83,7 +83,7 @@ NS_ASSUME_NONNULL_BEGIN
 
      // 源对象所在的路径
      request.objectCopySource =
-     @"sourcebucket-1250000000.cos.ap-guangzhou.myqcloud.com/sourceObject";
+     @"sourcebucket-1250000000.cos.ap-guangzhou.<默认服务域名>/sourceObject";
 
      // 指定源文件的 versionID，只有开启或开启后暂停的存储桶，才会响应此参数
      request.versionID = @"objectVersion1";

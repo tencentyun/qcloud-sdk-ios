@@ -19,8 +19,8 @@
 //  | timeout/shutdown | -       | 是           | 是       |
 //
 //  域名切换规则：
-//  - CI 主域名：*.ci.{region}.myqcloud.com
-//  - CI 备用域名：*.ci.{region}.tencentci.cn
+//  - CI 主域名：*.ci.{region}.默认服务域名
+//  - CI 备用域名：由备用后缀动态构造
 //  - 切换条件：响应不含 x-ci-request-id 且满足重试条件
 //
 

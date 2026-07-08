@@ -17,7 +17,7 @@
 //  | 未收到回包 | 重试3次 | 最后一次重试时切换 |
 //
 //  域名切换条件（需同时满足）：
-//  1. 域名匹配 myqcloud.com（COS: *.cos.{Region}.myqcloud.com，CI: *.ci.{Region}.myqcloud.com）
+//  1. 域名匹配默认服务域名（COS/CI 主域名）
 //  2. 响应不含 request-id（COS: x-cos-request-id，CI: x-ci-request-id）
 //  3. 开启域名切换开关（disableChangeHost = NO）
 //  4. SDK 生成签名（credential 存在）
@@ -27,21 +27,34 @@
 
 #pragma mark - 测试用域名常量
 
-// COS 域名格式：bucket.cos.region.myqcloud.com
-static NSString * const kCOSHostValid = @"bucket.cos.ap-beijing.myqcloud.com";
-static NSString * const kCOSHostValid2 = @"my-bucket.cos.ap-shanghai.myqcloud.com";
+static NSString *QCloudTestCOSHost(NSString *bucket, NSString *region) {
+    return [NSString stringWithFormat:@"%@.cos.%@.%@", bucket, region, QCloudDomainMyQCloud()];
+}
 
-// CI 域名格式：bucket.ci.region.myqcloud.com 或 ci.region.myqcloud.com
-static NSString * const kCIHostWithBucket = @"bucket.ci.ap-beijing.myqcloud.com";
-static NSString * const kCIHostWithoutBucket = @"ci.ap-beijing.myqcloud.com";
+static NSString *QCloudTestCIHostWithBucket(NSString *bucket, NSString *region) {
+    return [NSString stringWithFormat:@"%@.ci.%@.%@", bucket, region, QCloudDomainMyQCloud()];
+}
 
-// 备用域名
-static NSString * const kBackupCOSHost = @"bucket.cos.ap-beijing.tencentcos.cn";
-static NSString * const kBackupCIHost = @"bucket.ci.ap-beijing.tencentci.cn";
+static NSString *QCloudTestCIHost(NSString *region) {
+    return [NSString stringWithFormat:@"ci.%@.%@", region, QCloudDomainMyQCloud()];
+}
+
+#define kCOSHostValid QCloudTestCOSHost(@"bucket", @"ap-beijing")
+#define kCOSHostValid2 QCloudTestCOSHost(@"my-bucket", @"ap-shanghai")
+#define kCIHostWithBucket QCloudTestCIHostWithBucket(@"bucket", @"ap-beijing")
+#define kCIHostWithoutBucket QCloudTestCIHost(@"ap-beijing")
+
+static NSString *QCloudTestBackupCOSHost(void) {
+    return [NSString stringWithFormat:@"bucket.cos.ap-beijing.%@", QCloudDomainTencentCOS()];
+}
+
+static NSString *QCloudTestBackupCIHost(void) {
+    return [NSString stringWithFormat:@"bucket.ci.ap-beijing.%@", QCloudDomainTencentCI()];
+}
 
 // 不匹配的域名（不应触发切换）
-static NSString * const kAccelerateHost = @"bucket.cos.accelerate.myqcloud.com";
-static NSString * const kServiceHost = @"service.cos.myqcloud.com";
+#define kAccelerateHost [NSString stringWithFormat:@"bucket.cos.accelerate.%@", QCloudDomainMyQCloud()]
+#define kServiceHost [NSString stringWithFormat:@"service.cos.%@", QCloudDomainMyQCloud()]
 static NSString * const kCustomHost = @"custom.example.com";
 static NSString * const kOtherHost = @"bucket.oss.ap-beijing.aliyuncs.com";
 
@@ -52,8 +65,13 @@ static NSString * const kOtherHost = @"bucket.oss.ap-beijing.aliyuncs.com";
 
 #pragma mark - Mock 域名切换判断测试（needChangeHost 方法）
 
+/// 测试公开备用域名符号保持运行时值不变
+- (void)testMock_EmergencyHost_RuntimeValueUnchanged {
+    XCTAssertEqualObjects(emergencyHost, QCloudDomainTencentCOS());
+}
+
 /// 测试 COS 域名匹配 - 无 request-id 时应该切换
-/// 域名格式：bucket.cos.region.myqcloud.com
+/// 域名格式：bucket.cos.region.默认服务域名
 - (void)testMock_COSHost_WithoutRequestId_ShouldSwitch {
     // COS 域名，无 request-id
     BOOL result = [QCloudHTTPRequest needChangeHost:kCOSHostValid responseHeaders:@{}];
@@ -72,7 +90,7 @@ static NSString * const kOtherHost = @"bucket.oss.ap-beijing.aliyuncs.com";
 }
 
 /// 测试 CI 域名匹配 - 无 request-id 时应该切换
-/// 域名格式：bucket.ci.region.myqcloud.com 或 ci.region.myqcloud.com
+/// 域名格式：bucket.ci.region.默认服务域名 或 ci.region.默认服务域名
 - (void)testMock_CIHost_WithoutRequestId_ShouldSwitch {
     // CI 域名带 bucket
     BOOL result = [QCloudHTTPRequest needChangeHost:kCIHostWithBucket responseHeaders:@{}];
@@ -93,24 +111,22 @@ static NSString * const kOtherHost = @"bucket.oss.ap-beijing.aliyuncs.com";
 
 /// 测试备用域名 - 不应该再切换
 - (void)testMock_BackupHost_ShouldNotSwitch {
-    // tencentcos.cn 备用域名
-    BOOL result = [QCloudHTTPRequest needChangeHost:kBackupCOSHost responseHeaders:@{}];
-    XCTAssertFalse(result, @"备用域名 tencentcos.cn 不应该再切换");
+    BOOL result = [QCloudHTTPRequest needChangeHost:QCloudTestBackupCOSHost() responseHeaders:@{}];
+    XCTAssertFalse(result, @"COS 备用域名不应该再切换");
     
-    // tencentci.cn 备用域名
-    result = [QCloudHTTPRequest needChangeHost:kBackupCIHost responseHeaders:@{}];
-    XCTAssertFalse(result, @"备用域名 tencentci.cn 不应该再切换");
+    result = [QCloudHTTPRequest needChangeHost:QCloudTestBackupCIHost() responseHeaders:@{}];
+    XCTAssertFalse(result, @"CI 备用域名不应该再切换");
 }
 
 /// 测试加速域名 - 不应该切换
-/// 域名格式：bucket.cos.accelerate.myqcloud.com
+/// 域名格式：bucket.cos.accelerate.默认服务域名
 - (void)testMock_AccelerateHost_ShouldNotSwitch {
     BOOL result = [QCloudHTTPRequest needChangeHost:kAccelerateHost responseHeaders:@{}];
     XCTAssertFalse(result, @"加速域名不应该切换");
 }
 
 /// 测试服务域名 - 不应该切换
-/// 域名格式：service.cos.myqcloud.com
+/// 域名格式：service.cos.默认服务域名
 - (void)testMock_ServiceHost_ShouldNotSwitch {
     BOOL result = [QCloudHTTPRequest needChangeHost:kServiceHost responseHeaders:@{}];
     XCTAssertFalse(result, @"服务域名不应该切换");
@@ -140,15 +156,15 @@ static NSString * const kOtherHost = @"bucket.oss.ap-beijing.aliyuncs.com";
 - (void)testMock_GetBackupHost_COS {
     NSString *backupHost = [QCloudHTTPRequest getBackupHost:kCOSHostValid];
     XCTAssertNotNil(backupHost, @"应该返回备用域名");
-    XCTAssertTrue([backupHost containsString:@"tencentcos.cn"], @"COS 备用域名应该包含 tencentcos.cn");
-    XCTAssertFalse([backupHost containsString:@"myqcloud.com"], @"备用域名不应该包含 myqcloud.com");
+    XCTAssertTrue([backupHost containsString:QCloudDomainTencentCOS()], @"COS 备用域名应该包含动态构造后缀");
+    XCTAssertFalse([backupHost containsString:QCloudDomainMyQCloud()], @"备用域名不应该包含默认服务域名");
 }
 
 /// 测试 CI 域名获取备用域名
 - (void)testMock_GetBackupHost_CI {
     NSString *backupHost = [QCloudHTTPRequest getBackupHost:kCIHostWithBucket];
     XCTAssertNotNil(backupHost, @"应该返回备用域名");
-    XCTAssertTrue([backupHost containsString:@"tencentci.cn"], @"CI 备用域名应该包含 tencentci.cn");
+    XCTAssertTrue([backupHost containsString:QCloudDomainTencentCI()], @"CI 备用域名应该包含动态构造后缀");
 }
 
 #pragma mark - Mock 域名类型判断测试
@@ -157,7 +173,7 @@ static NSString * const kOtherHost = @"bucket.oss.ap-beijing.aliyuncs.com";
 - (void)testMock_IsCOSHost {
     // 有效 COS 域名
     BOOL result = [QCloudHTTPRequest needChangeHost:kCOSHostValid];
-    XCTAssertTrue(result, @"bucket.cos.region.myqcloud.com 应该是有效 COS 域名");
+    XCTAssertTrue(result, @"bucket.cos.region.默认服务域名 应该是有效 COS 域名");
     
     // 无效域名
     result = [QCloudHTTPRequest needChangeHost:kCustomHost];
@@ -169,17 +185,17 @@ static NSString * const kOtherHost = @"bucket.oss.ap-beijing.aliyuncs.com";
 /// 测试域名正则匹配边界情况
 - (void)testMock_DomainRegex_EdgeCases {
     // 多级 bucket 名称
-    NSString *multiLevelBucket = @"my-test-bucket.cos.ap-beijing.myqcloud.com";
+    NSString *multiLevelBucket = QCloudTestCOSHost(@"my-test-bucket", @"ap-beijing");
     BOOL result = [QCloudHTTPRequest needChangeHost:multiLevelBucket responseHeaders:@{}];
     XCTAssertTrue(result, @"多级 bucket 名称应该匹配");
     
     // 特殊字符 bucket
-    NSString *specialBucket = @"bucket-123.cos.ap-shanghai.myqcloud.com";
+    NSString *specialBucket = QCloudTestCOSHost(@"bucket-123", @"ap-shanghai");
     result = [QCloudHTTPRequest needChangeHost:specialBucket responseHeaders:@{}];
     XCTAssertTrue(result, @"带数字的 bucket 名称应该匹配");
     
     // 不同 region
-    NSString *differentRegion = @"bucket.cos.na-ashburn.myqcloud.com";
+    NSString *differentRegion = QCloudTestCOSHost(@"bucket", @"na-ashburn");
     result = [QCloudHTTPRequest needChangeHost:differentRegion responseHeaders:@{}];
     XCTAssertTrue(result, @"不同 region 应该匹配");
 }
@@ -215,7 +231,7 @@ static NSString * const kOtherHost = @"bucket.oss.ap-beijing.aliyuncs.com";
     // 步骤2：获取备用域名
     NSString *backupHost = [QCloudHTTPRequest getBackupHost:originalHost];
     XCTAssertNotNil(backupHost, @"步骤2：应该获取到备用域名");
-    XCTAssertTrue([backupHost containsString:@"tencentcos.cn"], @"步骤2：备用域名应该是 tencentcos.cn");
+    XCTAssertTrue([backupHost containsString:QCloudDomainTencentCOS()], @"步骤2：备用域名应该包含动态构造后缀");
     
     // 步骤3：检查备用域名是否还需要切换
     BOOL shouldSwitchAgain = [QCloudHTTPRequest needChangeHost:backupHost responseHeaders:noRequestIdHeaders];

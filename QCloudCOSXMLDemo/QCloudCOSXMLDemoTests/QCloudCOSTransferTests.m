@@ -19,6 +19,10 @@
 #import <QCloudGenerateSnapshotConfiguration.h>
 #import "QCloudDeleteObjectTaggingRequest.h"
 
+static NSString *QCloudTransferPicURL(NSString *path) {
+    return [NSString stringWithFormat:@"http://examplebucket-1250000000.picsh.%@/%@", QCloudDomainMyQCloud(), path];
+}
+
 @interface QCloudCOSTransferTests : XCTestCase <QCloudSignatureProvider>
 @property (nonatomic, strong) NSMutableArray *tempFilePathArray;
 @property (nonatomic, strong) NSString *appID;
@@ -1483,7 +1487,7 @@ static QCloudBucket *gSourceTestBucket;
     QCloudPicOperationRule * rule1 = [[QCloudPicOperationRule alloc]init];
     rule1.type = QCloudPicOperationRuleHalf;
     rule1.actionType = QCloudPicOperationRuleActionPut;
-    rule1.imageURL = @"http://examplebucket-1250000000.picsh.myqcloud.com/shuiyin.png";
+    rule1.imageURL = QCloudTransferPicURL(@"shuiyin.png");
     rule1.fileid = @"output/half_watermark.jpg";
     rule1.level = 1;
     XCTAssertNotNil(rule1.rule);
@@ -1492,7 +1496,7 @@ static QCloudBucket *gSourceTestBucket;
     QCloudPicOperationRule * rule2 = [[QCloudPicOperationRule alloc]init];
     rule2.type = QCloudPicOperationRuleFull;
     rule2.actionType = QCloudPicOperationRuleActionPut;
-    rule2.imageURL = @"http://examplebucket-1250000000.picsh.myqcloud.com/shuiyin2.png";
+    rule2.imageURL = QCloudTransferPicURL(@"shuiyin2.png");
     rule2.fileid = @"output/full_watermark.jpg";
     rule2.level = 2;
     XCTAssertNotNil(rule2.rule);
@@ -1501,7 +1505,7 @@ static QCloudBucket *gSourceTestBucket;
     QCloudPicOperationRule * rule2a = [[QCloudPicOperationRule alloc]init];
     rule2a.type = QCloudPicOperationRuleFull;
     rule2a.actionType = QCloudPicOperationRuleActionPut;
-    rule2a.imageURL = @"http://examplebucket-1250000000.picsh.myqcloud.com/shuiyin.png";
+    rule2a.imageURL = QCloudTransferPicURL(@"shuiyin.png");
     rule2a.fileid = @"output/full_watermark_level0.jpg";
     rule2a.level = 0; // 小于1，应默认为1
     XCTAssertNotNil(rule2a.rule);
@@ -1510,7 +1514,7 @@ static QCloudBucket *gSourceTestBucket;
     QCloudPicOperationRule * rule2b = [[QCloudPicOperationRule alloc]init];
     rule2b.type = QCloudPicOperationRuleFull;
     rule2b.actionType = QCloudPicOperationRuleActionPut;
-    rule2b.imageURL = @"http://examplebucket-1250000000.picsh.myqcloud.com/shuiyin.png";
+    rule2b.imageURL = QCloudTransferPicURL(@"shuiyin.png");
     rule2b.fileid = @"output/full_watermark_level5.jpg";
     rule2b.level = 5; // 大于3，应默认为3
     XCTAssertNotNil(rule2b.rule);
@@ -1529,7 +1533,7 @@ static QCloudBucket *gSourceTestBucket;
     QCloudPicOperationRule * rule4 = [[QCloudPicOperationRule alloc]init];
     rule4.type = QCloudPicOperationRuleFull;
     rule4.actionType = QCloudPicOperationRuleActionExtrac;
-    rule4.imageURL = @"http://examplebucket-1250000000.picsh.myqcloud.com/watermarked.png";
+    rule4.imageURL = QCloudTransferPicURL(@"watermarked.png");
     rule4.fileid = @"output/extracted.jpg";
     rule4.level = 2;
     XCTAssertNotNil(rule4.rule);

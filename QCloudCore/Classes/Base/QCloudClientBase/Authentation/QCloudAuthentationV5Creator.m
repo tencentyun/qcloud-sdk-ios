@@ -53,14 +53,14 @@
  返回 COS 签名中用到的 path , 。如果没有path时，为 /
 
  例如
- 1. URL 为: http://test-123456.cos.ap-shanghai.myqcloud.com?delimiter=%2F&max-keys=1000&prefix=test%2F
+ 1. URL 为: 默认 COS 域名根路径并携带 query
 
  path为 /
 
- 2. URL为: http://test-123456.cos.ap-shanghai.myqcloud.com/test
+ 2. URL 为默认 COS 域名下的 /test
  path 为 test
 
- 3. URL为: http://test-123456.cos.ap-shanghai.myqcloud.com/test/
+ 3. URL 为默认 COS 域名下的 /test/
  path 为 test/
 
 

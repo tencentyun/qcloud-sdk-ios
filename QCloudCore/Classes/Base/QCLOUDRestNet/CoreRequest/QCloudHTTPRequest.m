@@ -29,11 +29,8 @@
 
 #pragma mark - 域名切换相关正则表达式
 
-// COS 域名: bucket.cos.region.myqcloud.com
 static NSRegularExpression *_cosHostRegex;
-// CI 域名: *.ci.region.myqcloud.com 或 ci.region.myqcloud.com
 static NSRegularExpression *_ciHostRegex;
-// 排除域名: 加速域名和服务域名
 static NSRegularExpression *_excludeHostRegex;
 
 @interface QCloudHTTPRequest () {
@@ -51,13 +48,14 @@ static NSRegularExpression *_excludeHostRegex;
 @synthesize httpURLError = _httpURLError;
 
 + (void)load {
-    _cosHostRegex = [NSRegularExpression regularExpressionWithPattern:@"^[^.]+\\.cos\\.[^.]+\\.myqcloud\\.com$"
+    NSString *defaultDomainPattern = [NSRegularExpression escapedPatternForString:QCloudDomainMyQCloud()];
+    _cosHostRegex = [NSRegularExpression regularExpressionWithPattern:[NSString stringWithFormat:@"^[^.]+\\.cos\\.[^.]+\\.%@$", defaultDomainPattern]
                                                               options:NSRegularExpressionCaseInsensitive
                                                                 error:nil];
-    _ciHostRegex = [NSRegularExpression regularExpressionWithPattern:@"^([^.]+\\.)?ci\\.[^.]+\\.myqcloud\\.com$"
+    _ciHostRegex = [NSRegularExpression regularExpressionWithPattern:[NSString stringWithFormat:@"^([^.]+\\.)?ci\\.[^.]+\\.%@$", defaultDomainPattern]
                                                              options:NSRegularExpressionCaseInsensitive
                                                                error:nil];
-    _excludeHostRegex = [NSRegularExpression regularExpressionWithPattern:@"(\\.cos\\.accelerate\\.myqcloud\\.com$|^service\\.cos\\.myqcloud\\.com$)"
+    _excludeHostRegex = [NSRegularExpression regularExpressionWithPattern:[NSString stringWithFormat:@"(\\.cos\\.accelerate\\.%@$|^service\\.cos\\.%@$)", defaultDomainPattern, defaultDomainPattern]
                                                                   options:NSRegularExpressionCaseInsensitive
                                                                     error:nil];
 }
@@ -309,21 +307,21 @@ static NSRegularExpression *_excludeHostRegex;
         return nil;
     }
     
-    if ([self isCIHost:host]) {
-        // CI 域名: myqcloud.com -> tencentci.cn
-        return [host stringByReplacingOccurrencesOfString:@"myqcloud.com" withString:@"tencentci.cn"];
-    } else {
-        // COS 域名: myqcloud.com -> tencentcos.cn
-        return [host stringByReplacingOccurrencesOfString:@"myqcloud.com" withString:@"tencentcos.cn"];
+    NSString *backupDomain = [self isCIHost:host] ? QCloudDomainTencentCI() : QCloudDomainTencentCOS();
+    if (!backupDomain) {
+        return host;
     }
+    return [host stringByReplacingOccurrencesOfString:QCloudDomainMyQCloud() withString:backupDomain];
 }
 
 + (BOOL)isBackupHost:(NSString *)host {
     if (!host) {
         return NO;
     }
-    return [host rangeOfString:@"tencentcos.cn" options:NSCaseInsensitiveSearch].length > 0 ||
-           [host rangeOfString:@"tencentci.cn" options:NSCaseInsensitiveSearch].length > 0;
+    NSString *cosBackupDomain = QCloudDomainTencentCOS();
+    NSString *ciBackupDomain = QCloudDomainTencentCI();
+    return (cosBackupDomain && [host rangeOfString:cosBackupDomain options:NSCaseInsensitiveSearch].length > 0) ||
+           (ciBackupDomain && [host rangeOfString:ciBackupDomain options:NSCaseInsensitiveSearch].length > 0);
 }
 
 + (BOOL)needChangeHost:(NSString *)host responseHeaders:(NSDictionary *)responseHeaders {

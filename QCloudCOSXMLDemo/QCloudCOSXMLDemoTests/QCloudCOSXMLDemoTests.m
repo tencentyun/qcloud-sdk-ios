@@ -26,6 +26,7 @@
 #import "QCloudGetTextRecognitionRequest.h"
 #import "QCloudCommonRequest.h"
 #define kCOSDemoBucketKey @"demo"
+
 @interface QCloudCOSXMLDemoTests : XCTestCase <QCloudSignatureProvider>
 @property (nonatomic, strong) NSString *appID;
 @property (nonatomic, strong) NSString *ownerID;
@@ -964,7 +965,7 @@ static QCloudBucket *gGemoTestBucket;
     XCTestExpectation *expectation = [self expectationWithDescription:@"testVideoRecognition"];
     
     QCloudPostVideoRecognitionRequest * request = [[QCloudPostVideoRecognitionRequest alloc]init];
-//https://00000000000000-1253960454.cos.ap-chengdu.myqcloud.com/test.mp4
+// 默认 COS 服务域名下的视频文件 URL
     request.regionName = gGemoTestBucket.location;
     // 对象键，是对象在 COS 上的完整路径，如果带目录的话，格式为 "dir1/object1"
 //    request.object = @"test.mp4";
@@ -1020,7 +1021,7 @@ static QCloudBucket *gGemoTestBucket;
     XCTestExpectation *expectation = [self expectationWithDescription:@"testDocRecognition"];
     QCloudPostDocRecognitionRequest * request = [[QCloudPostDocRecognitionRequest alloc]init];
 
-    // 对象键，是对象在 COS 上的完整路径，如果带目录的话，格式为 "dir1/object1" https://00000000000000-1253960454.cos.ap-chengdu.myqcloud.com/03_%E8%B7%AF%E7%94%B1.pdf
+    // 对象键，是对象在 COS 上的完整路径，如果带目录的话，格式为 "dir1/object1"
     request.object = @"student.ppt";
     // 存储桶名称，格式为 BucketName-APPID
     request.bucket = @"cos-sdk-citest-1253960454";
@@ -1154,7 +1155,7 @@ static QCloudBucket *gGemoTestBucket;
 - (void)testQCloudCommonRequest {
     XCTestExpectation *expectation = [self expectationWithDescription:@"testQCloudCommonRequest"];
     QCloudCommonRequest * request = [QCloudCommonRequest new];
-    request.URL = @"https://0-a-1253960454.cos.ap-nanjing.myqcloud.com/05.jpg";
+    request.URL = [NSString stringWithFormat:@"https://0-a-1253960454.cos.ap-nanjing.%@/05.jpg", QCloudDomainMyQCloud()];
     request.queries = @{@"ci-process":@"AIPicMatting"};
     [request setFinishBlock:^(id  _Nullable result, NSError * _Nullable error) {
         NSLog(@"%@",result);
@@ -1170,7 +1171,7 @@ static QCloudBucket *gGemoTestBucket;
     request.requestContentType = QCloudContentStream;
 
     request.method = @"put";
-    request.URL = @"https://0-a-1253960454.cos.ap-nanjing.myqcloud.com/test.jpg";
+    request.URL = [NSString stringWithFormat:@"https://0-a-1253960454.cos.ap-nanjing.%@/test.jpg", QCloudDomainMyQCloud()];
     
     // 获取 test.jpg 图片路径
     NSBundle *bundle = [NSBundle bundleForClass:[self class]];

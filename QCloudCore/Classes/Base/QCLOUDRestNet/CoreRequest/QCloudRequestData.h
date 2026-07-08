@@ -12,7 +12,10 @@
 #import "QCloudEndPoint.h"
 NS_ASSUME_NONNULL_BEGIN
 extern NSString *const HTTPHeaderUserAgent;
-extern NSString *const emergencyHost;
+extern NSString *emergencyHost;
+FOUNDATION_EXTERN NSString *QCloudDomainMyQCloud(void);
+FOUNDATION_EXTERN NSString *QCloudDomainTencentCOS(void);
+FOUNDATION_EXTERN NSString *QCloudDomainTencentCI(void);
 
 /**
    网络请求参数的容器类

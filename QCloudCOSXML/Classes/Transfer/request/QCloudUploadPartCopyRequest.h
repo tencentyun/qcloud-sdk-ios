@@ -70,7 +70,7 @@ NS_ASSUME_NONNULL_BEGIN
     request.object = @"exampleobject";
 
     // 源文件 URL 路径，可以通过 versionid 子资源指定历史版本
-    request.source = @"sourcebucket-1250000000.cos.ap-guangzhou.myqcloud.com/sourceObject";
+    request.source = @"sourcebucket-1250000000.cos.ap-guangzhou.<默认服务域名>/sourceObject";
 
     // 在初始化分块上传的响应中，会返回一个唯一的描述符（upload ID）
     request.uploadID = uploadId;

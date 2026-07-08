@@ -8,6 +8,7 @@
 
 #import "QCloudCOSXMLEndPoint.h"
 #import "NSString+RegularExpressionCategory.h"
+
 @implementation QCloudCOSXMLEndPoint
 
 - (instancetype)init {
@@ -16,19 +17,10 @@
         return self;
     }
     _isPrefixURL = YES;
-    _serviceName = @"myqcloud.com";
+    _serviceName = QCloudDomainMyQCloud();
     return self;
 }
 
-//-(void)setEnableOldDomain:(BOOL)enableOldDomain{
-//    _enableOldDomain = enableOldDomain;
-//    if(_enableOldDomain){
-//        _serviceName = @"myqcloud.com";
-//
-//    }else{
-//        _serviceName = @"tencentcos.cn";
-//    }
-//}
 - (NSString *)formattedBucket:(NSString *)bucket withAPPID:(NSString *)APPID {
     NSInteger subfixLength = APPID.length + 1;
     if (bucket.length <= subfixLength) {
@@ -79,7 +71,7 @@
         regionNametmp = self.regionName;
     }
     
-    if ([self.serviceName isEqualToString:@"myqcloud.com"]) {
+    if ([self.serviceName isEqualToString:QCloudDomainMyQCloud()]) {
         NSParameterAssert(regionNametmp);
         static NSString *regularExpression = @"[a-zA-Z0-9.-]*";
         BOOL isLegal = [regionNametmp matchesRegularExpression:regularExpression];
@@ -112,7 +104,7 @@
 }
 - (void)setRegionName:(QCloudRegion)regionName {
     // Region 仅允许由 a-z, A-Z, 0-9, 英文句号. 和 - 构成。
-    if ([self.serviceName isEqualToString:@"myqcloud.com"]) {
+    if ([self.serviceName isEqualToString:QCloudDomainMyQCloud()]) {
         NSParameterAssert(regionName);
         static NSString *regularExpression = @"[a-zA-Z0-9.-]*";
         BOOL isLegal = [regionName matchesRegularExpression:regularExpression];

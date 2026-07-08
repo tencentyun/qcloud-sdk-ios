@@ -49,6 +49,7 @@
 		D22FB268246E303100C04C54 /* QCloudMyBucketListCtor.m in Sources */ = {isa = PBXBuildFile; fileRef = D22FB267246E303100C04C54 /* QCloudMyBucketListCtor.m */; };
 		D22FB26C246E3FBF00C04C54 /* QCCouldMyBucketCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D22FB26B246E3FBF00C04C54 /* QCCouldMyBucketCell.m */; };
 		D22FB272246E8E2100C04C54 /* QCloudFileListCtor.m in Sources */ = {isa = PBXBuildFile; fileRef = D22FB271246E8E2100C04C54 /* QCloudFileListCtor.m */; };
+		D27BB8352DBB9AC100CE0D5A /* client.p12 in Resources */ = {isa = PBXBuildFile; fileRef = D27BB8342DBB9AC100CE0D5A /* client.p12 */; };
 		D27BB85A2DC0AC7100CE0D5A /* QCloudCOSXMLRetryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D27BB8592DC0AC7100CE0D5A /* QCloudCOSXMLRetryTests.m */; };
 		D2A999BE2BF62D230094C83B /* QCloudCOSXMLMateDataTestsV2.m in Sources */ = {isa = PBXBuildFile; fileRef = D2A999BD2BF62D230094C83B /* QCloudCOSXMLMateDataTestsV2.m */; };
 		D2AB7937258A03A100BD694F /* QCloudCOSXMLModelCoverage.m in Sources */ = {isa = PBXBuildFile; fileRef = D2AB7936258A03A100BD694F /* QCloudCOSXMLModelCoverage.m */; };
@@ -171,6 +172,7 @@
 		D22FB26D246E40B900C04C54 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		D22FB270246E8E2100C04C54 /* QCloudFileListCtor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QCloudFileListCtor.h; sourceTree = "<group>"; };
 		D22FB271246E8E2100C04C54 /* QCloudFileListCtor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QCloudFileListCtor.m; sourceTree = "<group>"; };
+		D27BB8342DBB9AC100CE0D5A /* client.p12 */ = {isa = PBXFileReference; lastKnownFileType = file; path = client.p12; sourceTree = "<group>"; };
 		D27BB8592DC0AC7100CE0D5A /* QCloudCOSXMLRetryTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QCloudCOSXMLRetryTests.m; sourceTree = "<group>"; };
 		D2A999BD2BF62D230094C83B /* QCloudCOSXMLMateDataTestsV2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QCloudCOSXMLMateDataTestsV2.m; sourceTree = "<group>"; };
 		D2AB7936258A03A100BD694F /* QCloudCOSXMLModelCoverage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QCloudCOSXMLModelCoverage.m; sourceTree = "<group>"; };
@@ -244,6 +246,7 @@
 			children = (
 				46CF22D12EE6FA020038CE24 /* test.jpg */,
 				7F2923D42338ADB8008CE707 /* key.json */,
+				D27BB8342DBB9AC100CE0D5A /* client.p12 */,
 				1AB143EE1E601E0500830F93 /* QCloudCOSXMLDemo */,
 				1AB144081E601E0500830F93 /* QCloudCOSXMLDemoTests */,
 				1AB143ED1E601E0500830F93 /* Products */,
@@ -594,6 +597,7 @@
 				D2AD453C2C3C02B6009A62FA /* QCloudDownLoadNewCtorReuse.xib in Resources */,
 				1AC3C2711EED368100B3151F /* Main.storyboard in Resources */,
 				D2AD45412C3C02BF009A62FA /* QCloudDownLoadNewCtorOnce.xib in Resources */,
+				D27BB8352DBB9AC100CE0D5A /* client.p12 in Resources */,
 				D2AD452D2C3BE743009A62FA /* QCloudDownLoadNewCtorPermanent.xib in Resources */,
 				D2AD45432C3C0775009A62FA /* QCloudUploadNewCtorPermanent.xib in Resources */,
 				D2AD45472C3C09D1009A62FA /* QCloudUploadNewCtorOnce.xib in Resources */,

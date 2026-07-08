@@ -87,12 +87,8 @@ typedef NS_ENUM(NSUInteger, QCloudPicOperationRuleActionEnum) {
  盲水印图片地址，需要经过 URL 安全的 Base64 编码。 当 type 为1或2时必填，type 为3时无效。
     指定的水印图片必须同时满足如下 3 个条件：
  1. 盲水印图片与原图片必须位于同一个对象存储桶下；
- 2. URL 需使用数据万象源站域名（不能使用 CDN 加速、COS 源站域名），例如
-    examplebucket-1250000000.image.myqcloud.com属于 CDN 加速域名，不能在水印 URL 中使用；
- 3. URL 必须以http://开始，不能省略http头，
- 也不能填https头，例如examplebucket-1250000000.picsh.myqcloud.com/shuiyin_2.png，
- https://examplebucket-1250000000.picsh.myqcloud.com/shuiyin_2.png
- 就是非法的水印 URL。
+ 2. URL 需使用数据万象源站域名（不能使用 CDN 加速、COS 源站域名）；
+ 3. URL 必须以http://开始，不能省略http头，也不能填https头。
  */
 @property (nonatomic, copy) NSString *imageURL;
 

@@ -16,6 +16,9 @@
 #define QUIC_BUCKET @"mobile-ut-1253960454"
 #define QUIC_BUCKET_REGION @"ap-guangzhou"
 
+static NSString *QCloudQuicAuthorityHost(void) {
+    return [NSString stringWithFormat:@"840e6e58vodcq1256468886-10022853.cos.vod-quic.%@", QCloudDomainMyQCloud()];
+}
 
 @interface QCloudCOSQuicTransferTest : XCTestCase <QCloudSignatureProvider>
 @property (nonatomic,strong)NSString *appID;
@@ -99,8 +102,8 @@
     request.object = @"quic_large_object";
     request.enableQuic = YES;
     request.body = [NSURL fileURLWithPath:[self tempFileWithSize:2*1024*1024]];
-    request.customHeaders[@":authority"]= @"840e6e58vodcq1256468886-10022853.cos.vod-quic.myqcloud.com";
-    request.customHeaders[@"vod-forward-cos"]= @"840e6e58vodcq1256468886-10022853.cos.vod-quic.myqcloud.com";
+    request.customHeaders[@":authority"] = QCloudQuicAuthorityHost();
+    request.customHeaders[@"vod-forward-cos"] = QCloudQuicAuthorityHost();
     [request setFinishBlock:^(QCloudUploadObjectResult * _Nullable result, NSError * _Nullable error) {
         XCTAssertNil(error);
         [exp fulfill];
