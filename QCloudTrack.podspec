@@ -27,7 +27,9 @@ TODO: Add long description of the pod here.aaa
   s.author           = { "QCloudTerminalLab" => "g_PDTC_storage_DEV_terminallab@tencent.com" }
   s.source           = { :git => "https://github.com/tencentyun/qcloud-sdk-ios.git", :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
-  s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64', 'LLVM_LTO' => 'NO' }
+  # COSBeaconAPI_Base.xcframework 的 ios-arm64_i386_x86_64-simulator 切片已包含 arm64。
+  # 继续排除模拟器 arm64 会迫使 Apple Silicon 模拟器退回 x86_64。
+  s.pod_target_xcconfig = { 'LLVM_LTO' => 'NO' }
   # s.frameworks = 'UIKit', 'MapKit'
   s.static_framework = true
   s.ios.deployment_target = '10.0'
